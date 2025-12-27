@@ -134,6 +134,16 @@ export interface CarImage {
   mimeType: string;
   /** @nullable */
   altText?: string | null;
+  /**
+   * Public URL for the main image size
+   * @nullable
+   */
+  urlMain?: string | null;
+  /**
+   * Public URL for the thumbnail image
+   * @nullable
+   */
+  urlThumb?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -279,6 +289,48 @@ export interface CarsCreateBatchResponse {
   createdCount: number;
   results: CarBatchResultItem[];
 }
+
+export type PostApiAdminBody = {
+  username: string;
+  password: string;
+};
+
+export type PostApiAdminResetPasswordBody = {
+  username?: string;
+  newPassword?: string;
+};
+
+export type PostApiAdminChangePasswordBody = {
+  oldPassword?: string;
+  newPassword?: string;
+};
+
+export type PostApiAuthLoginBody = {
+  username?: string;
+  password?: string;
+};
+
+export type PostApiAuthLogin200 = {
+  accessToken?: string;
+  role?: string;
+};
+
+export type PostApiAuthRefresh200 = {
+  accessToken?: string;
+  role?: string;
+};
+
+export type PostApiAuthRefresh401Error = typeof PostApiAuthRefresh401Error[keyof typeof PostApiAuthRefresh401Error];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PostApiAuthRefresh401Error = {
+  refresh_token_invalid: 'refresh_token_invalid',
+} as const;
+
+export type PostApiAuthRefresh401 = {
+  error?: PostApiAuthRefresh401Error;
+};
 
 export type GetApiBrandsParams = {
 page?: number;
@@ -426,6 +478,398 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
+/**
+ * @summary Create a new admin (super-admin only)
+ */
+export const postApiAdmin = (
+    postApiAdminBody: PostApiAdminBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/admin`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAdminBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAdminMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdmin>>, TError,{data: PostApiAdminBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAdmin>>, TError,{data: PostApiAdminBody}, TContext> => {
+
+const mutationKey = ['postApiAdmin'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAdmin>>, {data: PostApiAdminBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAdmin(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAdminMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAdmin>>>
+    export type PostApiAdminMutationBody = PostApiAdminBody
+    export type PostApiAdminMutationError = unknown
+
+    /**
+ * @summary Create a new admin (super-admin only)
+ */
+export const usePostApiAdmin = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdmin>>, TError,{data: PostApiAdminBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAdmin>>,
+        TError,
+        {data: PostApiAdminBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAdminMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Reset an admin's password (super-admin only)
+ */
+export const postApiAdminResetPassword = (
+    postApiAdminResetPasswordBody: PostApiAdminResetPasswordBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/admin/reset-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAdminResetPasswordBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAdminResetPasswordMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetPassword>>, TError,{data: PostApiAdminResetPasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetPassword>>, TError,{data: PostApiAdminResetPasswordBody}, TContext> => {
+
+const mutationKey = ['postApiAdminResetPassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAdminResetPassword>>, {data: PostApiAdminResetPasswordBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAdminResetPassword(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAdminResetPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAdminResetPassword>>>
+    export type PostApiAdminResetPasswordMutationBody = PostApiAdminResetPasswordBody
+    export type PostApiAdminResetPasswordMutationError = unknown
+
+    /**
+ * @summary Reset an admin's password (super-admin only)
+ */
+export const usePostApiAdminResetPassword = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetPassword>>, TError,{data: PostApiAdminResetPasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAdminResetPassword>>,
+        TError,
+        {data: PostApiAdminResetPasswordBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAdminResetPasswordMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Change password for the authenticated admin
+ */
+export const postApiAdminChangePassword = (
+    postApiAdminChangePasswordBody: PostApiAdminChangePasswordBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/admin/change-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAdminChangePasswordBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAdminChangePasswordMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminChangePassword>>, TError,{data: PostApiAdminChangePasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAdminChangePassword>>, TError,{data: PostApiAdminChangePasswordBody}, TContext> => {
+
+const mutationKey = ['postApiAdminChangePassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAdminChangePassword>>, {data: PostApiAdminChangePasswordBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAdminChangePassword(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAdminChangePasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAdminChangePassword>>>
+    export type PostApiAdminChangePasswordMutationBody = PostApiAdminChangePasswordBody
+    export type PostApiAdminChangePasswordMutationError = unknown
+
+    /**
+ * @summary Change password for the authenticated admin
+ */
+export const usePostApiAdminChangePassword = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminChangePassword>>, TError,{data: PostApiAdminChangePasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAdminChangePassword>>,
+        TError,
+        {data: PostApiAdminChangePasswordBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAdminChangePasswordMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Admin login (returns access token, sets refresh cookie)
+ */
+export const postApiAuthLogin = (
+    postApiAuthLoginBody: PostApiAuthLoginBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiAuthLogin200>(
+      {url: `/api/auth/login`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAuthLoginBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthLoginMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError,{data: PostApiAuthLoginBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError,{data: PostApiAuthLoginBody}, TContext> => {
+
+const mutationKey = ['postApiAuthLogin'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthLogin>>, {data: PostApiAuthLoginBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthLogin(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthLogin>>>
+    export type PostApiAuthLoginMutationBody = PostApiAuthLoginBody
+    export type PostApiAuthLoginMutationError = unknown
+
+    /**
+ * @summary Admin login (returns access token, sets refresh cookie)
+ */
+export const usePostApiAuthLogin = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError,{data: PostApiAuthLoginBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthLogin>>,
+        TError,
+        {data: PostApiAuthLoginBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthLoginMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Logout admin (clears refresh cookie)
+ */
+export const postApiAuthLogout = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/auth/logout`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthLogoutMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogout>>, TError,void, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogout>>, TError,void, TContext> => {
+
+const mutationKey = ['postApiAuthLogout'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthLogout>>, void> = () => {
+          
+
+          return  postApiAuthLogout(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthLogout>>>
+    
+    export type PostApiAuthLogoutMutationError = unknown
+
+    /**
+ * @summary Logout admin (clears refresh cookie)
+ */
+export const usePostApiAuthLogout = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogout>>, TError,void, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthLogout>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthLogoutMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * This endpoint issues a new access token using the HttpOnly `refresh_token` cookie.
+The client MUST NOT include the expired access token in the `Authorization` header when calling this endpoint —
+browsers should call this endpoint without `Authorization` and with `credentials: 'include'` so the `refresh_token` cookie is sent.
+For non-browser clients you may supply the refresh token explicitly (e.g. in `Authorization: Bearer <refreshToken>` or in the request body),
+but the server treats that header/body value as a refresh token for this endpoint only.
+
+ * @summary Refresh access token using refresh cookie
+ */
+export const postApiAuthRefresh = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiAuthRefresh200>(
+      {url: `/api/auth/refresh`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthRefreshMutationOptions = <TError = PostApiAuthRefresh401,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRefresh>>, TError,void, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRefresh>>, TError,void, TContext> => {
+
+const mutationKey = ['postApiAuthRefresh'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthRefresh>>, void> = () => {
+          
+
+          return  postApiAuthRefresh(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthRefreshMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthRefresh>>>
+    
+    export type PostApiAuthRefreshMutationError = PostApiAuthRefresh401
+
+    /**
+ * @summary Refresh access token using refresh cookie
+ */
+export const usePostApiAuthRefresh = <TError = PostApiAuthRefresh401,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRefresh>>, TError,void, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthRefresh>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthRefreshMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Get all brands (paginated)
  */
