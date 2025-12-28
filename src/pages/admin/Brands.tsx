@@ -18,7 +18,7 @@ const Brands = () => {
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
-    /* ================= QUERY (same style as CarDetails.tsx) ================= */
+    /* ================= QUERY ================= */
     const {
         data: brandData,
         isLoading,
@@ -38,6 +38,12 @@ const Brands = () => {
                 refetch();
                 closeModal();
             },
+            onError: (err: unknown) => {
+                const msg =
+                    (err as any)?.payload?.error ??
+                    "Failed to create brand";
+                setError(msg);
+            },
         },
     });
 
@@ -47,6 +53,12 @@ const Brands = () => {
                 refetch();
                 closeModal();
             },
+            onError: (err: unknown) => {
+                const msg =
+                    (err as any)?.payload?.error ??
+                    "Failed to update brand";
+                setError(msg);
+            },
         },
     });
 
@@ -55,6 +67,9 @@ const Brands = () => {
             onSuccess: () => {
                 refetch();
                 setDeleteTarget(null);
+            },
+            onError: () => {
+                alert("Failed to delete brand");
             },
         },
     });
@@ -107,7 +122,7 @@ const Brands = () => {
 
     /* ================= UI ================= */
     return (
-        <div className="bg-[#F8F9FB] p-8 min-h-screen">
+        <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">
@@ -194,7 +209,9 @@ const Brands = () => {
                         </h2>
 
                         {error && (
-                            <div className="mb-4 text-red-600 text-sm">{error}</div>
+                            <div className="mb-4 text-red-600 text-sm">
+                                {error}
+                            </div>
                         )}
 
                         <input
