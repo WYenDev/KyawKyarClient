@@ -2,7 +2,7 @@ import axios, { type AxiosRequestConfig, type InternalAxiosRequestConfig } from 
 
 const baseURL = import.meta.env.VITE_API_BASE_URL ?? '';
 
-const client = axios.create({
+export const client = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',

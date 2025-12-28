@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "Admin Login",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "submit": "Login",
+    "loading": "Logging in...",
+    "error": "Invalid username or password",
+    "remember": "Remember me",
+    "forgot": "Forgot?",
+    "hint": "Use your admin credentials to sign in",
+    "failed": "Login failed. Check credentials and try again.",
+    "invalidResponse": "Invalid login response"
+  }
+}
