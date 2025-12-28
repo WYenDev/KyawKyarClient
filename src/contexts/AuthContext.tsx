@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { client } from '../services/mutator'; // Import the axios instance
-import { usePostApiAuthRefresh } from '../services/api';
+import { usePostApiAuthRefresh, PostApiAuthRefresh200 } from '../services/api';
 
 interface User {
   username: string;
@@ -9,8 +9,11 @@ interface User {
 interface AuthContextType {
   user: User | null;
   accessToken: string | null;
-  login: (username: string, token: string) => void;
+  needPasswordChange: boolean;
+  login: (username: string, token: string, needPasswordChange: boolean) => void;
   logout: () => void;
+  setRequirePasswordChange: (flag: boolean) => void;
+  markPasswordChanged: () => void;
   authLoading: boolean;
 }
 
@@ -19,6 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [needPasswordChange, setNeedPasswordChange] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
 
   // THE BRIDGE: Whenever the token changes, update the Axios Client
@@ -30,25 +34,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [accessToken]);
 
-  const login = (username: string, token: string) => {
+  const login = (username: string, token: string, needPasswordChange: boolean) => {
     setUser({ username });
     setAccessToken(token);
+    console.log("Setting needPasswordChange to:", needPasswordChange);
+    setNeedPasswordChange(needPasswordChange);
   };
 
   const logout = () => {
     setUser(null);
     setAccessToken(null);
+    setNeedPasswordChange(false);
     // You would also call your backend /logout to clear the HttpOnly cookie
   };
 
+  const setRequirePasswordChange = (flag: boolean) => {
+    setNeedPasswordChange(flag);
+  };
 
-const { mutate: refreshSession } = usePostApiAuthRefresh({
+  const markPasswordChanged = () => {
+    setNeedPasswordChange(false);
+  };
+
+
+  const { mutate: refreshSession } = usePostApiAuthRefresh({
     mutation: {
-      onSuccess: (data) => {
-        // Restore state from the cookie's valid session
-        if (data.accessToken && data.username) {
-          login(data.username, data.accessToken);
-        }
+      onSuccess: (data: PostApiAuthRefresh200) => {
+        if (data.username !==  undefined && data.accessToken !== undefined && data.needPasswordChange !== undefined) {
+          console.log('Tokens are defined')
+          login(data.username, data.accessToken, data.needPasswordChange);
+        } 
         setAuthLoading(false);
       },
       onError: () => {
@@ -64,7 +79,7 @@ const { mutate: refreshSession } = usePostApiAuthRefresh({
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, login, logout, authLoading }}>
+    <AuthContext.Provider value={{ user, accessToken, needPasswordChange, login, logout, setRequirePasswordChange, markPasswordChanged, authLoading }}>
       {children}
     </AuthContext.Provider>
   );
