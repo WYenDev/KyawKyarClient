@@ -313,12 +313,14 @@ export type PostApiAuthLoginBody = {
 export type PostApiAuthLogin200 = {
   accessToken?: string;
   role?: string;
+  needPasswordChange?: boolean;
 };
 
 export type PostApiAuthRefresh200 = {
   accessToken?: string;
   username?: string;
   role?: string;
+  needPasswordChange?: boolean;
 };
 
 export type PostApiAuthRefresh401Error = typeof PostApiAuthRefresh401Error[keyof typeof PostApiAuthRefresh401Error];

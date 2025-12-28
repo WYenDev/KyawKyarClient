@@ -21,6 +21,7 @@ import Brands from "./pages/admin/Brands";
 import Models from "./pages/admin/Model";
 import CarImages from "./pages/admin/CarImages";
 import AdminLogin from "./pages/admin/Login";
+import PasswordChange from "./pages/admin/PasswordChange";
 
 // auth guard
 import RequireAdmin from "./components/RequireAdmin";
@@ -31,6 +32,7 @@ function App() {
       <Routes>
         {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/password-change" element={<PasswordChange />} />
         <Route
           path="/admin"
           element={
@@ -45,6 +47,7 @@ function App() {
           <Route path="models" element={<Models />} />
           <Route path="car-images" element={<CarImages />} />
         </Route>
+
 
         {/* ================= PUBLIC ROUTES ================= */}
         <Route
