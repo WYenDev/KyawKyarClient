@@ -11,9 +11,27 @@ import {
     LogOut,
     ChevronLeft,
 } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { usePostApiAuthLogout } from '../services/api';
+
+
+
 
 const AdminSidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const { logout } = useAuth()
+
+    const { mutate } = usePostApiAuthLogout({
+        mutation: {
+            onSuccess: () => {
+                logout();
+            },
+        }
+    });
+
+    const handleLogout = () => {
+        mutate();
+    }
 
     return (
         <aside
@@ -96,6 +114,7 @@ const AdminSidebar = () => {
                     className={`flex items-center gap-3 p-3 rounded-xl
                     text-gray-600 hover:bg-white transition-all
                     ${collapsed && "justify-center"}`}
+                    onClick={handleLogout}
                 >
                     <LogOut size={20} />
                     {!collapsed && <span>Logout</span>}

@@ -9,6 +9,7 @@ import enCars from './locales/en/cars.json';
 import enContact from './locales/en/contact.json';
 import enFooter from './locales/en/footer.json';
 import enReviews from './locales/en/reviews.json';
+import enAdmin from './locales/en/admin.json';
 
 // Import all namespaces for Burmese
 import mmCommon from './locales/mm/common.json';
@@ -18,6 +19,8 @@ import mmCars from './locales/mm/cars.json';
 import mmContact from './locales/mm/contact.json';
 import mmFooter from './locales/mm/footer.json';
 import mmReviews from './locales/mm/reviews.json';
+import mmAdmin from './locales/mm/admin.json';
+
 
 i18n
   .use(initReactI18next)
@@ -31,6 +34,7 @@ i18n
         contact: enContact,
         footer: enFooter,
         reviews: enReviews,
+        admin: enAdmin
       },
       mm: {
         common: mmCommon,
@@ -40,6 +44,7 @@ i18n
         contact: mmContact,
         footer: mmFooter,
         reviews: mmReviews,
+        admin: mmAdmin
       },
     },
     lng: 'mm', // default language

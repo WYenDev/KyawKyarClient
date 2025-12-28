@@ -317,6 +317,7 @@ export type PostApiAuthLogin200 = {
 
 export type PostApiAuthRefresh200 = {
   accessToken?: string;
+  username?: string;
   role?: string;
 };
 
