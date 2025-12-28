@@ -8,12 +8,13 @@ import { useGetApiCarsSearch, useGetApiCarsFilters, Status } from '../services/a
 import type { GetApiCarsSearchParams } from '../services/api';
 import type { Fuel, Transmission } from '../services/api';
 import { useSearchParams } from 'react-router-dom';
+import { keepPreviousData } from '@tanstack/react-query';
 
 const CURRENT_YEAR = new Date().getFullYear();
 const DEFAULT_FILTERS: FilterOptions = {
   brand: '',
   model: '',
-  priceRange: [0, 30000], // units: Lakhs
+  priceRange: [0, 5000], // units: Lakhs
   yearRange: [1980, CURRENT_YEAR + 1],
   mileageRange: [0, 200000],
   fuelTypes: [],
@@ -32,6 +33,8 @@ const CarInventory: React.FC = () => {
   const [sortBy, setSortBy] = useState<'price-low' | 'price-high' | 'year-new' | 'year-old' | 'mileage-low'>('price-low');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>(DEFAULT_FILTERS);
+  const [page, setPage] = useState<number>(1);
+  const LIMIT = 9;
 
   // Fetch filter metadata from the API
   const { data: filterData, isLoading: filtersLoading, isError: filtersError } = useGetApiCarsFilters();
@@ -39,7 +42,7 @@ const CarInventory: React.FC = () => {
   const serverBrandModels = filterData?.brandsWithModels ?? undefined;
 
   // Helpers: parse & serialize URL search params
-  const parseFiltersFromSearchParams = (sp: URLSearchParams): { filters: FilterOptions; search: string } => {
+  const parseFiltersFromSearchParams = (sp: URLSearchParams): { filters: FilterOptions; search: string; page?: number } => {
     const brand = sp.get('brand') ?? '';
     const model = sp.get('model') ?? '';
     const priceMin = sp.get('priceMin');
@@ -50,6 +53,7 @@ const CarInventory: React.FC = () => {
     const transmission = sp.get('transmission') ?? '';
     const status = sp.get('status') ?? ''; // comma separated
     const search = sp.get('q') ?? '';
+    const pageParam = sp.get('page');
 
     const parsed: FilterOptions = {
       brand,
@@ -69,10 +73,10 @@ const CarInventory: React.FC = () => {
       status: status ? status.split(',').filter(Boolean) as Array<'available' | 'sold' | 'reserved'> : []
     };
 
-    return { filters: parsed, search };
+    return { filters: parsed, search, page: pageParam ? parseInt(pageParam, 10) : 1 };
   };
 
-  const serializeFiltersToParams = (f: FilterOptions, q: string) => {
+  const serializeFiltersToParams = (f: FilterOptions, q: string, p?: number) => {
     const params: Record<string, string> = {};
     if (f.brand) params.brand = f.brand;
     if (f.model) params.model = f.model;
@@ -88,12 +92,14 @@ const CarInventory: React.FC = () => {
     if (f.transmissions && f.transmissions.length > 0) params.transmission = String(f.transmissions[0]);
     if (f.status && f.status.length > 0) params.status = f.status.join(',');
     if (q) params.q = q;
+    // always include page (default 1)
+    params.page = String(p ?? 1);
     return params;
   };
 
   // Sync URL -> state on mount and when search params change (handles back/forward)
   useEffect(() => {
-    const { filters: parsedFilters, search } = parseFiltersFromSearchParams(searchParams);
+    const { filters: parsedFilters, search, page: parsedPage } = parseFiltersFromSearchParams(searchParams);
 
     // shallow compare filters to avoid unnecessary state updates
     const filtersEqual = (a: FilterOptions, b: FilterOptions) => {
@@ -113,17 +119,26 @@ const CarInventory: React.FC = () => {
     if (search !== searchTerm) {
       setSearchTerm(search);
     }
+    if (parsedPage !== undefined && parsedPage !== page) {
+      setPage(parsedPage);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  // When local filters/searchTerm change, update URL search params
+  // When local filters/searchTerm/page change, update URL search params
   useEffect(() => {
-    const params = serializeFiltersToParams(filters, searchTerm);
+    const params = serializeFiltersToParams(filters, searchTerm, page);
     setSearchParams(params);
-    // We intentionally only depend on filters and searchTerm here.
-  }, [filters, searchTerm, setSearchParams]);
+    // We intentionally only depend on filters, searchTerm and page here.
+  }, [filters, searchTerm, page, setSearchParams]);
 
   // Build search params for API from filters and search term
+
+  // reset to first page when filters or search term change
+  useEffect(() => {
+    setPage(1);
+  }, [filters, searchTerm]);
+
   const apiSearchParams = useMemo((): GetApiCarsSearchParams => {
     const params: GetApiCarsSearchParams = {};
     if (filters.model) params.model = filters.model;
@@ -142,14 +157,22 @@ const CarInventory: React.FC = () => {
       params.model = params.model || searchTerm;
       params.brand = params.brand || searchTerm;
     }
+    params.page = page;
+    params.limit = LIMIT;
     return params;
-  }, [filters, searchTerm]);
+  }, [filters, searchTerm, page]);
 
-  const { data: searchResponse, isLoading: carsLoading, isError: carsError } = useGetApiCarsSearch(apiSearchParams);
+  const { data: searchResponse, isLoading: carsLoading, isError: carsError } = useGetApiCarsSearch(apiSearchParams, { query: { placeholderData: keepPreviousData } });
 
   const availableCars = searchResponse?.items?.filter(car => car.status === Status.Available);
   const soldCars = searchResponse?.items?.filter(car => car.status === Status.Sold);
   const totalCount = searchResponse?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / LIMIT));
+
+  // clamp page if API returns fewer pages
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -217,11 +240,43 @@ const CarInventory: React.FC = () => {
           ) : carsError ? (
             <div className="p-6 text-sm text-red-500">Failed to load cars</div>
           ) : searchResponse?.total && searchResponse.total > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {searchResponse?.items?.map((car) => (
-                <CarCard key={car.id} car={car} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {searchResponse?.items?.map((car) => (
+                  <CarCard key={car.id} car={car} />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="mt-6 flex items-center justify-between">
+                <div className="text-sm text-slate-600">
+                  Showing {(page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalCount)} of {totalCount}
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      const newPage = Math.max(1, page - 1);
+                      setPage(newPage);
+                    }}
+                    disabled={page <= 1}
+                    className={`px-3 py-1 rounded-md border ${page <= 1 ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
+                  >
+                    Prev
+                  </button>
+                  <div className="text-sm text-slate-700">Page {page} of {totalPages}</div>
+                  <button
+                    onClick={() => {
+                      const newPage = Math.min(totalPages, page + 1);
+                      setPage(newPage);
+                    }}
+                    disabled={page >= totalPages}
+                    className={`px-3 py-1 rounded-md border ${page >= totalPages ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </>
           ) : (
             <div className="text-center py-12">
               <div className="text-slate-400 text-6xl mb-4">🚗</div>

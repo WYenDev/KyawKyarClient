@@ -6,7 +6,6 @@
     "about": "အကြောင်း",
     "reviews": "အမြင်များ",
     "contact": "ဆက်သွယ်ရန်",
-    "language": "ENG",
     "language": "ENG"
   },
   "buttons": {
@@ -14,8 +13,8 @@
     "get_consultation": "အခမဲ့ အကြံဉာဏ်ရယူမည်",
     "view_details": "အသေးစိတ်ကြည့်ရှုမည်",
     "call_us": "ဖုန်းဆက်မည်",
-"send_message": "စာပို့မည်",
-      "login": "လော့ဂ်အင်"
+    "send_message": "စာပို့မည်",
+      "login": "Login"
     },
   "labels": {
     "phone": "ဖုန်း",

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Car, Phone, Menu, X, Globe, User, ChevronDown } from 'lucide-react';
+import { Phone, Menu, X, Globe, User, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import logo from '../assets/logo-with-text.png';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,7 +19,17 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    const current = location.pathname;
+
+    // Home must match exactly
+    if (path === '/') return current === '/';
+
+    // Treat car detail pages as part of the Buy Cars section
+    if (path === '/buyCars') return current === '/buyCars' || current.startsWith('/cars');
+
+    return current === path;
+  };
 
   const navLinkClass = (path: string) => {
     const active = isActive(path);
@@ -67,18 +78,8 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform duration-200">
-              <Car className="h-6 w-6" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900 tracking-tight group-hover:text-indigo-700 transition-colors">
-                KyawKyar
-              </h1>
-              <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wider">
-                {t('tagline', "Myanmar's #1 Used Car Dealer")}
-              </p>
-            </div>
+          <Link to="/" className="flex items-center group">
+            <img src={logo} alt="ကျော်ကြား car showroom" className="h-16 md:h-20 w-auto object-contain" />
           </Link>
 
           {/* Desktop Navigation - Centered Pill */}
@@ -127,7 +128,7 @@ const Header: React.FC = () => {
               {isAccountOpen && (
                 <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
                   <Link
-                    to="/login"
+                    to="/admin/login"
                     className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
                     onClick={() => setIsAccountOpen(false)}
                   >

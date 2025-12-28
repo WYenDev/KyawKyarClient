@@ -3,7 +3,7 @@ import { defineConfig } from 'orval';
 export default defineConfig({
   api: {
     input: {
-      target: process.env.OPENAPI_URL ?? 'http://localhost:3000/openapi.json',
+      target: process.env.OPENAPI_URL ?? 'http://localhost:3000/api/openapi.json',
     },
     output: {
       mode: 'single',

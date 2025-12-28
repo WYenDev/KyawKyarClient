@@ -2,9 +2,77 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KyawKyaw - Myanmar's #1 Used Car Dealer</title>
+
+    <!-- Primary SEO -->
+    <title>ကျော်ကြား car showroom</title>
+    <meta name="description" content="ကျော်ကြား car showroom — Myanmar's trusted used car marketplace. ရှာဖွေ၊ နှိုင်းယှဉ်၊ ဆက်သွယ်ပါ။" />
+    <meta name="keywords" content="cars, Myanmar cars, used cars, car showroom, ကျော်ကြား" />
+    <meta name="author" content="ကျော်ကြား car showroom" />
+    <link rel="canonical" href="/" id="canonical-link" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ကျော်ကြား car showroom" />
+    <meta property="og:description" content="ကျော်ကြား car showroom — Myanmar's trusted used car marketplace. ရှာဖွေ၊ နှိုင်းယှဉ်၊ ဆက်သွယ်ပါ။" />
+    <meta property="og:image" content="/src/assets/logo-with-text.png" />
+    <meta property="og:image:alt" content="ကျော်ကြား car showroom logo" />
+    <meta property="og:locale" content="my_MM" />
+    <meta property="og:url" content="" id="og-url" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ကျော်ကြား car showroom" />
+    <meta name="twitter:description" content="ကျော်ကြား car showroom — Myanmar's trusted used car marketplace. ရှာဖွေ၊ နှိုင်းယှဉ်၊ ဆက်သွယ်ပါ။" />
+    <meta name="twitter:image" content="/src/assets/logo-with-text.png" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+
+    <!-- Structured Data placeholder -->
+    <script type="application/ld+json" id="ld-json">{}</script>
+
+    <!-- Set canonical/og/url and structured data from env (Vite) -->
+    <script type="module">
+      // Uses VITE_CANONICAL_URL (preferred) or VITE_SITE_URL; falls back to window.origin.
+      const envCanonical = import.meta.env.VITE_CANONICAL_URL || import.meta.env.VITE_SITE_URL;
+      const siteUrl = envCanonical ? envCanonical.replace(/\/$/, '') + '/' : window.location.origin + '/';
+      const canonicalLink = document.getElementById('canonical-link');
+      const ogUrl = document.getElementById('og-url');
+      if (canonicalLink) canonicalLink.setAttribute('href', siteUrl);
+      if (ogUrl) ogUrl.setAttribute('content', siteUrl);
+
+      // JSON-LD structured data (Organization + WebSite)
+      const logoPath = '/src/assets/logo-with-text.png';
+      const ld = {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "ကျော်ကြား car showroom",
+            "url": siteUrl,
+            "logo": logoPath
+          },
+          {
+            "@type": "WebSite",
+            "url": siteUrl,
+            "name": "ကျော်ကြား car showroom",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": siteUrl + "search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      };
+      const ldNode = document.getElementById('ld-json');
+      if (ldNode) ldNode.textContent = JSON.stringify(ld);
+    </script>
   </head>
   <body>
     <div id="root"></div>

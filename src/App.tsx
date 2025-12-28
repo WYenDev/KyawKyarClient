@@ -20,19 +20,34 @@ import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
 import Models from "./pages/admin/Model";
 import CarImages from "./pages/admin/CarImages";
+import AdminLogin from "./pages/admin/Login";
+import PasswordChange from "./pages/admin/PasswordChange";
+
+// auth guard
+import RequireAdmin from "./components/RequireAdmin";
 
 function App() {
   return (
     <Router>
       <Routes>
         {/* ================= ADMIN ROUTES ================= */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/password-change" element={<PasswordChange />} />
+        <Route
+          path="/admin"
+          element={
+            <RequireAdmin>
+              <AdminLayout />
+            </RequireAdmin>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="cars" element={<Cars />} />
           <Route path="brands" element={<Brands />} />
           <Route path="models" element={<Models />} />
           <Route path="car-images" element={<CarImages />} />
         </Route>
+
 
         {/* ================= PUBLIC ROUTES ================= */}
         <Route

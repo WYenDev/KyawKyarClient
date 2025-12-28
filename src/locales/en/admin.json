@@ -1,0 +1,28 @@
+{
+  "login": {
+    "title": "Admin Login",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "submit": "Login",
+    "loading": "Logging in...",
+    "error": "Invalid username or password",
+    "remember": "Remember me",
+    "forgot": "Forgot?",
+    "hint": "Use your admin credentials to sign in",
+    "failed": "Login failed. Check credentials and try again.",
+    "invalidResponse": "Invalid login response"
+  },
+  "passwordChange": {
+    "title": "Change Password",
+    "old": "Current password",
+    "new": "New password",
+    "confirm": "Confirm new password",
+    "submit": "Save",
+    "loading": "Saving...",
+    "error": "Failed to change password",
+    "errorEmpty": "Please fill both fields",
+    "errorMatch": "New passwords do not match"
+  }
+}

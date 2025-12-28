@@ -9,8 +9,10 @@ interface CarFilterProps {
   onFiltersChange: (filters: FilterOptions) => void;
   isOpen: boolean;
   onToggle: () => void;
+  // serverBrands may be names or ids depending on API
   serverBrands?: string[];
-  serverBrandModels?: Record<string, string[]>;
+  // serverBrandModels may be an array of strings or array of objects {id, name}
+  serverBrandModels?: Record<string, Array<string | { id?: string; name?: string }>>;
 }
 
 const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels }) => {
@@ -36,11 +38,23 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
   };
 
   const brandsToShow = serverBrands && serverBrands.length > 0 ? serverBrands : localBrands;
-  const brandModelsToUse = serverBrandModels && Object.keys(serverBrandModels).length > 0 ? serverBrandModels : localBrandModels;
+  const brandModelsRaw = serverBrandModels && Object.keys(serverBrandModels).length > 0 ? serverBrandModels : localBrandModels;
+
+  const normalizeModelsForBrand = (brandKey?: string) => {
+    if (!brandKey) return [] as { id: string; name: string }[];
+    const raw = brandModelsRaw[brandKey] ?? [];
+    if (raw.length === 0) return [] as { id: string; name: string }[];
+    // if items are strings
+    if (typeof raw[0] === 'string') {
+      return (raw as string[]).map(name => ({ id: name, name }));
+    }
+    // items are objects
+    return (raw as { id?: string; name?: string }[]).map(m => ({ id: m.id ?? m.name ?? String(m), name: m.name ?? m.id ?? String(m) }));
+  };
 
   const getAvailableModels = () => {
-    if (!filters.brand) return [];
-    return brandModelsToUse[filters.brand] || [];
+    if (!filters.brand) return [] as { id: string; name: string }[];
+    return normalizeModelsForBrand(filters.brand);
   };
 
   return (
@@ -152,10 +166,10 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 <label className="block text-sm font-medium text-slate-800 mb-2">Brand</label>
                 <select
                   value={filters.brand}
-                  onChange={(e) => {
+                    onChange={(e) => {
                     const newBrand = e.target.value;
-                    const availableModels = brandModelsToUse[newBrand] || [];
-                    const retainedModel = availableModels.includes(filters.model) ? filters.model : '';
+                    const availableModels = normalizeModelsForBrand(newBrand);
+                    const retainedModel = availableModels.some(m => m.id === filters.model || m.name === filters.model) ? filters.model : '';
                     onFiltersChange({ ...filters, brand: newBrand, model: retainedModel });
                   }}
                   className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm shadow-sm bg-white"
@@ -172,12 +186,12 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 <select
                   value={filters.model}
                   onChange={(e) => updateFilters('model', e.target.value)}
-                  className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm shadow-sm bg-white"
+                  className={`w-full border border-slate-200 rounded-md px-3 py-2 text-sm shadow-sm ${!filters.brand ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white text-slate-900'}`}
                   disabled={!filters.brand}
                 >
                   <option value="">All</option>
                   {getAvailableModels().map((model) => (
-                    <option key={model} value={model}>{model}</option>
+                    <option key={model.id} value={model.id}>{model.name}</option>
                   ))}
                 </select>
               </div>
