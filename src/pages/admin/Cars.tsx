@@ -148,7 +148,7 @@ const Cars = () => {
 
     /* ================= UI ================= */
     return (
-        <div className="bg-[#F8F9FB] min-h-screen p-8">
+        <div className="bg-[#F8F9FB] p-8 overflow-x-hidden">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">
@@ -193,24 +193,14 @@ const Cars = () => {
                                     <td className="px-6 py-4 text-xs font-mono">
                                         {car.modelId}
                                     </td>
-                                    <td className="px-6 py-4 text-center">
-                                        {car.modelYear}
-                                    </td>
+                                    <td className="px-6 py-4 text-center">{car.modelYear}</td>
                                     <td className="px-6 py-4 text-center">
                                         {car.price.toLocaleString()}
                                     </td>
-                                    <td className="px-6 py-4 text-center">
-                                        {car.mileage}
-                                    </td>
-                                    <td className="px-6 py-4 text-center">
-                                        {car.fuel}
-                                    </td>
-                                    <td className="px-6 py-4 text-center">
-                                        {car.transmission}
-                                    </td>
-                                    <td className="px-6 py-4 text-center">
-                                        {car.status}
-                                    </td>
+                                    <td className="px-6 py-4 text-center">{car.mileage}</td>
+                                    <td className="px-6 py-4 text-center">{car.fuel}</td>
+                                    <td className="px-6 py-4 text-center">{car.transmission}</td>
+                                    <td className="px-6 py-4 text-center">{car.status}</td>
                                     <td className="px-6 py-4">
                                         <div className="flex justify-end gap-4">
                                             <button

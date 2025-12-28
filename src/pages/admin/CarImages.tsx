@@ -116,9 +116,7 @@ const CarImages: React.FC = () => {
         if (selectedImage) {
             setImages((prev) =>
                 prev.map((i) =>
-                    i.id === selectedImage.id
-                        ? { ...i, ...form }
-                        : i
+                    i.id === selectedImage.id ? { ...i, ...form } : i
                 )
             );
         } else {
@@ -137,7 +135,7 @@ const CarImages: React.FC = () => {
 
     /* ================= UI ================= */
     return (
-        <div className="bg-[#F8F9FB] min-h-screen p-8">
+        <div className="bg-[#F8F9FB] p-8 overflow-x-hidden">
             {/* HEADER */}
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">
@@ -190,12 +188,10 @@ const CarImages: React.FC = () => {
                                     key={img.id}
                                     className="border-t hover:bg-gray-50 transition"
                                 >
-                                    {/* Car */}
                                     <td className="px-6 py-4 font-medium">
                                         {getCarVin(img.carId)}
                                     </td>
 
-                                    {/* Preview */}
                                     <td className="px-6 py-4 text-center">
                                         <img
                                             src={img.storageBaseKey}
@@ -204,9 +200,6 @@ const CarImages: React.FC = () => {
                                         />
                                     </td>
 
-                                   
-
-                                    {/* Primary */}
                                     <td className="px-6 py-4 text-center">
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-medium ${img.isPrimary
@@ -218,12 +211,10 @@ const CarImages: React.FC = () => {
                                         </span>
                                     </td>
 
-                                    {/* Order */}
                                     <td className="px-6 py-4 text-center">
                                         {img.sequenceNumber}
                                     </td>
 
-                                    {/* Visibility */}
                                     <td className="px-6 py-4 text-center">
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-medium ${img.visibility === "PUBLIC"
@@ -235,7 +226,6 @@ const CarImages: React.FC = () => {
                                         </span>
                                     </td>
 
-                                    {/* Actions */}
                                     <td className="px-6 py-4 text-right">
                                         <button
                                             onClick={() => openEdit(img)}
@@ -250,7 +240,6 @@ const CarImages: React.FC = () => {
                 </table>
             </div>
 
-            {/* MODAL */}
             {/* CREATE / EDIT MODAL */}
             {openModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -266,7 +255,6 @@ const CarImages: React.FC = () => {
                         )}
 
                         <div className="grid grid-cols-2 gap-4">
-                            {/* Car */}
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium mb-1">
                                     Car (VIN)
@@ -281,14 +269,12 @@ const CarImages: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Storage Key */}
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium mb-1">
                                     Storage Base Key
                                 </label>
                                 <input
                                     className="border p-3 rounded-xl w-full"
-                                    placeholder="/cars/toyota/camry/front.jpg"
                                     value={form.storageBaseKey}
                                     onChange={(e) =>
                                         setForm({
@@ -299,14 +285,12 @@ const CarImages: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Alt Text */}
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium mb-1">
                                     Alt Text
                                 </label>
                                 <input
                                     className="border p-3 rounded-xl w-full"
-                                    placeholder="Front view"
                                     value={form.altText}
                                     onChange={(e) =>
                                         setForm({
@@ -317,14 +301,12 @@ const CarImages: React.FC = () => {
                                 />
                             </div>
 
-                            {/* MIME Type */}
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     MIME Type
                                 </label>
                                 <input
                                     className="border p-3 rounded-xl w-full"
-                                    placeholder="image/jpeg"
                                     value={form.mimeType}
                                     onChange={(e) =>
                                         setForm({
@@ -335,7 +317,6 @@ const CarImages: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Sequence Number */}
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Sequence Number
@@ -353,7 +334,6 @@ const CarImages: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Visibility */}
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Visibility
@@ -370,7 +350,6 @@ const CarImages: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Is Primary */}
                             <div className="flex items-center gap-3 mt-6">
                                 <input
                                     type="checkbox"
@@ -405,7 +384,6 @@ const CarImages: React.FC = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
