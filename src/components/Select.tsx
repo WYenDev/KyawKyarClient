@@ -46,13 +46,19 @@ function Select<T extends string>({
             </button>
 
             {open && (
-                <div className="absolute z-50 mt-2 w-full rounded-xl bg-white shadow-lg border overflow-hidden">
+                <div
+                    className="
+                        absolute z-50 mt-2 w-full
+                        rounded-xl bg-white shadow-lg border
+                        max-h-60 overflow-y-auto
+                    "
+                >
                     {options.map((opt) => (
                         <button
                             key={opt.value}
                             type="button"
                             onClick={() => {
-                                onChange(opt.value); // ✅ always correct type
+                                onChange(opt.value);
                                 setOpen(false);
                             }}
                             className={`w-full px-4 py-3 text-left hover:bg-indigo-50 transition
