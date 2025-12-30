@@ -461,6 +461,20 @@ export type PostApiCarsCreateBatch201 = {
   results?: PostApiCarsCreateBatch201ResultsItem[];
 };
 
+export type PostApiCarsIdFeature200 = {
+  success?: boolean;
+  car?: Car;
+};
+
+export type PostApiCarsIdFeature400 = {
+  error?: string;
+};
+
+export type DeleteApiCarsIdFeature200 = {
+  success?: boolean;
+  car?: Car;
+};
+
 export type GetApiModelsParams = {
 page?: number;
 limit?: number;
@@ -2307,6 +2321,224 @@ export const usePostApiCarsCreateBatch = <TError = unknown,
       return useMutation(mutationOptions, queryClient);
     }
     
+/**
+ * @summary Mark a car as featured
+ */
+export const postApiCarsIdFeature = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiCarsIdFeature200>(
+      {url: `/api/cars/${id}/feature`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiCarsIdFeatureMutationOptions = <TError = PostApiCarsIdFeature400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdFeature>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiCarsIdFeature'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiCarsIdFeature>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiCarsIdFeature(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiCarsIdFeatureMutationResult = NonNullable<Awaited<ReturnType<typeof postApiCarsIdFeature>>>
+    
+    export type PostApiCarsIdFeatureMutationError = PostApiCarsIdFeature400
+
+    /**
+ * @summary Mark a car as featured
+ */
+export const usePostApiCarsIdFeature = <TError = PostApiCarsIdFeature400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiCarsIdFeature>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiCarsIdFeatureMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Remove a car from featured
+ */
+export const deleteApiCarsIdFeature = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiCarsIdFeature200>(
+      {url: `/api/cars/${id}/feature`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiCarsIdFeatureMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiCarsIdFeature'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiCarsIdFeature(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiCarsIdFeatureMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>>
+    
+    export type DeleteApiCarsIdFeatureMutationError = unknown
+
+    /**
+ * @summary Remove a car from featured
+ */
+export const useDeleteApiCarsIdFeature = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiCarsIdFeature>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiCarsIdFeatureMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get all featured cars (max 12)
+ */
+export const getApiCarsFeatured = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<CarListItem[]>(
+      {url: `/api/cars/featured`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiCarsFeaturedQueryKey = () => {
+    return [
+    `/api/cars/featured`
+    ] as const;
+    }
+
+    
+export const getGetApiCarsFeaturedQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsFeaturedQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsFeatured>>> = ({ signal }) => getApiCarsFeatured(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiCarsFeaturedQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCarsFeatured>>>
+export type GetApiCarsFeaturedQueryError = unknown
+
+
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsFeatured>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsFeatured>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsFeatured>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsFeatured>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all featured cars (max 12)
+ */
+
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiCarsFeaturedQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Health check
  */
