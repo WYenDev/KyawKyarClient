@@ -48,7 +48,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         <img 
           src={car.primaryImage?.url} 
           alt={`carImage} ${car.model?.name}`}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300"
         />
         {/* 
 

@@ -289,23 +289,6 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
             </div>
           </div>
 
-          {/* Footer actions (desktop sticky) */}
-          <div className="mt-4 lg:mt-6">
-            <div className="flex items-center justify-between">
-              <button
-                onClick={clearFilters}
-                className="text-sm text-slate-600 hover:text-slate-800"
-              >
-                Reset
-              </button>
-              <button
-                onClick={() => onToggle()}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:shadow-md"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 

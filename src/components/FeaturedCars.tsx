@@ -93,7 +93,7 @@ const FeaturedCars: React.FC = () => {
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               {displayCars.map((car) => (
-                <div key={car.id} className="snap-start w-64 sm:w-72 md:w-80 lg:w-96 flex-shrink-0">
+                <div key={car.id} className="snap-start w-64 sm:w-52 md:w-64 lg:w-72 flex-shrink-0">
                   <FeaturedCard car={car} />
                 </div>
               ))}
