@@ -10,7 +10,7 @@ export const cars: Car[] = [
     price: 45000000,
     mileage: 35000,
     fuelType: 'Hybrid',
-    transmission: 'Automatic',
+    transmission: 'Manual',
     bodyType: 'Sedan',
     color: 'Pearl White',
     status: 'available',

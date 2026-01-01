@@ -11,6 +11,7 @@
   --color-accent-600: #4338ca; /* indigo-700 */
   --radius-lg: 1rem;
   --card-shadow: 0 10px 30px rgba(2,6,23,0.06);
+  --modern-shadow: 0 8px 30px rgba(16,24,40,0.18);
 }
 
 html, body, #root {
@@ -34,11 +35,68 @@ html, body, #root {
   background-color: var(--color-accent-600);
 }
 
-/* Hide native scrollbars while keeping scroll functionality */
+/* modern UI helpers for hero + cards */
+
+/* subtle modern card shadow */
+.modern-shadow {
+  box-shadow: var(--modern-shadow);
+}
+
+/* slightly stronger scale on hover for tiles */
+.group:hover .group-hover\:scale-105 {
+  transform: scale(1.05);
+}
+
+/* utility to slightly scale element on hover */
+.scale-102 {
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+}
+.scale-102:hover {
+  transform: scale(1.02);
+}
+
+/* smooth entrance animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fadeUp 520ms ease both;
+}
+
+/* hide native scrollbars while keeping scroll functionality (used elsewhere) */
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+}
+
+/* accessible focus styles */
+:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+}
+
+/* ensure images cover nicely */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* small utility to prevent subpixel jitter on transforms */
+.transform,
+.scale-102,
+.group-hover\:scale-105 {
+  backface-visibility: hidden;
+  transform-origin: center;
 }

@@ -1,215 +1,209 @@
-import React, { useEffect, useState } from 'react';
-import { Search, Award, Car, ChevronDown } from 'lucide-react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Search, ChevronDown, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-
-import logo from '../assets/logo-with-text.png';
-
-interface StatItemProps {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-}
-
-const StatItem: React.FC<StatItemProps> = ({ icon, value, label }) => (
-  <div className="flex items-center space-x-4">
-    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-slate-100">
-      {icon}
-    </div>
-    <div>
-      <div className="text-xl font-semibold text-slate-900">{value}</div>
-      <div className="text-sm text-slate-600">{label}</div>
-    </div>
-  </div>
-);
+import { useGetApiCarsFilters } from '../services/api';
+import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
 
 const Hero: React.FC = () => {
   const { t } = useTranslation('home');
-  const { t: tCommon } = useTranslation('common');
   const navigate = useNavigate();
-
-  const goToInventory = () => navigate('/buyCars');
-
-  // show scroll hint only if featured section has content
   const [showScrollHint, setShowScrollHint] = useState<boolean>(false);
+
+  // Brand / Model state (match BuyCars filter behavior)
+  const [brand, setBrand] = useState<string>('');
+  const [model, setModel] = useState<string>('');
 
   useEffect(() => {
     const featured = document.getElementById('featured');
-    if (!featured) return;
-
-    const evaluate = () => {
-      // consider there is content if there are child nodes (cards) or height > 0
-      const hasChildren = featured.childElementCount > 0;
-      const hasHeight = featured.scrollHeight > 0;
-      setShowScrollHint(hasChildren && hasHeight);
-    };
-
-    evaluate();
-
-    const mo = new MutationObserver(evaluate);
-    mo.observe(featured, { childList: true, subtree: true });
-
-    // also re-evaluate on resize (layout changes)
-    window.addEventListener('resize', evaluate);
-
-    return () => {
-      mo.disconnect();
-      window.removeEventListener('resize', evaluate);
-    };
+    if (featured) setShowScrollHint(true);
   }, []);
 
+  // Fetch server-side filter metadata (brands & models)
+  const { data: filterData } = useGetApiCarsFilters();
+  const serverBrands = filterData?.brandsWithModels ? Object.keys(filterData.brandsWithModels) : undefined;
+  const serverBrandModels = filterData?.brandsWithModels ?? undefined;
+
+  const brandsToShow = serverBrands && serverBrands.length > 0 ? serverBrands : localBrands;
+
+  const normalizeModelsForBrand = (brandKey?: string) => {
+    if (!brandKey) return [] as { id: string; name: string }[];
+    const raw = (serverBrandModels && serverBrandModels[brandKey]) ?? localBrandModels[brandKey] ?? [];
+    if (raw.length === 0) return [] as { id: string; name: string }[];
+    if (typeof raw[0] === 'string') {
+      return (raw as string[]).map(name => ({ id: name, name }));
+    }
+    return (raw as { id?: string; name?: string }[]).map(m => ({ id: m.id ?? m.name ?? String(m), name: m.name ?? m.id ?? String(m) }));
+  };
+
+  const availableModels = useMemo(() => normalizeModelsForBrand(brand), [brand, serverBrandModels]);
+
+  const navigateWithParams = (b?: string, m?: string) => {
+    const params: string[] = [];
+    if (b) params.push(`brand=${encodeURIComponent(b)}`);
+    if (m) params.push(`model=${encodeURIComponent(m)}`);
+    const q = params.length ? `?${params.join('&')}` : '';
+    navigate(`/buyCars${q}`);
+  };
+
+  useEffect(() => {
+    // if selected model is not available for the brand, clear it
+    if (model) {
+      const found = availableModels.some(m => m.id === model || m.name === model);
+      if (!found) setModel('');
+    }
+  }, [brand, availableModels]);
+
+
   return (
-    <section
-      id="home"
-      className="relative overflow-hidden bg-white flex items-center h-screen"
-      aria-label={t('hero.aria') || 'Hero'}
-    >
-      {/* Decorative soft blobs (subtle, light) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-24 -top-24 w-[420px] h-[420px] rounded-full blur-3xl opacity-30"
-        style={{ background: 'radial-gradient(circle at 30% 30%, rgba(99,102,241,0.06), transparent 40%)' }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-28 bottom-0 w-[360px] h-[360px] rounded-full blur-2xl opacity-25"
-        style={{ background: 'radial-gradient(circle at 70% 70%, rgba(14,165,233,0.04), transparent 40%)' }}
-      />
+    <section className="relative min-h-screen flex items-center bg-slate-50 overflow-hidden">
+      {/* BACKGROUND DECORATION: Subtle Mesh Gradient for the "Luxury" feel */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-100/50 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-100/40 blur-[100px]" />
+      </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full">
-        <div className="grid lg:grid-cols-2 items-center gap-12 py-16">
-          {/* Left: focused content (badge, headline, description, quick search) */}
-          <div className="z-10">
-            <div className="relative max-w-2xl pl-10">
-              {/* accent stripe (kept) */}
-              <div className="absolute left-0 top-6 bottom-6 w-1 rounded-r-lg bg-gradient-to-b from-indigo-600 to-violet-400" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 py-12 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-              {/* soft decorative circle retained for depth */}
-              <div aria-hidden className="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-gradient-to-br from-indigo-100 to-transparent opacity-40 blur-3xl pointer-events-none" />
+          {/* LEFT SIDE: (Occupies 5 columns) */}
+          <div className="lg:col-span-5 space-y-8 text-center lg:text-left">
+            <div className="inline-flex items-center space-x-2 bg-white border border-slate-200 px-4 py-2 rounded-2xl shadow-sm animate-fade-in">
+              <ShieldCheck className="w-5 h-5 text-indigo-600" />
+              <span className="text-slate-700 text-sm font-semibold tracking-wide uppercase">
+                {t('hero.badge', "Mandalay's Premier Multi-Brand Showroom")}
+              </span>
+            </div>
 
-              <div className="relative">
-                <div className="inline-flex items-center px-4 py-1 rounded-full bg-amber-50 text-amber-700 text-sm font-medium mb-3">
-                  {t('hero.badge') || 'Trusted in Myanmar'}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
+              Every Grade. <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-blue-600">
+                Every Budget.
+              </span>
+            </h1>
+
+            <p className="text-lg text-slate-600 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+              From reliable daily commuters like <span className="font-bold text-slate-800">Suzuki & Toyota</span> to the ultimate luxury of <span className="font-bold text-slate-800">Lexus & Range Rover</span>. Certified quality for every driver.
+            </p>
+
+            {/* Brand / Model selects (match BuyCars filters) */}
+            <div className="flex gap-3 items-center max-w-md mx-auto lg:mx-0">
+              <div className="flex-1">
+                <label className="sr-only">Brand</label>
+                <select
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  className="w-full border border-slate-200 rounded-md px-3 py-3 text-sm shadow-sm bg-white"
+                >
+                  <option value="">All Brands</option>
+                  {brandsToShow.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex-1">
+                <label className="sr-only">Model</label>
+                <select
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  disabled={!brand}
+                  className={`w-full border border-slate-200 rounded-md px-3 py-3 text-sm shadow-sm ${!brand ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white text-slate-900'}`}
+                >
+                  <option value="">All Models</option>
+                  {availableModels.map((m) => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <button
+                  onClick={() => navigateWithParams(brand || undefined, model || undefined)}
+                  className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl shadow hover:shadow-md"
+                >
+                  <Search className="h-4 w-4" />
+                  <span className="text-sm font-medium">{t('hero.search_cta', 'Search')}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* QUICK STATS - Horizontal for better flow */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-6 pt-4 text-slate-500 text-sm">
+              <div className="flex items-center gap-2"><Zap className="w-4 h-4 text-amber-500 fill-amber-500" /> Instant Finance Approval</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" /> 150+ Point Inspection</div>
+            </div>
+          </div>
+
+          {/* RIGHT SIDE: (Occupies 7 columns) - THE MULTI-CAR GRID */}
+          <div className="lg:col-span-7 relative h-[500px] lg:h-[650px] grid grid-cols-2 grid-rows-6 gap-4 animate-fade-in-right pt-6">
+
+            {/* LARGE IMAGE: THE LUXURY FLAGSHIP (LX600 / Range Rover) */}
+            <div className="col-span-1 row-span-4 relative rounded-[2rem] overflow-hidden shadow-2xl group border-4 border-white">
+              <img
+                src="https://images.hdqwalls.com/download/lexus-lx-570-suv-4k-1440x900.jpg"
+                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                alt="Luxury SUV"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+              <div className="absolute bottom-6 left-6 text-white">
+                <p className="text-xs font-bold uppercase tracking-widest opacity-80">Premium</p>
+                <h3 className="text-xl font-bold">Luxury SUV</h3>
+              </div>
+            </div>
+
+            {/* TOP RIGHT: THE DAILY COMMUTER (Toyota Crown / Camry) */}
+            <div className="col-span-1 row-span-3 relative rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white">
+              <img
+                src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=800"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                alt="Daily Sedan"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-50" />
+              <div className="absolute bottom-6 left-6 text-white">
+                <p className="text-xs font-bold uppercase tracking-widest opacity-80">Efficiency</p>
+                <h3 className="text-lg font-bold">Daily Sedan</h3>
+              </div>
+            </div>
+
+            {/* BOTTOM RIGHT: THE FAMILY / HATCHBACK (Suzuki / Honda) */}
+            <div className="col-span-1 row-span-3 relative rounded-[2rem] overflow-hidden shadow-xl group border-4 border-white">
+              <img
+                src="https://car-images.bauersecure.com/wp-images/4485/volvoxc40.jpg"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                alt="City Compact"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-50" />
+              <div className="absolute bottom-6 left-6 text-white">
+                <p className="text-xs font-bold uppercase tracking-widest opacity-80">City</p>
+                <h3 className="text-lg font-bold">Family Compact</h3>
+              </div>
+            </div>
+
+            {/* FLOATING FINANCE CARD: Positioned to overlap the center gap */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-white/95 backdrop-blur px-6 py-4 rounded-3xl shadow-2xl border border-indigo-50 animate-bounce-slow">
+              <div className="text-center">
+                <div className="text-[10px] text-indigo-500 font-black uppercase tracking-[0.2em]">Finance Range</div>
+                <div className="text-2xl font-black text-slate-900 leading-none mt-1">
+                  300K <span className="text-slate-400 font-normal text-sm">to</span> 2M
                 </div>
-
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-3 text-slate-900">
-                  <span className="block">{t('hero.title_prefix') || 'Find your next'}</span>
-                  <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500">{t('hero.title_suffix') || 'perfect car'}</span>
-                </h1>
-
-                <p className="text-base text-slate-600 max-w-2xl mb-6">
-                  {t('hero.description') ||
-                    'Myanmar’s trusted used car marketplace — search, compare and contact sellers quickly.'}
-                </p>
-
-                {/* faux search / quick-filter UI (visual only) */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="flex-1 flex items-center gap-3 bg-gradient-to-r from-white to-slate-50 border border-slate-100 rounded-full px-4 py-3 shadow-sm">
-                    <div className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100">
-                      <Search className="w-4 h-4 text-slate-500" />
-                    </div>
-                    <span className="text-slate-400 text-sm">Search by brand, model or year</span>
-                  </div>
-
-                  <button
-                    onClick={goToInventory}
-                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-full font-semibold shadow-lg transition"
-                  >
-                    <span className="text-sm">{tCommon('buttons.browse_cars') || 'Browse'}</span>
-                  </button>
-                </div>
-
-                {/* compact CTA row (left) */}
-                <div className="flex items-center gap-4">
-                  <button onClick={goToInventory} className="bg-indigo-600 text-white px-5 py-3 rounded-lg font-semibold shadow">{tCommon('buttons.browse_cars') || 'Browse cars'}</button>
-                  <button className="border border-slate-100 text-slate-700 px-4 py-2 rounded-lg">{tCommon('buttons.get_consultation') || 'Get consultation'}</button>
-                </div>
+                <div className="text-[10px] text-slate-400 font-medium">MMK Monthly Estimate</div>
               </div>
             </div>
           </div>
 
-          {/* Right: modern showcase card (light) - expanded with categories + stats */}
-          <div className="z-10 flex items-center justify-center">
-            <div className="relative w-full max-w-lg lg:max-w-xl">
-              <div className="rounded-3xl overflow-hidden shadow-2xl transform transition-transform duration-500 hover:-translate-y-1 bg-white p-8 border border-slate-100">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="text-sm text-slate-500">Featured</div>
-                    <div className="text-2xl font-semibold text-slate-900 mt-2">Top picks this week</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-slate-400">From</div>
-                    <div className="text-lg font-semibold text-slate-900">MMK 12,500,000</div>
-                  </div>
-                </div>
-
-                <div className="mt-6 grid grid-cols-3 gap-3">
-                  <div className="h-28 rounded-lg bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center text-indigo-700 font-medium">Sedan</div>
-                  <div className="h-28 rounded-lg bg-gradient-to-br from-rose-100 to-pink-50 flex items-center justify-center text-rose-600 font-medium">SUV</div>
-                  <div className="h-28 rounded-lg bg-gradient-to-br from-emerald-100 to-lime-50 flex items-center justify-center text-emerald-700 font-medium">Hatch</div>
-                </div>
-
-                {/* moved feature tiles here */}
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-3 rounded-lg bg-indigo-50 border border-indigo-100">
-                    <div className="text-sm text-indigo-700 font-semibold">New arrivals</div>
-                    <div className="text-xs text-slate-500">Latest models added</div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-rose-50 border border-rose-100">
-                    <div className="text-sm text-rose-600 font-semibold">Top sellers</div>
-                    <div className="text-xs text-slate-500">Popular picks</div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
-                    <div className="text-sm text-emerald-700 font-semibold">Great deals</div>
-                    <div className="text-xs text-slate-500">Value cars under budget</div>
-                  </div>
-                </div>
-
-                {/* moved stats here */}
-                <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-100 shadow-sm">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <StatItem icon={<Car className="w-5 h-5 text-indigo-600" />} value="5000+" label={t('stats.cars_sold') || 'Cars sold'} />
-                    <StatItem icon={<Award className="w-5 h-5 text-indigo-600" />} value="15+" label={t('stats.years_experience') || 'Years'} />
-                    <StatItem icon={<Search className="w-5 h-5 text-indigo-600" />} value="200+" label={t('stats.cars_available') || 'Available'} />
-                  </div>
-                </div>
-
-                <div className="mt-6 flex justify-between items-center">
-                  <button className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">View picks</button>
-                  <div className="text-sm text-slate-400">Updated weekly</div>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-6 left-6 bg-white p-3 rounded-lg shadow">
-                <img src={logo} alt="ကျော်ကြား car showroom" className="h-8" />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Decorative bottom wave */}
-      <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden>
-        <path d="M0,32 C360,120 1080,0 1440,64 L1440,120 L0,120 Z" fill="rgba(15,23,42,0.02)"></path>
-      </svg>
-
-      {/* Scroll hint -> only visible when featured section likely has items */}
+      {/* SCROLL HINT */}
       {showScrollHint && (
         <button
-          type="button"
           onClick={() => document.getElementById('featured')?.scrollIntoView({ behavior: 'smooth' })}
-          aria-label="Scroll to featured cars"
-          className="absolute z-50 left-1/2 -translate-x-1/2 bottom-8 flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 text-indigo-700 shadow hover:bg-indigo-100 transition"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 p-2 text-slate-300 hover:text-indigo-600 transition-colors animate-bounce"
         >
-          <ChevronDown className="w-6 h-6 animate-bounce" />
+          <ChevronDown className="w-8 h-8" />
         </button>
       )}
-
-      {/* Bottom fade into page background (white) */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 left-0 w-full h-40 sm:h-56 pointer-events-none z-30 bg-gradient-to-b from-transparent to-white"
-      />
     </section>
   );
 };

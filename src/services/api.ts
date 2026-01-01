@@ -511,6 +511,8 @@ export type GetApiCarsFilters200 = {
   regions?: Region[];
   colors?: Color[];
   showrooms?: Showroom[];
+  buildTypes?: BuildType[];
+  steeringPositions?: SteeringPosition[];
 };
 
 export type GetApiCarsSearchParams = {
@@ -528,6 +530,18 @@ yearMin?: number;
 yearMax?: number;
 fuel?: Fuel;
 transmission?: Transmission;
+/**
+ * Build type name (partial match, e.g. "Hatchback")
+ */
+buildType?: string;
+/**
+ * Showroom id (UUID)
+ */
+showroom?: string;
+/**
+ * Steering position (Left or Right)
+ */
+steeringPosition?: SteeringPosition;
 page?: number;
 limit?: number;
 };
@@ -537,6 +551,40 @@ export type GetApiCarsSearch200 = {
   total?: number;
   page?: number;
   limit?: number;
+};
+
+export type GetApiCarsSuggestionsParams = {
+/**
+ * Partial search term (brand or model name)
+ */
+q?: string;
+/**
+ * Maximum number of suggestions for each type (brands, models)
+ */
+limit?: number;
+};
+
+/**
+ * @nullable
+ */
+export type GetApiCarsSuggestions200ItemBrand = {
+  id?: string;
+  name?: string;
+} | null;
+
+/**
+ * @nullable
+ */
+export type GetApiCarsSuggestions200ItemModel = {
+  id?: string;
+  name?: string;
+} | null;
+
+export type GetApiCarsSuggestions200Item = {
+  /** @nullable */
+  brand?: GetApiCarsSuggestions200ItemBrand;
+  /** @nullable */
+  model?: GetApiCarsSuggestions200ItemModel;
 };
 
 export type PatchApiCarsId200AllOf = {
@@ -2287,7 +2335,7 @@ export const usePostApiCars = <TError = unknown,
     }
     
 /**
- * @summary Get car filters (brandsWithModels, regions, colors, showrooms)
+ * @summary Get car filters (brandsWithModels, regions, colors, showrooms, buildTypes)
  */
 export const getApiCarsFilters = (
     
@@ -2358,7 +2406,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get car filters (brandsWithModels, regions, colors, showrooms)
+ * @summary Get car filters (brandsWithModels, regions, colors, showrooms, buildTypes)
  */
 
 export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(
@@ -2380,7 +2428,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
 
 
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
  */
 export const getApiCarsSearch = (
     params?: GetApiCarsSearchParams,
@@ -2452,7 +2500,7 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
  */
 
 export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCarsSearch>>, TError = unknown>(
@@ -2461,6 +2509,100 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetApiCarsSearchQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Suggest brands and models by name fragment
+ */
+export const getApiCarsSuggestions = (
+    params?: GetApiCarsSuggestionsParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiCarsSuggestions200Item[]>(
+      {url: `/api/cars/suggestions`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiCarsSuggestionsQueryKey = (params?: GetApiCarsSuggestionsParams,) => {
+    return [
+    `/api/cars/suggestions`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiCarsSuggestionsQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsSuggestionsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsSuggestions>>> = ({ signal }) => getApiCarsSuggestions(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiCarsSuggestionsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCarsSuggestions>>>
+export type GetApiCarsSuggestionsQueryError = unknown
+
+
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params: undefined |  GetApiCarsSuggestionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Suggest brands and models by name fragment
+ */
+
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiCarsSuggestionsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

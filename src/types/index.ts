@@ -27,5 +27,7 @@ export interface FilterOptions {
   fuelTypes: string[];
   transmissions: string[];
   bodyTypes: string[];
+  showrooms?: string[];
+  steeringPositions?: string[];
   status: Array<'available' | 'sold' | 'reserved'>;
 }

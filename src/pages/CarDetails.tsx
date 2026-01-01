@@ -203,8 +203,15 @@ const CarDetails: React.FC = () => {
               <div className="flex items-center">
                 <Box className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
-                  <div className="text-sm text-gray-600">{t('details.build_type', 'BuildType')}</div>
+                  <div className="text-sm text-gray-600">{t('details.build_type', 'Build Type')}</div>
                   <div className="text-lg font-semibold text-gray-900">{carData.buildType?.name}</div>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <Box className="h-5 w-5 mr-3 text-gray-400" />
+                <div>
+                  <div className="text-sm text-gray-600">{t('details.steerin_position', 'Sterring Position')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData.steering}</div>
                 </div>
               </div>
               <div className="flex items-center">
