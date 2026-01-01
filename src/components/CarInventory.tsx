@@ -11,7 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 import { keepPreviousData } from '@tanstack/react-query';
 
 const CURRENT_YEAR = new Date().getFullYear();
-const DEFAULT_FILTERS: FilterOptions = {
+  const DEFAULT_FILTERS: FilterOptions = {
   brand: '',
   model: '',
   priceRange: [0, 5000], // units: Lakhs
@@ -20,6 +20,8 @@ const DEFAULT_FILTERS: FilterOptions = {
   fuelTypes: [],
   transmissions: [],
   bodyTypes: [],
+  showrooms: [],
+  steeringPositions: [],
   status: []
 };
 
@@ -40,6 +42,9 @@ const CarInventory: React.FC = () => {
   const { data: filterData, isLoading: filtersLoading, isError: filtersError } = useGetApiCarsFilters();
   const serverBrands = filterData?.brandsWithModels ? Object.keys(filterData.brandsWithModels) : undefined;
   const serverBrandModels = filterData?.brandsWithModels ?? undefined;
+  const serverBodyTypes = filterData?.buildTypes ?? [];
+  const serverShowrooms = filterData?.showrooms ?? [];
+  const serverSteeringPositions = filterData?.steeringPositions ?? [];
 
   // Helpers: parse & serialize URL search params
   const parseFiltersFromSearchParams = (sp: URLSearchParams): { filters: FilterOptions; search: string; page?: number } => {
@@ -52,6 +57,9 @@ const CarInventory: React.FC = () => {
     const fuel = sp.get('fuel') ?? '';
     const transmission = sp.get('transmission') ?? '';
     const status = sp.get('status') ?? ''; // comma separated
+    const bodyTypesParam = sp.get('buildType') ?? '';
+    const showroomsParam = sp.get('showroom') ?? '';
+    const steeringParam = sp.get('steeringPosition') ?? '';
     const search = sp.get('q') ?? '';
     const pageParam = sp.get('page');
 
@@ -69,7 +77,9 @@ const CarInventory: React.FC = () => {
       mileageRange: DEFAULT_FILTERS.mileageRange,
       fuelTypes: fuel ? [fuel] : [],
       transmissions: transmission ? [transmission] : [],
-      bodyTypes: DEFAULT_FILTERS.bodyTypes,
+      bodyTypes: bodyTypesParam ? bodyTypesParam.split(',').filter(Boolean) : DEFAULT_FILTERS.bodyTypes,
+      showrooms: showroomsParam ? showroomsParam.split(',').filter(Boolean) : DEFAULT_FILTERS.showrooms,
+      steeringPositions: steeringParam ? steeringParam.split(',').filter(Boolean) : DEFAULT_FILTERS.steeringPositions,
       status: status ? status.split(',').filter(Boolean) as Array<'available' | 'sold' | 'reserved'> : []
     };
 
@@ -89,6 +99,9 @@ const CarInventory: React.FC = () => {
       params.yearMax = String(f.yearRange[1]);
     }
     if (f.fuelTypes && f.fuelTypes.length > 0) params.fuel = String(f.fuelTypes[0]);
+    if (f.bodyTypes && f.bodyTypes.length > 0) params.buildType = f.bodyTypes.join(',');
+    if (f.showrooms && f.showrooms.length > 0) params.showroom = f.showrooms.join(',');
+    if (f.steeringPositions && f.steeringPositions.length > 0) params.steeringPosition = f.steeringPositions.join(',');
     if (f.transmissions && f.transmissions.length > 0) params.transmission = String(f.transmissions[0]);
     if (f.status && f.status.length > 0) params.status = f.status.join(',');
     if (q) params.q = q;
@@ -109,6 +122,9 @@ const CarInventory: React.FC = () => {
       if (a.yearRange[0] !== b.yearRange[0] || a.yearRange[1] !== b.yearRange[1]) return false;
       if ((a.fuelTypes[0] ?? '') !== (b.fuelTypes[0] ?? '')) return false;
       if ((a.transmissions[0] ?? '') !== (b.transmissions[0] ?? '')) return false;
+      if ((a.bodyTypes ?? []).join(',') !== (b.bodyTypes ?? []).join(',')) return false;
+      if (((a.showrooms ?? []) as string[]).join(',') !== ((b.showrooms ?? []) as string[]).join(',')) return false;
+      if (((a.steeringPositions ?? []) as string[]).join(',') !== ((b.steeringPositions ?? []) as string[]).join(',')) return false;
       if ((a.status ?? []).join(',') !== (b.status ?? []).join(',')) return false;
       return true;
     };
@@ -153,13 +169,22 @@ const CarInventory: React.FC = () => {
     }
     if (filters.fuelTypes && filters.fuelTypes.length > 0) params.fuel = filters.fuelTypes[0] as unknown as Fuel;
     if (filters.transmissions && filters.transmissions.length > 0) params.transmission = filters.transmissions[0] as unknown as Transmission;
+
+    // create a runtime params record to append non-generated query keys
+    const runtimeParams: Record<string, unknown> = { ...(params as unknown as Record<string, unknown>) };
+    if (filters.bodyTypes && filters.bodyTypes.length > 0) runtimeParams.buildType = filters.bodyTypes.join(',');
+    if (filters.showrooms && filters.showrooms.length > 0) runtimeParams.showroom = (filters.showrooms as string[]).join(',');
+    if (filters.steeringPositions && filters.steeringPositions.length > 0) runtimeParams.steeringPosition = (filters.steeringPositions as string[]).join(',');
+
     if (searchTerm) {
-      params.model = params.model || searchTerm;
-      params.brand = params.brand || searchTerm;
+      runtimeParams.model = runtimeParams.model || searchTerm;
+      runtimeParams.brand = runtimeParams.brand || searchTerm;
     }
-    params.page = page;
-    params.limit = LIMIT;
-    return params;
+
+    runtimeParams.page = page;
+    runtimeParams.limit = LIMIT;
+
+    return runtimeParams as unknown as GetApiCarsSearchParams;
   }, [filters, searchTerm, page]);
 
   const { data: searchResponse, isLoading: carsLoading, isError: carsError } = useGetApiCarsSearch(apiSearchParams, { query: { placeholderData: keepPreviousData } });
@@ -173,6 +198,13 @@ const CarInventory: React.FC = () => {
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
+
+  // scroll to top when page changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+  }, [page]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -196,6 +228,9 @@ const CarInventory: React.FC = () => {
               onToggle={() => setIsFilterOpen(!isFilterOpen)}
               serverBrands={serverBrands}
               serverBrandModels={serverBrandModels}
+              serverBodyTypes={serverBodyTypes}
+              serverShowrooms={serverShowrooms}
+              serverSteeringPositions={serverSteeringPositions}
             />
           )}
         </div>

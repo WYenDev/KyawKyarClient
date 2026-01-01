@@ -45,6 +45,15 @@ export const Fuel = {
   Hybrid: 'Hybrid',
 } as const;
 
+export type Steering = typeof Steering[keyof typeof Steering];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Steering = {
+  Left: 'Left',
+  Right: 'Right',
+} as const;
+
 export type Transmission = typeof Transmission[keyof typeof Transmission];
 
 
@@ -76,6 +85,8 @@ export interface Model {
   name: string;
   brandId: string;
   brand?: Brand;
+  /** @nullable */
+  grades?: Grade[] | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -89,6 +100,13 @@ export interface Region {
 export interface Color {
   id: string;
   name: string;
+}
+
+export interface BuildType {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface License {
@@ -163,8 +181,11 @@ export interface Car {
   modelYear: number;
   price: number;
   mileage: number;
+  /** @nullable */
+  enginePower?: number | null;
   fuel: Fuel;
   transmission: Transmission;
+  steering?: Steering;
   status: Status;
   /** @nullable */
   license?: License;
@@ -174,6 +195,14 @@ export interface Car {
   showroomId?: string | null;
   /** @nullable */
   showroom?: Showroom;
+  /** @nullable */
+  buildTypeId?: string | null;
+  /** @nullable */
+  buildType?: BuildType;
+  /** @nullable */
+  gradeId?: string | null;
+  /** @nullable */
+  grade?: Grade;
   images: CarImage[];
   createdAt: string;
   updatedAt: string;
@@ -186,8 +215,11 @@ export interface CarListItem {
   modelYear: number;
   price: number;
   mileage: number;
+  /** @nullable */
+  enginePower?: number | null;
   fuel: Fuel;
   transmission: Transmission;
+  steering?: Steering;
   status: Status;
   /** @nullable */
   license?: License;
@@ -197,6 +229,10 @@ export interface CarListItem {
   showroomId?: string | null;
   /** @nullable */
   showroom?: Showroom;
+  /** @nullable */
+  gradeId?: string | null;
+  /** @nullable */
+  grade?: Grade;
   /** @nullable */
   primaryImage?: PrimaryImage;
   createdAt: string;
@@ -208,12 +244,19 @@ export interface CarCreate {
   modelYear: number;
   price: number;
   mileage: number;
+  /** @nullable */
+  enginePower?: number | null;
   fuel: Fuel;
   transmission: Transmission;
+  steering?: Steering;
   status?: Status;
   colorId: string;
   /** @nullable */
   showroomId?: string | null;
+  /** @nullable */
+  buildTypeId?: string | null;
+  /** @nullable */
+  gradeId?: string | null;
 }
 
 export interface CarUpdate {
@@ -221,12 +264,19 @@ export interface CarUpdate {
   modelYear?: number;
   price?: number;
   mileage?: number;
+  /** @nullable */
+  enginePower?: number | null;
   fuel?: Fuel;
   transmission?: Transmission;
+  steering?: Steering;
   status?: Status;
   colorId?: string;
   /** @nullable */
   showroomId?: string | null;
+  /** @nullable */
+  buildTypeId?: string | null;
+  /** @nullable */
+  gradeId?: string | null;
 }
 
 export interface BrandCreate {
@@ -244,12 +294,17 @@ export interface CarBatchItem {
   modelYear?: number;
   price?: number;
   mileage?: number;
+  /** @nullable */
+  enginePower?: number | null;
   fuel?: Fuel;
   transmission?: Transmission;
+  steering?: Steering;
   status?: Status;
   colorId?: string;
   /** @nullable */
   showroomId?: string | null;
+  /** @nullable */
+  gradeId?: string | null;
 }
 
 export interface CarsCreateBatch {
@@ -288,6 +343,21 @@ export interface CarBatchResultItem {
 export interface CarsCreateBatchResponse {
   createdCount: number;
   results: CarBatchResultItem[];
+}
+
+export interface Grade {
+  id: string;
+  name: string;
+  modelId: string;
+}
+
+export interface GradeCreate {
+  name: string;
+  modelId: string;
+}
+
+export interface GradeUpdate {
+  name?: string;
 }
 
 export type PostApiAdminBody = {
@@ -351,6 +421,10 @@ export type DeleteApiBrandsId200 = {
   deleted?: boolean;
 };
 
+export type DeleteApiBuildTypesId200 = {
+  deleted?: boolean;
+};
+
 export type PostApiCarImagesCarIdUploadBody = {
   images?: Blob[];
   /** Index of the uploaded file (0-based) to mark as primary */
@@ -382,6 +456,20 @@ export type PatchApiCarImagesImageIdReplace200 = {
   newBaseKey?: string;
 };
 
+export type DeleteApiCarsIdFeature200 = {
+  success?: boolean;
+  car?: Car;
+};
+
+export type PostApiCarsIdFeature200 = {
+  success?: boolean;
+  car?: Car;
+};
+
+export type PostApiCarsIdFeature400 = {
+  error?: string;
+};
+
 export type GetApiCarsParams = {
 /**
  * Page number
@@ -397,12 +485,24 @@ limit?: number;
 make?: string;
 };
 
+export type GetApiCars200ItemsItemAllOf = {
+  grade?: Grade;
+};
+
+export type GetApiCars200ItemsItem = CarListItem & GetApiCars200ItemsItemAllOf;
+
 export type GetApiCars200 = {
-  items?: CarListItem[];
+  items?: GetApiCars200ItemsItem[];
   total?: number;
   page?: number;
   limit?: number;
 };
+
+export type PostApiCars201AllOf = {
+  grade?: Grade;
+};
+
+export type PostApiCars201 = Car & PostApiCars201AllOf;
 
 export type GetApiCarsFilters200BrandsWithModels = {[key: string]: string[]};
 
@@ -411,6 +511,8 @@ export type GetApiCarsFilters200 = {
   regions?: Region[];
   colors?: Color[];
   showrooms?: Showroom[];
+  buildTypes?: BuildType[];
+  steeringPositions?: SteeringPosition[];
 };
 
 export type GetApiCarsSearchParams = {
@@ -428,6 +530,18 @@ yearMin?: number;
 yearMax?: number;
 fuel?: Fuel;
 transmission?: Transmission;
+/**
+ * Build type name (partial match, e.g. "Hatchback")
+ */
+buildType?: string;
+/**
+ * Showroom id (UUID)
+ */
+showroom?: string;
+/**
+ * Steering position (Left or Right)
+ */
+steeringPosition?: SteeringPosition;
 page?: number;
 limit?: number;
 };
@@ -438,6 +552,46 @@ export type GetApiCarsSearch200 = {
   page?: number;
   limit?: number;
 };
+
+export type GetApiCarsSuggestionsParams = {
+/**
+ * Partial search term (brand or model name)
+ */
+q?: string;
+/**
+ * Maximum number of suggestions for each type (brands, models)
+ */
+limit?: number;
+};
+
+/**
+ * @nullable
+ */
+export type GetApiCarsSuggestions200ItemBrand = {
+  id?: string;
+  name?: string;
+} | null;
+
+/**
+ * @nullable
+ */
+export type GetApiCarsSuggestions200ItemModel = {
+  id?: string;
+  name?: string;
+} | null;
+
+export type GetApiCarsSuggestions200Item = {
+  /** @nullable */
+  brand?: GetApiCarsSuggestions200ItemBrand;
+  /** @nullable */
+  model?: GetApiCarsSuggestions200ItemModel;
+};
+
+export type PatchApiCarsId200AllOf = {
+  grade?: Grade;
+};
+
+export type PatchApiCarsId200 = Car & PatchApiCarsId200AllOf;
 
 export type DeleteApiCarsId200 = {
   message?: string;
@@ -1253,6 +1407,291 @@ export const useDeleteApiBrandsId = <TError = unknown,
     }
     
 /**
+ * @summary Get all build types
+ */
+export const getApiBuildTypes = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<BuildType[]>(
+      {url: `/api/buildTypes`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiBuildTypesQueryKey = () => {
+    return [
+    `/api/buildTypes`
+    ] as const;
+    }
+
+    
+export const getGetApiBuildTypesQueryOptions = <TData = Awaited<ReturnType<typeof getApiBuildTypes>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBuildTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiBuildTypesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiBuildTypes>>> = ({ signal }) => getApiBuildTypes(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiBuildTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiBuildTypesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiBuildTypes>>>
+export type GetApiBuildTypesQueryError = unknown
+
+
+export function useGetApiBuildTypes<TData = Awaited<ReturnType<typeof getApiBuildTypes>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBuildTypes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBuildTypes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBuildTypes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBuildTypes<TData = Awaited<ReturnType<typeof getApiBuildTypes>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBuildTypes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBuildTypes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBuildTypes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBuildTypes<TData = Awaited<ReturnType<typeof getApiBuildTypes>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBuildTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all build types
+ */
+
+export function useGetApiBuildTypes<TData = Awaited<ReturnType<typeof getApiBuildTypes>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBuildTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiBuildTypesQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a build type
+ */
+export const postApiBuildTypes = (
+    buildTypeCreate: BuildTypeCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<BuildType>(
+      {url: `/api/buildTypes`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: buildTypeCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiBuildTypesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBuildTypes>>, TError,{data: BuildTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiBuildTypes>>, TError,{data: BuildTypeCreate}, TContext> => {
+
+const mutationKey = ['postApiBuildTypes'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiBuildTypes>>, {data: BuildTypeCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiBuildTypes(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiBuildTypesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBuildTypes>>>
+    export type PostApiBuildTypesMutationBody = BuildTypeCreate
+    export type PostApiBuildTypesMutationError = unknown
+
+    /**
+ * @summary Create a build type
+ */
+export const usePostApiBuildTypes = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBuildTypes>>, TError,{data: BuildTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiBuildTypes>>,
+        TError,
+        {data: BuildTypeCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiBuildTypesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Update build type (name only)
+ */
+export const patchApiBuildTypesId = (
+    id: string,
+    buildTypeUpdate: BuildTypeUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<BuildType>(
+      {url: `/api/buildTypes/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: buildTypeUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiBuildTypesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiBuildTypesId>>, TError,{id: string;data: BuildTypeUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiBuildTypesId>>, TError,{id: string;data: BuildTypeUpdate}, TContext> => {
+
+const mutationKey = ['patchApiBuildTypesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiBuildTypesId>>, {id: string;data: BuildTypeUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchApiBuildTypesId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiBuildTypesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiBuildTypesId>>>
+    export type PatchApiBuildTypesIdMutationBody = BuildTypeUpdate
+    export type PatchApiBuildTypesIdMutationError = unknown
+
+    /**
+ * @summary Update build type (name only)
+ */
+export const usePatchApiBuildTypesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiBuildTypesId>>, TError,{id: string;data: BuildTypeUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiBuildTypesId>>,
+        TError,
+        {id: string;data: BuildTypeUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiBuildTypesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete build type
+ */
+export const deleteApiBuildTypesId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiBuildTypesId200>(
+      {url: `/api/buildTypes/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiBuildTypesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBuildTypesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiBuildTypesId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiBuildTypesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiBuildTypesId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiBuildTypesId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiBuildTypesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiBuildTypesId>>>
+    
+    export type DeleteApiBuildTypesIdMutationError = unknown
+
+    /**
+ * @summary Delete build type
+ */
+export const useDeleteApiBuildTypesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBuildTypesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiBuildTypesId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiBuildTypesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Get images for a car
  */
 export const getApiCarImagesCarId = (
@@ -1612,6 +2051,131 @@ export const usePatchApiCarImagesImageIdReplace = <TError = unknown,
     }
     
 /**
+ * @summary Remove a car from featured
+ */
+export const deleteApiCarsIdFeature = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiCarsIdFeature200>(
+      {url: `/api/cars/${id}/feature`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiCarsIdFeatureMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiCarsIdFeature'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiCarsIdFeature(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiCarsIdFeatureMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>>
+    
+    export type DeleteApiCarsIdFeatureMutationError = unknown
+
+    /**
+ * @summary Remove a car from featured
+ */
+export const useDeleteApiCarsIdFeature = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiCarsIdFeature>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiCarsIdFeatureMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Mark a car as featured
+ */
+export const postApiCarsIdFeature = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiCarsIdFeature200>(
+      {url: `/api/cars/${id}/feature`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiCarsIdFeatureMutationOptions = <TError = PostApiCarsIdFeature400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdFeature>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiCarsIdFeature'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiCarsIdFeature>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiCarsIdFeature(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiCarsIdFeatureMutationResult = NonNullable<Awaited<ReturnType<typeof postApiCarsIdFeature>>>
+    
+    export type PostApiCarsIdFeatureMutationError = PostApiCarsIdFeature400
+
+    /**
+ * @summary Mark a car as featured
+ */
+export const usePostApiCarsIdFeature = <TError = PostApiCarsIdFeature400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdFeature>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiCarsIdFeature>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiCarsIdFeatureMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Get all cars (paginated)
  */
 export const getApiCars = (
@@ -1714,7 +2278,7 @@ export const postApiCars = (
 ) => {
       
       
-      return mutator<Car>(
+      return mutator<PostApiCars201>(
       {url: `/api/cars`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: carCreate, signal
@@ -1771,7 +2335,7 @@ export const usePostApiCars = <TError = unknown,
     }
     
 /**
- * @summary Get car filters (brandsWithModels, regions, colors, showrooms)
+ * @summary Get car filters (brandsWithModels, regions, colors, showrooms, buildTypes)
  */
 export const getApiCarsFilters = (
     
@@ -1842,7 +2406,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get car filters (brandsWithModels, regions, colors, showrooms)
+ * @summary Get car filters (brandsWithModels, regions, colors, showrooms, buildTypes)
  */
 
 export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(
@@ -1864,7 +2428,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
 
 
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
  */
 export const getApiCarsSearch = (
     params?: GetApiCarsSearchParams,
@@ -1936,7 +2500,7 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
  */
 
 export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCarsSearch>>, TError = unknown>(
@@ -1945,6 +2509,100 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetApiCarsSearchQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Suggest brands and models by name fragment
+ */
+export const getApiCarsSuggestions = (
+    params?: GetApiCarsSuggestionsParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiCarsSuggestions200Item[]>(
+      {url: `/api/cars/suggestions`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiCarsSuggestionsQueryKey = (params?: GetApiCarsSuggestionsParams,) => {
+    return [
+    `/api/cars/suggestions`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiCarsSuggestionsQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsSuggestionsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsSuggestions>>> = ({ signal }) => getApiCarsSuggestions(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiCarsSuggestionsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCarsSuggestions>>>
+export type GetApiCarsSuggestionsQueryError = unknown
+
+
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params: undefined |  GetApiCarsSuggestionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsSuggestions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Suggest brands and models by name fragment
+ */
+
+export function useGetApiCarsSuggestions<TData = Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError = unknown>(
+ params?: GetApiCarsSuggestionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsSuggestions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiCarsSuggestionsQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -2059,7 +2717,7 @@ export const patchApiCarsId = (
  options?: SecondParameter<typeof mutator>,) => {
       
       
-      return mutator<Car>(
+      return mutator<PatchApiCarsId200>(
       {url: `/api/cars/${id}`, method: 'PATCH',
       headers: {'Content-Type': 'application/json', },
       data: carUpdate
@@ -2303,6 +2961,384 @@ export const usePostApiCarsCreateBatch = <TError = unknown,
       > => {
 
       const mutationOptions = getPostApiCarsCreateBatchMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get all featured cars (max 12)
+ */
+export const getApiCarsFeatured = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<CarListItem[]>(
+      {url: `/api/cars/featured`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiCarsFeaturedQueryKey = () => {
+    return [
+    `/api/cars/featured`
+    ] as const;
+    }
+
+    
+export const getGetApiCarsFeaturedQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsFeaturedQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsFeatured>>> = ({ signal }) => getApiCarsFeatured(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiCarsFeaturedQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCarsFeatured>>>
+export type GetApiCarsFeaturedQueryError = unknown
+
+
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsFeatured>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsFeatured>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsFeatured>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsFeatured>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all featured cars (max 12)
+ */
+
+export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCarsFeatured>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFeatured>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiCarsFeaturedQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Get grades for a model
+ */
+export const getApiModelsIdGrades = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<Grade[]>(
+      {url: `/api/models/${id}/grades`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiModelsIdGradesQueryKey = (id?: string,) => {
+    return [
+    `/api/models/${id}/grades`
+    ] as const;
+    }
+
+    
+export const getGetApiModelsIdGradesQueryOptions = <TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiModelsIdGradesQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiModelsIdGrades>>> = ({ signal }) => getApiModelsIdGrades(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiModelsIdGradesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiModelsIdGrades>>>
+export type GetApiModelsIdGradesQueryError = unknown
+
+
+export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiModelsIdGrades>>,
+          TError,
+          Awaited<ReturnType<typeof getApiModelsIdGrades>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiModelsIdGrades>>,
+          TError,
+          Awaited<ReturnType<typeof getApiModelsIdGrades>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get grades for a model
+ */
+
+export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiModelsIdGradesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a grade
+ */
+export const postApiGrades = (
+    gradeCreate: GradeCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/grades`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: gradeCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiGradesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiGrades>>, TError,{data: GradeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiGrades>>, TError,{data: GradeCreate}, TContext> => {
+
+const mutationKey = ['postApiGrades'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiGrades>>, {data: GradeCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiGrades(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiGradesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiGrades>>>
+    export type PostApiGradesMutationBody = GradeCreate
+    export type PostApiGradesMutationError = unknown
+
+    /**
+ * @summary Create a grade
+ */
+export const usePostApiGrades = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiGrades>>, TError,{data: GradeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiGrades>>,
+        TError,
+        {data: GradeCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiGradesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Update a grade
+ */
+export const patchApiGradesId = (
+    id: string,
+    gradeUpdate: GradeUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/grades/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: gradeUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiGradesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiGradesId>>, TError,{id: string;data: GradeUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiGradesId>>, TError,{id: string;data: GradeUpdate}, TContext> => {
+
+const mutationKey = ['patchApiGradesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiGradesId>>, {id: string;data: GradeUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchApiGradesId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiGradesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiGradesId>>>
+    export type PatchApiGradesIdMutationBody = GradeUpdate
+    export type PatchApiGradesIdMutationError = unknown
+
+    /**
+ * @summary Update a grade
+ */
+export const usePatchApiGradesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiGradesId>>, TError,{id: string;data: GradeUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiGradesId>>,
+        TError,
+        {id: string;data: GradeUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiGradesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a grade
+ */
+export const deleteApiGradesId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/grades/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiGradesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiGradesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiGradesId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiGradesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiGradesId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiGradesId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiGradesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiGradesId>>>
+    
+    export type DeleteApiGradesIdMutationError = unknown
+
+    /**
+ * @summary Delete a grade
+ */
+export const useDeleteApiGradesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiGradesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiGradesId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiGradesIdMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
