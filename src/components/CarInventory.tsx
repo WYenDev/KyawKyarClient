@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FilterOptions } from '../types';
 import CarCard from './CarCard';
 import CarFilter from './CarFilter';
-import { Search } from 'lucide-react';
+//import { Search } from 'lucide-react';
 import { useGetApiCarsSearch, useGetApiCarsFilters, Status } from '../services/api';
 import type { GetApiCarsSearchParams } from '../services/api';
 import type { Fuel, Transmission } from '../services/api';
@@ -11,7 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 import { keepPreviousData } from '@tanstack/react-query';
 
 const CURRENT_YEAR = new Date().getFullYear();
-  const DEFAULT_FILTERS: FilterOptions = {
+const DEFAULT_FILTERS: FilterOptions = {
   brand: '',
   model: '',
   priceRange: [0, 5000], // units: Lakhs
@@ -32,7 +32,7 @@ const CarInventory: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [sortBy, setSortBy] = useState<'price-low' | 'price-high' | 'year-new' | 'year-old' | 'mileage-low'>('price-low');
+  //const [sortBy, setSortBy] = useState<'price-low' | 'price-high' | 'year-new' | 'year-old' | 'mileage-low'>('price-low');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>(DEFAULT_FILTERS);
   const [page, setPage] = useState<number>(1);
@@ -237,7 +237,9 @@ const CarInventory: React.FC = () => {
 
         {/* Main Content */}
         <div className="flex-1">
-          {/* Search and Sort */}
+
+          {/* 
+           Search and Sort 
           <div className="mb-6 flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
@@ -261,7 +263,7 @@ const CarInventory: React.FC = () => {
               <option value="mileage-low">Mileage: Low to High</option>
             </select>
           </div>
-
+          */}
           {/* Results Summary */}
           <div className="mb-6 flex flex-wrap gap-4 text-sm">
             <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Available: {availableCars?.length}</div>

@@ -18,25 +18,40 @@ const Brands = () => {
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
-    /* ================= QUERY (same style as CarDetails.tsx) ================= */
+    /* ===== PAGINATION STATE (SAME AS MODELS) ===== */
+    const [page, setPage] = useState(1);
+    const limit = 13;
+
+    /* ================= QUERY ================= */
     const {
         data: brandData,
         isLoading,
         isError,
         refetch,
     } = useGetApiBrands({
-        page: 1,
-        limit: 50,
+        page,
+        limit,
     });
 
     const brands = brandData?.items ?? [];
+
+    /* ===== PAGINATION DATA (SAME AS MODELS) ===== */
+    const total = brandData?.total ?? 0;
+    const totalPages = Math.ceil(total / limit);
 
     /* ================= MUTATIONS ================= */
     const { mutate: createBrand, isPending: creating } = usePostApiBrands({
         mutation: {
             onSuccess: () => {
                 refetch();
+                setPage(1); // same as Models
                 closeModal();
+            },
+            onError: (err: unknown) => {
+                const msg =
+                    (err as any)?.payload?.error ??
+                    "Failed to create brand";
+                setError(msg);
             },
         },
     });
@@ -47,6 +62,12 @@ const Brands = () => {
                 refetch();
                 closeModal();
             },
+            onError: (err: unknown) => {
+                const msg =
+                    (err as any)?.payload?.error ??
+                    "Failed to update brand";
+                setError(msg);
+            },
         },
     });
 
@@ -55,6 +76,10 @@ const Brands = () => {
             onSuccess: () => {
                 refetch();
                 setDeleteTarget(null);
+                setPage(1); // same as Models
+            },
+            onError: () => {
+                alert("Failed to delete brand");
             },
         },
     });
@@ -107,7 +132,7 @@ const Brands = () => {
 
     /* ================= UI ================= */
     return (
-        <div className="bg-[#F8F9FB] p-8 min-h-screen">
+        <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">
@@ -129,32 +154,46 @@ const Brands = () => {
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
                             <th className="px-8 py-4 text-left">Brand Name</th>
-                            <th className="px-8 py-4 text-right w-40">Actions</th>
+                            <th className="px-8 py-4 text-right w-40">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {isLoading ? (
                             <tr>
-                                <td colSpan={2} className="py-12 text-center text-gray-400">
+                                <td
+                                    colSpan={2}
+                                    className="py-12 text-center text-gray-400"
+                                >
                                     Loading...
                                 </td>
                             </tr>
                         ) : isError ? (
                             <tr>
-                                <td colSpan={2} className="py-12 text-center text-red-500">
+                                <td
+                                    colSpan={2}
+                                    className="py-12 text-center text-red-500"
+                                >
                                     Failed to load brands
                                 </td>
                             </tr>
                         ) : brands.length === 0 ? (
                             <tr>
-                                <td colSpan={2} className="py-12 text-center text-gray-400">
+                                <td
+                                    colSpan={2}
+                                    className="py-12 text-center text-gray-400"
+                                >
                                     No brands found
                                 </td>
                             </tr>
                         ) : (
                             brands.map((brand) => (
-                                <tr key={brand.id} className="border-t hover:bg-gray-50">
+                                <tr
+                                    key={brand.id}
+                                    className="border-t hover:bg-gray-50"
+                                >
                                     <td className="px-8 py-4 font-medium text-gray-900">
                                         {brand.name}
                                     </td>
@@ -162,7 +201,9 @@ const Brands = () => {
                                     <td className="px-8 py-4">
                                         <div className="flex justify-end gap-4">
                                             <button
-                                                onClick={() => openEdit(brand)}
+                                                onClick={() =>
+                                                    openEdit(brand)
+                                                }
                                                 className="text-indigo-600 hover:underline flex items-center gap-1"
                                             >
                                                 <Pencil size={14} />
@@ -170,7 +211,9 @@ const Brands = () => {
                                             </button>
 
                                             <button
-                                                onClick={() => setDeleteTarget(brand)}
+                                                onClick={() =>
+                                                    setDeleteTarget(brand)
+                                                }
                                                 className="text-red-500 hover:underline flex items-center gap-1"
                                             >
                                                 <Trash2 size={14} />
@@ -183,6 +226,52 @@ const Brands = () => {
                         )}
                     </tbody>
                 </table>
+
+                {/* PAGINATION — SAME AS MODELS */}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between px-8 py-4 border-t">
+                        <span className="text-sm text-gray-500">
+                            Page {page} of {totalPages}
+                        </span>
+
+                        <div className="flex gap-2">
+                            <button
+                                disabled={page === 1}
+                                onClick={() => setPage((p) => p - 1)}
+                                className="px-3 py-1 rounded-lg border text-sm
+                                           disabled:opacity-40 hover:bg-gray-100"
+                            >
+                                Previous
+                            </button>
+
+                            {Array.from(
+                                { length: totalPages },
+                                (_, i) => i + 1
+                            ).map((p) => (
+                                <button
+                                    key={p}
+                                    onClick={() => setPage(p)}
+                                    className={`px-3 py-1 rounded-lg text-sm border
+                                        ${p === page
+                                            ? "bg-black text-white"
+                                            : "hover:bg-gray-100"
+                                        }`}
+                                >
+                                    {p}
+                                </button>
+                            ))}
+
+                            <button
+                                disabled={page === totalPages}
+                                onClick={() => setPage((p) => p + 1)}
+                                className="px-3 py-1 rounded-lg border text-sm
+                                           disabled:opacity-40 hover:bg-gray-100"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* CREATE / EDIT MODAL */}
@@ -194,7 +283,9 @@ const Brands = () => {
                         </h2>
 
                         {error && (
-                            <div className="mb-4 text-red-600 text-sm">{error}</div>
+                            <div className="mb-4 text-red-600 text-sm">
+                                {error}
+                            </div>
                         )}
 
                         <input
@@ -227,7 +318,9 @@ const Brands = () => {
             {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-md rounded-2xl p-6">
-                        <h2 className="text-lg font-semibold mb-2">Delete Brand</h2>
+                        <h2 className="text-lg font-semibold mb-2">
+                            Delete Brand
+                        </h2>
 
                         <p className="text-sm text-gray-600 mb-6">
                             Are you sure you want to delete

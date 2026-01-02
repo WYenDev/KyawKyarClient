@@ -200,13 +200,18 @@ const CarDetails: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <Box className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.build_type', 'Build Type')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData.buildType?.name}</div>
-                </div>
-              </div>
+              {
+                carData.buildType && (
+                  <div className="flex items-center">
+                    <Box className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.build_type', 'Build Type')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData.buildType?.name}</div>
+                    </div>
+                  </div>
+
+                )
+              }
               <div className="flex items-center">
                 <Box className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
@@ -214,58 +219,50 @@ const CarDetails: React.FC = () => {
                   <div className="text-lg font-semibold text-gray-900">{carData.steering}</div>
                 </div>
               </div>
-              <div className="flex items-center">
-                {
-                  carData.enginePower && (
-                    <>
-                      <img src={CarEngine} alt="Engine" className="w-6 h-6 mr-3" />
-                      <div>
-                        <div className="text-sm text-gray-600">{t('details.engine_power', 'Engine Power')}</div>
-                        <div className="text-lg font-semibold text-gray-900">{carData.enginePower} HP</div>
-                      </div>
-                    </>
-                  )
-                }
-              </div>
-              <div className="flex items-center">
-                {
-                  carData.grade && (
-                    <>
-                      <Badge className="h-5 w-5 mr-3 text-gray-400" />
-                      <div>
-                        <div className="text-sm text-gray-600">{t('details.grade', 'Grade')}</div>
-                        <div className="text-lg font-semibold text-gray-900">{carData?.grade?.name}</div>
-                      </div>
-                    </>
-                  )
-                }
-              </div>
-              <div className="flex items-center">
-                {
-                  carData.showroom?.city && (
-                    <>
-                      <MapPin className="h-5 w-5 mr-3 text-gray-400" />
-                      <div>
-                        <div className="text-sm text-gray-600">{t('details.showroom_location', 'Showroom Location')}</div>
-                        <div className="text-lg font-semibold text-gray-900">{carData?.showroom?.city}</div>
-                      </div>
-                    </>
-                  )
-                }
-              </div>
-              <div className="flex items-center">
-                {
-                  carData.license?.region && (
-                    <>
-                      <MapPin className="h-5 w-5 mr-3 text-gray-400" />
-                      <div>
-                        <div className="text-sm text-gray-600">{t('details.licence', 'Linence Region')}</div>
-                        <div className="text-lg font-semibold text-gray-900">{carData?.license?.region.name}</div>
-                      </div>
-                    </>
-                  )
-                }
-              </div>
+              {
+                carData.enginePower && (
+                  <div className="flex items-center">
+                    <img src={CarEngine} alt="Engine" className="w-6 h-6 mr-3" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.engine_power', 'Engine Power')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData.enginePower} HP</div>
+                    </div>
+                  </div>
+                )
+              }
+              {
+                carData.grade && (
+                  <div className="flex items-center">
+                    <Badge className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.grade', 'Grade')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData?.grade?.name}</div>
+                    </div>
+                  </div>
+                )
+              }
+              {
+                carData.showroom?.city && (
+                  <div className="flex items-center">
+                    <MapPin className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.showroom_location', 'Showroom Location')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData?.showroom?.city}</div>
+                    </div>
+                  </div>
+                )
+              }
+              {
+                carData.license?.region && (
+                  <div className="flex items-center">
+                    <MapPin className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.licence', 'Linence Region')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData?.license?.region.name}</div>
+                    </div>
+                  </div>
+                )
+              }
             </div>
             <div className="space-y-3 mb-10">
               <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
@@ -311,7 +308,7 @@ const CarDetails: React.FC = () => {
         )}
 */}
       </div>
-    </div>
+    </div >
   );
 };
 

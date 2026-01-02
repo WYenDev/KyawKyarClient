@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import {
     LayoutDashboard,
     Car,
@@ -10,113 +10,80 @@ import {
     Settings,
     LogOut,
     ChevronLeft,
+    ChevronRight,
 } from "lucide-react";
+
 import { useAuth } from "../contexts/AuthContext";
-import { usePostApiAuthLogout } from '../services/api';
-
-
-
+import { usePostApiAuthLogout } from "../services/api";
+import logo from "../assets/logo-with-text.png";
 
 const AdminSidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const { logout } = useAuth()
+    const { logout } = useAuth();
 
     const { mutate } = usePostApiAuthLogout({
-        mutation: {
-            onSuccess: () => {
-                logout();
-            },
-        }
+        mutation: { onSuccess: () => logout() },
     });
-
-    const handleLogout = () => {
-        mutate();
-    }
 
     return (
         <aside
-            className={`h-screen bg-[#FDECEC] flex flex-col
-            transition-all duration-300
-            ${collapsed ? "w-[72px]" : "w-64"}`}
+            className={`
+                h-screen flex flex-col bg-white border-r
+                transition-all duration-300
+                ${collapsed ? "w-[84px]" : "w-64"}
+            `}
         >
-            {/* HEADER */}
-            <div
-                onClick={() => setCollapsed(!collapsed)}
-                className="h-16 flex items-center justify-between px-4 cursor-pointer"
-            >
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow">
-                        <span className="font-bold">A</span>
-                    </div>
+            {/* ================= HEADER ================= */}
+            <div className="h-14 flex items-center justify-between px-4 border-b">
+                <Link
+                    to="/"
+                    className={`flex items-center gap-2 ${collapsed ? "justify-center w-full" : ""
+                        }`}
+                >
+                    <img
+                        src={logo}
+                        alt="ကျော်ကြား car showroom"
+                        className={`${collapsed ? "h-7" : "h-9"} object-contain`}
+                    />
                     {!collapsed && (
-                        <span className="font-semibold">Admin Panel</span>
+                        <span className="text-sm font-semibold text-slate-700">
+                            Admin
+                        </span>
                     )}
-                </div>
-                {!collapsed && <ChevronLeft size={18} />}
-            </div>
-
-            {/* MENU */}
-            <nav className="flex flex-col gap-2 mt-6 px-3 flex-1">
-                <SideItem
-                    to="/admin"
-                    icon={<LayoutDashboard size={20} />}
-                    label="Dashboard"
-                    collapsed={collapsed}
-                    end
-                />
-
-                <SideItem
-                    to="/admin/cars"
-                    icon={<Car size={20} />}
-                    label="Cars"
-                    collapsed={collapsed}
-                />
-
-                <SideItem
-                    to="/admin/brands"
-                    icon={<Tag size={20} />}
-                    label="Brands"
-                    collapsed={collapsed}
-                />
-
-                <SideItem
-                    to="/admin/models"
-                    icon={<Layers size={20} />}
-                    label="Models"
-                    collapsed={collapsed}
-                />
-
-                <SideItem
-                    to="/admin/car-images"
-                    icon={<Image size={20} />}
-                    label="Car Images"
-                    collapsed={collapsed}
-                />
-
-                <SideItem
-                    to="/admin/health"
-                    icon={<Activity size={20} />}
-                    label="System Health"
-                    collapsed={collapsed}
-                />
-            </nav>
-
-            {/* BOTTOM */}
-            <div className="px-3 pb-4 flex flex-col gap-2">
-                <SideItem
-                    to="/admin/settings"
-                    icon={<Settings size={20} />}
-                    label="Settings"
-                    collapsed={collapsed}
-                />
+                </Link>
 
                 <button
-                    className={`flex items-center gap-3 p-3 rounded-xl
-                    text-gray-600 hover:bg-white transition-all
-                    ${collapsed && "justify-center"}`}
-                    onClick={handleLogout}
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="p-1.5 rounded-md hover:bg-gray-100"
                 >
-                    <LogOut size={20} />
+                    {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+                </button>
+            </div>
+
+            {/* ================= MENU ================= */}
+            <nav className="flex-1 px-3 py-4 space-y-1">
+                <MenuItem to="/admin" icon={LayoutDashboard} label="Dashboard" collapsed={collapsed} end />
+                <MenuItem to="/admin/cars" icon={Car} label="Cars" collapsed={collapsed} />
+                <MenuItem to="/admin/brands" icon={Tag} label="Brands" collapsed={collapsed} />
+                <MenuItem to="/admin/models" icon={Layers} label="Models" collapsed={collapsed} />
+                <MenuItem to="/admin/car-images" icon={Image} label="Car Images" collapsed={collapsed} />
+                <MenuItem to="/admin/health" icon={Activity} label="System Health" collapsed={collapsed} />
+            </nav>
+
+            {/* ================= FOOTER ================= */}
+            <div className="px-3 py-3 border-t space-y-1">
+                <MenuItem to="/admin/settings" icon={Settings} label="Settings" collapsed={collapsed} />
+
+                <button
+                    onClick={() => mutate()}
+                    className={`
+                        w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
+                        text-sm text-slate-600 hover:bg-red-50 hover:text-red-600
+                        transition
+                        ${collapsed && "justify-center"}
+                    `}
+                >
+                    <LogOut size={18} />
                     {!collapsed && <span>Logout</span>}
                 </button>
             </div>
@@ -124,16 +91,16 @@ const AdminSidebar = () => {
     );
 };
 
-/* ================= SIDE ITEM ================= */
-const SideItem = ({
+/* ================= MENU ITEM ================= */
+const MenuItem = ({
     to,
-    icon,
+    icon: Icon,
     label,
     collapsed,
     end = false,
 }: {
     to: string;
-    icon: React.ReactNode;
+    icon: any;
     label: string;
     collapsed: boolean;
     end?: boolean;
@@ -142,17 +109,22 @@ const SideItem = ({
         to={to}
         end={end}
         className={({ isActive }) =>
-            `flex items-center gap-3 p-3 rounded-xl
-            transition-all duration-200
-            ${isActive
-                ? "bg-white shadow text-black"
-                : "text-gray-600 hover:bg-white"
+            `
+                group flex items-center gap-3 px-3 py-2.5 rounded-lg
+                text-sm font-medium transition-all
+                ${isActive
+                ? "bg-indigo-50 text-indigo-700"
+                : "text-slate-600 hover:bg-gray-100"
             }
-            ${collapsed && "justify-center"}`
+                ${collapsed && "justify-center"}
+            `
         }
     >
-        {icon}
-        {!collapsed && <span className="text-sm font-medium">{label}</span>}
+        <Icon
+            size={18}
+            className="group-hover:scale-105 transition-transform"
+        />
+        {!collapsed && <span>{label}</span>}
     </NavLink>
 );
 
