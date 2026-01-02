@@ -3,6 +3,7 @@ import {
   Award, Shield, Users, Clock, Phone, 
   MessageCircle, MapPin, ArrowUpRight, HelpCircle 
 } from 'lucide-react';
+import AboutImage from '../assets/about.jpg';
 
 const AboutContact: React.FC = () => {
   const viberNumber = "959123456789"; // General Inquiry Viber
@@ -38,7 +39,7 @@ const AboutContact: React.FC = () => {
             <div className="relative">
               <div className="absolute -top-10 -left-10 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -z-10 opacity-60" />
               <img
-                src="https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg?auto=compress&cs=tinysrgb&w=800"
+                src={AboutImage}
                 alt="KyawKyar Showroom"
                 className="rounded-[3rem] shadow-2xl border-8 border-white object-cover h-[500px] w-full"
               />
