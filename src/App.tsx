@@ -12,6 +12,7 @@ import About from "./pages/About";
 import Reviews from "./pages/Reviews";
 import Contact from "./pages/Contact";
 import CarDetails from "./pages/CarDetails";
+import Payments from "./pages/Payments";
 
 // Admin pages
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -63,6 +64,7 @@ function App() {
                   <Route path="/cars/:id" element={<CarDetails />} />
                   <Route path="/sellCars" element={<SellCars />} />
                   <Route path="/about" element={<About />} />
+                  <Route path="/payments" element={<Payments />} />
                   <Route path="/reviews" element={<Reviews />} />
                   <Route path="/contact" element={<Contact />} />
                 </Routes>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Gauge, Fuel, Settings, MapPin, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, Gauge, Fuel, Settings, Palette, Box, ArrowLeft, ChevronLeft, ChevronRight, Badge, MapPin } from 'lucide-react';
+import CarEngine from "../assets/car-engine.webp"
 
 import type { CarImage } from '../services/api';
 
@@ -14,7 +15,7 @@ function getImageUrl(img: CarImage, kind: 'main' | 'thumb'): string {
 
 
 import { formatPriceLakhs } from '../utils/price';
-import { Status, useGetApiCarsId } from '../services/api';
+import { useGetApiCarsId } from '../services/api';
 
 const CarDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -69,6 +70,7 @@ const CarDetails: React.FC = () => {
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev === carData.images.length - 1 ? 0 : prev + 1));
   };
+
 
   return (
     <div className="bg-gray-50">
@@ -131,9 +133,8 @@ const CarDetails: React.FC = () => {
                     key={index}
                     type="button"
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-colors duration-200 ${
-                      index === currentImageIndex ? 'border-blue-600' : 'border-transparent hover:border-gray-300'
-                    }`}
+                    className={`relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-colors duration-200 ${index === currentImageIndex ? 'border-blue-600' : 'border-transparent hover:border-gray-300'
+                      }`}
                   >
                     <img
                       src={getImageUrl(image, 'thumb')}
@@ -151,103 +152,138 @@ const CarDetails: React.FC = () => {
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
               {carData?.model?.brand?.name} {carData?.model?.name}
             </h1>
-            <div className="flex items-center text-gray-600 mb-4">
-              <MapPin className="h-4 w-4 mr-1" />
-              <span className="text-sm">{carData.showroom?.city}</span>
-            </div>
 
-            <div className="flex items-center justify-between mb-6">
+
+            <div className="flex items-center justify-between my-6">
               <div>
-                <div className="text-sm text-gray-500 mb-1">{t('details.price_label', 'Price')}</div>
                 <div className="text-3xl font-extrabold text-blue-700">
                   {formatPriceLakhs(carData.price)}
                 </div>
               </div>
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                  carData.status === Status.Available 
-                    ? 'bg-green-100 text-green-800 border border-green-200'
-                    : carData.status === Status.Sold
-                    ? 'bg-red-100 text-red-800 border border-red-200'
-                    : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-                }`}
-              >
-                {t(`status.${carData.status}`)}
-              </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-8 text-sm text-gray-700">
+            <div className="grid grid-cols-2 gap-4 mb-8 text-gray-700">
               <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                <Calendar className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
-                  <div className="text-xs text-gray-500">{t('details.year', 'Year')}</div>
-                  <div className="font-medium">{carData.modelYear}</div>
+                  <div className="text-sm text-gray-600">{t('details.year', 'Year')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData.modelYear}</div>
                 </div>
               </div>
               <div className="flex items-center">
-                <Gauge className="h-4 w-4 mr-2 text-gray-400" />
+                <Gauge className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
-                  <div className="text-xs text-gray-500">{t('details.mileage', 'Mileage')}</div>
-                  <div className="font-medium">{carData.mileage.toLocaleString()} km</div>
+                  <div className="text-sm text-gray-600">{t('details.mileage', 'Mileage')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData.mileage.toLocaleString()} km</div>
                 </div>
               </div>
               <div className="flex items-center">
-                <Fuel className="h-4 w-4 mr-2 text-gray-400" />
+                <Fuel className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
-                  <div className="text-xs text-gray-500">{t('details.fuel_type', 'Fuel Type')}</div>
-                  <div className="font-medium">{carData.fuel}</div>
+                  <div className="text-sm text-gray-600">{t('details.fuel_type', 'Fuel Type')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData.fuel}</div>
                 </div>
               </div>
               <div className="flex items-center">
-                <Settings className="h-4 w-4 mr-2 text-gray-400" />
+                <Settings className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
-                  <div className="text-xs text-gray-500">{t('details.transmission', 'Transmission')}</div>
-                  <div className="font-medium">{carData.transmission}</div>
+                  <div className="text-sm text-gray-600">{t('details.transmission', 'Transmission')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData?.color?.name}</div>
                 </div>
               </div>
-            </div>
 
+              <div className="flex items-center">
+                <Palette className="h-5 w-5 mr-3 text-gray-400" />
+                <div>
+                  <div className="text-sm text-gray-600">{t('details.color', 'Color')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData?.color?.name}</div>
+                </div>
+              </div>
+
+              {
+                carData.buildType && (
+                  <div className="flex items-center">
+                    <Box className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.build_type', 'Build Type')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData.buildType?.name}</div>
+                    </div>
+                  </div>
+
+                )
+              }
+              <div className="flex items-center">
+                <Box className="h-5 w-5 mr-3 text-gray-400" />
+                <div>
+                  <div className="text-sm text-gray-600">{t('details.steerin_position', 'Sterring Position')}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData.steering}</div>
+                </div>
+              </div>
+              {
+                carData.enginePower && (
+                  <div className="flex items-center">
+                    <img src={CarEngine} alt="Engine" className="w-6 h-6 mr-3" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.engine_power', 'Engine Power')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData.enginePower} HP</div>
+                    </div>
+                  </div>
+                )
+              }
+              {
+                carData.grade && (
+                  <div className="flex items-center">
+                    <Badge className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.grade', 'Grade')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData?.grade?.name}</div>
+                    </div>
+                  </div>
+                )
+              }
+              {
+                carData.showroom?.city && (
+                  <div className="flex items-center">
+                    <MapPin className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.showroom_location', 'Showroom Location')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData?.showroom?.city}</div>
+                    </div>
+                  </div>
+                )
+              }
+              {
+                carData.license?.region && (
+                  <div className="flex items-center">
+                    <MapPin className="h-5 w-5 mr-3 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-600">{t('details.licence', 'Linence Region')}</div>
+                      <div className="text-lg font-semibold text-gray-900">{carData?.license?.region.name}</div>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
             <div className="space-y-3 mb-10">
               <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
                 {t('details.call_now', 'Call Now: +95-9-123-456-789')}
               </button>
-              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
-                {t('details.request_info', 'Request More Info')}
-              </button>
-              <button className="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 py-3 px-6 rounded-lg font-semibold transition-colors">
-                {t('details.schedule_test_drive', 'Schedule Test Drive')}
+              <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
+                {'Viber'}
               </button>
             </div>
           </div>
         </div>
 
         {/* Detailed sections */}
-        <div className="mt-12 grid lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
+        <div className="mt-12 grid lg:grid-cols-1 gap-10">
+          <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               {t('details.overview', 'Car Overview')}
             </h2>
             <p className="text-gray-700 leading-relaxed">
               {'description not available'}
             </p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              {t('details.key_details', 'Key Details')}
-            </h2>
-            <dl className="space-y-2 text-sm">
-              {carData.color && (
-                <div className="flex justify-between">
-                  <dt className="text-gray-500">{t('details.color', 'Color')}</dt>
-                  <dd className="text-gray-900 font-medium">{carData?.color.name}</dd>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <dt className="text-gray-500">{t('details.location', 'Location')}</dt>
-                <dd className="text-gray-900 font-medium">{carData.showroom?.city}</dd>
-              </div>
-            </dl>
           </div>
         </div>
 
@@ -272,7 +308,7 @@ const CarDetails: React.FC = () => {
         )}
 */}
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -50,8 +50,8 @@ const Header: React.FC = () => {
     { path: '/', label: t('nav.home') },
     { path: '/buyCars', label: t('nav.buyCars') },
     { path: '/sellCars', label: t('nav.sellCars') },
+    { path: '/payments', label: t('nav.payments') },
     { path: '/about', label: t('nav.about') },
-    { path: '/contact', label: t('nav.contact') },
   ];
 
   const accountRef = useRef<HTMLDivElement | null>(null);
@@ -67,92 +67,97 @@ const Header: React.FC = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  const isHome = location.pathname === '/';
+
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled || isMenuOpen
-          ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200'
-          : 'bg-white/50 backdrop-blur-sm border-b border-transparent'
-      }`}
+      className={`w-full ${isHome ? 'absolute inset-x-0 top-0 z-40' : 'relative z-10'} transition`}
+      aria-hidden={false}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <img src={logo} alt="ကျော်ကြား car showroom" className="h-16 md:h-20 w-auto object-contain" />
-          </Link>
+      <div
+        className={`${isHome ? 'bg-transparent' : 'bg-white'} ${
+          isHome ? '' : 'shadow-sm'
+        } backdrop-blur-sm/0 transition-colors`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center group">
+              <img src={logo} alt="ကျော်ကြား car showroom" className="h-16 md:h-20 w-auto object-contain" />
+            </Link>
 
-          {/* Desktop Navigation - Centered Pill */}
-          <nav className="hidden md:flex items-center gap-1 bg-gray-100/50 p-1.5 rounded-full border border-gray-200/50 backdrop-blur-sm">
-            {navItems.map((item) => (
-              <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+            {/* Desktop Navigation - Centered Pill */}
+            <nav className="hidden md:flex items-center gap-1 bg-gray-100/50 p-1.5 rounded-full border border-gray-200/50 backdrop-blur-sm">
+              {navItems.map((item) => (
+                <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-          {/* Right Side Actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={handleLanguageChange}
-              className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-200 group"
-              aria-label="Toggle Language"
-            >
-              <Globe className="h-4 w-4 text-gray-500 group-hover:text-indigo-600" />
-              <span className="text-sm font-medium text-gray-700 group-hover:text-indigo-700">
-                {t(`nav.language`)}
-              </span>
-            </button>
-
-            <a
-              href="tel:+959123456789"
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-900 text-white hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg hover:-translate-y-0.5 duration-200"
-              aria-label={t('buttons.call_us')}
-            >
-              <Phone className="h-4 w-4" />
-            </a>
-
-            {/* Account / Avatar Button */}
-            <div ref={accountRef} className="relative">
+            {/* Right Side Actions */}
+            <div className="hidden md:flex items-center gap-3">
               <button
-                onClick={() => setIsAccountOpen((s) => !s)}
-                aria-expanded={isAccountOpen}
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                onClick={handleLanguageChange}
+                className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-200 group"
+                aria-label="Toggle Language"
               >
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
-                  <User className="h-4 w-4" />
+                <Globe className="h-4 w-4 text-gray-500 group-hover:text-indigo-600" />
+                <span className="text-sm font-medium text-gray-700 group-hover:text-indigo-700">
+                  {t(`nav.language`)}
                 </span>
-                <ChevronDown className="h-4 w-4 text-slate-500" />
               </button>
 
-              {isAccountOpen && (
-                <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
-                  <Link
-                    to="/admin/login"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
-                    onClick={() => setIsAccountOpen(false)}
-                  >
-                    <User className="h-4 w-4 text-slate-500" />
-                    <span>{t('buttons.login', 'Login')}</span>
-                  </Link>
-                  {/* Register removed: admin-only login; no public signup */}
-                </div>
-              )}
-            </div>
-          </div>
+              <a
+                href="tel:+959123456789"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-900 text-white hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg hover:-translate-y-0.5 duration-200"
+                aria-label={t('buttons.call_us')}
+              >
+                <Phone className="h-4 w-4" />
+              </a>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle Menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6 text-gray-600" />
-            ) : (
-              <Menu className="h-6 w-6 text-gray-600" />
-            )}
-          </button>
+              {/* Account / Avatar Button */}
+              <div ref={accountRef} className="relative">
+                <button
+                  onClick={() => setIsAccountOpen((s) => !s)}
+                  aria-expanded={isAccountOpen}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
+                    <User className="h-4 w-4" />
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-slate-500" />
+                </button>
+
+                {isAccountOpen && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
+                    <Link
+                      to="/admin/login"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
+                      onClick={() => setIsAccountOpen(false)}
+                    >
+                      <User className="h-4 w-4 text-slate-500" />
+                      <span>{t('buttons.login', 'Login')}</span>
+                    </Link>
+                    {/* Register removed: admin-only login; no public signup */}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle Menu"
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6 text-gray-600" />
+              ) : (
+                <Menu className="h-6 w-6 text-gray-600" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

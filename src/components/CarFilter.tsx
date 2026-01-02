@@ -13,9 +13,14 @@ interface CarFilterProps {
   serverBrands?: string[];
   // serverBrandModels may be an array of strings or array of objects {id, name}
   serverBrandModels?: Record<string, Array<string | { id?: string; name?: string }>>;
+  // serverBodyTypes (build types) may be array of strings or objects
+  serverBodyTypes?: Array<string | { id?: string; name?: string }>;
+  // serverShowrooms may be array of strings or objects {id, city, name}
+  serverShowrooms?: Array<string | { id?: string; city?: string; name?: string }>;
+  serverSteeringPositions?: Array<string | { id?: string; name?: string }>;
 }
 
-const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels }) => {
+const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions }) => {
 
   const updateFilters = (key: keyof FilterOptions, value: FilterOptions[keyof FilterOptions]) => {
     onFiltersChange({ ...filters, [key]: value } as FilterOptions);
@@ -33,6 +38,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
       fuelTypes: [],
       transmissions: [],
       bodyTypes: [],
+      showrooms: [],
+      steeringPositions: [],
       status: []
     });
   };
@@ -56,6 +63,33 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
     if (!filters.brand) return [] as { id: string; name: string }[];
     return normalizeModelsForBrand(filters.brand);
   };
+
+  // normalize strings or objects to {id, name}
+  const normalizeStringsOrObjects = (arr?: Array<string | { id?: string; name?: string }>) => {
+    if (!arr) return [] as { id: string; name: string }[];
+    if (arr.length === 0) return [] as { id: string; name: string }[];
+    if (typeof arr[0] === 'string') {
+      return (arr as string[]).map(s => ({ id: s, name: s }));
+    }
+    return (arr as { id?: string; name?: string }[]).map(o => ({ id: o.id ?? o.name ?? String(o), name: o.name ?? o.id ?? String(o) }));
+  };
+
+
+  const bodyTypesToShow = (serverBodyTypes && serverBodyTypes.length > 0)
+    ? normalizeStringsOrObjects(serverBodyTypes).map(b => b.name)
+    : [];
+
+  const normalizeShowrooms = (arr?: Array<string | { id?: string; city?: string; name?: string }>) => {
+    if (!arr) return [] as { id: string; city: string; name: string }[];
+    if (arr.length === 0) return [] as { id: string; city: string; name: string }[];
+    if (typeof arr[0] === 'string') {
+      return (arr as string[]).map(s => ({ id: s, city: s, name: s }));
+    }
+    return (arr as { id?: string; city?: string; name?: string }[]).map(o => ({ id: o.id ?? o.city ?? o.name ?? String(o), city: o.city ?? o.name ?? '', name: o.name ?? o.city ?? '' }));
+  };
+
+  const showroomsToShow = normalizeShowrooms(serverShowrooms);
+  const steeringToShow = normalizeStringsOrObjects(serverSteeringPositions).map(s => s.name);
 
   return (
     <>
@@ -166,7 +200,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 <label className="block text-sm font-medium text-slate-800 mb-2">Brand</label>
                 <select
                   value={filters.brand}
-                    onChange={(e) => {
+                  onChange={(e) => {
                     const newBrand = e.target.value;
                     const availableModels = normalizeModelsForBrand(newBrand);
                     const retainedModel = availableModels.some(m => m.id === filters.model || m.name === filters.model) ? filters.model : '';
@@ -286,24 +320,64 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 </div>
               </div>
 
-            </div>
-          </div>
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block text-sm font-medium text-slate-800 mb-2">Build Type</label>
+                <div className="flex flex-wrap gap-2">
+                    {(bodyTypesToShow.length > 0 ? bodyTypesToShow : []).map((bt) => (
+                    <button
+                      key={bt}
+                      onClick={() => {
+                        const selected = filters.bodyTypes.includes(bt);
+                        if (selected) updateFilters('bodyTypes', []);
+                        else updateFilters('bodyTypes', [bt]);
+                      }}
+                      className={`px-3 py-1 rounded-full text-sm border ${filters.bodyTypes.includes(bt) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                    >
+                      {bt}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          {/* Footer actions (desktop sticky) */}
-          <div className="mt-4 lg:mt-6">
-            <div className="flex items-center justify-between">
-              <button
-                onClick={clearFilters}
-                className="text-sm text-slate-600 hover:text-slate-800"
-              >
-                Reset
-              </button>
-              <button
-                onClick={() => onToggle()}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:shadow-md"
-              >
-                Apply
-              </button>
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block text-sm font-medium text-slate-800 mb-2">Steering Position</label>
+                <div className="flex flex-wrap gap-2">
+                  {(steeringToShow.length > 0 ? steeringToShow : ['Left','Right']).map((sp) => (
+                    <button
+                      key={sp}
+                      onClick={() => {
+                        const selected = (filters.steeringPositions ?? []).includes(sp);
+                        if (selected) updateFilters('steeringPositions', []);
+                        else updateFilters('steeringPositions', [sp]);
+                      }}
+                      className={`px-3 py-1 rounded-full text-sm border ${(filters.steeringPositions ?? []).includes(sp) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}>
+                      {sp}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block text-sm font-medium text-slate-800 mb-2">Showroom</label>
+                <div className="flex flex-wrap gap-2">
+{(showroomsToShow.length > 0 ? showroomsToShow : []).map((s) => {
+                    const id = s.id;
+                    const selected = (filters.showrooms ?? []).includes(id);
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => {
+                          if (selected) updateFilters('showrooms', []);
+                          else updateFilters('showrooms', [id]);
+                        }}
+                        className={`px-3 py-1 rounded-full text-sm border ${selected ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}>
+                        {s.name || s.city}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

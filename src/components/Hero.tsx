@@ -1,101 +1,173 @@
-import React from 'react';
-import { Search, Award, Car } from 'lucide-react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Search,  ShieldCheck, Star, Users, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useGetApiCarsFilters } from '../services/api';
+import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
+import CarImage from '../assets/cars.jpg';
 
 const Hero: React.FC = () => {
   const { t } = useTranslation('home');
-  const { t: tCommon } = useTranslation('common');
   const navigate = useNavigate();
+  const [showScrollHint, setShowScrollHint] = useState<boolean>(false);
+  const [brand, setBrand] = useState<string>('');
+  const [model, setModel] = useState<string>('');
 
-  const goToInventory = () => navigate('/buyCars');
+  useEffect(() => {
+    const featured = document.getElementById('featured');
+    if (featured) setShowScrollHint(true);
+  }, []);
+
+  const { data: filterData } = useGetApiCarsFilters();
+  const serverBrands = filterData?.brandsWithModels ? Object.keys(filterData.brandsWithModels) : undefined;
+  const serverBrandModels = filterData?.brandsWithModels ?? undefined;
+  const brandsToShow = serverBrands && serverBrands.length > 0 ? serverBrands : localBrands;
+
+  const normalizeModelsForBrand = (brandKey?: string) => {
+    if (!brandKey) return [] as { id: string; name: string }[];
+    const raw = (serverBrandModels && serverBrandModels[brandKey]) ?? localBrandModels[brandKey] ?? [];
+    if (raw.length === 0) return [] as { id: string; name: string }[];
+    if (typeof raw[0] === 'string') {
+      return (raw as string[]).map(name => ({ id: name, name }));
+    }
+    return (raw as { id?: string; name?: string }[]).map(m => ({ id: m.id ?? m.name ?? String(m), name: m.name ?? m.id ?? String(m) }));
+  };
+
+  const availableModels = useMemo(() => normalizeModelsForBrand(brand), [brand, serverBrandModels]);
+
+  const navigateWithParams = (b?: string, m?: string) => {
+    const params: string[] = [];
+    if (b) params.push(`brand=${encodeURIComponent(b)}`);
+    if (m) params.push(`model=${encodeURIComponent(m)}`);
+    const q = params.length ? `?${params.join('&')}` : '';
+    navigate(`/buyCars${q}`);
+  };
+
+  useEffect(() => {
+    if (model) {
+      const found = availableModels.some(m => m.id === model || m.name === model);
+      if (!found) setModel('');
+    }
+  }, [brand, availableModels]);
 
   return (
-    <section id="home" className="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="mb-6">
-              <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                {t('hero.badge')}
-              </span>
-            </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight text-slate-900">
-              {t('hero.title_prefix')} <span className="text-indigo-600">{t('hero.title_suffix')}</span>
-            </h2>
-            <p className="text-lg sm:text-xl mb-6 text-slate-600 max-w-2xl">
-              {t('hero.description')}
-            </p>
+    <section className="relative min-h-screen flex items-center bg-white overflow-hidden pt-20 lg:pt-0">
+      {/* Background elements remain the same */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[60%] rounded-full bg-indigo-50/50 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[50%] rounded-full bg-blue-50/40 blur-[100px]" />
+      </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-<button onClick={goToInventory} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold text-base transition-colors shadow">
-                 {tCommon('buttons.browse_cars')}
-               </button>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-6 py-3 rounded-lg font-semibold text-base transition-colors">
-                {tCommon('buttons.get_consultation')}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 py-12 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+
+          {/* LEFT SIDE: Content - Updated for "Kyaw Kyar" and space filling */}
+          <div className="lg:col-span-5 space-y-8 text-center lg:text-left order-2 lg:order-1">
+            <div className="space-y-4">
+              <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-full shadow-sm">
+                <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                <span className="text-indigo-900 text-[11px] font-bold tracking-widest uppercase">
+                  Kyaw Kyar Premium Showroom
+                </span>
+              </div>
+
+              <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-[1.05]">
+                Kyaw Kyar: <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
+                  Every Grade. Every Budget.
+                </span>
+              </h1>
+
+              <p className="text-base sm:text-lg text-slate-500 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                Experience Myanmar's most trusted automotive selection. From daily <span className="text-slate-900 font-semibold uppercase">Suzuki</span> to the ultimate luxury of <span className="text-slate-900 font-semibold uppercase">Kyaw Kyar Lexus & Range Rover</span>.
+              </p>
+            </div>
+
+            {/* INTEGRATED SEARCH */}
+            <div className="flex flex-col gap-3 p-3 bg-slate-50/80 backdrop-blur-sm rounded-[2.5rem] lg:bg-transparent lg:p-0 lg:flex-row max-w-2xl">
+              <select
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                className="w-full bg-white border-0 ring-1 ring-slate-200 rounded-[1.5rem] px-6 py-4 shadow-sm focus:ring-2 focus:ring-indigo-500 transition-all text-slate-700"
+              >
+                <option value="">All Brands</option>
+                {brandsToShow.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+
+              <select
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                disabled={!brand}
+                className={`w-full border-0 ring-1 ring-slate-200 rounded-[1.5rem] px-6 py-4 shadow-sm focus:ring-2 focus:ring-indigo-500 transition-all ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
+              >
+                <option value="">All Models</option>
+                {availableModels.map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </select>
+
+              <button
+                onClick={() => navigateWithParams(brand || undefined, model || undefined)}
+                className="w-full lg:w-auto bg-slate-900 text-white px-8 py-4 rounded-[1.5rem] font-bold hover:bg-indigo-600 active:scale-95 transition-all shadow-xl shadow-slate-200 flex items-center justify-center gap-2 group"
+              >
+                <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>Search</span>
               </button>
             </div>
 
-
+            {/* NEW: Trust & Info Row (Fills the empty bottom-left space) */}
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-100 max-w-md mx-auto lg:mx-0">
+                <div className="flex flex-col items-center lg:items-start">
+                    <div className="flex items-center text-amber-500 mb-1">
+                        <Star className="w-3 h-3 fill-current" />
+                        <span className="text-xs font-bold text-slate-900 ml-1">4.9/5</span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">Customer Rating</span>
+                </div>
+                <div className="flex flex-col items-center lg:items-start">
+                    <Users className="w-4 h-4 text-indigo-600 mb-1" />
+                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">15k+ Happy Owners</span>
+                </div>
+                <div className="flex flex-col items-center lg:items-start">
+                    <MapPin className="w-4 h-4 text-indigo-600 mb-1" />
+                    <span className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">3 Branches</span>
+                </div>
+            </div>
           </div>
 
-          <div className="relative">
-            <div className="rounded-3xl overflow-hidden shadow-2xl transform hover:scale-102 transition-transform duration-300">
-              <img
-                src="https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Featured Car"
-                className="w-full h-[380px] object-cover"
-              />
-            </div>
+          {/* RIGHT SIDE: Visual Content (Unchanged) */}
+          <div className="lg:col-span-7 relative order-1 lg:order-2">
+            <div className="relative h-[200px] sm:h-[300px] lg:h-[450px] w-full">
+              <div className="absolute inset-0 rounded-[4rem] lg:rounded-[6rem] overflow-hidden shadow-2xl border-[6px] lg:border-[12px] border-white group">
+                <img
+                  src={CarImage}
+                  className="w-full h-full object-contain transition-transform duration-1000 group-hover:scale-105"
+                  alt="Kyaw Kyar Luxury SUV"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/40 via-transparent to-transparent" />
+              </div>
 
-            <div className="absolute -bottom-8 left-6 bg-white text-gray-900 p-5 rounded-xl shadow-xl w-56">
-              <div className="flex items-center space-x-3">
-                <Award className="h-6 w-6 text-orange-500" />
-                <div>
-                  <div className="font-bold text-lg">{t('hero.experience_badge.years')}</div>
-                  <div className="text-sm text-gray-600">{t('hero.experience_badge.label')}</div>
+              <div className="absolute -bottom-4 right-2 lg:bottom-12 lg:-left-12 z-20">
+                <div className="bg-white/80 backdrop-blur-xl border border-white p-5 lg:p-7 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] animate-float">
+                  <div className="text-center">
+                    <p className="text-[10px] lg:text-xs text-indigo-500 font-bold uppercase tracking-[0.2em] mb-1">
+                      Monthly From
+                    </p>
+                    <div className="text-xl lg:text-3xl font-black text-slate-900 flex items-baseline justify-center gap-1">
+                      300K <span className="text-slate-400 font-medium text-xs lg:text-sm">to</span> 2M
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-20 pt-12 border-t border-slate-200">
-          <div className="flex items-start space-x-4">
-            <div className="bg-white/10 p-3 rounded-lg">
-              <Car className="h-6 w-6 text-indigo-400" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold">5000+</div>
-              <div className="text-slate-500 text-sm">{t('stats.cars_sold')}</div>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-4">
-            <div className="bg-white/10 p-3 rounded-lg">
-              <Award className="h-6 w-6 text-indigo-400" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold">15+</div>
-              <div className="text-slate-500 text-sm">{t('stats.years_experience')}</div>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-4">
-            <div className="bg-white/10 p-3 rounded-lg">
-              <Search className="h-6 w-6 text-indigo-400" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold">200+</div>
-              <div className="text-slate-500 text-sm">{t('stats.cars_available')}</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
   );
-
 };
 
 export default Hero;

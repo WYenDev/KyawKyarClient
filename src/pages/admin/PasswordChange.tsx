@@ -9,7 +9,7 @@ import { usePostApiAdminChangePassword } from '../../services/api';
 const PasswordChange: React.FC = () => {
   const { t } = useTranslation('admin');
   const navigate = useNavigate();
-  const { accessToken, markPasswordChanged } = useAuth();
+  const {  markPasswordChanged } = useAuth();
 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
