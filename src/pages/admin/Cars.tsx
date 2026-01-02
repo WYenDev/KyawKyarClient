@@ -13,6 +13,8 @@ import {
     usePostApiCars,
     usePatchApiCarsId,
     useDeleteApiCarsId,
+    useGetApiModels,
+    useGetApiCarsFilters,
 } from "../../services/api";
 
 /* ================= OPTIONS ================= */
@@ -56,13 +58,42 @@ const Cars = () => {
         showroomId: null,
     });
 
-    /* ================= QUERY ================= */
+    /* ================= QUERIES ================= */
     const { data, isLoading, isError, refetch } = useGetApiCars({
         page: 1,
         limit: 20,
     });
 
+    const { data: modelData } = useGetApiModels({
+        page: 1,
+        limit: 100,
+    });
+
+    const { data: filterData } = useGetApiCarsFilters();
+
     const cars = data?.items ?? [];
+    const models = modelData?.models ?? [];
+    const colors = filterData?.colors ?? [];
+    const showrooms = filterData?.showrooms ?? [];
+
+    /* ================= DROPDOWN OPTIONS ================= */
+    const modelOptions: Option<string>[] = models.map((m) => ({
+        label: `${m.brand?.name ?? ""} ${m.name}`,
+        value: m.id,
+    }));
+
+    const colorOptions: Option<string>[] = colors.map((c) => ({
+        label: c.name,
+        value: c.id,
+    }));
+
+    const showroomOptions: Option<string>[] = [
+        { label: "No Showroom", value: "" },
+        ...showrooms.map((s) => ({
+            label: `${s.city} - ${s.addressEn}`,
+            value: s.id,
+        })),
+    ];
 
     /* ================= MUTATIONS ================= */
     const { mutate: createCar, isPending: creating } = usePostApiCars({
@@ -136,12 +167,21 @@ const Cars = () => {
 
     const handleSubmit = () => {
         if (!form.modelId || !form.colorId) {
-            setError("Model ID and Color ID are required");
+            setError("Model and Color are required");
             return;
         }
 
         if (editingId) {
-            const payload: CarUpdate = { ...form };
+            const payload: CarUpdate = {
+                modelYear: form.modelYear,
+                price: form.price,
+                mileage: form.mileage,
+                fuel: form.fuel,
+                transmission: form.transmission,
+                status: form.status,
+                colorId: form.colorId,
+                showroomId: form.showroomId,
+            };
             updateCar({ id: editingId, data: payload });
         } else {
             createCar({ data: form });
@@ -176,7 +216,7 @@ const Cars = () => {
                 <table className="w-full text-sm">
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
-                            <th className="px-6 py-4 text-left">Model ID</th>
+                            <th className="px-6 py-4 text-left">Model</th>
                             <th className="px-6 py-4 text-center">Year</th>
                             <th className="px-6 py-4 text-center">Price</th>
                             <th className="px-6 py-4 text-center">Mileage</th>
@@ -254,12 +294,59 @@ const Cars = () => {
                         )}
 
                         <div className="grid grid-cols-2 gap-4">
-                            <Input label="Model ID" value={form.modelId} onChange={(v) => setForm({ ...form, modelId: v })} />
-                            <Input label="Color ID" value={form.colorId} onChange={(v) => setForm({ ...form, colorId: v })} />
-                            <Input label="Showroom ID" value={form.showroomId ?? ""} onChange={(v) => setForm({ ...form, showroomId: v || null })} />
-                            <Input label="Model Year" type="number" value={form.modelYear} onChange={(v) => setForm({ ...form, modelYear: Number(v) })} />
-                            <Input label="Price" type="number" value={form.price} onChange={(v) => setForm({ ...form, price: Number(v) })} />
-                            <Input label="Mileage" type="number" value={form.mileage} onChange={(v) => setForm({ ...form, mileage: Number(v) })} />
+                            <Select
+                                value={form.modelId}
+                                options={modelOptions}
+                                placeholder="Select Model"
+                                onChange={(v) =>
+                                    setForm({ ...form, modelId: v ?? "" })
+                                }
+                            />
+
+                            <Select
+                                value={form.colorId}
+                                options={colorOptions}
+                                placeholder="Select Color"
+                                onChange={(v) =>
+                                    setForm({ ...form, colorId: v ?? "" })
+                                }
+                            />
+
+                            <Select
+                                value={form.showroomId ?? ""}
+                                options={showroomOptions}
+                                placeholder="Select Showroom"
+                                onChange={(v) =>
+                                    setForm({ ...form, showroomId: v || null })
+                                }
+                            />
+
+                            <Input
+                                label="Model Year"
+                                type="number"
+                                value={form.modelYear}
+                                onChange={(v) =>
+                                    setForm({ ...form, modelYear: Number(v) })
+                                }
+                            />
+
+                            <Input
+                                label="Price"
+                                type="number"
+                                value={form.price}
+                                onChange={(v) =>
+                                    setForm({ ...form, price: Number(v) })
+                                }
+                            />
+
+                            <Input
+                                label="Mileage"
+                                type="number"
+                                value={form.mileage}
+                                onChange={(v) =>
+                                    setForm({ ...form, mileage: Number(v) })
+                                }
+                            />
                         </div>
 
                         <div className="grid grid-cols-3 gap-4 mt-4">
@@ -271,17 +358,24 @@ const Cars = () => {
                             <Select<Transmission>
                                 value={form.transmission}
                                 options={transmissionOptions}
-                                onChange={(v) => setForm({ ...form, transmission: v })}
+                                onChange={(v) =>
+                                    setForm({ ...form, transmission: v })
+                                }
                             />
                             <Select<Status>
                                 value={form.status}
                                 options={statusOptions}
-                                onChange={(v) => setForm({ ...form, status: v })}
+                                onChange={(v) =>
+                                    setForm({ ...form, status: v })
+                                }
                             />
                         </div>
 
                         <div className="flex justify-end gap-4 mt-6">
-                            <button onClick={closeModal} className="border px-4 py-2 rounded-xl">
+                            <button
+                                onClick={closeModal}
+                                className="border px-4 py-2 rounded-xl"
+                            >
                                 Cancel
                             </button>
                             <button
@@ -337,7 +431,12 @@ interface ConfirmDeleteProps {
     onConfirm: () => void;
 }
 
-const ConfirmDelete = ({ name, loading, onCancel, onConfirm }: ConfirmDeleteProps) => (
+const ConfirmDelete = ({
+    name,
+    loading,
+    onCancel,
+    onConfirm,
+}: ConfirmDeleteProps) => (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
         <div className="bg-white w-full max-w-md rounded-2xl p-6">
             <h2 className="text-lg font-semibold mb-2">Delete Car</h2>
@@ -363,3 +462,4 @@ const ConfirmDelete = ({ name, loading, onCancel, onConfirm }: ConfirmDeleteProp
 );
 
 export default Cars;
+ 
