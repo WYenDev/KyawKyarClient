@@ -98,9 +98,16 @@ const CarDetails: React.FC = () => {
           {/* Gallery */}
           <div>
             <div className="relative bg-white rounded-2xl shadow-sm overflow-hidden">
-              {carData.images[currentImageIndex] && (
+              {carData.images[currentImageIndex] ? (
                 <img
                   src={getImageUrl(carData.images[currentImageIndex], 'main') || ''}
+                  alt={`${carData.model?.brand?.name} ${carData?.model?.name}`}
+                  className="w-full h-80 sm:h-96 object-cover"
+                />
+              ) : (
+
+                <img
+                  src={'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
                   alt={`${carData.model?.brand?.name} ${carData?.model?.name}`}
                   className="w-full h-80 sm:h-96 object-cover"
                 />
@@ -188,7 +195,7 @@ const CarDetails: React.FC = () => {
                 <Settings className="h-5 w-5 mr-3 text-gray-400" />
                 <div>
                   <div className="text-sm text-gray-600">{t('details.transmission', 'Transmission')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData?.color?.name}</div>
+                  <div className="text-lg font-semibold text-gray-900">{carData?.transmission}</div>
                 </div>
               </div>
 
@@ -275,7 +282,8 @@ const CarDetails: React.FC = () => {
           </div>
         </div>
 
-        {/* Detailed sections */}
+        {/* 
+        Detailed sections 
         <div className="mt-12 grid lg:grid-cols-1 gap-10">
           <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
@@ -286,7 +294,7 @@ const CarDetails: React.FC = () => {
             </p>
           </div>
         </div>
-
+*/}
         {/* Features */}
         {/*
         {car.features && car.features.length > 0 && (
