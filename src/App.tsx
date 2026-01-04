@@ -21,6 +21,8 @@ import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
 import Models from "./pages/admin/Model";
 import CarImages from "./pages/admin/CarImages";
+import BuildType from "./pages/admin/BuildType";
+import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
 
@@ -47,6 +49,8 @@ function App() {
           <Route path="brands" element={<Brands />} />
           <Route path="models" element={<Models />} />
           <Route path="car-images" element={<CarImages />} />
+          <Route path="build-types" element={<BuildType />} />
+          <Route path="showrooms" element={<Showroom />} />
         </Route>
 
 

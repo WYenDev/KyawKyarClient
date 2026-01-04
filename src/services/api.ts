@@ -138,8 +138,41 @@ export interface Showroom {
   addressMm: string;
   addressEn: string;
   city: string;
+  /** @nullable */
+  googleMapUrl?: string | null;
+  phones?: ShowroomPhone[];
   createdAt: string;
   updatedAt: string;
+}
+
+export type ShowroomCreatePhonesItem = {
+  phone: string;
+  /** @nullable */
+  label?: string | null;
+};
+
+export interface ShowroomCreate {
+  addressMm: string;
+  addressEn: string;
+  city: string;
+  /** @nullable */
+  googleMapUrl?: string | null;
+  phones?: ShowroomCreatePhonesItem[];
+}
+
+export type ShowroomUpdatePhonesItem = {
+  phone: string;
+  /** @nullable */
+  label?: string | null;
+};
+
+export interface ShowroomUpdate {
+  addressMm?: string;
+  addressEn?: string;
+  city?: string;
+  /** @nullable */
+  googleMapUrl?: string | null;
+  phones?: ShowroomUpdatePhonesItem[];
 }
 
 export interface CarImage {
@@ -183,6 +216,7 @@ export interface Car {
   mileage: number;
   /** @nullable */
   enginePower?: number | null;
+  isNewArrival?: boolean;
   fuel: Fuel;
   transmission: Transmission;
   steering?: Steering;
@@ -246,6 +280,8 @@ export interface CarCreate {
   mileage: number;
   /** @nullable */
   enginePower?: number | null;
+  /** @nullable */
+  isNewArrival?: boolean | null;
   fuel: Fuel;
   transmission: Transmission;
   steering?: Steering;
@@ -266,6 +302,8 @@ export interface CarUpdate {
   mileage?: number;
   /** @nullable */
   enginePower?: number | null;
+  /** @nullable */
+  isNewArrival?: boolean | null;
   fuel?: Fuel;
   transmission?: Transmission;
   steering?: Steering;
@@ -296,6 +334,8 @@ export interface CarBatchItem {
   mileage?: number;
   /** @nullable */
   enginePower?: number | null;
+  /** @nullable */
+  isNewArrival?: boolean | null;
   fuel?: Fuel;
   transmission?: Transmission;
   steering?: Steering;
@@ -358,6 +398,29 @@ export interface GradeCreate {
 
 export interface GradeUpdate {
   name?: string;
+}
+
+export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosition];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SteeringPosition = {
+  Left: 'Left',
+  Right: 'Right',
+} as const;
+
+export interface BuildTypeCreate {
+  name: string;
+}
+
+export interface BuildTypeUpdate {
+  name?: string;
+}
+
+export interface ShowroomPhoneUpdate {
+  phone?: string;
+  /** @nullable */
+  label?: string | null;
 }
 
 export type PostApiAdminBody = {
@@ -553,6 +616,24 @@ export type GetApiCarsSearch200 = {
   limit?: number;
 };
 
+export type GetApiCarsNewArrivalsParams = {
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Items per page
+ */
+limit?: number;
+};
+
+export type GetApiCarsNewArrivals200 = {
+  items?: CarListItem[];
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
 export type GetApiCarsSuggestionsParams = {
 /**
  * Partial search term (brand or model name)
@@ -630,6 +711,26 @@ export type GetApiModels200 = {
 };
 
 export type PutApiModelsIdBody = { [key: string]: unknown };
+
+export type GetApiShowroomsParams = {
+page?: number;
+limit?: number;
+};
+
+export type GetApiShowrooms200 = {
+  items?: Showroom[];
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type DeleteApiShowroomsId200 = {
+  deleted?: boolean;
+};
+
+export type DeleteApiShowroomsShowroomIdPhonesPhoneId200 = {
+  deleted?: boolean;
+};
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -2522,6 +2623,100 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
 
 
 /**
+ * @summary Get cars marked as new arrivals (paginated)
+ */
+export const getApiCarsNewArrivals = (
+    params?: GetApiCarsNewArrivalsParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiCarsNewArrivals200>(
+      {url: `/api/cars/new-arrivals`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiCarsNewArrivalsQueryKey = (params?: GetApiCarsNewArrivalsParams,) => {
+    return [
+    `/api/cars/new-arrivals`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiCarsNewArrivalsQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError = unknown>(params?: GetApiCarsNewArrivalsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsNewArrivalsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsNewArrivals>>> = ({ signal }) => getApiCarsNewArrivals(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiCarsNewArrivalsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCarsNewArrivals>>>
+export type GetApiCarsNewArrivalsQueryError = unknown
+
+
+export function useGetApiCarsNewArrivals<TData = Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError = unknown>(
+ params: undefined |  GetApiCarsNewArrivalsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsNewArrivals>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsNewArrivals>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsNewArrivals<TData = Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError = unknown>(
+ params?: GetApiCarsNewArrivalsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCarsNewArrivals>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCarsNewArrivals>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCarsNewArrivals<TData = Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError = unknown>(
+ params?: GetApiCarsNewArrivalsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get cars marked as new arrivals (paginated)
+ */
+
+export function useGetApiCarsNewArrivals<TData = Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError = unknown>(
+ params?: GetApiCarsNewArrivalsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsNewArrivals>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiCarsNewArrivalsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
  * @summary Suggest brands and models by name fragment
  */
 export const getApiCarsSuggestions = (
@@ -3811,6 +4006,487 @@ export const useDeleteApiModelsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiModelsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get all showrooms (paginated)
+ */
+export const getApiShowrooms = (
+    params?: GetApiShowroomsParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiShowrooms200>(
+      {url: `/api/showrooms`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiShowroomsQueryKey = (params?: GetApiShowroomsParams,) => {
+    return [
+    `/api/showrooms`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiShowroomsQueryOptions = <TData = Awaited<ReturnType<typeof getApiShowrooms>>, TError = unknown>(params?: GetApiShowroomsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowrooms>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiShowroomsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiShowrooms>>> = ({ signal }) => getApiShowrooms(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiShowrooms>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiShowroomsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiShowrooms>>>
+export type GetApiShowroomsQueryError = unknown
+
+
+export function useGetApiShowrooms<TData = Awaited<ReturnType<typeof getApiShowrooms>>, TError = unknown>(
+ params: undefined |  GetApiShowroomsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowrooms>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiShowrooms>>,
+          TError,
+          Awaited<ReturnType<typeof getApiShowrooms>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiShowrooms<TData = Awaited<ReturnType<typeof getApiShowrooms>>, TError = unknown>(
+ params?: GetApiShowroomsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowrooms>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiShowrooms>>,
+          TError,
+          Awaited<ReturnType<typeof getApiShowrooms>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiShowrooms<TData = Awaited<ReturnType<typeof getApiShowrooms>>, TError = unknown>(
+ params?: GetApiShowroomsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowrooms>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all showrooms (paginated)
+ */
+
+export function useGetApiShowrooms<TData = Awaited<ReturnType<typeof getApiShowrooms>>, TError = unknown>(
+ params?: GetApiShowroomsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowrooms>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiShowroomsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a showroom
+ */
+export const postApiShowrooms = (
+    showroomCreate: ShowroomCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<Showroom>(
+      {url: `/api/showrooms`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: showroomCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiShowroomsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowrooms>>, TError,{data: ShowroomCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiShowrooms>>, TError,{data: ShowroomCreate}, TContext> => {
+
+const mutationKey = ['postApiShowrooms'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiShowrooms>>, {data: ShowroomCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiShowrooms(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiShowroomsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiShowrooms>>>
+    export type PostApiShowroomsMutationBody = ShowroomCreate
+    export type PostApiShowroomsMutationError = unknown
+
+    /**
+ * @summary Create a showroom
+ */
+export const usePostApiShowrooms = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowrooms>>, TError,{data: ShowroomCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiShowrooms>>,
+        TError,
+        {data: ShowroomCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiShowroomsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Update a showroom
+ */
+export const putApiShowroomsId = (
+    id: string,
+    showroomUpdate: ShowroomUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<Showroom>(
+      {url: `/api/showrooms/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: showroomUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPutApiShowroomsIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShowroomsId>>, TError,{id: string;data: ShowroomUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof putApiShowroomsId>>, TError,{id: string;data: ShowroomUpdate}, TContext> => {
+
+const mutationKey = ['putApiShowroomsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putApiShowroomsId>>, {id: string;data: ShowroomUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  putApiShowroomsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutApiShowroomsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiShowroomsId>>>
+    export type PutApiShowroomsIdMutationBody = ShowroomUpdate
+    export type PutApiShowroomsIdMutationError = unknown
+
+    /**
+ * @summary Update a showroom
+ */
+export const usePutApiShowroomsId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShowroomsId>>, TError,{id: string;data: ShowroomUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof putApiShowroomsId>>,
+        TError,
+        {id: string;data: ShowroomUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPutApiShowroomsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a showroom (and its phones)
+ */
+export const deleteApiShowroomsId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiShowroomsId200>(
+      {url: `/api/showrooms/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiShowroomsIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiShowroomsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiShowroomsId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiShowroomsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiShowroomsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiShowroomsId>>>
+    
+    export type DeleteApiShowroomsIdMutationError = unknown
+
+    /**
+ * @summary Delete a showroom (and its phones)
+ */
+export const useDeleteApiShowroomsId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiShowroomsId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiShowroomsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Update a showroom phone
+ */
+export const putApiShowroomsShowroomIdPhonesPhoneId = (
+    showroomId: string,
+    phoneId: string,
+    showroomPhoneUpdate: ShowroomPhoneUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<ShowroomPhone>(
+      {url: `/api/showrooms/${showroomId}/phones/${phoneId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: showroomPhoneUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPutApiShowroomsShowroomIdPhonesPhoneIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShowroomsShowroomIdPhonesPhoneId>>, TError,{showroomId: string;phoneId: string;data: ShowroomPhoneUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof putApiShowroomsShowroomIdPhonesPhoneId>>, TError,{showroomId: string;phoneId: string;data: ShowroomPhoneUpdate}, TContext> => {
+
+const mutationKey = ['putApiShowroomsShowroomIdPhonesPhoneId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putApiShowroomsShowroomIdPhonesPhoneId>>, {showroomId: string;phoneId: string;data: ShowroomPhoneUpdate}> = (props) => {
+          const {showroomId,phoneId,data} = props ?? {};
+
+          return  putApiShowroomsShowroomIdPhonesPhoneId(showroomId,phoneId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutApiShowroomsShowroomIdPhonesPhoneIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiShowroomsShowroomIdPhonesPhoneId>>>
+    export type PutApiShowroomsShowroomIdPhonesPhoneIdMutationBody = ShowroomPhoneUpdate
+    export type PutApiShowroomsShowroomIdPhonesPhoneIdMutationError = unknown
+
+    /**
+ * @summary Update a showroom phone
+ */
+export const usePutApiShowroomsShowroomIdPhonesPhoneId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShowroomsShowroomIdPhonesPhoneId>>, TError,{showroomId: string;phoneId: string;data: ShowroomPhoneUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof putApiShowroomsShowroomIdPhonesPhoneId>>,
+        TError,
+        {showroomId: string;phoneId: string;data: ShowroomPhoneUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPutApiShowroomsShowroomIdPhonesPhoneIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a showroom phone
+ */
+export const deleteApiShowroomsShowroomIdPhonesPhoneId = (
+    showroomId: string,
+    phoneId: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiShowroomsShowroomIdPhonesPhoneId200>(
+      {url: `/api/showrooms/${showroomId}/phones/${phoneId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiShowroomsShowroomIdPhonesPhoneIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsShowroomIdPhonesPhoneId>>, TError,{showroomId: string;phoneId: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsShowroomIdPhonesPhoneId>>, TError,{showroomId: string;phoneId: string}, TContext> => {
+
+const mutationKey = ['deleteApiShowroomsShowroomIdPhonesPhoneId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiShowroomsShowroomIdPhonesPhoneId>>, {showroomId: string;phoneId: string}> = (props) => {
+          const {showroomId,phoneId} = props ?? {};
+
+          return  deleteApiShowroomsShowroomIdPhonesPhoneId(showroomId,phoneId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiShowroomsShowroomIdPhonesPhoneIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiShowroomsShowroomIdPhonesPhoneId>>>
+    
+    export type DeleteApiShowroomsShowroomIdPhonesPhoneIdMutationError = unknown
+
+    /**
+ * @summary Delete a showroom phone
+ */
+export const useDeleteApiShowroomsShowroomIdPhonesPhoneId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsShowroomIdPhonesPhoneId>>, TError,{showroomId: string;phoneId: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiShowroomsShowroomIdPhonesPhoneId>>,
+        TError,
+        {showroomId: string;phoneId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiShowroomsShowroomIdPhonesPhoneIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Add a phone to a showroom
+ */
+export const postApiShowroomsShowroomIdPhones = (
+    showroomId: string,
+    showroomPhone: ShowroomPhone,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<ShowroomPhone>(
+      {url: `/api/showrooms/${showroomId}/phones`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: showroomPhone, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiShowroomsShowroomIdPhonesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomsShowroomIdPhones>>, TError,{showroomId: string;data: ShowroomPhone}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomsShowroomIdPhones>>, TError,{showroomId: string;data: ShowroomPhone}, TContext> => {
+
+const mutationKey = ['postApiShowroomsShowroomIdPhones'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiShowroomsShowroomIdPhones>>, {showroomId: string;data: ShowroomPhone}> = (props) => {
+          const {showroomId,data} = props ?? {};
+
+          return  postApiShowroomsShowroomIdPhones(showroomId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiShowroomsShowroomIdPhonesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiShowroomsShowroomIdPhones>>>
+    export type PostApiShowroomsShowroomIdPhonesMutationBody = ShowroomPhone
+    export type PostApiShowroomsShowroomIdPhonesMutationError = unknown
+
+    /**
+ * @summary Add a phone to a showroom
+ */
+export const usePostApiShowroomsShowroomIdPhones = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomsShowroomIdPhones>>, TError,{showroomId: string;data: ShowroomPhone}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiShowroomsShowroomIdPhones>>,
+        TError,
+        {showroomId: string;data: ShowroomPhone},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiShowroomsShowroomIdPhonesMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
