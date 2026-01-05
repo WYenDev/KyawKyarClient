@@ -11,6 +11,8 @@ import {
     LogOut,
     ChevronLeft,
     ChevronRight,
+    Building,
+    Home,
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -37,8 +39,7 @@ const AdminSidebar = () => {
             <div className="h-14 flex items-center justify-between px-4 border-b">
                 <Link
                     to="/"
-                    className={`flex items-center gap-2 ${collapsed ? "justify-center w-full" : ""
-                        }`}
+                    className={`flex items-center gap-2 ${collapsed ? "justify-center w-full" : ""}`}
                 >
                     <img
                         src={logo}
@@ -66,6 +67,11 @@ const AdminSidebar = () => {
                 <MenuItem to="/admin/cars" icon={Car} label="Cars" collapsed={collapsed} />
                 <MenuItem to="/admin/brands" icon={Tag} label="Brands" collapsed={collapsed} />
                 <MenuItem to="/admin/models" icon={Layers} label="Models" collapsed={collapsed} />
+
+                {/* 🔹 NEW ITEMS */}
+                <MenuItem to="/admin/showrooms" icon={Building} label="Showrooms" collapsed={collapsed} />
+                <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={collapsed} />
+
                 <MenuItem to="/admin/car-images" icon={Image} label="Car Images" collapsed={collapsed} />
                 <MenuItem to="/admin/health" icon={Activity} label="System Health" collapsed={collapsed} />
             </nav>
@@ -114,16 +120,12 @@ const MenuItem = ({
                 text-sm font-medium transition-all
                 ${isActive
                 ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-gray-100"
-            }
+                : "text-slate-600 hover:bg-gray-100"}
                 ${collapsed && "justify-center"}
             `
         }
     >
-        <Icon
-            size={18}
-            className="group-hover:scale-105 transition-transform"
-        />
+        <Icon size={18} className="group-hover:scale-105 transition-transform" />
         {!collapsed && <span>{label}</span>}
     </NavLink>
 );
