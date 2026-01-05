@@ -1,39 +1,33 @@
 import React from 'react';
-import { 
-  Award, Shield, Users, Clock, Phone, 
-  MessageCircle, MapPin, ArrowUpRight, HelpCircle 
+import {
+  Award, Shield, Users, Clock, Phone,
+  MessageCircle, MapPin, ArrowUpRight, HelpCircle
 } from 'lucide-react';
 import AboutImage from '../assets/about.jpg';
+import { useGetApiShowrooms } from '../services/api';
+import { useTranslation } from 'react-i18next';
 
 const AboutContact: React.FC = () => {
-  const viberNumber = "959123456789"; // General Inquiry Viber
+  const viberNumber = import.meta.env.VITE_VIBER_NUMBER; // General Inquiry Viber
+  const { t, i18n } = useTranslation('about'); // Use 'common' namespace
 
-  const locations = [
-    { 
-      city: "Mandalay (Main Showroom)", 
-      address: "၁၂၃၊ စက်မှုဇုန်လမ်း၊ ပြည်ကြီးတံခွန်မြို့နယ်၊ မန္တလေးမြို့။", 
-      phone: "09 111 222 333",
-      mapUrl: "https://maps.google.com/?q=Mandalay" 
-    },
-    { 
-      city: "Yangon Branch", 
-      address: "၄၅၆၊ ကမ္ဘာအေးဘုရားလမ်း၊ ဗဟန်းမြို့နယ်၊ ရန်ကုန်မြို့။", 
-      phone: "09 444 555 666",
-      mapUrl: "https://maps.google.com/?q=Yangon" 
-    },
-    { 
-      city: "Naypyidaw Branch", 
-      address: "၇၈၉၊ သီရိမန္တလာလမ်း၊ ဇမ္ဗူသီရိမြို့နယ်၊ နေပြည်တော်။", 
-      phone: "09 777 888 999",
-      mapUrl: "https://maps.google.com/?q=Naypyidaw" 
-    },
-  ];
+
+  const { data: showroomData, isLoading, isError } = useGetApiShowrooms()
+
+  if (isLoading) {
+    return <div>Loading showroom data...</div>;
+  }
+
+
+  if (!showroomData || isError) {
+    return <div>Failed to load showroom data.</div>;
+  }
 
   return (
     <div className="bg-white">
       {/* --- SECTION 1: ABOUT US --- */}
-      <section id="about" className="py-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="about" className="py-12 sm:py-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Image Side */}
             <div className="relative">
@@ -58,14 +52,13 @@ const AboutContact: React.FC = () => {
                   Our Legacy
                 </span>
                 <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
-                  Myanmar's Premier <br />
-                  <span className="text-indigo-600">Automotive Destination</span>
+                  {t('title')} <br />
+                  <span className="text-indigo-600">{t("title_suffix")}</span>
                 </h2>
               </div>
 
               <p className="text-lg text-slate-500 leading-relaxed">
-                For over 15 years, KyawKyar has been the leading destination for quality vehicles in Myanmar.
-                We've built our reputation on transparency, helping thousands of families find their perfect drive.
+                {t('description')}
               </p>
 
               <div className="grid grid-cols-2 gap-6">
@@ -90,17 +83,17 @@ const AboutContact: React.FC = () => {
       </section>
 
       {/* --- SECTION 2: CONTACT & BRANCHES --- */}
-      <section id="contact" className="py-24 bg-slate-50 border-y border-slate-100">
+      <section id="contact" className="py-12 sm:py-24 bg-slate-50 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-[4rem] p-12 lg:p-20 shadow-xl shadow-indigo-100/50 relative overflow-hidden">
-            
+          <div className="bg-white rounded-[4rem] p-6 sm:p-12 lg:p-20 shadow-xl shadow-indigo-100/50 relative overflow-hidden">
+
             {/* Background Decorative Icon */}
             <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
               <MessageCircle size={400} className="text-indigo-600" />
             </div>
 
             <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-start">
-              
+
               {/* LEFT SIDE: Balanced Content */}
               <div className="space-y-12 lg:sticky lg:top-10">
                 <div className="text-center lg:text-left">
@@ -126,7 +119,7 @@ const AboutContact: React.FC = () => {
                     Call Sales Team
                   </a>
                   <a
-                    href={`viber://add?number=${viberNumber}`}
+                    href={`viber://chat?number=%2B${viberNumber}`}
                     className="flex-1 flex items-center justify-center gap-3 bg-[#7360f2] text-white px-8 py-5 rounded-2xl font-bold hover:bg-[#6654e0] transition-all shadow-xl shadow-indigo-200"
                   >
                     <MessageCircle size={20} />
@@ -177,40 +170,48 @@ const AboutContact: React.FC = () => {
                   Showroom တည်နေရာများ (Locations)
                 </p>
 
-                {locations.map((loc, i) => (
+                {showroomData.items && showroomData.items.map((loc: any, i: number) => (
                   <div
                     key={i}
                     className="group bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100 transition-all hover:border-indigo-200 hover:bg-white hover:shadow-2xl hover:shadow-indigo-100/40"
                   >
                     <div className="flex justify-between items-start mb-6">
                       <div className="flex gap-4">
-                        <div className="p-3 bg-white rounded-2xl shadow-sm group-hover:bg-indigo-50 transition-colors">
-                          <MapPin className="text-indigo-600 w-6 h-6" />
-                        </div>
+                        <MapPin className="text-indigo-600 w-6 h-6" />
                         <div>
                           <h4 className="font-black text-slate-900 text-lg">{loc.city}</h4>
                           <p className="text-sm text-slate-500 leading-relaxed max-w-[220px]">
-                            {loc.address}
+                            {loc.addressEn}
                           </p>
                         </div>
                       </div>
 
-                      <button
-                        onClick={() => window.open(loc.mapUrl, '_blank')}
-                        className="p-3 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all"
-                        title="View on Map"
-                      >
-                        <ArrowUpRight size={20} />
-                      </button>
+                      {
+                        loc.googleMapUrl && (
+
+                          <button
+                            onClick={() => window.open(loc.googleMapUrl!, '_blank')}
+                            className="p-3 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all"
+                            title="View on Map"
+                          >
+                            <ArrowUpRight size={20} />
+                          </button>
+                        )
+                      }
                     </div>
 
-                    <a
-                      href={`tel:${loc.phone.replace(/\s/g, '')}`}
-                      className="flex items-center justify-center gap-3 w-full py-4 bg-white border-2 border-slate-100 rounded-2xl text-slate-900 font-bold text-base hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm"
-                    >
-                      <Phone size={18} className="text-indigo-600 group-hover:text-white" />
-                      {loc.phone}
-                    </a>
+                    {
+                      loc.phones && loc.phones.length > 0 && loc.phones.map((phone: any) => (
+                        <a
+                          key={phone.phone}
+                          href={`tel:${phone.phone.replace(/\s/g, '')}`}
+                          className="flex items-center justify-center gap-3 w-full py-4 mb-3 bg-white border-2 border-slate-100 rounded-2xl text-slate-900 font-bold text-base hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm"
+                        >
+                          <Phone size={18} className="text-indigo-600 group-hover:text-white" />
+                          {phone.phone}
+                        </a>
+                      )) 
+                    }
 
                     <div className="mt-3 text-center">
                       <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">

@@ -301,6 +301,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 </div>
               </div>
 
+              {/*  
               <div className="border-t border-slate-100 pt-4">
                 <label className="block text-sm font-medium text-slate-800 mb-2">Status</label>
                 <div className="flex gap-2">
@@ -319,7 +320,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                   ))}
                 </div>
               </div>
-
+              */}
               <div className="border-t border-slate-100 pt-4">
                 <label className="block text-sm font-medium text-slate-800 mb-2">Build Type</label>
                 <div className="flex flex-wrap gap-2">

@@ -1,7 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { CarListItem, Status} from '../services/api'
+import { CarListItem } from '../services/api'
 import { Calendar, Gauge, Fuel, Settings, MapPin } from 'lucide-react';
 import { formatPriceLakhs } from '../utils/price';
  
@@ -10,10 +9,10 @@ interface CarCardProps {
 }
  
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
-  const { t } = useTranslation('cars');
+  //const { t } = useTranslation('cars');
   const navigate = useNavigate();
 
-
+  {/*
   const getStatusBadge = (status: Status) => {
     switch (status) {
       case Status.Available:
@@ -26,7 +25,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         return 'bg-gray-100 text-gray-800 border border-gray-200';
     }
   };
-
+  */}
   const handleClick = () => {
     navigate(`/cars/${car.id}`);
   };
@@ -64,12 +63,13 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
             </span>
           )}
         </div>
-        */}
         <div className="absolute top-3 right-3">
           <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusBadge(car.status)}`}>
             {t(`${car.status}`)}
           </span>
         </div>
+
+        */}
       </div>
 
       <div className="p-6">
