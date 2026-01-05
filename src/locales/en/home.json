@@ -1,18 +1,15 @@
 {
   "hero": {
     "badge": "Myanmar's #1 Car Dealer",
-    "title_prefix": "Find Your Perfect",
-    "title_suffix": "Car",
-    "description": "Over 15 years of experience serving Myanmar with the largest selection of quality cars at KyawKyaw. Trusted by thousands of families nationwide.",
-    "experience_badge": {
-      "years": "15+ Years",
-      "label": "Experience"
-    }
+    "title_prefix": "Kyaw Kyar",
+    "title_suffix": "With Full Accountability",
+    "description": " From daily use cars to high-end luxury cars, a full variety of your favorite vehicles are available all in one place at Kyaw Kyar."
   },
   "stats": {
     "cars_sold": "Cars Sold",
     "happy_customers": "Happy Customers",
     "years_experience": "Years Experience",
-    "cars_available": "Cars Available"
+    "cars_available": "Cars Available",
+    "branches": "Branches"
   }
 }

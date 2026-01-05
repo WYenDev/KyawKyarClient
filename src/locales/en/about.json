@@ -1,15 +1,15 @@
 {
-  "title": "Myanmar's Most Trusted",
-  "title_suffix": "Car Dealer",
-  "description": "For over 15 years, KyawKyaw has been the leading destination for quality cars. We've built our reputation on trust, transparency, and exceptional customer service, helping thousands of families find their perfect vehicle.",
+  "title": "Myanmar's Premier",
+  "title_suffix": "Car Destination",
+  "description": "For over 15 years, KyawKyaw has been the leading destination for quality cars. We've built our reputation on trust, transparency, and exceptional customer service, helping thousands of families find their perfect drive.",
   "features": {
     "quality": {
       "title": "Quality Assured",
       "desc": "Every car inspected"
     },
     "warranty": {
-      "title": "Warranty",
-      "desc": "6-month guarantee"
+      "sellBack": "Sell-Back Guarantee",
+      "desc": "Buy back at the current market price"
     },
     "expert": {
       "title": "Expert Team",
