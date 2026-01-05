@@ -74,6 +74,7 @@ const AdminSidebar = () => {
 
                 <MenuItem to="/admin/car-images" icon={Image} label="Car Images" collapsed={collapsed} />
                 <MenuItem to="/admin/health" icon={Activity} label="System Health" collapsed={collapsed} />
+                <MenuItem to="/admin/user-management" icon={Layers} label="User Management" collapsed={collapsed} />
             </nav>
 
             {/* ================= FOOTER ================= */}

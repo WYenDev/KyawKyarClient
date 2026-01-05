@@ -25,9 +25,11 @@ import BuildType from "./pages/admin/BuildType";
 import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
+import SuperAdminGuard from "./components/SuperAdminGuard";
 
 // auth guard
 import RequireAdmin from "./components/RequireAdmin";
+import UserManagement from "./pages/admin/UserManagement";
 
 function App() {
   return (
@@ -51,6 +53,15 @@ function App() {
           <Route path="car-images" element={<CarImages />} />
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
+
+          <Route
+            path="super-admin"
+            element={
+              <SuperAdminGuard>
+                <UserManagement />
+              </SuperAdminGuard>
+            }
+          />
         </Route>
 
 
