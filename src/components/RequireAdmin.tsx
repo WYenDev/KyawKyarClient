@@ -8,19 +8,23 @@ interface Props {
 
 const RequireAdmin: React.FC<Props> = ({ children }) => {
   const location = useLocation();
-  const { authLoading, accessToken, needPasswordChange } = useAuth();
+  const { authLoading, user } = useAuth();
   
   if (authLoading) {
     return <div>Loading...</div>; // Or a spinner component
   }
 
+  if (!user) {
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
+
   // If user must change password, redirect to change page first
-  if (needPasswordChange) {
+  if (user.needPasswordChange) {
     return <Navigate to="/admin/password-change" replace />;
   }
 
-  if (!accessToken) {
-    console.log('No access token found, redirecting to login.', accessToken);
+  if (!user.accessToken) {
+    console.log('No access token found, redirecting to login.');
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 

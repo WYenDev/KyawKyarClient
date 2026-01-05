@@ -31,3 +31,13 @@ export interface FilterOptions {
   steeringPositions?: string[];
   status: Array<'available' | 'sold' | 'reserved'>;
 }
+
+
+export type Role = "ADMIN" | "SUPER_ADMIN";
+
+export interface User {
+  username: string;
+  accessToken: string;
+  needPasswordChange: boolean;
+  role: Role
+}

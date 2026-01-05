@@ -1,16 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { client } from '../services/mutator'; // Import the axios instance
 import { usePostApiAuthRefresh, PostApiAuthRefresh200 } from '../services/api';
+import type { User, Role } from '../types';
 
-interface User {
-  username: string;
-}
 
 interface AuthContextType {
   user: User | null;
-  accessToken: string | null;
-  needPasswordChange: boolean;
-  login: (username: string, token: string, needPasswordChange: boolean) => void;
+  login: (user: User) => void;
   logout: () => void;
   setRequirePasswordChange: (flag: boolean) => void;
   markPasswordChanged: () => void;
@@ -34,9 +30,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [accessToken]);
 
-  const login = (username: string, token: string, needPasswordChange: boolean) => {
-    setUser({ username });
-    setAccessToken(token);
+  const login = (user: User) => {
+    setUser(user);
+    setAccessToken(user.accessToken);
     console.log("Setting needPasswordChange to:", needPasswordChange);
     setNeedPasswordChange(needPasswordChange);
   };
@@ -60,9 +56,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { mutate: refreshSession } = usePostApiAuthRefresh({
     mutation: {
       onSuccess: (data: PostApiAuthRefresh200) => {
-        if (data.username !==  undefined && data.accessToken !== undefined && data.needPasswordChange !== undefined) {
+        if (data.username !==  undefined && data.accessToken !== undefined && data.needPasswordChange !== undefined && data.role !== undefined) {
           console.log('Tokens are defined')
-          login(data.username, data.accessToken, data.needPasswordChange);
+          
+          login({username: data.username,accessToken: data.accessToken,needPasswordChange: data.needPasswordChange, role: data.role as Role});
         } 
         setAuthLoading(false);
       },
@@ -79,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, needPasswordChange, login, logout, setRequirePasswordChange, markPasswordChanged, authLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, setRequirePasswordChange, markPasswordChanged, authLoading }}>
       {children}
     </AuthContext.Provider>
   );

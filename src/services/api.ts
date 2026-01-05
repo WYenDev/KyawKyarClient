@@ -447,9 +447,19 @@ export type PostApiAuthLoginBody = {
   password?: string;
 };
 
+export type PostApiAuthLogin200Role = typeof PostApiAuthLogin200Role[keyof typeof PostApiAuthLogin200Role];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PostApiAuthLogin200Role = {
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+} as const;
+
 export type PostApiAuthLogin200 = {
+  username?: string;
   accessToken?: string;
-  role?: string;
+  role?: PostApiAuthLogin200Role;
   needPasswordChange?: boolean;
 };
 
