@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import Select from "../../components/Select";
 
@@ -23,9 +23,16 @@ const Models = () => {
     const [brandId, setBrandId] = useState("");
     const [error, setError] = useState<string | null>(null);
 
-    /* ===== PAGINATION STATE (ADDED) ===== */
+    /* ================= SEARCH ================= */
+    const [search, setSearch] = useState("");
+
+    /* ================= PAGINATION ================= */
     const [page, setPage] = useState(1);
-    const limit = 13;
+
+    const PAGE_LIMIT = 13;
+    const SEARCH_LIMIT = 10000;
+
+    const isSearching = search.trim().length > 0;
 
     /* ================= QUERIES ================= */
     const {
@@ -34,8 +41,8 @@ const Models = () => {
         isError,
         refetch,
     } = useGetApiModels({
-        page,
-        limit,
+        page: isSearching ? 1 : page,
+        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
     });
 
     const { data: brandData } = useGetApiBrands({
@@ -46,23 +53,46 @@ const Models = () => {
     const models = modelData?.models ?? [];
     const brands = brandData?.items ?? [];
 
-    /* ===== PAGINATION DATA (ADDED) ===== */
-    const total = modelData?.total ?? 0;
-    const totalPages = Math.ceil(total / limit);
+    /* ================= SEARCH FILTER ================= */
+    const filteredModels = useMemo(() => {
+        if (!isSearching) return models;
+
+        return models.filter((m) =>
+            m.name.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [models, search, isSearching]);
+
+    /* ================= PAGINATION DATA ================= */
+    const total = isSearching
+        ? filteredModels.length
+        : modelData?.total ?? 0;
+
+    const totalPages = Math.ceil(total / PAGE_LIMIT);
+
+    const visibleModels = useMemo(() => {
+        if (!isSearching) return filteredModels;
+
+        const start = (page - 1) * PAGE_LIMIT;
+        return filteredModels.slice(start, start + PAGE_LIMIT);
+    }, [filteredModels, page, isSearching]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [search]);
 
     /* ================= MUTATIONS ================= */
     const { mutate: createModel, isPending: creating } = usePostApiModels({
         mutation: {
             onSuccess: () => {
                 refetch();
-                setPage(1); // reset page
+                setPage(1);
                 closeModal();
             },
             onError: (err: unknown) => {
-                const msg =
+                setError(
                     (err as any)?.payload?.error ??
-                    "Failed to create model";
-                setError(msg);
+                    "Failed to create model"
+                );
             },
         },
     });
@@ -74,10 +104,10 @@ const Models = () => {
                 closeModal();
             },
             onError: (err: unknown) => {
-                const msg =
+                setError(
                     (err as any)?.payload?.error ??
-                    "Failed to update model";
-                setError(msg);
+                    "Failed to update model"
+                );
             },
         },
     });
@@ -88,10 +118,7 @@ const Models = () => {
                 onSuccess: () => {
                     refetch();
                     setDeleteTarget(null);
-                    setPage(1); // reset page
-                },
-                onError: () => {
-                    alert("Failed to delete model");
+                    setPage(1);
                 },
             },
         });
@@ -162,13 +189,23 @@ const Models = () => {
                     Models Management
                 </h1>
 
-                <button
-                    onClick={openCreate}
-                    className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
-                >
-                    <Plus size={16} />
-                    Add Model
-                </button>
+                <div className="flex gap-3 items-center">
+                    <input
+                        type="text"
+                        placeholder="Search model..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="border px-4 py-2 rounded-xl text-sm w-64"
+                    />
+
+                    <button
+                        onClick={openCreate}
+                        className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
+                    >
+                        <Plus size={16} />
+                        Add Model
+                    </button>
+                </div>
             </div>
 
             {/* TABLE */}
@@ -176,8 +213,12 @@ const Models = () => {
                 <table className="w-full text-sm">
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
-                            <th className="px-8 py-4 text-left">Model Name</th>
-                            <th className="px-8 py-4 text-left">Brand</th>
+                            <th className="px-8 py-4 text-left">
+                                Model Name
+                            </th>
+                            <th className="px-8 py-4 text-left">
+                                Brand
+                            </th>
                             <th className="px-8 py-4 text-right w-40">
                                 Actions
                             </th>
@@ -203,7 +244,7 @@ const Models = () => {
                                     Failed to load models
                                 </td>
                             </tr>
-                        ) : models.length === 0 ? (
+                        ) : visibleModels.length === 0 ? (
                             <tr>
                                 <td
                                     colSpan={3}
@@ -213,7 +254,7 @@ const Models = () => {
                                 </td>
                             </tr>
                         ) : (
-                            models.map((model) => (
+                            visibleModels.map((model) => (
                                 <tr
                                     key={model.id}
                                     className="border-t hover:bg-gray-50"
@@ -253,7 +294,7 @@ const Models = () => {
                     </tbody>
                 </table>
 
-                {/* PAGINATION (ADDED) */}
+                {/* PAGINATION */}
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-8 py-4 border-t">
                         <span className="text-sm text-gray-500">
@@ -263,9 +304,10 @@ const Models = () => {
                         <div className="flex gap-2">
                             <button
                                 disabled={page === 1}
-                                onClick={() => setPage((p) => p - 1)}
-                                className="px-3 py-1 rounded-lg border text-sm
-                                           disabled:opacity-40 hover:bg-gray-100"
+                                onClick={() =>
+                                    setPage((p) => p - 1)
+                                }
+                                className="px-3 py-1 rounded-lg border text-sm disabled:opacity-40"
                             >
                                 Previous
                             </button>
@@ -289,9 +331,10 @@ const Models = () => {
 
                             <button
                                 disabled={page === totalPages}
-                                onClick={() => setPage((p) => p + 1)}
-                                className="px-3 py-1 rounded-lg border text-sm
-                                           disabled:opacity-40 hover:bg-gray-100"
+                                onClick={() =>
+                                    setPage((p) => p + 1)
+                                }
+                                className="px-3 py-1 rounded-lg border text-sm disabled:opacity-40"
                             >
                                 Next
                             </button>
@@ -319,12 +362,16 @@ const Models = () => {
                                 className="border p-3 rounded-xl w-full"
                                 placeholder="Model name"
                                 value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={(e) =>
+                                    setName(e.target.value)
+                                }
                             />
 
                             <Select
                                 value={brandId}
-                                onChange={(v) => setBrandId(v ?? "")}
+                                onChange={(v) =>
+                                    setBrandId(v ?? "")
+                                }
                                 options={brandOptions}
                                 placeholder="Select Brand"
                             />
@@ -368,7 +415,9 @@ const Models = () => {
 
                         <div className="flex justify-end gap-4">
                             <button
-                                onClick={() => setDeleteTarget(null)}
+                                onClick={() =>
+                                    setDeleteTarget(null)
+                                }
                                 className="border px-4 py-2 rounded-xl"
                             >
                                 Cancel
