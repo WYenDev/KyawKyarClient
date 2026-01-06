@@ -1,18 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { client } from '../services/mutator'; // Import the axios instance
 import { usePostApiAuthRefresh, PostApiAuthRefresh200 } from '../services/api';
+import type { User, Role } from '../types';
 
-interface User {
-  username: string;
-}
 
 interface AuthContextType {
   user: User | null;
-  accessToken: string | null;
-  needPasswordChange: boolean;
-  login: (username: string, token: string, needPasswordChange: boolean) => void;
+  login: (user: User) => void;
   logout: () => void;
-  setRequirePasswordChange: (flag: boolean) => void;
   markPasswordChanged: () => void;
   authLoading: boolean;
 }
@@ -21,48 +16,40 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [needPasswordChange, setNeedPasswordChange] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
 
   // THE BRIDGE: Whenever the token changes, update the Axios Client
   useEffect(() => {
-    if (accessToken) {
-      client.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    if (user && user.accessToken) {
+      client.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
     } else {
       delete client.defaults.headers.common['Authorization'];
     }
-  }, [accessToken]);
+  }, [user]);
 
-  const login = (username: string, token: string, needPasswordChange: boolean) => {
-    setUser({ username });
-    setAccessToken(token);
-    console.log("Setting needPasswordChange to:", needPasswordChange);
-    setNeedPasswordChange(needPasswordChange);
+  const login = (user: User) => {
+    console.log("Logging in user:", user);
+    setUser(user);
   };
 
   const logout = () => {
     setUser(null);
-    setAccessToken(null);
-    setNeedPasswordChange(false);
     // You would also call your backend /logout to clear the HttpOnly cookie
   };
 
-  const setRequirePasswordChange = (flag: boolean) => {
-    setNeedPasswordChange(flag);
-  };
 
   const markPasswordChanged = () => {
-    setNeedPasswordChange(false);
+    setUser((prevUser) => prevUser ? { ...prevUser, needPasswordChange: false } : null);
   };
 
 
   const { mutate: refreshSession } = usePostApiAuthRefresh({
     mutation: {
       onSuccess: (data: PostApiAuthRefresh200) => {
-        if (data.username !==  undefined && data.accessToken !== undefined && data.needPasswordChange !== undefined) {
+        if (data.username !==  undefined && data.accessToken !== undefined && data.needPasswordChange !== undefined && data.role !== undefined) {
           console.log('Tokens are defined')
-          login(data.username, data.accessToken, data.needPasswordChange);
+          
+          login({username: data.username,accessToken: data.accessToken,needPasswordChange: data.needPasswordChange, role: data.role as Role});
         } 
         setAuthLoading(false);
       },
@@ -79,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, needPasswordChange, login, logout, setRequirePasswordChange, markPasswordChanged, authLoading }}>
+    <AuthContext.Provider value={{ user, login, logout,  markPasswordChanged, authLoading }}>
       {children}
     </AuthContext.Provider>
   );

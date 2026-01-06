@@ -432,6 +432,15 @@ export type PostApiAdminBody = {
   password: string;
 };
 
+export type GetApiAdmin200Item = {
+  id?: string;
+  username?: string;
+  role?: string;
+  needPasswordChange?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 export type PostApiAdminResetPasswordBody = {
   username?: string;
   newPassword?: string;
@@ -447,16 +456,35 @@ export type PostApiAuthLoginBody = {
   password?: string;
 };
 
+export type PostApiAuthLogin200Role = typeof PostApiAuthLogin200Role[keyof typeof PostApiAuthLogin200Role];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PostApiAuthLogin200Role = {
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+} as const;
+
 export type PostApiAuthLogin200 = {
+  username?: string;
   accessToken?: string;
-  role?: string;
+  role?: PostApiAuthLogin200Role;
   needPasswordChange?: boolean;
 };
+
+export type PostApiAuthRefresh200Role = typeof PostApiAuthRefresh200Role[keyof typeof PostApiAuthRefresh200Role];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PostApiAuthRefresh200Role = {
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+} as const;
 
 export type PostApiAuthRefresh200 = {
   accessToken?: string;
   username?: string;
-  role?: string;
+  role?: PostApiAuthRefresh200Role;
   needPasswordChange?: boolean;
 };
 
@@ -883,6 +911,99 @@ export const usePostApiAdmin = <TError = unknown,
     }
     
 /**
+ * @summary Get all admins (super-admin only)
+ */
+export const getApiAdmin = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiAdmin200Item[]>(
+      {url: `/api/admin`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiAdminQueryKey = () => {
+    return [
+    `/api/admin`
+    ] as const;
+    }
+
+    
+export const getGetApiAdminQueryOptions = <TData = Awaited<ReturnType<typeof getApiAdmin>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAdmin>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiAdminQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAdmin>>> = ({ signal }) => getApiAdmin(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAdmin>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiAdminQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAdmin>>>
+export type GetApiAdminQueryError = unknown
+
+
+export function useGetApiAdmin<TData = Awaited<ReturnType<typeof getApiAdmin>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAdmin>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAdmin>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAdmin>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAdmin<TData = Awaited<ReturnType<typeof getApiAdmin>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAdmin>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAdmin>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAdmin>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAdmin<TData = Awaited<ReturnType<typeof getApiAdmin>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAdmin>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all admins (super-admin only)
+ */
+
+export function useGetApiAdmin<TData = Awaited<ReturnType<typeof getApiAdmin>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAdmin>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiAdminQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
  * @summary Reset an admin's password (super-admin only)
  */
 export const postApiAdminResetPassword = (
@@ -1008,6 +1129,68 @@ export const usePostApiAdminChangePassword = <TError = unknown,
       > => {
 
       const mutationOptions = getPostApiAdminChangePasswordMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete an admin by id (super-admin only)
+ */
+export const deleteApiAdminId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/admin/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiAdminIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiAdminId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiAdminId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiAdminId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiAdminId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiAdminId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiAdminIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiAdminId>>>
+    
+    export type DeleteApiAdminIdMutationError = unknown
+
+    /**
+ * @summary Delete an admin by id (super-admin only)
+ */
+export const useDeleteApiAdminId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiAdminId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiAdminId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiAdminIdMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

@@ -21,7 +21,7 @@ import logo from "../assets/logo-with-text.png";
 
 const AdminSidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
 
     const { mutate } = usePostApiAuthLogout({
         mutation: { onSuccess: () => logout() },
@@ -74,6 +74,11 @@ const AdminSidebar = () => {
 
                 <MenuItem to="/admin/car-images" icon={Image} label="Car Images" collapsed={collapsed} />
                 <MenuItem to="/admin/health" icon={Activity} label="System Health" collapsed={collapsed} />
+                {
+                    user?.role === "SUPER_ADMIN" && (
+                        <MenuItem to="/admin/user-management" icon={Layers} label="User Management" collapsed={collapsed} />
+                    )
+                }
             </nav>
 
             {/* ================= FOOTER ================= */}

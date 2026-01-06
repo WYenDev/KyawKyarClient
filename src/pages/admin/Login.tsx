@@ -26,8 +26,13 @@ const AdminLogin: React.FC = () => {
   const loginMutation = usePostApiAuthLogin({
     mutation: {
       onSuccess: (response, variables) => {
-        if (response.accessToken && response.needPasswordChange !== undefined && variables.data.username) {
-          login(variables.data.username, response.accessToken, response.needPasswordChange);
+        if (response.accessToken && response.needPasswordChange !== undefined && response.username !== undefined && response.role !== undefined) {
+          login({
+            username: response.username,
+            accessToken: response.accessToken,
+            needPasswordChange: response.needPasswordChange,
+            role: response.role
+          });
           navigate('/admin/');
         } else {
           console.log('Invalid login response:', response, variables.data.username);
