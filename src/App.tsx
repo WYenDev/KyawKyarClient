@@ -55,7 +55,7 @@ function App() {
           <Route path="showrooms" element={<Showroom />} />
 
           <Route
-            path="super-admin"
+            path="user-management"
             element={
               <SuperAdminGuard>
                 <UserManagement />

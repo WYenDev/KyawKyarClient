@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -16,6 +17,10 @@ const PasswordChange: React.FC = () => {
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const changePasswordMutation = usePostApiAdminChangePassword({
     mutation: {
@@ -62,17 +67,62 @@ const PasswordChange: React.FC = () => {
             <form onSubmit={submit} className="space-y-4">
               <div>
                 <label className="text-sm text-slate-700">{t('passwordChange.old', 'Current password')}</label>
-                <input value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} type="password" className="w-full mt-1 px-3 py-2 border rounded" />
+                <div className="relative">
+                  <input
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    type={showOld ? 'text' : 'password'}
+                    className="w-full mt-1 px-3 py-2 border rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOld((s) => !s)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500"
+                    aria-label={showOld ? 'Hide password' : 'Show password'}
+                  >
+                    {showOld ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="text-sm text-slate-700">{t('passwordChange.new', 'New password')}</label>
-                <input value={newPassword} onChange={(e) => setNewPassword(e.target.value)} type="password" className="w-full mt-1 px-3 py-2 border rounded" />
+                <div className="relative">
+                  <input
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    type={showNew ? 'text' : 'password'}
+                    className="w-full mt-1 px-3 py-2 border rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNew((s) => !s)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500"
+                    aria-label={showNew ? 'Hide password' : 'Show password'}
+                  >
+                    {showNew ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="text-sm text-slate-700">{t('passwordChange.confirm', 'Confirm new password')}</label>
-                <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" className="w-full mt-1 px-3 py-2 border rounded" />
+                <div className="relative">
+                  <input
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    type={showConfirm ? 'text' : 'password'}
+                    className="w-full mt-1 px-3 py-2 border rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm((s) => !s)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500"
+                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirm ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex justify-end">

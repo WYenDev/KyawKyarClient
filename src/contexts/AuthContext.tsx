@@ -8,7 +8,6 @@ interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
-  setRequirePasswordChange: (flag: boolean) => void;
   markPasswordChanged: () => void;
   authLoading: boolean;
 }
@@ -17,39 +16,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [needPasswordChange, setNeedPasswordChange] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
 
   // THE BRIDGE: Whenever the token changes, update the Axios Client
   useEffect(() => {
-    if (accessToken) {
-      client.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    if (user && user.accessToken) {
+      client.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
     } else {
       delete client.defaults.headers.common['Authorization'];
     }
-  }, [accessToken]);
+  }, [user]);
 
   const login = (user: User) => {
+    console.log("Logging in user:", user);
     setUser(user);
-    setAccessToken(user.accessToken);
-    console.log("Setting needPasswordChange to:", needPasswordChange);
-    setNeedPasswordChange(needPasswordChange);
   };
 
   const logout = () => {
     setUser(null);
-    setAccessToken(null);
-    setNeedPasswordChange(false);
     // You would also call your backend /logout to clear the HttpOnly cookie
   };
 
-  const setRequirePasswordChange = (flag: boolean) => {
-    setNeedPasswordChange(flag);
-  };
 
   const markPasswordChanged = () => {
-    setNeedPasswordChange(false);
+    setUser((prevUser) => prevUser ? { ...prevUser, needPasswordChange: false } : null);
   };
 
 
@@ -76,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, setRequirePasswordChange, markPasswordChanged, authLoading }}>
+    <AuthContext.Provider value={{ user, login, logout,  markPasswordChanged, authLoading }}>
       {children}
     </AuthContext.Provider>
   );
