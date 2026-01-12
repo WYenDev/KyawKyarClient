@@ -12,6 +12,7 @@ import {
     ChevronRight,
     Building,
     Home,
+    Star, 
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -100,8 +101,12 @@ const AdminSidebar = () => {
                     label="Models"
                     collapsed={collapsed}
                 />
-
-                {/* 🔹 NEW ITEMS */}
+                <MenuItem
+                    to="/admin/grades"
+                    icon={Star}
+                    label="Grades"
+                    collapsed={collapsed}
+                />
                 <MenuItem
                     to="/admin/showrooms"
                     icon={Building}
