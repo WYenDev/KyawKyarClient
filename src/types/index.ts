@@ -39,5 +39,7 @@ export interface User {
   username: string;
   accessToken: string;
   needPasswordChange: boolean;
-  role: Role
+  role: Role, 
+  resetPassword: boolean,
+  recoverCodesSaved: boolean
 }

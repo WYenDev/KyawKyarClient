@@ -446,9 +446,21 @@ export type PostApiAdminResetPasswordBody = {
   newPassword?: string;
 };
 
+export type PostApiAdminResetSuperadminPasswordBody = {
+  newPassword: string;
+};
+
 export type PostApiAdminChangePasswordBody = {
   oldPassword?: string;
   newPassword?: string;
+};
+
+export type GetApiAuthRecoverCodes200 = {
+  codes?: string[];
+};
+
+export type PostApiAuthRecoverCodesSavedBody = {
+  username?: string;
 };
 
 export type PostApiAuthLoginBody = {
@@ -470,6 +482,12 @@ export type PostApiAuthLogin200 = {
   accessToken?: string;
   role?: PostApiAuthLogin200Role;
   needPasswordChange?: boolean;
+  resetPassword?: boolean;
+  recoverCodesSaved?: boolean;
+};
+
+export type PostApiAuthVerifyRecoverBody = {
+  recoveryCode: string;
 };
 
 export type PostApiAuthRefresh200Role = typeof PostApiAuthRefresh200Role[keyof typeof PostApiAuthRefresh200Role];
@@ -486,6 +504,8 @@ export type PostApiAuthRefresh200 = {
   username?: string;
   role?: PostApiAuthRefresh200Role;
   needPasswordChange?: boolean;
+  resetPassword?: boolean;
+  recoverCodesSaved?: boolean;
 };
 
 export type PostApiAuthRefresh401Error = typeof PostApiAuthRefresh401Error[keyof typeof PostApiAuthRefresh401Error];
@@ -1069,6 +1089,76 @@ export const usePostApiAdminResetPassword = <TError = unknown,
     }
     
 /**
+ * Resets the single `SUPER_ADMIN` account password. This endpoint expects a
+`reset_token` cookie (set previously during the recovery flow) and a
+JSON body containing `newPassword`. No bearer auth is required for this
+endpoint because it is authorized via the cookie token.
+
+ * @summary Reset the super-admin password using a reset token
+ */
+export const postApiAdminResetSuperadminPassword = (
+    postApiAdminResetSuperadminPasswordBody: PostApiAdminResetSuperadminPasswordBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/admin/reset-superadmin-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAdminResetSuperadminPasswordBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAdminResetSuperadminPasswordMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, TError,{data: PostApiAdminResetSuperadminPasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, TError,{data: PostApiAdminResetSuperadminPasswordBody}, TContext> => {
+
+const mutationKey = ['postApiAdminResetSuperadminPassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, {data: PostApiAdminResetSuperadminPasswordBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAdminResetSuperadminPassword(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAdminResetSuperadminPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>>
+    export type PostApiAdminResetSuperadminPasswordMutationBody = PostApiAdminResetSuperadminPasswordBody
+    export type PostApiAdminResetSuperadminPasswordMutationError = void
+
+    /**
+ * @summary Reset the super-admin password using a reset token
+ */
+export const usePostApiAdminResetSuperadminPassword = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, TError,{data: PostApiAdminResetSuperadminPasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>,
+        TError,
+        {data: PostApiAdminResetSuperadminPasswordBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAdminResetSuperadminPasswordMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Change password for the authenticated admin
  */
 export const postApiAdminChangePassword = (
@@ -1196,6 +1286,164 @@ export const useDeleteApiAdminId = <TError = unknown,
     }
     
 /**
+ * @summary Get temporary recovery codes from cookie
+ */
+export const getApiAuthRecoverCodes = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiAuthRecoverCodes200>(
+      {url: `/api/auth/recover-codes`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiAuthRecoverCodesQueryKey = () => {
+    return [
+    `/api/auth/recover-codes`
+    ] as const;
+    }
+
+    
+export const getGetApiAuthRecoverCodesQueryOptions = <TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiAuthRecoverCodesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>> = ({ signal }) => getApiAuthRecoverCodes(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiAuthRecoverCodesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>>
+export type GetApiAuthRecoverCodesQueryError = void
+
+
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get temporary recovery codes from cookie
+ */
+
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiAuthRecoverCodesQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Mark that recovery codes have been saved
+ */
+export const postApiAuthRecoverCodesSaved = (
+    postApiAuthRecoverCodesSavedBody: PostApiAuthRecoverCodesSavedBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/auth/recover-codes-saved`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAuthRecoverCodesSavedBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthRecoverCodesSavedMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, TError,{data: PostApiAuthRecoverCodesSavedBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, TError,{data: PostApiAuthRecoverCodesSavedBody}, TContext> => {
+
+const mutationKey = ['postApiAuthRecoverCodesSaved'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, {data: PostApiAuthRecoverCodesSavedBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthRecoverCodesSaved(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthRecoverCodesSavedMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>>
+    export type PostApiAuthRecoverCodesSavedMutationBody = PostApiAuthRecoverCodesSavedBody
+    export type PostApiAuthRecoverCodesSavedMutationError = void
+
+    /**
+ * @summary Mark that recovery codes have been saved
+ */
+export const usePostApiAuthRecoverCodesSaved = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, TError,{data: PostApiAuthRecoverCodesSavedBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>,
+        TError,
+        {data: PostApiAuthRecoverCodesSavedBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthRecoverCodesSavedMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Admin login (returns access token, sets refresh cookie)
  */
 export const postApiAuthLogin = (
@@ -1256,6 +1504,71 @@ export const usePostApiAuthLogin = <TError = unknown,
       > => {
 
       const mutationOptions = getPostApiAuthLoginMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Verify recovery code and set reset token cookie
+ */
+export const postApiAuthVerifyRecover = (
+    postApiAuthVerifyRecoverBody: PostApiAuthVerifyRecoverBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/auth/verify-recover`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAuthVerifyRecoverBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthVerifyRecoverMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, TError,{data: PostApiAuthVerifyRecoverBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, TError,{data: PostApiAuthVerifyRecoverBody}, TContext> => {
+
+const mutationKey = ['postApiAuthVerifyRecover'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, {data: PostApiAuthVerifyRecoverBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthVerifyRecover(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthVerifyRecoverMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>>
+    export type PostApiAuthVerifyRecoverMutationBody = PostApiAuthVerifyRecoverBody
+    export type PostApiAuthVerifyRecoverMutationError = void
+
+    /**
+ * @summary Verify recovery code and set reset token cookie
+ */
+export const usePostApiAuthVerifyRecover = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, TError,{data: PostApiAuthVerifyRecoverBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthVerifyRecover>>,
+        TError,
+        {data: PostApiAuthVerifyRecoverBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthVerifyRecoverMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

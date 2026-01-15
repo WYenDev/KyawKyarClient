@@ -30,6 +30,9 @@ import SuperAdminGuard from "./components/SuperAdminGuard";
 // auth guard
 import RequireAdmin from "./components/RequireAdmin";
 import UserManagement from "./pages/admin/UserManagement";
+import RecoverCodesPage from "./pages/admin/RecoverCodes";
+import ForgotPassword from "./pages/admin/ForgotPassword";
+import ResetPassword from "./pages/admin/ResetPassword";
 
 function App() {
   return (
@@ -37,7 +40,9 @@ function App() {
       <Routes>
         {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin/password-change" element={<PasswordChange />} />
+        <Route path="/admin/reset-password" element={<ResetPassword />} />
         <Route
           path="/admin"
           element={
@@ -53,6 +58,7 @@ function App() {
           <Route path="car-images" element={<CarImages />} />
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
+          <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route
             path="user-management"

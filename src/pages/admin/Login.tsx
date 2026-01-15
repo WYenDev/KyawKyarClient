@@ -47,6 +47,11 @@ const AdminLogin: React.FC = () => {
     }
   });
 
+  const handleForgotPassword = () => {
+    navigate("/admin/forgot-password")
+
+  }
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
   };
@@ -142,13 +147,8 @@ const AdminLogin: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <label className="inline-flex items-center gap-2">
-                  <input type="checkbox" className="form-checkbox h-4 w-4 text-indigo-600 rounded" />
-                  <span className="text-sm text-slate-600">{t('login.remember', 'Remember me')}</span>
-                </label>
-
-                <button type="button" className="text-sm text-indigo-600 hover:underline" onClick={() => { /* future: open reset flow */ }}>
+              <div className="flex items-center justify-end">
+                <button type="button" className="text-sm text-indigo-600 hover:underline" onClick={handleForgotPassword }>
                   {t('login.forgot', 'Forgot?')}
                 </button>
               </div>

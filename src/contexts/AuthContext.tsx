@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { client } from '../services/mutator'; // Import the axios instance
-import { usePostApiAuthRefresh, PostApiAuthRefresh200 } from '../services/api';
+import { usePostApiAuthRefresh, PostApiAuthRefresh200, usePostApiAuthRecoverCodesSaved } from '../services/api';
 import type { User, Role } from '../types';
 
 
@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (user: User) => void;
   logout: () => void;
   markPasswordChanged: () => void;
+  markRecoverCodesSaved: () => void;
   authLoading: boolean;
 }
 
@@ -43,15 +44,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
 
-  const { mutate: refreshSession } = usePostApiAuthRefresh({
+
+  const {mutate: markRecoverCodesSavedMutate} = usePostApiAuthRecoverCodesSaved({
+    mutation: {
+      onSuccess: () => {
+          setUser(prevUser => prevUser ? { ...prevUser, recoverCodesSaved: true } : null);
+        setAuthLoading(false);
+      },
+      onError: () => {
+        setAuthLoading(false);
+        // Handle error if needed
+      }
+    }
+  });
+
+
+  const markRecoverCodesSaved = () => {
+    setAuthLoading(true);
+    if (user?.username) markRecoverCodesSavedMutate({data: {username: user?.username}});
+  };
+
+
+ const { mutate: refreshSession } = usePostApiAuthRefresh({
     mutation: {
       onSuccess: (data: PostApiAuthRefresh200) => {
         if (data.username !==  undefined && data.accessToken !== undefined && data.needPasswordChange !== undefined && data.role !== undefined) {
           console.log('Tokens are defined')
           
-          login({username: data.username,accessToken: data.accessToken,needPasswordChange: data.needPasswordChange, role: data.role as Role});
+          login({username: data.username,accessToken: data.accessToken,needPasswordChange: data.needPasswordChange, role: data.role as Role, resetPassword: data.resetPassword ?? false, recoverCodesSaved: data.recoverCodesSaved ?? false});
         } 
         setAuthLoading(false);
+
+
       },
       onError: () => {
         logout();
@@ -66,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout,  markPasswordChanged, authLoading }}>
+    <AuthContext.Provider value={{ user, login, logout,  markPasswordChanged, markRecoverCodesSaved, authLoading }}>
       {children}
     </AuthContext.Provider>
   );
