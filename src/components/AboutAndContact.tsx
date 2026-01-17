@@ -26,22 +26,34 @@ const AboutContact: React.FC = () => {
   return (
     <div className="bg-white">
       {/* --- SECTION 1: ABOUT US --- */}
-      <section id="about" className="py-12 sm:py-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Image Side */}
-            <div className="relative">
-              <div className="absolute -top-10 -left-10 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -z-10 opacity-60" />
-              <img
-                src={AboutImage}
-                alt="KyawKyar Showroom"
-                className="rounded-[3rem] shadow-2xl border-8 border-white object-cover h-[500px] w-full"
-              />
-              <div className="absolute -bottom-8 -right-8 bg-slate-900 text-white p-8 rounded-[2rem] shadow-2xl">
-                <div className="text-center">
-                  <div className="text-4xl font-black text-indigo-400 mb-1">15+</div>
-                  <div className="text-xs uppercase tracking-widest font-bold opacity-70">Years of Excellence</div>
-                </div>
+      <section id="about" className="py-16 sm:py-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Image Collage */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1554224155-16954405a255?q=80&w=800&auto=format&fit=crop"
+                  alt="Showroom Interior"
+                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
+                />
+                <img 
+                  src="https://images.unsplash.com/photo-1617854818583-09e7f077a156?q=80&w=800&auto=format&fit=crop"
+                  alt="Our Team"
+                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
+                />
+              </div>
+              <div className="space-y-4 mt-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1517999144091-3d9dca6d1649?q=80&w=800&auto=format&fit=crop"
+                  alt="Customer Service"
+                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
+                />
+                <img 
+                  src={AboutImage}
+                  alt="KyawKyar Luxury Car"
+                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
+                />
               </div>
             </div>
 
@@ -61,7 +73,7 @@ const AboutContact: React.FC = () => {
                 {t('description')}
               </p>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-6 pt-6 border-t border-slate-200">
                 {[
                   { icon: <Award className="text-indigo-600" />, title: "Quality Assured", desc: "150-point check" },
                   { icon: <Shield className="text-emerald-600" />, title: "Warranty", desc: "6-month guarantee" },
@@ -69,10 +81,10 @@ const AboutContact: React.FC = () => {
                   { icon: <Clock className="text-amber-600" />, title: "Fast Process", desc: "Quick ownership" },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <div className="p-3 bg-slate-50 rounded-xl">{item.icon}</div>
+                    <div className="p-3 bg-slate-100 rounded-xl">{item.icon}</div>
                     <div>
                       <h4 className="font-bold text-slate-900">{item.title}</h4>
-                      <p className="text-xs text-slate-500">{item.desc}</p>
+                      <p className="text-sm text-slate-500">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -83,145 +95,104 @@ const AboutContact: React.FC = () => {
       </section>
 
       {/* --- SECTION 2: CONTACT & BRANCHES --- */}
-      <section id="contact" className="py-12 sm:py-24 bg-slate-50 border-y border-slate-100">
+      <section id="contact" className="py-16 sm:py-24 bg-slate-50 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-[4rem] p-6 sm:p-12 lg:p-20 shadow-xl shadow-indigo-100/50 relative overflow-hidden">
+          <div className="text-center mb-12">
+            <span className="text-indigo-600 font-bold tracking-widest text-xs uppercase mb-3 inline-block">
+              Get In Touch
+            </span>
+            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
+              Let's Get You On The Road
+            </h2>
+            <p className="mt-4 text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">
+              Our team is ready to assist you. Reach out via your preferred method or visit us at one of our showroom locations.
+            </p>
+          </div>
 
-            {/* Background Decorative Icon */}
-            <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-              <MessageCircle size={400} className="text-indigo-600" />
-            </div>
-
-            <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-start">
-
-              {/* LEFT SIDE: Balanced Content */}
-              <div className="space-y-12 lg:sticky lg:top-10">
-                <div className="text-center lg:text-left">
-                  <span className="text-indigo-600 font-bold tracking-widest text-xs uppercase mb-3 inline-block">
-                    Get In Touch
-                  </span>
-                  <h2 className="text-4xl lg:text-5xl font-black text-slate-900 mb-6 leading-tight">
-                    Let's Get You <br />
-                    <span className="text-indigo-600">On The Road</span>
-                  </h2>
-                  <p className="text-slate-500 text-lg leading-relaxed max-w-md mx-auto lg:mx-0">
-                    Skip the forms. Reach out to our sales team directly for instant pricing and availability.
-                  </p>
-                </div>
-
-                {/* Main Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4">
+          <div className="grid lg:grid-cols-3 gap-8 items-start">
+            {/* Left Column: Contact Actions */}
+            <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-10">
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
+                <h3 className="font-bold text-lg text-slate-900 mb-4">Direct Contact</h3>
+                <div className="flex flex-col gap-4">
                   <a
                     href="tel:+959123456789"
-                    className="flex-1 flex items-center justify-center gap-3 bg-slate-900 text-white px-8 py-5 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 group"
+                    className="flex-1 flex items-center justify-center gap-3 bg-slate-900 text-white px-6 py-4 rounded-lg font-bold hover:bg-slate-800 transition-all group"
                   >
-                    <Phone size={20} className="group-hover:rotate-12 transition-transform" />
+                    <Phone size={18} />
                     Call Sales Team
                   </a>
                   <a
                     href={`viber://chat?number=%2B${viberNumber}`}
-                    className="flex-1 flex items-center justify-center gap-3 bg-[#7360f2] text-white px-8 py-5 rounded-2xl font-bold hover:bg-[#6654e0] transition-all shadow-xl shadow-indigo-200"
+                    className="flex-1 flex items-center justify-center gap-3 bg-[#7360f2] text-white px-6 py-4 rounded-lg font-bold hover:bg-[#6654e0] transition-all"
                   >
-                    <MessageCircle size={20} />
+                    <MessageCircle size={18} />
                     Chat on Viber
                   </a>
                 </div>
+              </div>
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
+                <h4 className="font-bold text-lg text-slate-900 flex items-center gap-2 mb-4">
+                  <HelpCircle className="text-indigo-600 w-5 h-5" />
+                  Quick Answers
+                </h4>
+                <div className="grid gap-4">
+                  {[
+                    { q: "Looking for a specific model?", a: "Ask about upcoming stock and pre-orders." },
+                    { q: "Need a trade-in value?", a: "Visit any branch for a free valuation." },
+                    { q: "Finance questions?", a: "We provide instant calculations." }
+                  ].map((item, i) => (
+                    <div key={i}>
+                      <p className="text-sm font-semibold text-slate-800">{item.q}</p>
+                      <p className="text-xs text-slate-500 mt-1">{item.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-                {/* Help Center / FAQ Box */}
-                <div className="bg-slate-50 rounded-[2.5rem] p-8 space-y-6 border border-slate-100">
-                  <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                    <HelpCircle className="text-indigo-600 w-5 h-5" />
-                    How can we help?
-                  </h4>
-                  <div className="grid gap-5">
-                    {[
-                      { q: "Looking for a specific model?", a: "Ask our team about upcoming stock and pre-orders." },
-                      { q: "Need a trade-in value?", a: "Bring your car to any branch for a free valuation." },
-                      { q: "Finance questions?", a: "We provide instant calculations for bank and showroom plans." }
-                    ].map((item, i) => (
-                      <div key={i}>
-                        <p className="text-sm font-bold text-slate-800">{item.q}</p>
-                        <p className="text-xs text-slate-500 mt-1 italic">{item.a}</p>
+            {/* Right Column: Branch Cards */}
+            <div className="lg:col-span-2 grid gap-6">
+              {showroomData.items && showroomData.items.map((loc: any, i: number) => (
+                <div
+                  key={i}
+                  className="group bg-white rounded-2xl p-6 border border-slate-100 transition-all hover:border-indigo-200 hover:bg-white hover:shadow-xl hover:shadow-indigo-100/50"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex gap-4">
+                      <MapPin className="text-indigo-600 w-6 h-6 mt-1" />
+                      <div>
+                        <h4 className="font-bold text-slate-900 text-lg">{loc.city}</h4>
+                        <p className="text-sm text-slate-500 leading-relaxed max-w-md">
+                          {loc.addressEn}
+                        </p>
                       </div>
+                    </div>
+                    {loc.googleMapUrl && (
+                      <button
+                        onClick={() => window.open(loc.googleMapUrl!, '_blank')}
+                        className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-100 transition-all"
+                        title="View on Map"
+                      >
+                        <ArrowUpRight size={18} />
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3 pt-4 border-t border-slate-100">
+                    {loc.phones && loc.phones.length > 0 && loc.phones.map((phone: any) => (
+                      <a
+                        key={phone.phone}
+                        href={`tel:${phone.phone.replace(/\s/g, '')}`}
+                        className="flex items-center justify-center gap-3 w-full py-3 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 font-bold text-sm hover:bg-slate-900 hover:text-white transition-all"
+                      >
+                        <Phone size={16} />
+                        {phone.phone}
+                      </a>
                     ))}
                   </div>
                 </div>
-
-                {/* Trust Stats Row */}
-                <div className="flex items-center justify-between lg:justify-start lg:gap-12 px-4 grayscale opacity-40">
-                  <div className="text-center lg:text-left">
-                    <p className="text-2xl font-black text-slate-900">98%</p>
-                    <p className="text-[10px] font-bold uppercase tracking-tighter">Happy Clients</p>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <p className="text-2xl font-black text-slate-900">24h</p>
-                    <p className="text-[10px] font-bold uppercase tracking-tighter">Fast Approval</p>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <p className="text-2xl font-black text-slate-900">3</p>
-                    <p className="text-[10px] font-bold uppercase tracking-tighter">Major Cities</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT SIDE: Branch Cards */}
-              <div className="grid gap-6">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 px-2">
-                  Showroom တည်နေရာများ (Locations)
-                </p>
-
-                {showroomData.items && showroomData.items.map((loc: any, i: number) => (
-                  <div
-                    key={i}
-                    className="group bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100 transition-all hover:border-indigo-200 hover:bg-white hover:shadow-2xl hover:shadow-indigo-100/40"
-                  >
-                    <div className="flex justify-between items-start mb-6">
-                      <div className="flex gap-4">
-                        <MapPin className="text-indigo-600 w-6 h-6" />
-                        <div>
-                          <h4 className="font-black text-slate-900 text-lg">{loc.city}</h4>
-                          <p className="text-sm text-slate-500 leading-relaxed max-w-[220px]">
-                            {loc.addressEn}
-                          </p>
-                        </div>
-                      </div>
-
-                      {
-                        loc.googleMapUrl && (
-
-                          <button
-                            onClick={() => window.open(loc.googleMapUrl!, '_blank')}
-                            className="p-3 rounded-xl bg-white border border-slate-100 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all"
-                            title="View on Map"
-                          >
-                            <ArrowUpRight size={20} />
-                          </button>
-                        )
-                      }
-                    </div>
-
-                    {
-                      loc.phones && loc.phones.length > 0 && loc.phones.map((phone: any) => (
-                        <a
-                          key={phone.phone}
-                          href={`tel:${phone.phone.replace(/\s/g, '')}`}
-                          className="flex items-center justify-center gap-3 w-full py-4 mb-3 bg-white border-2 border-slate-100 rounded-2xl text-slate-900 font-bold text-base hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm"
-                        >
-                          <Phone size={18} className="text-indigo-600 group-hover:text-white" />
-                          {phone.phone}
-                        </a>
-                      )) 
-                    }
-
-                    <div className="mt-3 text-center">
-                      <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                        Click to Call Branch
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
+              ))}
             </div>
           </div>
         </div>
