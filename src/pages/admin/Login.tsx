@@ -31,6 +31,8 @@ const AdminLogin: React.FC = () => {
             username: response.username,
             accessToken: response.accessToken,
             needPasswordChange: response.needPasswordChange,
+            resetPassword: response.resetPassword ?? false,
+            recoverCodesSaved: response.recoverCodesSaved ?? false, 
             role: response.role
           });
           navigate('/admin/');
