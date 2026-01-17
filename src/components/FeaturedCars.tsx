@@ -5,7 +5,7 @@ import { useGetApiCarsFeatured } from '../services/api';
 import type { CarListItem } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
-const SCROLL_AMOUNT = 350; // Increased to match larger card widths
+const SCROLL_AMOUNT = 300; // reduced to match smaller card widths
 
 const FeaturedCars: React.FC = () => {
   const { data, isLoading, isError } = useGetApiCarsFeatured();
@@ -50,14 +50,14 @@ const FeaturedCars: React.FC = () => {
 
   return (
     // Updated background to match Hero's clean white/slate-50 transition
-    <section id="featured" className="py-7 lg:py-24 bg-white relative overflow-hidden">
+    <section id="featured" className="py-4 lg:py-12 bg-white relative overflow-hidden">
       {/* Background Glow - Same Mesh style as Hero */}
       <div className="absolute top-0 right-0 w-[30%] h-[30%] bg-indigo-50/50 blur-[100px] -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header - Unified with Hero's Bold Style */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-6">
           <div className="space-y-4">
             {/* Color Swapped from Amber to Indigo */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">

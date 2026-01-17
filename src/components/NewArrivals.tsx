@@ -5,7 +5,7 @@ import FeaturedCard from './FeaturedCard';
 import { useGetApiCarsNewArrivals } from '../services/api';
 import type { CarListItem } from '../services/api';
 
-const SCROLL_AMOUNT = 350;
+const SCROLL_AMOUNT = 300;
 
 const NewArrivals: React.FC = () => {
   const { data, isLoading, isError } = useGetApiCarsNewArrivals();
@@ -49,11 +49,11 @@ const NewArrivals: React.FC = () => {
   };
 
   return (
-    <section id="new-arrivals" className="py-7 lg:py-24 bg-white relative overflow-hidden">
+    <section id="new-arrivals" className="py-4 lg:py-12 bg-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[30%] h-[30%] bg-indigo-50/40 blur-[80px] -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-6">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold uppercase tracking-wider">
               <Star className="w-3 h-3 fill-amber-700" />
