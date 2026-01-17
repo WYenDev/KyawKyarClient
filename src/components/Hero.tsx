@@ -71,14 +71,14 @@ const Hero: React.FC = () => {
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-6xl font-black text-slate-900  tracking-tight leading-[2.5]">
-                {t('hero.title_prefix')}
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
+              <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-[1.2] md:leading-snug py-4">
+                <span className="block mb-2">
+                  {t('hero.title_prefix')}
+                </span>
+                <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 box-decoration-clone">
                   {t('hero.title_suffix')}
                 </span>
               </h1>
-
               <p className="text-base sm:text-lg text-slate-500 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                 {t('hero.description')}
               </p>
