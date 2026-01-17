@@ -8,7 +8,7 @@ import NewArrivals from '../components/NewArrivals';
 
 const Home: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-900">
       <Hero />
       <FeaturedCars />
       <NewArrivals />
