@@ -26,6 +26,8 @@ import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
 import SuperAdminGuard from "./components/SuperAdminGuard";
+import SellCarRequests from "./pages/admin/SellCarRequests";
+import SellCarRequestDetails from "./pages/admin/SellCarRequestDetails";
 
 // auth guard
 import RequireAdmin from "./components/RequireAdmin";
@@ -68,6 +70,8 @@ function App() {
               </SuperAdminGuard>
             }
           />
+          <Route path="sell-requests" element={<SellCarRequests />} />
+          <Route path="sell-requests/:id" element={<SellCarRequestDetails />} />
         </Route>
 
 
