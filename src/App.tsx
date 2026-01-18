@@ -20,7 +20,6 @@ import Dashboard from "./pages/admin/Dashboard";
 import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
 import Models from "./pages/admin/Model";
-import CarImages from "./pages/admin/CarImages";
 import BuildType from "./pages/admin/BuildType";
 import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
@@ -54,7 +53,6 @@ function App() {
           <Route path="cars/:id/edit" element={<CarEditPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="models" element={<Models />} />
-          <Route path="car-images" element={<CarImages />} />
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
           <Route path="grades" element={<Grades />} />

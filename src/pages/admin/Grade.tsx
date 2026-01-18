@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { Plus, Trash2, Pencil } from "lucide-react";
-
+import Select from "../../components/Select";
 import {
     Grade,
     Model,
     useGetApiModels,
-    useGetApiModelsIdGrades,
+    useGetApiGradesModelId,
     usePostApiGrades,
     usePatchApiGradesId,
     useDeleteApiGradesId,
@@ -33,8 +33,12 @@ const Grades = () => {
     const getModelName = (id: string) =>
         models.find((m) => m.id === id)?.name ?? "-";
 
-    /* ================= GRADES (ORVAL HOOK) ================= */
-    const gradesQuery = useGetApiModelsIdGrades(modelId);
+    /* ================= GRADES ================= */
+    const gradesQuery = useGetApiGradesModelId(modelId, {
+        query: {
+            enabled: !!modelId,
+        },
+    });
 
     const grades: Grade[] = gradesQuery.data ?? [];
     const isLoading = gradesQuery.isLoading;
@@ -63,19 +67,30 @@ const Grades = () => {
         },
     });
 
-    const { mutate: updateGrade, isPending: updating } = usePatchApiGradesId({
-        mutation: {
-            onSuccess: () => {
-                gradesQuery.refetch();
-                closeModal();
+    const { mutate: updateGrade, isPending: updating } =
+        usePatchApiGradesId({
+            mutation: {
+                onSuccess: () => {
+                    gradesQuery.refetch();
+                    closeModal();
+                },
+                onError: (err: unknown) =>
+                    setError(
+                        (err as any)?.payload?.error ??
+                        "Failed to update grade"
+                    ),
             },
-            onError: (err: unknown) =>
-                setError(
-                    (err as any)?.payload?.error ??
-                    "Failed to update grade"
-                ),
-        },
-    });
+        });
+        
+    const modelOptions = useMemo(
+        () =>
+            models.map((m) => ({
+                label: m.name,
+                value: m.id,
+            })),
+        [models]
+    );
+
 
     const { mutate: deleteGrade, isPending: deleting } =
         useDeleteApiGradesId({
@@ -98,7 +113,6 @@ const Grades = () => {
     /* ================= HANDLERS ================= */
     const openCreate = () => {
         setSelectedGrade(null);
-        setModelId("");
         setName("");
         setError(null);
         setOpenModal(true);
@@ -145,11 +159,23 @@ const Grades = () => {
         <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">
+                <h1 className="text-2xl font-semibold">
                     Grades Management
                 </h1>
 
                 <div className="flex gap-3 items-center">
+                    {/* MODEL FILTER */}
+                    <div className="w-64">
+                        <Select
+                            value={modelId}
+                            options={modelOptions}
+                            onChange={(value) => setModelId(value)}
+                            placeholder="Select Model"
+                        />
+                    </div>
+
+
+
                     <input
                         type="text"
                         placeholder="Search grade..."
@@ -160,7 +186,7 @@ const Grades = () => {
 
                     <button
                         onClick={openCreate}
-                        className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
+                        className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm"
                     >
                         <Plus size={16} />
                         Add Grade
@@ -171,7 +197,7 @@ const Grades = () => {
             {/* TABLE */}
             <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
                 <table className="w-full text-sm">
-                    <thead className="bg-gray-50 text-gray-600">
+                    <thead className="bg-gray-50">
                         <tr>
                             <th className="px-8 py-4 text-left">
                                 Grade Name
@@ -192,7 +218,7 @@ const Grades = () => {
                                     colSpan={3}
                                     className="py-12 text-center text-gray-400"
                                 >
-                                    Create or edit a grade to select a model
+                                    Please select a model
                                 </td>
                             </tr>
                         ) : isLoading ? (
@@ -240,7 +266,7 @@ const Grades = () => {
                                                 onClick={() =>
                                                     openEdit(grade)
                                                 }
-                                                className="text-indigo-600 hover:underline flex items-center gap-1"
+                                                className="text-indigo-600 flex items-center gap-1"
                                             >
                                                 <Pencil size={14} />
                                                 Edit
@@ -249,7 +275,7 @@ const Grades = () => {
                                                 onClick={() =>
                                                     setDeleteTarget(grade)
                                                 }
-                                                className="text-red-500 hover:underline flex items-center gap-1"
+                                                className="text-red-500 flex items-center gap-1"
                                             >
                                                 <Trash2 size={14} />
                                                 Delete
@@ -268,7 +294,9 @@ const Grades = () => {
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-md rounded-2xl p-6">
                         <h2 className="text-xl font-semibold mb-4">
-                            {selectedGrade ? "Edit Grade" : "Add Grade"}
+                            {selectedGrade
+                                ? "Edit Grade"
+                                : "Add Grade"}
                         </h2>
 
                         {error && (
@@ -278,23 +306,13 @@ const Grades = () => {
                         )}
 
                         <div className="space-y-4">
-                            <select
+                            <Select
                                 value={modelId}
-                                onChange={(e) =>
-                                    setModelId(e.target.value)
-                                }
-                                className="border p-3 rounded-xl w-full"
-                            >
-                                <option value="">Select Model</option>
-                                {models.map((m) => (
-                                    <option
-                                        key={m.id}
-                                        value={m.id}
-                                    >
-                                        {m.name}
-                                    </option>
-                                ))}
-                            </select>
+                                options={modelOptions}
+                                onChange={(value) => setModelId(value)}
+                                placeholder="Select Model"
+                            />
+
 
                             <input
                                 autoFocus
@@ -319,7 +337,9 @@ const Grades = () => {
                                 disabled={creating || updating}
                                 className="bg-black text-white px-4 py-2 rounded-xl disabled:opacity-50"
                             >
-                                Save
+                                {creating || updating
+                                    ? "Saving..."
+                                    : "Save"}
                             </button>
                         </div>
                     </div>
@@ -357,7 +377,9 @@ const Grades = () => {
                                 disabled={deleting}
                                 className="bg-red-600 text-white px-4 py-2 rounded-xl disabled:opacity-50"
                             >
-                                Delete
+                                {deleting
+                                    ? "Deleting..."
+                                    : "Delete"}
                             </button>
                         </div>
                     </div>

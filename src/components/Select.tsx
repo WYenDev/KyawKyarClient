@@ -13,20 +13,22 @@ interface SelectProps<T extends string> {
     options: Option<T>[];
     onChange: (value: T) => void;
     placeholder?: string;
+    className?: string; 
 }
+
 
 function Select<T extends string>({
     value,
     options,
     onChange,
     placeholder = "Select",
+    className = "",
 }: SelectProps<T>) {
     const [open, setOpen] = useState(false);
-    const id = useId(); // 👈 unique per dropdown
+    const id = useId(); 
 
     const selected = options.find((o) => o.value === value);
 
-    // 👇 Listen for other dropdowns opening
     useEffect(() => {
         const handler = (e: Event) => {
             const openedId = (e as CustomEvent<string>).detail;
@@ -42,7 +44,6 @@ function Select<T extends string>({
 
     const toggle = () => {
         if (!open) {
-            // 👇 Tell others to close
             window.dispatchEvent(
                 new CustomEvent("select-open", { detail: id })
             );
@@ -55,10 +56,17 @@ function Select<T extends string>({
             <button
                 type="button"
                 onClick={toggle}
-                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-left
-                           shadow-sm hover:border-indigo-400
-                           focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                className={`
+    relative w-full
+    rounded-xl border border-gray-300 bg-white
+    px-4 py-2 text-sm text-left
+    shadow-sm
+    focus:outline-none focus:ring-2 focus:ring-indigo-200
+    ${className}
+  `}
             >
+
+
                 <div className="flex justify-between items-center">
                     <span className={selected ? "text-gray-900" : "text-gray-400"}>
                         {selected?.label ?? placeholder}

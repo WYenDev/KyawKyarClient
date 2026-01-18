@@ -12,6 +12,7 @@ import {
     usePostApiCars,
     useGetApiModels,
     useGetApiCarsFilters,
+    useGetApiGradesModelId,
 } from "../../services/api";
 
 /* ===================== FORM TYPE ===================== */
@@ -32,7 +33,7 @@ type CarForm = {
     isNewArrival?: boolean;
 };
 
-/* ===================== SELECT OPTIONS ===================== */
+/* ===================== STATIC OPTIONS ===================== */
 const fuelOptions: Option<Fuel>[] = [
     { label: "Petrol", value: Fuel.Petrol },
     { label: "Diesel", value: Fuel.Diesel },
@@ -63,7 +64,25 @@ const CarCreatePage = () => {
     const { data: modelData } = useGetApiModels({ page: 1, limit: 100 });
     const { data: filterData } = useGetApiCarsFilters();
 
-    /* ===================== OPTIONS ===================== */
+    /* ===================== FORM STATE ===================== */
+    const [form, setForm] = useState<CarForm>({
+        modelId: "",
+        modelYear: new Date().getFullYear(),
+        price: 0,
+        mileage: 0,
+        enginePower: null,
+        fuel: Fuel.Petrol,
+        transmission: Transmission.Manual,
+        steering: Steering.Left,
+        status: Status.Available,
+        colorId: "",
+        showroomId: undefined,
+        buildTypeId: undefined,
+        gradeId: undefined,
+        isNewArrival: false,
+    });
+
+    /* ===================== MODEL OPTIONS ===================== */
     const modelOptions: Option<string>[] = useMemo(
         () =>
             modelData?.models?.map((m) => ({
@@ -73,6 +92,7 @@ const CarCreatePage = () => {
         [modelData]
     );
 
+    /* ===================== FILTER OPTIONS ===================== */
     const colorOptions: Option<string>[] = useMemo(
         () =>
             filterData?.colors?.map((c) => ({
@@ -102,36 +122,21 @@ const CarCreatePage = () => {
         [filterData]
     );
 
-    const gradeOptions: Option<string>[] = useMemo(() => {
-        const grades = (filterData as any)?.grades as
-            | { id: string; name: string }[]
-            | undefined;
+    /* ===================== GRADES (MODEL DEPENDENT ⭐) ===================== */
+    const gradesQuery = useGetApiGradesModelId(form.modelId, {
+        query: {
+            enabled: !!form.modelId, // ⭐ modelId ရှိမှ fetch
+        },
+    });
 
-        return (
-            grades?.map((g) => ({
+    const gradeOptions: Option<string>[] = useMemo(
+        () =>
+            (gradesQuery.data ?? []).map((g) => ({
                 label: g.name,
                 value: g.id,
-            })) ?? []
-        );
-    }, [filterData]);
-
-    /* ===================== FORM STATE ===================== */
-    const [form, setForm] = useState<CarForm>({
-        modelId: "",
-        modelYear: new Date().getFullYear(),
-        price: 0,
-        mileage: 0,
-        enginePower: null,
-        fuel: Fuel.Petrol,
-        transmission: Transmission.Manual,
-        steering: Steering.Left,
-        status: Status.Available,
-        colorId: "",
-        showroomId: undefined,
-        buildTypeId: undefined,
-        gradeId: undefined,
-        isNewArrival: false,
-    });
+            })),
+        [gradesQuery.data]
+    );
 
     /* ===================== MUTATION ===================== */
     const { mutate, isPending } = usePostApiCars({
@@ -139,6 +144,15 @@ const CarCreatePage = () => {
             onSuccess: () => navigate("/admin/cars"),
         },
     });
+
+    /* ===================== HANDLERS ===================== */
+    const onChangeModel = (modelId: string) => {
+        setForm({
+            ...form,
+            modelId,
+            gradeId: undefined, // ⭐ reset grade on model change
+        });
+    };
 
     const handleSave = () => {
         if (!form.modelId || !form.colorId) return;
@@ -159,9 +173,7 @@ const CarCreatePage = () => {
                                 value={form.modelId}
                                 options={modelOptions}
                                 placeholder="Select model"
-                                onChange={(v) =>
-                                    setForm({ ...form, modelId: v ?? "" })
-                                }
+                                onChange={onChangeModel}
                             />
                         </Field>
 
@@ -208,13 +220,16 @@ const CarCreatePage = () => {
                             <Select
                                 value={form.gradeId ?? ""}
                                 options={gradeOptions}
-                                placeholder="Grade"
+                                placeholder={
+                                    form.modelId ? "Select grade" : "Select model first"
+                                }
                                 onChange={(v) =>
                                     setForm({
                                         ...form,
                                         gradeId: v || undefined,
                                     })
                                 }
+                                className={!form.modelId ? "opacity-50 cursor-not-allowed" : ""}
                             />
                         </Field>
                     </div>
@@ -227,10 +242,7 @@ const CarCreatePage = () => {
                             label="Model Year"
                             value={form.modelYear}
                             onChange={(v) =>
-                                setForm({
-                                    ...form,
-                                    modelYear: Number(v),
-                                })
+                                setForm({ ...form, modelYear: Number(v) })
                             }
                         />
                         <Input
@@ -267,9 +279,7 @@ const CarCreatePage = () => {
                             value={form.fuel}
                             options={fuelOptions}
                             placeholder="Fuel"
-                            onChange={(v) =>
-                                setForm({ ...form, fuel: v })
-                            }
+                            onChange={(v) => setForm({ ...form, fuel: v })}
                         />
 
                         <Select

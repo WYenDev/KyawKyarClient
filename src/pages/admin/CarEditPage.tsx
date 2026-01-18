@@ -13,6 +13,7 @@ import {
     usePatchApiCarsId,
     useGetApiModels,
     useGetApiCarsFilters,
+    useGetApiGradesModelId,
 } from "../../services/api";
 
 /* ===================== FORM TYPE ===================== */
@@ -33,7 +34,7 @@ type CarForm = {
     isNewArrival?: boolean;
 };
 
-/* ===================== SELECT OPTIONS ===================== */
+/* ===================== STATIC OPTIONS ===================== */
 const fuelOptions: Option<Fuel>[] = [
     { label: "Petrol", value: Fuel.Petrol },
     { label: "Diesel", value: Fuel.Diesel },
@@ -66,7 +67,32 @@ const CarEditPage = () => {
     const { data: modelData } = useGetApiModels({ page: 1, limit: 100 });
     const { data: filterData } = useGetApiCarsFilters();
 
-    /* ===================== OPTIONS ===================== */
+    /* ===================== FORM STATE ===================== */
+    const [form, setForm] = useState<CarForm | null>(null);
+
+    /* ===================== INIT FORM ===================== */
+    useEffect(() => {
+        if (!car) return;
+
+        setForm({
+            modelId: car.modelId,
+            modelYear: car.modelYear,
+            price: car.price,
+            mileage: car.mileage,
+            enginePower: car.enginePower ?? null,
+            fuel: car.fuel,
+            transmission: car.transmission,
+            steering: car.steering ?? Steering.Left,
+            status: car.status,
+            colorId: car.colorId,
+            showroomId: car.showroomId ?? undefined,
+            buildTypeId: car.buildTypeId ?? undefined,
+            gradeId: car.gradeId ?? undefined,
+            isNewArrival: car.isNewArrival ?? false,
+        });
+    }, [car]);
+
+    /* ===================== MODEL OPTIONS ===================== */
     const modelOptions: Option<string>[] = useMemo(
         () =>
             modelData?.models?.map((m) => ({
@@ -76,6 +102,7 @@ const CarEditPage = () => {
         [modelData]
     );
 
+    /* ===================== FILTER OPTIONS ===================== */
     const colorOptions: Option<string>[] = useMemo(
         () =>
             filterData?.colors?.map((c) => ({
@@ -105,42 +132,21 @@ const CarEditPage = () => {
         [filterData]
     );
 
-    const gradeOptions: Option<string>[] = useMemo(() => {
-        const grades = (filterData as any)?.grades as
-            | { id: string; name: string }[]
-            | undefined;
+    /* ===================== GRADES (MODEL DEPENDENT ⭐) ===================== */
+    const gradesQuery = useGetApiGradesModelId(form?.modelId ?? "", {
+        query: {
+            enabled: !!form?.modelId,
+        },
+    });
 
-        return (
-            grades?.map((g) => ({
+    const gradeOptions: Option<string>[] = useMemo(
+        () =>
+            (gradesQuery.data ?? []).map((g) => ({
                 label: g.name,
                 value: g.id,
-            })) ?? []
-        );
-    }, [filterData]);
-
-    /* ===================== FORM STATE ===================== */
-    const [form, setForm] = useState<CarForm | null>(null);
-
-    useEffect(() => {
-        if (!car) return;
-
-        setForm({
-            modelId: car.modelId,
-            modelYear: car.modelYear,
-            price: car.price,
-            mileage: car.mileage,
-            enginePower: car.enginePower ?? null,
-            fuel: car.fuel,
-            transmission: car.transmission,
-            steering: car.steering ?? Steering.Left,
-            status: car.status,
-            colorId: car.colorId,
-            showroomId: car.showroomId ?? undefined,
-            buildTypeId: car.buildTypeId ?? undefined,
-            gradeId: car.gradeId ?? undefined,
-            isNewArrival: car.isNewArrival ?? false,
-        });
-    }, [car]);
+            })),
+        [gradesQuery.data]
+    );
 
     /* ===================== MUTATION ===================== */
     const { mutate, isPending } = usePatchApiCarsId({
@@ -149,82 +155,118 @@ const CarEditPage = () => {
         },
     });
 
+    /* ===================== HANDLERS ===================== */
+    const onChangeModel = (modelId: string) => {
+        if (!form) return;
+        setForm({
+            ...form,
+            modelId,
+            gradeId: undefined, // ⭐ reset grade
+        });
+    };
+
+    const handleSave = () => {
+        if (!form) return;
+        mutate({ id: id!, data: form as CarUpdate });
+    };
+
     if (isLoading || !form) {
         return <div className="p-8">Loading...</div>;
     }
 
-    const handleSave = () => {
-        mutate({ id: id!, data: form as CarUpdate });
-    };
-
     /* ===================== RENDER ===================== */
     return (
-        <div className="p-8 max-w-6xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-sm p-8">
+        <div className="bg-[#F8F9FB] min-h-screen p-8">
+            <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-8">
                 <h1 className="text-2xl font-semibold mb-8">Edit Car</h1>
 
-                {/* ===== BASIC INFORMATION ===== */}
-                <section className="mb-10">
-                    <h2 className="text-lg font-medium mb-4">Basic Information</h2>
-
+                {/* ===== BASIC INFO ===== */}
+                <Section title="Basic Information">
                     <div className="grid grid-cols-2 gap-6">
-                        <Select
-                            value={form.modelId}
-                            options={modelOptions}
-                            placeholder="Select model"
-                            onChange={(v) =>
-                                setForm({ ...form, modelId: v ?? "" })
-                            }
-                        />
+                        <Field label="Model">
+                            <Select
+                                value={form.modelId}
+                                options={modelOptions}
+                                placeholder="Select model"
+                                onChange={onChangeModel}
+                            />
+                        </Field>
 
-                        <Select
-                            value={form.colorId}
-                            options={colorOptions}
-                            placeholder="Select color"
-                            onChange={(v) =>
-                                setForm({ ...form, colorId: v ?? "" })
-                            }
-                        />
+                        <Field label="Color">
+                            <Select
+                                value={form.colorId}
+                                options={colorOptions}
+                                placeholder="Select color"
+                                onChange={(v) =>
+                                    setForm({ ...form, colorId: v ?? "" })
+                                }
+                            />
+                        </Field>
 
-                        <Select
-                            value={form.showroomId ?? ""}
-                            options={showroomOptions}
-                            placeholder="Showroom"
-                            onChange={(v) =>
-                                setForm({ ...form, showroomId: v || undefined })
-                            }
-                        />
+                        <Field label="Showroom">
+                            <Select
+                                value={form.showroomId ?? ""}
+                                options={showroomOptions}
+                                placeholder="No Showroom"
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        showroomId: v || undefined,
+                                    })
+                                }
+                            />
+                        </Field>
 
-                        <Select
-                            value={form.buildTypeId ?? ""}
-                            options={buildTypeOptions}
-                            placeholder="Build Type"
-                            onChange={(v) =>
-                                setForm({ ...form, buildTypeId: v || undefined })
-                            }
-                        />
+                        <Field label="Build Type">
+                            <Select
+                                value={form.buildTypeId ?? ""}
+                                options={buildTypeOptions}
+                                placeholder="Build Type"
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        buildTypeId: v || undefined,
+                                    })
+                                }
+                            />
+                        </Field>
 
-                        <Select
-                            value={form.gradeId ?? ""}
-                            options={gradeOptions}
-                            placeholder="Grade"
-                            onChange={(v) =>
-                                setForm({ ...form, gradeId: v || undefined })
-                            }
-                        />
+                        <Field label="Grade">
+                            <Select
+                                value={form.gradeId ?? ""}
+                                options={gradeOptions}
+                                placeholder={
+                                    form.modelId
+                                        ? "Select grade"
+                                        : "Select model first"
+                                }
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        gradeId: v || undefined,
+                                    })
+                                }
+                                className={
+                                    !form.modelId
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }
+                            />
+                        </Field>
                     </div>
-                </section>
+                </Section>
 
                 {/* ===== SPECIFICATIONS ===== */}
-                <section className="mb-10">
-                    <h2 className="text-lg font-medium mb-4">Specifications</h2>
-
+                <Section title="Specifications">
                     <div className="grid grid-cols-4 gap-6">
                         <Input
                             label="Model Year"
                             value={form.modelYear}
                             onChange={(v) =>
-                                setForm({ ...form, modelYear: Number(v) })
+                                setForm({
+                                    ...form,
+                                    modelYear: Number(v),
+                                })
                             }
                         />
                         <Input
@@ -252,13 +294,11 @@ const CarEditPage = () => {
                             }
                         />
                     </div>
-                </section>
+                </Section>
 
                 {/* ===== STATUS ===== */}
-                <section className="mb-10">
-                    <h2 className="text-lg font-medium mb-4">Status</h2>
-
-                    <div className="grid grid-cols-4 gap-6">
+                <Section title="Status">
+                    <div className="grid grid-cols-4 gap-6 items-end">
                         <Select
                             value={form.fuel}
                             options={fuelOptions}
@@ -267,16 +307,17 @@ const CarEditPage = () => {
                                 setForm({ ...form, fuel: v })
                             }
                         />
-
                         <Select
                             value={form.transmission}
                             options={transmissionOptions}
                             placeholder="Transmission"
                             onChange={(v) =>
-                                setForm({ ...form, transmission: v })
+                                setForm({
+                                    ...form,
+                                    transmission: v,
+                                })
                             }
                         />
-
                         <Select
                             value={form.steering ?? Steering.Left}
                             options={steeringOptions}
@@ -285,7 +326,6 @@ const CarEditPage = () => {
                                 setForm({ ...form, steering: v })
                             }
                         />
-
                         <Select
                             value={form.status}
                             options={statusOptions}
@@ -296,23 +336,25 @@ const CarEditPage = () => {
                         />
                     </div>
 
-                    <label className="flex items-center gap-2 mt-4">
-                        <input
-                            type="checkbox"
-                            checked={!!form.isNewArrival}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    isNewArrival: e.target.checked,
-                                })
-                            }
-                        />
-                        New Arrival
-                    </label>
-                </section>
+                    <div className="mt-6">
+                        <label className="flex items-center gap-2 text-sm">
+                            <input
+                                type="checkbox"
+                                checked={!!form.isNewArrival}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        isNewArrival: e.target.checked,
+                                    })
+                                }
+                            />
+                            New Arrival
+                        </label>
+                    </div>
+                </Section>
 
                 {/* ===== ACTIONS ===== */}
-                <div className="flex justify-end gap-4">
+                <div className="flex justify-end gap-4 mt-10">
                     <button
                         onClick={() => navigate(-1)}
                         className="px-6 py-2 rounded-xl border"
@@ -322,7 +364,7 @@ const CarEditPage = () => {
                     <button
                         onClick={handleSave}
                         disabled={isPending}
-                        className="px-6 py-2 rounded-xl bg-black text-white"
+                        className="px-8 py-2 rounded-xl bg-black text-white"
                     >
                         Save
                     </button>
@@ -334,7 +376,34 @@ const CarEditPage = () => {
 
 export default CarEditPage;
 
-/* ===================== INPUT ===================== */
+/* ===================== UI HELPERS ===================== */
+
+const Section = ({
+    title,
+    children,
+}: {
+    title: string;
+    children: React.ReactNode;
+}) => (
+    <div className="mb-10">
+        <h2 className="text-lg font-medium mb-4">{title}</h2>
+        {children}
+    </div>
+);
+
+const Field = ({
+    label,
+    children,
+}: {
+    label: string;
+    children: React.ReactNode;
+}) => (
+    <div>
+        <label className="block text-sm mb-1">{label}</label>
+        {children}
+    </div>
+);
+
 const Input = ({
     label,
     value,
@@ -350,7 +419,7 @@ const Input = ({
             type="number"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="border p-3 rounded-xl w-full"
+            className="w-full rounded-xl border px-4 py-3"
         />
     </div>
 );
