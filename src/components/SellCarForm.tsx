@@ -181,13 +181,9 @@ const SellCarForm: React.FC = () => {
           }
 
           // Use permanentUrl returned by the presigned generation endpoint
-          if (urlItem.permanentUrl) {
-            imageUrls.push(urlItem.permanentUrl);
-          } else if (urlItem.key) {
-            // fallback: construct URL from key if needed
+          if (urlItem.key) {
             imageUrls.push(urlItem.key);
-          }
-        }
+          }}
       }
 
 
@@ -217,7 +213,7 @@ const SellCarForm: React.FC = () => {
           }
         })(),
         color: values.color || undefined,
-        message: values.message,
+        details: values.message,
         images: imageUrls,
       };
 
