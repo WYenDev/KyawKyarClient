@@ -841,6 +841,28 @@ export type GetApiModels200 = {
 
 export type PutApiModelsIdBody = { [key: string]: unknown };
 
+export type PostApiSellCarRequestsPresignedUrlBody = {
+  /**
+   * Number of presigned URLs to generate (1-5)
+   * @minimum 1
+   * @maximum 5
+   */
+  images: number;
+};
+
+export type PostApiSellCarRequestsPresignedUrl200UrlsItem = {
+  /** Presigned PUT URL to upload the file */
+  uploadUrl?: string;
+  /** Storage key for the uploaded object */
+  key?: string;
+  /** Public/permanent object URL (no signature) */
+  permanentUrl?: string;
+};
+
+export type PostApiSellCarRequestsPresignedUrl200 = {
+  urls?: PostApiSellCarRequestsPresignedUrl200UrlsItem[];
+};
+
 export type GetApiShowroomsParams = {
 page?: number;
 limit?: number;
@@ -5021,6 +5043,71 @@ export const useDeleteApiModelsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiModelsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Generate presigned S3 URLs for sell car request image uploads
+ */
+export const postApiSellCarRequestsPresignedUrl = (
+    postApiSellCarRequestsPresignedUrlBody: PostApiSellCarRequestsPresignedUrlBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiSellCarRequestsPresignedUrl200>(
+      {url: `/api/sell-car-requests/presigned-url`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiSellCarRequestsPresignedUrlBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiSellCarRequestsPresignedUrlMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, TError,{data: PostApiSellCarRequestsPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, TError,{data: PostApiSellCarRequestsPresignedUrlBody}, TContext> => {
+
+const mutationKey = ['postApiSellCarRequestsPresignedUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, {data: PostApiSellCarRequestsPresignedUrlBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiSellCarRequestsPresignedUrl(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiSellCarRequestsPresignedUrlMutationResult = NonNullable<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>>
+    export type PostApiSellCarRequestsPresignedUrlMutationBody = PostApiSellCarRequestsPresignedUrlBody
+    export type PostApiSellCarRequestsPresignedUrlMutationError = unknown
+
+    /**
+ * @summary Generate presigned S3 URLs for sell car request image uploads
+ */
+export const usePostApiSellCarRequestsPresignedUrl = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, TError,{data: PostApiSellCarRequestsPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>,
+        TError,
+        {data: PostApiSellCarRequestsPresignedUrlBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiSellCarRequestsPresignedUrlMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
