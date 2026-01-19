@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Plus, Trash2, Pencil } from "lucide-react";
 
 import {
@@ -9,18 +9,22 @@ import {
     useDeleteApiBrandsId,
 } from "../../services/api";
 
-/* ================= COMPONENT ================= */
 const Brands = () => {
     /* ================= STATE ================= */
     const [openModal, setOpenModal] = useState(false);
     const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Brand | null>(null);
+
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
-    /* ===== PAGINATION STATE (SAME AS MODELS) ===== */
+    const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
-    const limit = 13;
+
+    const PAGE_LIMIT = 13;
+    const SEARCH_LIMIT = 10000;
+
+    const isSearching = search.trim().length > 0;
 
     /* ================= QUERY ================= */
     const {
@@ -29,29 +33,51 @@ const Brands = () => {
         isError,
         refetch,
     } = useGetApiBrands({
-        page,
-        limit,
+        page: isSearching ? 1 : page,
+        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
     });
 
     const brands = brandData?.items ?? [];
 
-    /* ===== PAGINATION DATA (SAME AS MODELS) ===== */
-    const total = brandData?.total ?? 0;
-    const totalPages = Math.ceil(total / limit);
+    /* ================= SEARCH FILTER ================= */
+    const filteredBrands = useMemo(() => {
+        if (!isSearching) return brands;
+
+        return brands.filter((b) =>
+            b.name.toLowerCase().includes(search.toLowerCase())
+        );
+    }, [brands, search, isSearching]);
+
+    /* ================= PAGINATION ================= */
+    const total = isSearching
+        ? filteredBrands.length
+        : brandData?.total ?? 0;
+
+    const totalPages = Math.ceil(total / PAGE_LIMIT);
+
+    const visibleBrands = useMemo(() => {
+        if (!isSearching) return filteredBrands;
+
+        const start = (page - 1) * PAGE_LIMIT;
+        return filteredBrands.slice(start, start + PAGE_LIMIT);
+    }, [filteredBrands, page, isSearching]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [search]);
 
     /* ================= MUTATIONS ================= */
     const { mutate: createBrand, isPending: creating } = usePostApiBrands({
         mutation: {
             onSuccess: () => {
                 refetch();
-                setPage(1); // same as Models
                 closeModal();
             },
             onError: (err: unknown) => {
-                const msg =
+                setError(
                     (err as any)?.payload?.error ??
-                    "Failed to create brand";
-                setError(msg);
+                    "Failed to create brand"
+                );
             },
         },
     });
@@ -63,10 +89,10 @@ const Brands = () => {
                 closeModal();
             },
             onError: (err: unknown) => {
-                const msg =
+                setError(
                     (err as any)?.payload?.error ??
-                    "Failed to update brand";
-                setError(msg);
+                    "Failed to update brand"
+                );
             },
         },
     });
@@ -76,10 +102,6 @@ const Brands = () => {
             onSuccess: () => {
                 refetch();
                 setDeleteTarget(null);
-                setPage(1); // same as Models
-            },
-            onError: () => {
-                alert("Failed to delete brand");
             },
         },
     });
@@ -139,13 +161,23 @@ const Brands = () => {
                     Brands Management
                 </h1>
 
-                <button
-                    onClick={openCreate}
-                    className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
-                >
-                    <Plus size={16} />
-                    Add Brand
-                </button>
+                <div className="flex gap-3 items-center">
+                    <input
+                        type="text"
+                        placeholder="Search brand..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="border px-4 py-2 rounded-xl text-sm w-64"
+                    />
+
+                    <button
+                        onClick={openCreate}
+                        className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
+                    >
+                        <Plus size={16} />
+                        Add Brand
+                    </button>
+                </div>
             </div>
 
             {/* TABLE */}
@@ -153,7 +185,9 @@ const Brands = () => {
                 <table className="w-full text-sm">
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
-                            <th className="px-8 py-4 text-left">Brand Name</th>
+                            <th className="px-8 py-4 text-left">
+                                Brand Name
+                            </th>
                             <th className="px-8 py-4 text-right w-40">
                                 Actions
                             </th>
@@ -163,33 +197,24 @@ const Brands = () => {
                     <tbody>
                         {isLoading ? (
                             <tr>
-                                <td
-                                    colSpan={2}
-                                    className="py-12 text-center text-gray-400"
-                                >
+                                <td colSpan={2} className="py-12 text-center text-gray-400">
                                     Loading...
                                 </td>
                             </tr>
                         ) : isError ? (
                             <tr>
-                                <td
-                                    colSpan={2}
-                                    className="py-12 text-center text-red-500"
-                                >
+                                <td colSpan={2} className="py-12 text-center text-red-500">
                                     Failed to load brands
                                 </td>
                             </tr>
-                        ) : brands.length === 0 ? (
+                        ) : visibleBrands.length === 0 ? (
                             <tr>
-                                <td
-                                    colSpan={2}
-                                    className="py-12 text-center text-gray-400"
-                                >
+                                <td colSpan={2} className="py-12 text-center text-gray-400">
                                     No brands found
                                 </td>
                             </tr>
                         ) : (
-                            brands.map((brand) => (
+                            visibleBrands.map((brand) => (
                                 <tr
                                     key={brand.id}
                                     className="border-t hover:bg-gray-50"
@@ -201,9 +226,7 @@ const Brands = () => {
                                     <td className="px-8 py-4">
                                         <div className="flex justify-end gap-4">
                                             <button
-                                                onClick={() =>
-                                                    openEdit(brand)
-                                                }
+                                                onClick={() => openEdit(brand)}
                                                 className="text-indigo-600 hover:underline flex items-center gap-1"
                                             >
                                                 <Pencil size={14} />
@@ -211,9 +234,7 @@ const Brands = () => {
                                             </button>
 
                                             <button
-                                                onClick={() =>
-                                                    setDeleteTarget(brand)
-                                                }
+                                                onClick={() => setDeleteTarget(brand)}
                                                 className="text-red-500 hover:underline flex items-center gap-1"
                                             >
                                                 <Trash2 size={14} />
@@ -227,7 +248,7 @@ const Brands = () => {
                     </tbody>
                 </table>
 
-                {/* PAGINATION — SAME AS MODELS */}
+                {/* PAGINATION  */}
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-8 py-4 border-t">
                         <span className="text-sm text-gray-500">
@@ -238,8 +259,7 @@ const Brands = () => {
                             <button
                                 disabled={page === 1}
                                 onClick={() => setPage((p) => p - 1)}
-                                className="px-3 py-1 rounded-lg border text-sm
-                                           disabled:opacity-40 hover:bg-gray-100"
+                                className="px-3 py-1 rounded-lg border text-sm disabled:opacity-40"
                             >
                                 Previous
                             </button>
@@ -264,8 +284,7 @@ const Brands = () => {
                             <button
                                 disabled={page === totalPages}
                                 onClick={() => setPage((p) => p + 1)}
-                                className="px-3 py-1 rounded-lg border text-sm
-                                           disabled:opacity-40 hover:bg-gray-100"
+                                className="px-3 py-1 rounded-lg border text-sm disabled:opacity-40"
                             >
                                 Next
                             </button>

@@ -4193,16 +4193,16 @@ export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCa
 
 
 /**
- * @summary Get grades for a model
+ * @summary Get grades by modelId
  */
-export const getApiModelsIdGrades = (
-    id: string,
+export const getApiGradesModelId = (
+    modelId: string,
  options?: SecondParameter<typeof mutator>,signal?: AbortSignal
 ) => {
       
       
       return mutator<Grade[]>(
-      {url: `/api/models/${id}/grades`, method: 'GET', signal
+      {url: `/api/grades/${modelId}`, method: 'GET', signal
     },
       options);
     }
@@ -4210,69 +4210,69 @@ export const getApiModelsIdGrades = (
 
 
 
-export const getGetApiModelsIdGradesQueryKey = (id?: string,) => {
+export const getGetApiGradesModelIdQueryKey = (modelId?: string,) => {
     return [
-    `/api/models/${id}/grades`
+    `/api/grades/${modelId}`
     ] as const;
     }
 
     
-export const getGetApiModelsIdGradesQueryOptions = <TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export const getGetApiGradesModelIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiGradesModelId>>, TError = unknown>(modelId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGradesModelId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetApiModelsIdGradesQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getGetApiGradesModelIdQueryKey(modelId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiModelsIdGrades>>> = ({ signal }) => getApiModelsIdGrades(id, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiGradesModelId>>> = ({ signal }) => getApiGradesModelId(modelId, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(modelId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiGradesModelId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetApiModelsIdGradesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiModelsIdGrades>>>
-export type GetApiModelsIdGradesQueryError = unknown
+export type GetApiGradesModelIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiGradesModelId>>>
+export type GetApiGradesModelIdQueryError = unknown
 
 
-export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>> & Pick<
+export function useGetApiGradesModelId<TData = Awaited<ReturnType<typeof getApiGradesModelId>>, TError = unknown>(
+ modelId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGradesModelId>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiModelsIdGrades>>,
+          Awaited<ReturnType<typeof getApiGradesModelId>>,
           TError,
-          Awaited<ReturnType<typeof getApiModelsIdGrades>>
+          Awaited<ReturnType<typeof getApiGradesModelId>>
         > , 'initialData'
       >, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>> & Pick<
+export function useGetApiGradesModelId<TData = Awaited<ReturnType<typeof getApiGradesModelId>>, TError = unknown>(
+ modelId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGradesModelId>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiModelsIdGrades>>,
+          Awaited<ReturnType<typeof getApiGradesModelId>>,
           TError,
-          Awaited<ReturnType<typeof getApiModelsIdGrades>>
+          Awaited<ReturnType<typeof getApiGradesModelId>>
         > , 'initialData'
       >, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export function useGetApiGradesModelId<TData = Awaited<ReturnType<typeof getApiGradesModelId>>, TError = unknown>(
+ modelId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGradesModelId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get grades for a model
+ * @summary Get grades by modelId
  */
 
-export function useGetApiModelsIdGrades<TData = Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsIdGrades>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export function useGetApiGradesModelId<TData = Awaited<ReturnType<typeof getApiGradesModelId>>, TError = unknown>(
+ modelId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGradesModelId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetApiModelsIdGradesQueryOptions(id,options)
+  const queryOptions = getGetApiGradesModelIdQueryOptions(modelId,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

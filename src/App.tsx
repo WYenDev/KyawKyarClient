@@ -20,11 +20,14 @@ import Dashboard from "./pages/admin/Dashboard";
 import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
 import Models from "./pages/admin/Model";
-import CarImages from "./pages/admin/CarImages";
 import BuildType from "./pages/admin/BuildType";
 import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
+import CarCreatePage from "./pages/admin/CarCreatePage";
+import CarEditPage from "./pages/admin/CarEditPage";
+import Grades from "./pages/admin/Grade"; 
+
 import SuperAdminGuard from "./components/SuperAdminGuard";
 import SellCarRequests from "./pages/admin/SellCarRequests";
 import SellCarRequestDetails from "./pages/admin/SellCarRequestDetails";
@@ -55,11 +58,13 @@ function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="cars" element={<Cars />} />
+          <Route path="cars/create" element={<CarCreatePage />} />
+          <Route path="cars/:id/edit" element={<CarEditPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="models" element={<Models />} />
-          <Route path="car-images" element={<CarImages />} />
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
+          <Route path="grades" element={<Grades />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route
