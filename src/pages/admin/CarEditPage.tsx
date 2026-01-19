@@ -3,12 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Select, { Option } from "../../components/Select";
 
+
 import {
     Fuel,
     Transmission,
     Status,
-    Steering,
     CarUpdate,
+    SteeringPosition,
     useGetApiCarsId,
     usePatchApiCarsId,
     useGetApiModels,
@@ -25,7 +26,7 @@ type CarForm = {
     enginePower?: number | null;
     fuel: Fuel;
     transmission: Transmission;
-    steering?: Steering;
+    steering?: SteeringPosition;
     status: Status;
     colorId: string;
     showroomId?: string;
@@ -48,9 +49,9 @@ const transmissionOptions: Option<Transmission>[] = [
     { label: "CVT", value: Transmission.CVT },
 ];
 
-const steeringOptions: Option<Steering>[] = [
-    { label: "Left", value: Steering.Left },
-    { label: "Right", value: Steering.Right },
+const steeringOptions: Option<SteeringPosition>[] = [
+    { label: "Left", value: SteeringPosition.Left },
+    { label: "Right", value: SteeringPosition.Right },
 ];
 
 const statusOptions: Option<Status>[] = [
@@ -79,10 +80,10 @@ const CarEditPage = () => {
             modelYear: car.modelYear,
             price: car.price,
             mileage: car.mileage,
-            enginePower: car.enginePower ?? null,
+            enginePower: car.engineSize ?? null,
             fuel: car.fuel,
             transmission: car.transmission,
-            steering: car.steering ?? Steering.Left,
+            steering: car.steering || SteeringPosition.Left,
             status: car.status,
             colorId: car.colorId,
             showroomId: car.showroomId ?? undefined,
@@ -319,7 +320,7 @@ const CarEditPage = () => {
                             }
                         />
                         <Select
-                            value={form.steering ?? Steering.Left}
+                            value={form.steering ?? SteeringPosition.Left}
                             options={steeringOptions}
                             placeholder="Steering"
                             onChange={(v) =>

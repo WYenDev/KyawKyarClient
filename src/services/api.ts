@@ -45,11 +45,11 @@ export const Fuel = {
   Hybrid: 'Hybrid',
 } as const;
 
-export type Steering = typeof Steering[keyof typeof Steering];
+export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosition];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Steering = {
+export const SteeringPosition = {
   Left: 'Left',
   Right: 'Right',
 } as const;
@@ -80,6 +80,10 @@ export interface Brand {
   updatedAt: string;
 }
 
+export interface BrandCreate {
+  name: string;
+}
+
 export interface Model {
   id: string;
   name: string;
@@ -89,6 +93,21 @@ export interface Model {
   grades?: Grade[] | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Grade {
+  id: string;
+  name: string;
+  modelId: string;
+}
+
+export interface GradeCreate {
+  name: string;
+  modelId: string;
+}
+
+export interface GradeUpdate {
+  name?: string;
 }
 
 export interface Region {
@@ -109,26 +128,59 @@ export interface BuildType {
   updatedAt: string;
 }
 
-export interface License {
-  id: string;
-  carId: string;
-  prefixNumber: number;
-  prefixLetter: string;
-  registrationNumber: number;
-  registeredName: string;
-  issuedDate: string;
-  /** @nullable */
-  expiryDate?: string | null;
-  regionId: string;
-  region?: Region;
-  createdAt: string;
-  updatedAt: string;
+export interface BuildTypeCreate {
+  name: string;
+}
+
+export interface BuildTypeUpdate {
+  name?: string;
+}
+
+export interface ModelCreate {
+  name: string;
+  brandId: string;
 }
 
 export interface ShowroomPhone {
   id: string;
   showroomId: string;
   phone: string;
+  /** @nullable */
+  label?: string | null;
+}
+
+export type ShowroomCreatePhonesItem = {
+  phone?: string;
+  /** @nullable */
+  label?: string | null;
+};
+
+export interface ShowroomCreate {
+  addressMm: string;
+  addressEn: string;
+  city: string;
+  /** @nullable */
+  googleMapUrl?: string | null;
+  phones?: ShowroomCreatePhonesItem[];
+}
+
+export type ShowroomUpdatePhonesItem = {
+  phone?: string;
+  /** @nullable */
+  label?: string | null;
+};
+
+export interface ShowroomUpdate {
+  addressMm?: string;
+  addressEn?: string;
+  city?: string;
+  /** @nullable */
+  googleMapUrl?: string | null;
+  phones?: ShowroomUpdatePhonesItem[];
+}
+
+export interface ShowroomPhoneUpdate {
+  phone?: string;
   /** @nullable */
   label?: string | null;
 }
@@ -145,48 +197,155 @@ export interface Showroom {
   updatedAt: string;
 }
 
-export type ShowroomCreatePhonesItem = {
-  phone: string;
+export interface License {
+  id: string;
+  carId: string;
+  prefixNumber: number;
+  prefixLetter: string;
+  registrationNumber: number;
+  registeredName: string;
+  issuedDate: string;
   /** @nullable */
-  label?: string | null;
-};
-
-export interface ShowroomCreate {
-  addressMm: string;
-  addressEn: string;
-  city: string;
-  /** @nullable */
-  googleMapUrl?: string | null;
-  phones?: ShowroomCreatePhonesItem[];
+  expiryDate?: string | null;
+  regionId: string;
+  region?: Region;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export type ShowroomUpdatePhonesItem = {
-  phone: string;
+export interface CarImage {
+  id: string;
+  carId: string;
+  isPrimary?: boolean;
+  sequenceNumber: number;
+  visibility?: Visibility;
+  storageBaseKey: string;
+  mimeType: string;
   /** @nullable */
-  label?: string | null;
-};
-
-export interface ShowroomUpdate {
-  addressMm?: string;
-  addressEn?: string;
-  city?: string;
-  /** @nullable */
-  googleMapUrl?: string | null;
-  phones?: ShowroomUpdatePhonesItem[];
+  altText?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface BuildTypeCreate {
-  name: string;
-}
-
-export interface BuildTypeUpdate {
-  name?: string;
-}
-
-export interface ShowroomPhoneUpdate {
-  phone?: string;
+export interface Car {
+  id: string;
+  modelId: string;
+  model?: Model;
+  modelYear: number;
+  price: number;
+  mileage: number;
   /** @nullable */
-  label?: string | null;
+  engineSize?: number | null;
+  fuel: Fuel;
+  transmission: Transmission;
+  status: Status;
+  /** @nullable */
+  license?: License;
+  steering?: SteeringPosition;
+  /** @nullable */
+  buildTypeId?: string | null;
+  colorId: string;
+  /** @nullable */
+  showroomId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  /** @nullable */
+  deletedAt?: string | null;
+  featured?: boolean;
+  isNewArrival?: boolean;
+  /** @nullable */
+  gradeId?: string | null;
+  /** @nullable */
+  grade?: Grade;
+}
+
+/**
+ * @nullable
+ */
+export type CarListItemPrimaryImage = {
+  id?: string;
+  url?: string;
+  isPrimary?: boolean;
+  sequenceNumber?: number;
+  mimeType?: string;
+} | null;
+
+export interface CarListItem {
+  id: string;
+  model: Model;
+  modelId?: string;
+  modelYear: number;
+  price: number;
+  mileage: number;
+  status: Status;
+  fuel?: Fuel;
+  transmission?: Transmission;
+  /** @nullable */
+  enginePower?: number | null;
+  /** @nullable */
+  steering?: SteeringPosition;
+  /** @nullable */
+  primaryImage?: CarListItemPrimaryImage;
+  /** @nullable */
+  color?: Color;
+  /** @nullable */
+  grade?: Grade;
+  /** @nullable */
+  showroom?: Showroom;
+  featured?: boolean;
+  isNewArrival?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CarCreate {
+  modelId: string;
+  modelYear: number;
+  price: number;
+  mileage: number;
+  /** @nullable */
+  enginePower?: number | null;
+  /** @nullable */
+  engineSize?: number | null;
+  /** @nullable */
+  gradeId?: string | null;
+  fuel: Fuel;
+  transmission: Transmission;
+  status: Status;
+  /** @nullable */
+  steering?: SteeringPosition;
+  colorId: string;
+  /** @nullable */
+  showroomId?: string | null;
+  /** @nullable */
+  buildTypeId?: string | null;
+  /** @nullable */
+  isNewArrival?: boolean | null;
+  /** @nullable */
+  license?: License;
+}
+
+export interface CarUpdate {
+  modelId?: string;
+  modelYear?: number;
+  price?: number;
+  mileage?: number;
+  enginePower?: number;
+  engineSize?: number;
+  gradeId?: string;
+  fuel?: Fuel;
+  transmission?: Transmission;
+  status?: Status;
+  steering?: SteeringPosition;
+  colorId?: string;
+  showroomId?: string;
+  buildTypeId?: string;
+  isNewArrival?: boolean;
+  license?: License;
+}
+
+export interface CarsCreateBatch {
+  cars?: CarCreate[];
 }
 
 export type SellCarRequestCondition = typeof SellCarRequestCondition[keyof typeof SellCarRequestCondition];
@@ -303,6 +462,34 @@ export interface SellCarRequestUpdate {
   assignedAdminId?: string;
   status?: SellCarRequestUpdateStatus;
 }
+
+export type PostApiAboutImagesPresignedUrlBody = {
+  baseKeys?: string[];
+  images?: number;
+};
+
+export type PostApiAboutImagesPresignedUrl200UrlsItem = {
+  uploadUrl?: string;
+  key?: string;
+};
+
+export type PostApiAboutImagesPresignedUrl200 = {
+  urls?: PostApiAboutImagesPresignedUrl200UrlsItem[];
+};
+
+export type GetApiAboutAboutPageIdImages200Item = { [key: string]: unknown };
+
+export type PatchApiAboutImagesUpdateBodyImagesItem = {
+  id?: string;
+  sequenceNumber?: number;
+};
+
+export type PatchApiAboutImagesUpdateBody = {
+  aboutPageId?: string;
+  images?: PatchApiAboutImagesUpdateBodyImagesItem[];
+};
+
+export type DeleteApiAboutImagesImageId200 = { [key: string]: unknown };
 
 export type PostApiAdminBody = {
   username: string;
@@ -789,6 +976,290 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
+/**
+ * @summary Generate presigned S3 URLs for about page image uploads (count)
+ */
+export const postApiAboutImagesPresignedUrl = (
+    postApiAboutImagesPresignedUrlBody: PostApiAboutImagesPresignedUrlBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiAboutImagesPresignedUrl200>(
+      {url: `/api/about/images/presigned-url`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAboutImagesPresignedUrlBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAboutImagesPresignedUrlMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, TError,{data: PostApiAboutImagesPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, TError,{data: PostApiAboutImagesPresignedUrlBody}, TContext> => {
+
+const mutationKey = ['postApiAboutImagesPresignedUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, {data: PostApiAboutImagesPresignedUrlBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAboutImagesPresignedUrl(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAboutImagesPresignedUrlMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>>
+    export type PostApiAboutImagesPresignedUrlMutationBody = PostApiAboutImagesPresignedUrlBody
+    export type PostApiAboutImagesPresignedUrlMutationError = unknown
+
+    /**
+ * @summary Generate presigned S3 URLs for about page image uploads (count)
+ */
+export const usePostApiAboutImagesPresignedUrl = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, TError,{data: PostApiAboutImagesPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>,
+        TError,
+        {data: PostApiAboutImagesPresignedUrlBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAboutImagesPresignedUrlMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get images for an About page
+ */
+export const getApiAboutAboutPageIdImages = (
+    aboutPageId: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiAboutAboutPageIdImages200Item[]>(
+      {url: `/api/about/${aboutPageId}/images`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiAboutAboutPageIdImagesQueryKey = (aboutPageId?: string,) => {
+    return [
+    `/api/about/${aboutPageId}/images`
+    ] as const;
+    }
+
+    
+export const getGetApiAboutAboutPageIdImagesQueryOptions = <TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiAboutAboutPageIdImagesQueryKey(aboutPageId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>> = ({ signal }) => getApiAboutAboutPageIdImages(aboutPageId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(aboutPageId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiAboutAboutPageIdImagesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>>
+export type GetApiAboutAboutPageIdImagesQueryError = unknown
+
+
+export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
+ aboutPageId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
+ aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
+ aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get images for an About page
+ */
+
+export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
+ aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiAboutAboutPageIdImagesQueryOptions(aboutPageId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Update sequence numbers for about page images
+ */
+export const patchApiAboutImagesUpdate = (
+    patchApiAboutImagesUpdateBody: PatchApiAboutImagesUpdateBody,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/about/images/update`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchApiAboutImagesUpdateBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiAboutImagesUpdateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, TError,{data: PatchApiAboutImagesUpdateBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, TError,{data: PatchApiAboutImagesUpdateBody}, TContext> => {
+
+const mutationKey = ['patchApiAboutImagesUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, {data: PatchApiAboutImagesUpdateBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchApiAboutImagesUpdate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiAboutImagesUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>>
+    export type PatchApiAboutImagesUpdateMutationBody = PatchApiAboutImagesUpdateBody
+    export type PatchApiAboutImagesUpdateMutationError = unknown
+
+    /**
+ * @summary Update sequence numbers for about page images
+ */
+export const usePatchApiAboutImagesUpdate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, TError,{data: PatchApiAboutImagesUpdateBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>,
+        TError,
+        {data: PatchApiAboutImagesUpdateBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiAboutImagesUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete an about page image
+ */
+export const deleteApiAboutImagesImageId = (
+    imageId: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiAboutImagesImageId200>(
+      {url: `/api/about/images/${imageId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiAboutImagesImageIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, TError,{imageId: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, TError,{imageId: string}, TContext> => {
+
+const mutationKey = ['deleteApiAboutImagesImageId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, {imageId: string}> = (props) => {
+          const {imageId} = props ?? {};
+
+          return  deleteApiAboutImagesImageId(imageId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiAboutImagesImageIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>>
+    
+    export type DeleteApiAboutImagesImageIdMutationError = unknown
+
+    /**
+ * @summary Delete an about page image
+ */
+export const useDeleteApiAboutImagesImageId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, TError,{imageId: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>,
+        TError,
+        {imageId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiAboutImagesImageIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Create a new admin (super-admin only)
  */

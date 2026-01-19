@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 import Select, { Option } from "../../components/Select";
 
+import { Steering } from "../../types";
+
 import {
     Fuel,
     Transmission,
     Status,
-    Steering,
     CarCreate,
     usePostApiCars,
     useGetApiModels,
@@ -24,7 +25,7 @@ type CarForm = {
     enginePower?: number | null;
     fuel: Fuel;
     transmission: Transmission;
-    steering?: Steering;
+    steering?: string;
     status: Status;
     colorId: string;
     showroomId?: string;

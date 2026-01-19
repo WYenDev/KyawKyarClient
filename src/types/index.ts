@@ -43,3 +43,9 @@ export interface User {
   resetPassword: boolean,
   recoverCodesSaved: boolean
 }
+
+
+export enum Steering {
+    Left = "Left",
+    Right = "Right"
+}
