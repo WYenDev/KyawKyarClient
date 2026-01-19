@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Phone, Menu, X, Globe, User, ChevronDown, Headphones } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Phone, Menu, X, Globe, User, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-with-text.png';
 import ViberIcon from '../assets/viber-icon.avif';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,6 +52,9 @@ const Header: React.FC = () => {
   const contactRef = useRef<HTMLDivElement | null>(null);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -144,29 +148,43 @@ const Header: React.FC = () => {
 
               {/* Account / Avatar Button */}
               <div ref={accountRef} className="relative">
-                <button
-                  onClick={() => setIsAccountOpen((s) => !s)}
-                  aria-expanded={isAccountOpen}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
-                    <User className="h-4 w-4" />
-                  </span>
-                  <ChevronDown className="h-4 w-4 text-slate-500" />
-                </button>
-
-                {isAccountOpen && (
-                  <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
-                    <Link
-                      to="/admin/login"
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
-                      onClick={() => setIsAccountOpen(false)}
+                {user ? (
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white">
+                      <User className="h-4 w-4" />
+                    </span>
+                    <span className="hidden sm:inline">Admin</span>
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setIsAccountOpen((s) => !s)}
+                      aria-expanded={isAccountOpen}
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                     >
-                      <User className="h-4 w-4 text-slate-500" />
-                      <span>{t('buttons.login', 'Login')}</span>
-                    </Link>
-                    {/* Register removed: admin-only login; no public signup */}
-                  </div>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
+                        <User className="h-4 w-4" />
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-slate-500" />
+                    </button>
+
+                    {isAccountOpen && (
+                      <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
+                        <Link
+                          to="/admin/login"
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
+                          onClick={() => setIsAccountOpen(false)}
+                        >
+                          <User className="h-4 w-4 text-slate-500" />
+                          <span>{t('buttons.login', 'Login')}</span>
+                        </Link>
+                        {/* Register removed: admin-only login; no public signup */}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -229,13 +247,23 @@ const Header: React.FC = () => {
                   </button>
                 </div>
 
-                <Link
-                  to="/login"
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
-                >
-                  <User className="h-5 w-5" />
-                  <span className="font-medium">{t('buttons.login', 'Login')}</span>
-                </Link>
+                {user ? (
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full"
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="font-medium">Admin</span>
+                  </button>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="font-medium">{t('buttons.login', 'Login')}</span>
+                  </Link>
+                )}
 
                 <div />
               </div>

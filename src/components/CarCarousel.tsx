@@ -1,0 +1,186 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, ArrowRight, Plus, LucideProps } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import FeaturedCard from './FeaturedCard';
+import type { CarListItem } from '../services/api';
+
+const SCROLL_AMOUNT = 300;
+
+interface CarCarouselProps {
+  id: string;
+  badgeText: string;
+  badgeIcon: React.ReactElement<LucideProps>;
+  title: string;
+  highlightedTitle: string;
+  description: string;
+  useDataHook: () => { data: any; isLoading: boolean; isError: boolean };
+  theme: 'indigo' | 'amber';
+}
+
+const themeClasses = {
+  indigo: {
+    bg: 'bg-indigo-50',
+    text: 'text-indigo-700',
+    fill: 'fill-indigo-700',
+    hoverBg: 'hover:bg-indigo-600',
+    shadow: 'shadow-indigo-100',
+    highlight: 'text-indigo-600',
+    buttonBg: 'bg-indigo-600',
+    hoverBorder: 'hover:border-indigo-300',
+    hoverBgLight: 'hover:bg-indigo-50/30',
+    hoverText: 'hover:text-indigo-600',
+    gradientFrom: 'from-indigo-600',
+    gradientTo: 'to-purple-600',
+  },
+  amber: {
+    bg: 'bg-amber-50',
+    text: 'text-amber-700',
+    fill: 'fill-amber-700',
+    hoverBg: 'hover:bg-amber-600',
+    shadow: 'shadow-amber-100',
+    highlight: 'text-amber-600',
+    buttonBg: 'bg-amber-600',
+    hoverBorder: 'hover:border-amber-300',
+    hoverBgLight: 'hover:bg-amber-50/30',
+    hoverText: 'hover:text-amber-600',
+    gradientFrom: 'from-amber-600',
+    gradientTo: 'to-orange-600',
+  },
+};
+
+const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, description, useDataHook, theme }) => {
+  const { data, isLoading, isError } = useDataHook();
+  const cars: CarListItem[] = (data as any)?.items ?? (data as CarListItem[]) ?? [];
+  const navigate = useNavigate();
+  const classes = themeClasses[theme];
+
+  const displayCars = cars.length > 0 ? cars.slice(0, 6) : [];
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const evaluateScroll = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+  };
+
+  useEffect(() => {
+    evaluateScroll();
+    const el = containerRef.current;
+    if (!el) return;
+    const onScroll = () => evaluateScroll();
+    const ro = new ResizeObserver(evaluateScroll);
+    el.addEventListener('scroll', onScroll, { passive: true });
+    ro.observe(el);
+    window.addEventListener('resize', evaluateScroll);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      ro.disconnect();
+      window.removeEventListener('resize', evaluateScroll);
+    };
+  }, [displayCars.length]);
+
+  const scrollBy = (amount: number) => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: amount, behavior: 'smooth' });
+  };
+
+  return (
+    <section id={id} className="py-12 lg:py-16 bg-white relative overflow-hidden">
+      <div className={`absolute top-0 right-0 w-[30%] h-[30%] ${theme === 'indigo' ? 'bg-indigo-50/50' : 'bg-amber-50/40'} blur-[100px] -z-10`} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-8 gap-8">
+          <div className="space-y-4">
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${classes.bg} ${classes.text} text-xs font-bold uppercase tracking-wider`}>
+              {React.cloneElement(badgeIcon, { className: `w-3 h-3 ${classes.fill}` })}
+              {badgeText}
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+              {title} <span className={classes.highlight}>{highlightedTitle}</span>
+            </h2>
+            <p className="text-slate-500 max-w-xl text-lg leading-relaxed">
+              {description}
+            </p>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="flex gap-6 overflow-hidden">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="w-[300px] lg:w-[360px] h-[420px] flex-shrink-0 rounded-2xl bg-slate-100 animate-pulse" />
+            ))}
+          </div>
+        ) : isError ? (
+          <div className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+            <p className="text-slate-500">Failed to load cars. Please try again later.</p>
+          </div>
+        ) : (
+          <>
+            <div className="relative group/container">
+              <div className="absolute top-1/2 -left-6 z-30 -translate-y-1/2">
+                <button
+                  onClick={() => scrollBy(-SCROLL_AMOUNT)}
+                  className={`w-12 h-12 rounded-full bg-white shadow-2xl border border-slate-100 flex items-center justify-center transition-all ${
+                    canScrollLeft ? `opacity-100 scale-100 ${classes.hoverText}` : 'opacity-0 scale-90 pointer-events-none'
+                  }`}
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="absolute top-1/2 -right-6 z-30 -translate-y-1/2">
+                <button
+                  onClick={() => scrollBy(SCROLL_AMOUNT)}
+                  className={`w-12 h-12 rounded-full ${classes.buttonBg} text-white shadow-2xl flex items-center justify-center transition-all hover:bg-slate-900 ${
+                    canScrollRight ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+                  }`}
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div
+                ref={containerRef}
+                className="flex gap-8 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory pb-10 pt-4 px-2"
+              >
+                {displayCars.map((car) => (
+                  <div key={car.id} className="snap-start w-[280px] sm:w-[320px] lg:w-[360px] flex-shrink-0">
+                    <FeaturedCard car={car} />
+                  </div>
+                ))}
+
+                <div
+                  onClick={() => navigate('/buyCars')}
+                  className={`snap-start flex-shrink-0 w-64 flex flex-col items-center justify-center bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-200 ${classes.hoverBorder} ${classes.hoverBgLight} transition-all cursor-pointer group/more`}
+                >
+                  <div className={`w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover/more:scale-110 transition-all`}>
+                    <Plus className={`w-6 h-6 text-slate-400 ${classes.hoverText} transition-colors`} />
+                  </div>
+                  <span className="font-bold text-slate-900">Discover More</span>
+                  <span className="text-xs text-slate-400 mt-1 uppercase tracking-widest font-medium">150+ Vehicles</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-center mt-12">
+              <button
+                onClick={() => navigate('/buyCars')}
+                className={`group inline-flex items-center gap-3 bg-slate-900 text-white px-10 py-5 rounded-full text-base font-bold hover:bg-gradient-to-r ${classes.gradientFrom} ${classes.gradientTo} transition-all shadow-lg hover:shadow-2xl ${classes.shadow} transform hover:-translate-y-1`}
+              >
+                Explore Full Inventory
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default CarCarousel;

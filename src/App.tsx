@@ -28,9 +28,16 @@ import CarCreatePage from "./pages/admin/CarCreatePage";
 import CarEditPage from "./pages/admin/CarEditPage";
 import Grades from "./pages/admin/Grade"; 
 
+import SuperAdminGuard from "./components/SuperAdminGuard";
+import SellCarRequests from "./pages/admin/SellCarRequests";
+import SellCarRequestDetails from "./pages/admin/SellCarRequestDetails";
 
 // auth guard
 import RequireAdmin from "./components/RequireAdmin";
+import UserManagement from "./pages/admin/UserManagement";
+import RecoverCodesPage from "./pages/admin/RecoverCodes";
+import ForgotPassword from "./pages/admin/ForgotPassword";
+import ResetPassword from "./pages/admin/ResetPassword";
 
 function App() {
   return (
@@ -38,7 +45,9 @@ function App() {
       <Routes>
         {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin/password-change" element={<PasswordChange />} />
+        <Route path="/admin/reset-password" element={<ResetPassword />} />
         <Route
           path="/admin"
           element={
@@ -56,6 +65,18 @@ function App() {
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
           <Route path="grades" element={<Grades />} />
+          <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
+
+          <Route
+            path="user-management"
+            element={
+              <SuperAdminGuard>
+                <UserManagement />
+              </SuperAdminGuard>
+            }
+          />
+          <Route path="sell-requests" element={<SellCarRequests />} />
+          <Route path="sell-requests/:id" element={<SellCarRequestDetails />} />
         </Route>
 
 

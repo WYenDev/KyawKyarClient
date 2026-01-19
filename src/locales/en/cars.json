@@ -75,7 +75,7 @@
       "year_placeholder": "e.g. 2015",
       "mileage": "Mileage (km)",
       "mileage_placeholder": "e.g. 85000",
-      "expected_price": "Expected Price (MMK)",
+      "expected_price": "Expected Price (LAKHs)",
       "expected_price_placeholder": "Optional, your target price",
       "condition": "Car Condition",
       "condition_placeholder": "Select overall condition",

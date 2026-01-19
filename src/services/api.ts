@@ -175,244 +175,6 @@ export interface ShowroomUpdate {
   phones?: ShowroomUpdatePhonesItem[];
 }
 
-export interface CarImage {
-  id: string;
-  carId: string;
-  isPrimary: boolean;
-  sequenceNumber: number;
-  visibility: Visibility;
-  storageBaseKey: string;
-  mimeType: string;
-  /** @nullable */
-  altText?: string | null;
-  /**
-   * Public URL for the main image size
-   * @nullable
-   */
-  urlMain?: string | null;
-  /**
-   * Public URL for the thumbnail image
-   * @nullable
-   */
-  urlThumb?: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PrimaryImage {
-  id?: string;
-  url?: string;
-  isPrimary?: boolean;
-  sequenceNumber?: number;
-  mimeType?: string;
-}
-
-export interface Car {
-  id: string;
-  modelId: string;
-  model?: Model;
-  modelYear: number;
-  price: number;
-  mileage: number;
-  /** @nullable */
-  enginePower?: number | null;
-  isNewArrival?: boolean;
-  fuel: Fuel;
-  transmission: Transmission;
-  steering?: Steering;
-  status: Status;
-  /** @nullable */
-  license?: License;
-  colorId: string;
-  color?: Color;
-  /** @nullable */
-  showroomId?: string | null;
-  /** @nullable */
-  showroom?: Showroom;
-  /** @nullable */
-  buildTypeId?: string | null;
-  /** @nullable */
-  buildType?: BuildType;
-  /** @nullable */
-  gradeId?: string | null;
-  /** @nullable */
-  grade?: Grade;
-  images: CarImage[];
-  createdAt: string;
-  updatedAt: string;
-  /** @nullable */
-  deletedAt?: string | null;
-}
-
-export interface CarListItem {
-  id: string;
-  modelId: string;
-  model?: Model;
-  modelYear: number;
-  price: number;
-  mileage: number;
-  /** @nullable */
-  enginePower?: number | null;
-  fuel: Fuel;
-  transmission: Transmission;
-  steering?: Steering;
-  status: Status;
-  /** @nullable */
-  license?: License;
-  colorId: string;
-  color?: Color;
-  /** @nullable */
-  showroomId?: string | null;
-  /** @nullable */
-  showroom?: Showroom;
-  /** @nullable */
-  gradeId?: string | null;
-  /** @nullable */
-  grade?: Grade;
-  /** @nullable */
-  primaryImage?: PrimaryImage;
-  createdAt: string;
-  updatedAt: string;
-  /** @nullable */
-  deletedAt?: string | null;
-}
-
-export interface CarCreate {
-  modelId: string;
-  modelYear: number;
-  price: number;
-  mileage: number;
-  /** @nullable */
-  enginePower?: number | null;
-  /** @nullable */
-  isNewArrival?: boolean | null;
-  fuel: Fuel;
-  transmission: Transmission;
-  steering?: Steering;
-  status?: Status;
-  colorId: string;
-  /** @nullable */
-  showroomId?: string | null;
-  /** @nullable */
-  buildTypeId?: string | null;
-  /** @nullable */
-  gradeId?: string | null;
-}
-
-export interface CarUpdate {
-  id?: string;
-  modelYear?: number;
-  price?: number;
-  mileage?: number;
-  /** @nullable */
-  enginePower?: number | null;
-  /** @nullable */
-  isNewArrival?: boolean | null;
-  fuel?: Fuel;
-  transmission?: Transmission;
-  steering?: Steering;
-  status?: Status;
-  colorId?: string;
-  /** @nullable */
-  showroomId?: string | null;
-  /** @nullable */
-  buildTypeId?: string | null;
-  /** @nullable */
-  gradeId?: string | null;
-}
-
-export interface BrandCreate {
-  name: string;
-}
-
-export interface ModelCreate {
-  name: string;
-  brandId: string;
-}
-
-export interface CarBatchItem {
-  rowIndex: number;
-  modelId?: string;
-  modelYear?: number;
-  price?: number;
-  mileage?: number;
-  /** @nullable */
-  enginePower?: number | null;
-  /** @nullable */
-  isNewArrival?: boolean | null;
-  fuel?: Fuel;
-  transmission?: Transmission;
-  steering?: Steering;
-  status?: Status;
-  colorId?: string;
-  /** @nullable */
-  showroomId?: string | null;
-  /** @nullable */
-  gradeId?: string | null;
-}
-
-export interface CarsCreateBatch {
-  /**
-   * @minItems 1
-   * @maxItems 50
-   */
-  cars: CarBatchItem[];
-}
-
-/**
- * @nullable
- */
-export type CarBatchResultItemErrorMeta = { [key: string]: unknown } | null;
-
-/**
- * @nullable
- */
-export type CarBatchResultItemError = {
-  message?: string;
-  /** @nullable */
-  code?: string | null;
-  /** @nullable */
-  meta?: CarBatchResultItemErrorMeta;
-} | null;
-
-export interface CarBatchResultItem {
-  rowIndex: number;
-  success: boolean;
-  /** @nullable */
-  car?: Car;
-  /** @nullable */
-  error?: CarBatchResultItemError;
-}
-
-export interface CarsCreateBatchResponse {
-  createdCount: number;
-  results: CarBatchResultItem[];
-}
-
-export interface Grade {
-  id: string;
-  name: string;
-  modelId: string;
-}
-
-export interface GradeCreate {
-  name: string;
-  modelId: string;
-}
-
-export interface GradeUpdate {
-  name?: string;
-}
-
-export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosition];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const SteeringPosition = {
-  Left: 'Left',
-  Right: 'Right',
-} as const;
-
 export interface BuildTypeCreate {
   name: string;
 }
@@ -425,6 +187,121 @@ export interface ShowroomPhoneUpdate {
   phone?: string;
   /** @nullable */
   label?: string | null;
+}
+
+export type SellCarRequestCondition = typeof SellCarRequestCondition[keyof typeof SellCarRequestCondition];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SellCarRequestCondition = {
+  LIKENEW: 'LIKENEW',
+  GOOD: 'GOOD',
+  FAIR: 'FAIR',
+  NEEDWORK: 'NEEDWORK',
+} as const;
+
+export type SellCarRequestStatus = typeof SellCarRequestStatus[keyof typeof SellCarRequestStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SellCarRequestStatus = {
+  PENDING: 'PENDING',
+  INPROGESS: 'INPROGESS',
+  CONTACTED: 'CONTACTED',
+  CLOSED: 'CLOSED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export interface SellCarRequest {
+  id: string;
+  make: string;
+  model: string;
+  makeYear: number;
+  mileage: number;
+  expectedPrice: number;
+  condition: SellCarRequestCondition;
+  /** @nullable */
+  details?: string | null;
+  /** @nullable */
+  images?: string[] | null;
+  color?: string;
+  sellerName: string;
+  sellerPhone: string;
+  /** @nullable */
+  assignedAdminId?: string | null;
+  /** @nullable */
+  assignedAdminName?: string | null;
+  status: SellCarRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type SellCarRequestCreateCondition = typeof SellCarRequestCreateCondition[keyof typeof SellCarRequestCreateCondition];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SellCarRequestCreateCondition = {
+  LIKENEW: 'LIKENEW',
+  GOOD: 'GOOD',
+  FAIR: 'FAIR',
+  NEEDWORK: 'NEEDWORK',
+} as const;
+
+export interface SellCarRequestCreate {
+  make: string;
+  model: string;
+  makeYear: number;
+  mileage: number;
+  expectedPrice: number;
+  condition: SellCarRequestCreateCondition;
+  /** @nullable */
+  details?: string | null;
+  /** @nullable */
+  images?: string[] | null;
+  color: string;
+  sellerName: string;
+  sellerPhone: string;
+}
+
+export type SellCarRequestUpdateCondition = typeof SellCarRequestUpdateCondition[keyof typeof SellCarRequestUpdateCondition];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SellCarRequestUpdateCondition = {
+  LIKENEW: 'LIKENEW',
+  GOOD: 'GOOD',
+  FAIR: 'FAIR',
+  NEEDWORK: 'NEEDWORK',
+} as const;
+
+export type SellCarRequestUpdateStatus = typeof SellCarRequestUpdateStatus[keyof typeof SellCarRequestUpdateStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const SellCarRequestUpdateStatus = {
+  PENDING: 'PENDING',
+  INPROGESS: 'INPROGESS',
+  CONTACTED: 'CONTACTED',
+  CLOSED: 'CLOSED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export interface SellCarRequestUpdate {
+  make?: string;
+  model?: string;
+  makeYear?: number;
+  mileage?: number;
+  expectedPrice?: number;
+  condition?: SellCarRequestUpdateCondition;
+  /** @nullable */
+  details?: string | null;
+  /** @nullable */
+  images?: string[] | null;
+  color?: string;
+  sellerName?: string;
+  sellerPhone?: string;
+  assignedAdminId?: string;
+  status?: SellCarRequestUpdateStatus;
 }
 
 export type PostApiAdminBody = {
@@ -446,9 +323,21 @@ export type PostApiAdminResetPasswordBody = {
   newPassword?: string;
 };
 
+export type PostApiAdminResetSuperadminPasswordBody = {
+  newPassword: string;
+};
+
 export type PostApiAdminChangePasswordBody = {
   oldPassword?: string;
   newPassword?: string;
+};
+
+export type GetApiAuthRecoverCodes200 = {
+  codes?: string[];
+};
+
+export type PostApiAuthRecoverCodesSavedBody = {
+  username?: string;
 };
 
 export type PostApiAuthLoginBody = {
@@ -470,6 +359,12 @@ export type PostApiAuthLogin200 = {
   accessToken?: string;
   role?: PostApiAuthLogin200Role;
   needPasswordChange?: boolean;
+  resetPassword?: boolean;
+  recoverCodesSaved?: boolean;
+};
+
+export type PostApiAuthVerifyRecoverBody = {
+  recoveryCode: string;
 };
 
 export type PostApiAuthRefresh200Role = typeof PostApiAuthRefresh200Role[keyof typeof PostApiAuthRefresh200Role];
@@ -486,6 +381,8 @@ export type PostApiAuthRefresh200 = {
   username?: string;
   role?: PostApiAuthRefresh200Role;
   needPasswordChange?: boolean;
+  resetPassword?: boolean;
+  recoverCodesSaved?: boolean;
 };
 
 export type PostApiAuthRefresh401Error = typeof PostApiAuthRefresh401Error[keyof typeof PostApiAuthRefresh401Error];
@@ -821,6 +718,53 @@ export type GetApiModels200 = {
 
 export type PutApiModelsIdBody = { [key: string]: unknown };
 
+export type GetApiSellCarRequestsParams = {
+/**
+ * Page number (default 1)
+ * @minimum 1
+ */
+page?: number;
+/**
+ * Items per page (default 20)
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+};
+
+export type GetApiSellCarRequests200 = {
+  items?: SellCarRequest[];
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type DeleteApiSellCarRequestsId200 = {
+  deleted?: boolean;
+};
+
+export type PostApiSellCarRequestsPresignedUrlBody = {
+  /**
+   * Number of presigned URLs to generate (1-5)
+   * @minimum 1
+   * @maximum 5
+   */
+  images: number;
+};
+
+export type PostApiSellCarRequestsPresignedUrl200UrlsItem = {
+  /** Presigned PUT URL to upload the file */
+  uploadUrl?: string;
+  /** Storage key for the uploaded object */
+  key?: string;
+  /** Public/permanent object URL (no signature) */
+  permanentUrl?: string;
+};
+
+export type PostApiSellCarRequestsPresignedUrl200 = {
+  urls?: PostApiSellCarRequestsPresignedUrl200UrlsItem[];
+};
+
 export type GetApiShowroomsParams = {
 page?: number;
 limit?: number;
@@ -1069,6 +1013,76 @@ export const usePostApiAdminResetPassword = <TError = unknown,
     }
     
 /**
+ * Resets the single `SUPER_ADMIN` account password. This endpoint expects a
+`reset_token` cookie (set previously during the recovery flow) and a
+JSON body containing `newPassword`. No bearer auth is required for this
+endpoint because it is authorized via the cookie token.
+
+ * @summary Reset the super-admin password using a reset token
+ */
+export const postApiAdminResetSuperadminPassword = (
+    postApiAdminResetSuperadminPasswordBody: PostApiAdminResetSuperadminPasswordBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/admin/reset-superadmin-password`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAdminResetSuperadminPasswordBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAdminResetSuperadminPasswordMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, TError,{data: PostApiAdminResetSuperadminPasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, TError,{data: PostApiAdminResetSuperadminPasswordBody}, TContext> => {
+
+const mutationKey = ['postApiAdminResetSuperadminPassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, {data: PostApiAdminResetSuperadminPasswordBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAdminResetSuperadminPassword(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAdminResetSuperadminPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>>
+    export type PostApiAdminResetSuperadminPasswordMutationBody = PostApiAdminResetSuperadminPasswordBody
+    export type PostApiAdminResetSuperadminPasswordMutationError = void
+
+    /**
+ * @summary Reset the super-admin password using a reset token
+ */
+export const usePostApiAdminResetSuperadminPassword = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>, TError,{data: PostApiAdminResetSuperadminPasswordBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAdminResetSuperadminPassword>>,
+        TError,
+        {data: PostApiAdminResetSuperadminPasswordBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAdminResetSuperadminPasswordMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Change password for the authenticated admin
  */
 export const postApiAdminChangePassword = (
@@ -1196,6 +1210,167 @@ export const useDeleteApiAdminId = <TError = unknown,
     }
     
 /**
+<<<<<<< HEAD
+=======
+ * @summary Get temporary recovery codes from cookie
+ */
+export const getApiAuthRecoverCodes = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiAuthRecoverCodes200>(
+      {url: `/api/auth/recover-codes`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiAuthRecoverCodesQueryKey = () => {
+    return [
+    `/api/auth/recover-codes`
+    ] as const;
+    }
+
+    
+export const getGetApiAuthRecoverCodesQueryOptions = <TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiAuthRecoverCodesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>> = ({ signal }) => getApiAuthRecoverCodes(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiAuthRecoverCodesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>>
+export type GetApiAuthRecoverCodesQueryError = void
+
+
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiAuthRecoverCodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get temporary recovery codes from cookie
+ */
+
+export function useGetApiAuthRecoverCodes<TData = Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthRecoverCodes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiAuthRecoverCodesQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Mark that recovery codes have been saved
+ */
+export const postApiAuthRecoverCodesSaved = (
+    postApiAuthRecoverCodesSavedBody: PostApiAuthRecoverCodesSavedBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/auth/recover-codes-saved`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAuthRecoverCodesSavedBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthRecoverCodesSavedMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, TError,{data: PostApiAuthRecoverCodesSavedBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, TError,{data: PostApiAuthRecoverCodesSavedBody}, TContext> => {
+
+const mutationKey = ['postApiAuthRecoverCodesSaved'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, {data: PostApiAuthRecoverCodesSavedBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthRecoverCodesSaved(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthRecoverCodesSavedMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>>
+    export type PostApiAuthRecoverCodesSavedMutationBody = PostApiAuthRecoverCodesSavedBody
+    export type PostApiAuthRecoverCodesSavedMutationError = void
+
+    /**
+ * @summary Mark that recovery codes have been saved
+ */
+export const usePostApiAuthRecoverCodesSaved = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>, TError,{data: PostApiAuthRecoverCodesSavedBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthRecoverCodesSaved>>,
+        TError,
+        {data: PostApiAuthRecoverCodesSavedBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthRecoverCodesSavedMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+>>>>>>> main
  * @summary Admin login (returns access token, sets refresh cookie)
  */
 export const postApiAuthLogin = (
@@ -1256,6 +1431,71 @@ export const usePostApiAuthLogin = <TError = unknown,
       > => {
 
       const mutationOptions = getPostApiAuthLoginMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Verify recovery code and set reset token cookie
+ */
+export const postApiAuthVerifyRecover = (
+    postApiAuthVerifyRecoverBody: PostApiAuthVerifyRecoverBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/auth/verify-recover`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiAuthVerifyRecoverBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiAuthVerifyRecoverMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, TError,{data: PostApiAuthVerifyRecoverBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, TError,{data: PostApiAuthVerifyRecoverBody}, TContext> => {
+
+const mutationKey = ['postApiAuthVerifyRecover'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, {data: PostApiAuthVerifyRecoverBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthVerifyRecover(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthVerifyRecoverMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>>
+    export type PostApiAuthVerifyRecoverMutationBody = PostApiAuthVerifyRecoverBody
+    export type PostApiAuthVerifyRecoverMutationError = void
+
+    /**
+ * @summary Verify recovery code and set reset token cookie
+ */
+export const usePostApiAuthVerifyRecover = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRecover>>, TError,{data: PostApiAuthVerifyRecoverBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthVerifyRecover>>,
+        TError,
+        {data: PostApiAuthVerifyRecoverBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiAuthVerifyRecoverMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -4708,6 +4948,513 @@ export const useDeleteApiModelsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiModelsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary List sell car requests
+ */
+export const getApiSellCarRequests = (
+    params?: GetApiSellCarRequestsParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiSellCarRequests200>(
+      {url: `/api/sell-car-requests`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiSellCarRequestsQueryKey = (params?: GetApiSellCarRequestsParams,) => {
+    return [
+    `/api/sell-car-requests`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiSellCarRequestsQueryOptions = <TData = Awaited<ReturnType<typeof getApiSellCarRequests>>, TError = unknown>(params?: GetApiSellCarRequestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequests>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiSellCarRequestsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiSellCarRequests>>> = ({ signal }) => getApiSellCarRequests(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequests>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiSellCarRequestsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiSellCarRequests>>>
+export type GetApiSellCarRequestsQueryError = unknown
+
+
+export function useGetApiSellCarRequests<TData = Awaited<ReturnType<typeof getApiSellCarRequests>>, TError = unknown>(
+ params: undefined |  GetApiSellCarRequestsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequests>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiSellCarRequests>>,
+          TError,
+          Awaited<ReturnType<typeof getApiSellCarRequests>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiSellCarRequests<TData = Awaited<ReturnType<typeof getApiSellCarRequests>>, TError = unknown>(
+ params?: GetApiSellCarRequestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequests>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiSellCarRequests>>,
+          TError,
+          Awaited<ReturnType<typeof getApiSellCarRequests>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiSellCarRequests<TData = Awaited<ReturnType<typeof getApiSellCarRequests>>, TError = unknown>(
+ params?: GetApiSellCarRequestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequests>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary List sell car requests
+ */
+
+export function useGetApiSellCarRequests<TData = Awaited<ReturnType<typeof getApiSellCarRequests>>, TError = unknown>(
+ params?: GetApiSellCarRequestsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequests>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiSellCarRequestsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a sell car request
+ */
+export const postApiSellCarRequests = (
+    sellCarRequestCreate: SellCarRequestCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<SellCarRequest>(
+      {url: `/api/sell-car-requests`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: sellCarRequestCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiSellCarRequestsMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequests>>, TError,{data: SellCarRequestCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequests>>, TError,{data: SellCarRequestCreate}, TContext> => {
+
+const mutationKey = ['postApiSellCarRequests'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiSellCarRequests>>, {data: SellCarRequestCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiSellCarRequests(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiSellCarRequestsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiSellCarRequests>>>
+    export type PostApiSellCarRequestsMutationBody = SellCarRequestCreate
+    export type PostApiSellCarRequestsMutationError = void
+
+    /**
+ * @summary Create a sell car request
+ */
+export const usePostApiSellCarRequests = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequests>>, TError,{data: SellCarRequestCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiSellCarRequests>>,
+        TError,
+        {data: SellCarRequestCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiSellCarRequestsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get a sell car request by id
+ */
+export const getApiSellCarRequestsId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<SellCarRequest>(
+      {url: `/api/sell-car-requests/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiSellCarRequestsIdQueryKey = (id?: string,) => {
+    return [
+    `/api/sell-car-requests/${id}`
+    ] as const;
+    }
+
+    
+export const getGetApiSellCarRequestsIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError = void>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiSellCarRequestsIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiSellCarRequestsId>>> = ({ signal }) => getApiSellCarRequestsId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiSellCarRequestsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiSellCarRequestsId>>>
+export type GetApiSellCarRequestsIdQueryError = void
+
+
+export function useGetApiSellCarRequestsId<TData = Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError = void>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiSellCarRequestsId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiSellCarRequestsId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiSellCarRequestsId<TData = Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiSellCarRequestsId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiSellCarRequestsId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiSellCarRequestsId<TData = Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get a sell car request by id
+ */
+
+export function useGetApiSellCarRequestsId<TData = Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSellCarRequestsId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiSellCarRequestsIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Update a sell car request
+ */
+export const putApiSellCarRequestsId = (
+    id: string,
+    sellCarRequestUpdate: SellCarRequestUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<SellCarRequest>(
+      {url: `/api/sell-car-requests/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: sellCarRequestUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPutApiSellCarRequestsIdMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiSellCarRequestsId>>, TError,{id: string;data: SellCarRequestUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof putApiSellCarRequestsId>>, TError,{id: string;data: SellCarRequestUpdate}, TContext> => {
+
+const mutationKey = ['putApiSellCarRequestsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putApiSellCarRequestsId>>, {id: string;data: SellCarRequestUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  putApiSellCarRequestsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutApiSellCarRequestsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiSellCarRequestsId>>>
+    export type PutApiSellCarRequestsIdMutationBody = SellCarRequestUpdate
+    export type PutApiSellCarRequestsIdMutationError = void
+
+    /**
+ * @summary Update a sell car request
+ */
+export const usePutApiSellCarRequestsId = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiSellCarRequestsId>>, TError,{id: string;data: SellCarRequestUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof putApiSellCarRequestsId>>,
+        TError,
+        {id: string;data: SellCarRequestUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPutApiSellCarRequestsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a sell car request
+ */
+export const deleteApiSellCarRequestsId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiSellCarRequestsId200>(
+      {url: `/api/sell-car-requests/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiSellCarRequestsIdMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiSellCarRequestsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiSellCarRequestsId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiSellCarRequestsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiSellCarRequestsId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiSellCarRequestsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiSellCarRequestsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiSellCarRequestsId>>>
+    
+    export type DeleteApiSellCarRequestsIdMutationError = void
+
+    /**
+ * @summary Delete a sell car request
+ */
+export const useDeleteApiSellCarRequestsId = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiSellCarRequestsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiSellCarRequestsId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiSellCarRequestsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Generate presigned S3 URLs for sell car request image uploads
+ */
+export const postApiSellCarRequestsPresignedUrl = (
+    postApiSellCarRequestsPresignedUrlBody: PostApiSellCarRequestsPresignedUrlBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiSellCarRequestsPresignedUrl200>(
+      {url: `/api/sell-car-requests/presigned-url`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiSellCarRequestsPresignedUrlBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiSellCarRequestsPresignedUrlMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, TError,{data: PostApiSellCarRequestsPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, TError,{data: PostApiSellCarRequestsPresignedUrlBody}, TContext> => {
+
+const mutationKey = ['postApiSellCarRequestsPresignedUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, {data: PostApiSellCarRequestsPresignedUrlBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiSellCarRequestsPresignedUrl(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiSellCarRequestsPresignedUrlMutationResult = NonNullable<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>>
+    export type PostApiSellCarRequestsPresignedUrlMutationBody = PostApiSellCarRequestsPresignedUrlBody
+    export type PostApiSellCarRequestsPresignedUrlMutationError = unknown
+
+    /**
+ * @summary Generate presigned S3 URLs for sell car request image uploads
+ */
+export const usePostApiSellCarRequestsPresignedUrl = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>, TError,{data: PostApiSellCarRequestsPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiSellCarRequestsPresignedUrl>>,
+        TError,
+        {data: PostApiSellCarRequestsPresignedUrlBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiSellCarRequestsPresignedUrlMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Assign the sell car request to the authenticated admin
+ */
+export const postApiSellCarRequestsIdAssign = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<SellCarRequest>(
+      {url: `/api/sell-car-requests/${id}/assign`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiSellCarRequestsIdAssignMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsIdAssign>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsIdAssign>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiSellCarRequestsIdAssign'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiSellCarRequestsIdAssign>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiSellCarRequestsIdAssign(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiSellCarRequestsIdAssignMutationResult = NonNullable<Awaited<ReturnType<typeof postApiSellCarRequestsIdAssign>>>
+    
+    export type PostApiSellCarRequestsIdAssignMutationError = void
+
+    /**
+ * @summary Assign the sell car request to the authenticated admin
+ */
+export const usePostApiSellCarRequestsIdAssign = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiSellCarRequestsIdAssign>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiSellCarRequestsIdAssign>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiSellCarRequestsIdAssignMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
