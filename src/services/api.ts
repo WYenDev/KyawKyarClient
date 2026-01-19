@@ -1210,8 +1210,6 @@ export const useDeleteApiAdminId = <TError = unknown,
     }
     
 /**
-<<<<<<< HEAD
-=======
  * @summary Get temporary recovery codes from cookie
  */
 export const getApiAuthRecoverCodes = (
@@ -1370,7 +1368,6 @@ export const usePostApiAuthRecoverCodesSaved = <TError = void,
     }
     
 /**
->>>>>>> main
  * @summary Admin login (returns access token, sets refresh cookie)
  */
 export const postApiAuthLogin = (
