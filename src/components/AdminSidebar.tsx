@@ -119,22 +119,9 @@ const AdminSidebar = () => {
                     label="Build Types"
                     collapsed={collapsed}
                 />
-                <MenuItem
-                    to="/admin/health"
-                    icon={Activity}
-                    label="System Health"
-                    collapsed={collapsed}
-                />
-                <MenuItem to="/admin" icon={LayoutDashboard} label="Dashboard" collapsed={collapsed} end />
-                <MenuItem to="/admin/cars" icon={Car} label="Cars" collapsed={collapsed} />
-                <MenuItem to="/admin/brands" icon={Tag} label="Brands" collapsed={collapsed} />
-                <MenuItem to="/admin/models" icon={Layers} label="Models" collapsed={collapsed} />
-
                 {/* 🔹 NEW ITEMS */}
-                <MenuItem to="/admin/showrooms" icon={Building} label="Showrooms" collapsed={collapsed} />
-                <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={collapsed} />
  
-                 <MenuItem to="/admin/car-images" icon={Image} label="Car Images" collapsed={collapsed} />
+                 <MenuItem to="/admin/car-images" icon={Car} label="Car Images" collapsed={collapsed} />
                  <MenuItem to="/admin/health" icon={Activity} label="System Health" collapsed={collapsed} />
                  <MenuItem to="/admin/sell-requests" icon={Tag} label="Sell Requests" collapsed={collapsed} />
                  {
