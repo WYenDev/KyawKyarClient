@@ -12,6 +12,12 @@ import {
     useGetApiBrands,
 } from "../../services/api";
 
+type ApiError = {
+    payload?: {
+        error?: string;
+    };
+};
+
 /* ================= COMPONENT ================= */
 const Models = () => {
     /* ================= STATE ================= */
@@ -90,7 +96,7 @@ const Models = () => {
             },
             onError: (err: unknown) => {
                 setError(
-                    (err as any)?.payload?.error ??
+                    (err as ApiError)?.payload?.error ??
                     "Failed to create model"
                 );
             },
@@ -105,7 +111,7 @@ const Models = () => {
             },
             onError: (err: unknown) => {
                 setError(
-                    (err as any)?.payload?.error ??
+                    (err as ApiError)?.payload?.error ??
                     "Failed to update model"
                 );
             },

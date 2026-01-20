@@ -3,9 +3,9 @@ import AdminSidebar from "../../components/AdminSidebar";
 
 const AdminLayout = () => {
     return (
-        <div className="flex min-h-screen bg-[#F8F9FB]">
+        <div className="flex h-screen bg-[#F8F9FB] overflow-hidden">
             <AdminSidebar />
-            <main className="flex-1 p-8">
+            <main className="flex-1">
                 <Outlet />
             </main>
         </div>

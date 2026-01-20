@@ -9,6 +9,12 @@ import {
     useDeleteApiBuildTypesId,
 } from "../../services/api";
 
+type ApiError = {
+    payload?: {
+        error?: string;
+    };
+};
+
 /* ================= COMPONENT ================= */
 const BuildTypes = () => {
     /* ================= STATE ================= */
@@ -50,7 +56,7 @@ const BuildTypes = () => {
                 },
                 onError: (err: unknown) => {
                     const msg =
-                        (err as any)?.payload?.error ??
+                        (err as ApiError)?.payload?.error ??
                         "Failed to create build type";
                     setError(msg);
                 },
@@ -66,7 +72,7 @@ const BuildTypes = () => {
                 },
                 onError: (err: unknown) => {
                     const msg =
-                        (err as any)?.payload?.error ??
+                        (err as ApiError)?.payload?.error ??
                         "Failed to update build type";
                     setError(msg);
                 },

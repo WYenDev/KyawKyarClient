@@ -28,7 +28,7 @@ const ResetPassword: React.FC = () => {
         setLoading(false);
         navigate('/admin/login');
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error('Reset password failed', err);
         setError(t('reset.error', 'Failed to reset password.'));
       },

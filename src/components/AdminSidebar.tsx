@@ -5,7 +5,6 @@ import {
     Car,
     Tag,
     Layers,
-    Activity,
     Settings,
     LogOut,
     ChevronLeft,
@@ -121,8 +120,6 @@ const AdminSidebar = () => {
                 />
                 {/* 🔹 NEW ITEMS */}
  
-                 <MenuItem to="/admin/car-images" icon={Car} label="Car Images" collapsed={collapsed} />
-                 <MenuItem to="/admin/health" icon={Activity} label="System Health" collapsed={collapsed} />
                  <MenuItem to="/admin/sell-requests" icon={Tag} label="Sell Requests" collapsed={collapsed} />
                  {
                      user?.role === "SUPER_ADMIN" && (

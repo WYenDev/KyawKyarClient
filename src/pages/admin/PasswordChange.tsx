@@ -28,7 +28,7 @@ const PasswordChange: React.FC = () => {
         markPasswordChanged();
         navigate('/admin/');
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error('Change password failed', err);
         setError(t('passwordChange.error', 'Failed to change password'));
       },

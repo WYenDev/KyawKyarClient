@@ -11,7 +11,8 @@ import {
     Status,
     CarCreate,
     usePostApiCars,
-    useGetApiModels,
+    useGetApiBrands,
+    useGetApiModelsBrandBrandId,
     useGetApiCarsFilters,
     useGetApiGradesModelId,
 } from "../../services/api";
@@ -61,8 +62,14 @@ const statusOptions: Option<Status>[] = [
 const CarCreatePage = () => {
     const navigate = useNavigate();
 
+    /* ===================== STATE ===================== */
+    const [brandId, setBrandId] = useState<string>("");
+
     /* ===================== QUERIES ===================== */
-    const { data: modelData } = useGetApiModels({ page: 1, limit: 100 });
+    const { data: brandData } = useGetApiBrands({ page: 1, limit: 100 });
+    const { data: modelData } = useGetApiModelsBrandBrandId(brandId, {
+        query: { enabled: !!brandId },
+    });
     const { data: filterData } = useGetApiCarsFilters();
 
     /* ===================== FORM STATE ===================== */
@@ -83,11 +90,20 @@ const CarCreatePage = () => {
         isNewArrival: false,
     });
 
-    /* ===================== MODEL OPTIONS ===================== */
+    /* ===================== OPTIONS ===================== */
+    const brandOptions: Option<string>[] = useMemo(
+        () =>
+            brandData?.items?.map((b) => ({
+                label: b.name,
+                value: b.id,
+            })) ?? [],
+        [brandData]
+    );
+
     const modelOptions: Option<string>[] = useMemo(
         () =>
-            modelData?.models?.map((m) => ({
-                label: `${m.brand?.name ?? ""} ${m.name}`,
+            modelData?.map((m) => ({
+                label: m.name,
                 value: m.id,
             })) ?? [],
         [modelData]
@@ -147,6 +163,15 @@ const CarCreatePage = () => {
     });
 
     /* ===================== HANDLERS ===================== */
+    const onChangeBrand = (newBrandId: string) => {
+        setBrandId(newBrandId);
+        setForm({
+            ...form,
+            modelId: "",
+            gradeId: undefined,
+        });
+    };
+
     const onChangeModel = (modelId: string) => {
         setForm({
             ...form,
@@ -162,19 +187,40 @@ const CarCreatePage = () => {
 
     /* ===================== RENDER ===================== */
     return (
-        <div className="bg-[#F8F9FB] min-h-screen p-8">
-            <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-8">
-                <h1 className="text-2xl font-semibold mb-8">Create Car</h1>
+        <div className="bg-[#F8F9FB] h-full overflow-y-auto p-8">
+            <div className="max-w-5xl mx-auto">
+                <h1 className="text-2xl font-semibold mb-6 text-gray-900">
+                    Create Car
+                </h1>
 
-                {/* ===== BASIC INFO ===== */}
-                <Section title="Basic Information">
+                <div className="bg-white rounded-2xl shadow-sm p-8">
+                    {/* ===== BASIC INFO ===== */}
+                    <Section title="Basic Information">
                     <div className="grid grid-cols-2 gap-6">
+                        <Field label="Brand">
+                            <Select
+                                value={brandId}
+                                options={brandOptions}
+                                placeholder="Select brand"
+                                onChange={onChangeBrand}
+                            />
+                        </Field>
+
                         <Field label="Model">
                             <Select
                                 value={form.modelId}
                                 options={modelOptions}
-                                placeholder="Select model"
+                                placeholder={
+                                    brandId
+                                        ? "Select model"
+                                        : "Select brand first"
+                                }
                                 onChange={onChangeModel}
+                                className={
+                                    !brandId
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }
                             />
                         </Field>
 
@@ -344,6 +390,7 @@ const CarCreatePage = () => {
                         Save
                     </button>
                 </div>
+            </div>
             </div>
         </div>
     );
