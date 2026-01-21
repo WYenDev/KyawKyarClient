@@ -41,7 +41,7 @@ const AdminLogin: React.FC = () => {
           setError(t('login.invalidResponse', 'Invalid login response'));
         }
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error('Login failed:', err);
         setError(t('login.failed', 'Login failed. Check credentials and try again.'));
       },

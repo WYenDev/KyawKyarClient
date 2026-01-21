@@ -16,10 +16,18 @@ import {
 } from "../../services/api";
 
 /* ================= TYPES ================= */
-type ShowroomCreateForm = ShowroomCreate & {
-    phones?: { phone: string }[];
+type FormPhone = { phone: string };
+
+type ShowroomCreateForm = Omit<ShowroomCreate, "phones"> & {
+    phones: FormPhone[];
 };
 
+// Simple error type
+type ApiError = {
+    payload?: {
+        error?: string;
+    };
+};
 /* ================= COMPONENT ================= */
 const Showrooms = () => {
     /* ================= STATE ================= */
@@ -79,8 +87,9 @@ const Showrooms = () => {
                     setPage(1);
                     closeModal();
                 },
-                onError: (err: any) => {
-                    setError(err?.payload?.error ?? "Failed to create showroom");
+                onError: (err: unknown) => {
+                    const error = err as ApiError;
+                    setError(error?.payload?.error ?? "Failed to create showroom");
                 },
             },
         });
@@ -92,8 +101,9 @@ const Showrooms = () => {
                     refetch();
                     closeModal();
                 },
-                onError: (err: any) => {
-                    setError(err?.payload?.error ?? "Failed to update showroom");
+                onError: (err: unknown) => {
+                    const error = err as ApiError;
+                    setError(error?.payload?.error ?? "Failed to update showroom");
                 },
             },
         });
@@ -118,9 +128,10 @@ const Showrooms = () => {
                     setNewPhone("");
                     setPhoneError(null);
                 },
-                onError: (err: any) => {
+                onError: (err: unknown) => {
+                    const error = err as ApiError;
                     setPhoneError(
-                        err?.payload?.error ?? "Failed to add phone number"
+                        error?.payload?.error ?? "Failed to add phone number"
                     );
                 },
             },
@@ -135,9 +146,10 @@ const Showrooms = () => {
                     setEditPhoneValue("");
                     setPhoneError(null);
                 },
-                onError: (err: any) => {
+                onError: (err: unknown) => {
+                    const error = err as ApiError;
                     setPhoneError(
-                        err?.payload?.error ?? "Failed to update phone number"
+                        error?.payload?.error ?? "Failed to update phone number"
                     );
                 },
             },
@@ -152,9 +164,10 @@ const Showrooms = () => {
                     setDeletePhoneTarget(null);
                     setPhoneError(null);
                 },
-                onError: (err: any) => {
+                onError: (err: unknown) => {
+                    const error = err as ApiError;
                     setPhoneError(
-                        err?.payload?.error ?? "Failed to delete phone number"
+                        error?.payload?.error ?? "Failed to delete phone number"
                     );
                 },
             },
@@ -220,8 +233,8 @@ const Showrooms = () => {
                     addressMm: form.addressMm,
                     city: form.city,
                     googleMapUrl: form.googleMapUrl,
-                    phones: form.phones,
-                } as any,
+                    phones: form.phones.map((p) => ({ phone: p.phone })),
+                },
             });
         }
     };
@@ -242,7 +255,7 @@ const Showrooms = () => {
         // EDIT MODE
         addPhone({
             showroomId: selectedItem.id,
-            data: { phone: newPhone } as any,
+            data: { phone: newPhone } as unknown as ShowroomPhone,
         });
     };
 
@@ -257,7 +270,7 @@ const Showrooms = () => {
         updatePhone({
             showroomId: editingPhone.showroomId,
             phoneId: editingPhone.id,
-            data: { phone: editPhoneValue } as any,
+            data: { phone: editPhoneValue },
         });
         setEditingPhone(null);
     };
@@ -303,8 +316,9 @@ const Showrooms = () => {
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
                             <th className="px-8 py-4 text-left">Address (EN)</th>
+                            <th className="px-8 py-4 text-left">Address (MM)</th>
                             <th className="px-8 py-4 text-left">City</th>
-                            <th className="px-8 py-4 text-left">Phones</th>
+                            <th className="px-8 py-4 text-left min-w-[200px]">Phones</th>
                             <th className="px-8 py-4 text-left">Map</th>
                             <th className="px-8 py-4 text-right w-40">
                                 Actions
@@ -315,14 +329,14 @@ const Showrooms = () => {
                     <tbody>
                         {isLoading ? (
                             <tr>
-                                <td colSpan={5} className="py-12 text-center">
+                                <td colSpan={6} className="py-12 text-center">
                                     Loading...
                                 </td>
                             </tr>
                         ) : isError ? (
                             <tr>
                                 <td
-                                    colSpan={5}
+                                    colSpan={6}
                                     className="py-12 text-center text-red-500"
                                 >
                                     Failed to load showrooms
@@ -330,7 +344,7 @@ const Showrooms = () => {
                             </tr>
                         ) : showrooms.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="py-12 text-center">
+                                <td colSpan={6} className="py-12 text-center">
                                     No showrooms found
                                 </td>
                             </tr>
@@ -339,6 +353,9 @@ const Showrooms = () => {
                                 <tr key={item.id} className="border-t">
                                     <td className="px-8 py-4 font-medium">
                                         {item.addressEn}
+                                    </td>
+                                    <td className="px-8 py-4">
+                                        {item.addressMm}
                                     </td>
                                     <td className="px-8 py-4">{item.city}</td>
 

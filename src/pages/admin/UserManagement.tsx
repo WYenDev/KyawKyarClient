@@ -81,8 +81,9 @@ const UserManagement: React.FC = () => {
       await postAdminMutation.mutateAsync({ data: { username: username.trim(), password } });
       await refetch();
       closeModal();
-    } catch (err: any) {
-      setFormError(err?.message || 'Failed to create admin');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to create admin';
+      setFormError(msg);
     } finally {
       setIsCreating(false);
     }

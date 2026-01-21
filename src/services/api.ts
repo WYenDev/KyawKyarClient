@@ -221,6 +221,7 @@ export interface CarImage {
   visibility?: Visibility;
   storageBaseKey: string;
   mimeType: string;
+  url?: string;
   /** @nullable */
   altText?: string | null;
   createdAt: string;
@@ -5200,6 +5201,99 @@ export const usePostApiModels = <TError = unknown,
       return useMutation(mutationOptions, queryClient);
     }
     
+/**
+ * @summary Get all models by brand ID (no pagination)
+ */
+export const getApiModelsBrandBrandId = (
+    brandId: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<Model[]>(
+      {url: `/api/models/brand/${brandId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiModelsBrandBrandIdQueryKey = (brandId?: string,) => {
+    return [
+    `/api/models/brand/${brandId}`
+    ] as const;
+    }
+
+    
+export const getGetApiModelsBrandBrandIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError = unknown>(brandId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiModelsBrandBrandIdQueryKey(brandId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>> = ({ signal }) => getApiModelsBrandBrandId(brandId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(brandId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiModelsBrandBrandIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>>
+export type GetApiModelsBrandBrandIdQueryError = unknown
+
+
+export function useGetApiModelsBrandBrandId<TData = Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError = unknown>(
+ brandId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiModelsBrandBrandId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiModelsBrandBrandId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiModelsBrandBrandId<TData = Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError = unknown>(
+ brandId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiModelsBrandBrandId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiModelsBrandBrandId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiModelsBrandBrandId<TData = Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError = unknown>(
+ brandId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all models by brand ID (no pagination)
+ */
+
+export function useGetApiModelsBrandBrandId<TData = Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError = unknown>(
+ brandId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiModelsBrandBrandId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiModelsBrandBrandIdQueryOptions(brandId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Get model by id
  */

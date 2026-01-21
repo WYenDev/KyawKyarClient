@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Trash2, Star, Upload, X } from "lucide-react";
 
 import Select, { Option } from "../../components/Select";
 
@@ -12,9 +13,14 @@ import {
     SteeringPosition,
     useGetApiCarsId,
     usePatchApiCarsId,
-    useGetApiModels,
+    useGetApiBrands,
+    useGetApiModelsBrandBrandId,
     useGetApiCarsFilters,
     useGetApiGradesModelId,
+    useGetApiCarImagesCarId,
+    usePostApiCarImagesCarIdUpload,
+    useDeleteApiCarImagesImageId,
+    usePatchApiCarImagesImageIdSetPrimary,
 } from "../../services/api";
 
 /* ===================== FORM TYPE ===================== */
@@ -63,17 +69,25 @@ const CarEditPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
+    /* ===================== STATE ===================== */
+    const [brandId, setBrandId] = useState<string>("");
+    const [form, setForm] = useState<CarForm | null>(null);
+
     /* ===================== QUERIES ===================== */
     const { data: car, isLoading } = useGetApiCarsId(id!);
-    const { data: modelData } = useGetApiModels({ page: 1, limit: 100 });
+    const { data: brandData } = useGetApiBrands({ page: 1, limit: 100 });
+    const { data: modelData } = useGetApiModelsBrandBrandId(brandId, {
+        query: { enabled: !!brandId },
+    });
     const { data: filterData } = useGetApiCarsFilters();
-
-    /* ===================== FORM STATE ===================== */
-    const [form, setForm] = useState<CarForm | null>(null);
 
     /* ===================== INIT FORM ===================== */
     useEffect(() => {
         if (!car) return;
+
+        if (car.model?.brandId) {
+            setBrandId(car.model.brandId);
+        }
 
         setForm({
             modelId: car.modelId,
@@ -93,11 +107,20 @@ const CarEditPage = () => {
         });
     }, [car]);
 
-    /* ===================== MODEL OPTIONS ===================== */
+    /* ===================== OPTIONS ===================== */
+    const brandOptions: Option<string>[] = useMemo(
+        () =>
+            brandData?.items?.map((b) => ({
+                label: b.name,
+                value: b.id,
+            })) ?? [],
+        [brandData]
+    );
+
     const modelOptions: Option<string>[] = useMemo(
         () =>
-            modelData?.models?.map((m) => ({
-                label: `${m.brand?.name ?? ""} ${m.name}`,
+            modelData?.map((m) => ({
+                label: m.name,
                 value: m.id,
             })) ?? [],
         [modelData]
@@ -157,6 +180,17 @@ const CarEditPage = () => {
     });
 
     /* ===================== HANDLERS ===================== */
+    const onChangeBrand = (newBrandId: string) => {
+        setBrandId(newBrandId);
+        if (form) {
+            setForm({
+                ...form,
+                modelId: "",
+                gradeId: undefined,
+            });
+        }
+    };
+
     const onChangeModel = (modelId: string) => {
         if (!form) return;
         setForm({
@@ -177,19 +211,42 @@ const CarEditPage = () => {
 
     /* ===================== RENDER ===================== */
     return (
-        <div className="bg-[#F8F9FB] min-h-screen p-8">
-            <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-8">
-                <h1 className="text-2xl font-semibold mb-8">Edit Car</h1>
+        <div className="bg-[#F8F9FB] h-full overflow-y-auto p-8">
+            <div className="max-w-5xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-semibold text-gray-900">
+                        Edit Car
+                    </h1>
+                </div>
 
-                {/* ===== BASIC INFO ===== */}
-                <Section title="Basic Information">
+                <div className="bg-white rounded-2xl shadow-sm p-8">
+                    {/* ===== BASIC INFO ===== */}
+                    <Section title="Basic Information">
                     <div className="grid grid-cols-2 gap-6">
+                        <Field label="Brand">
+                            <Select
+                                value={brandId}
+                                options={brandOptions}
+                                placeholder="Select brand"
+                                onChange={onChangeBrand}
+                            />
+                        </Field>
+
                         <Field label="Model">
                             <Select
                                 value={form.modelId}
                                 options={modelOptions}
-                                placeholder="Select model"
+                                placeholder={
+                                    brandId
+                                        ? "Select model"
+                                        : "Select brand first"
+                                }
                                 onChange={onChangeModel}
+                                className={
+                                    !brandId
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }
                             />
                         </Field>
 
@@ -297,6 +354,9 @@ const CarEditPage = () => {
                     </div>
                 </Section>
 
+                {/* ===== IMAGES ===== */}
+                <CarImagesManager carId={id!} />
+
                 {/* ===== STATUS ===== */}
                 <Section title="Status">
                     <div className="grid grid-cols-4 gap-6 items-end">
@@ -371,6 +431,7 @@ const CarEditPage = () => {
                     </button>
                 </div>
             </div>
+            </div>
         </div>
     );
 };
@@ -424,3 +485,182 @@ const Input = ({
         />
     </div>
 );
+
+
+/* ===================== IMAGE MANAGER ===================== */
+const CarImagesManager = ({ carId }: { carId: string }) => {
+    /* ===================== QUERY ===================== */
+    const { data: images = [], refetch } = useGetApiCarImagesCarId(carId);
+
+    /* ===================== MUTATIONS ===================== */
+    const { mutate: upload, isPending: isUploading } =
+        usePostApiCarImagesCarIdUpload({
+            mutation: {
+                onSuccess: () => {
+                    refetch();
+                    setFiles([]);
+                    setPrimaryIndex(null);
+                },
+            },
+        });
+
+    const { mutate: deleteImage } = useDeleteApiCarImagesImageId({
+        mutation: { onSuccess: () => refetch() },
+    });
+
+    const { mutate: setPrimary } = usePatchApiCarImagesImageIdSetPrimary({
+        mutation: { onSuccess: () => refetch() },
+    });
+
+    /* ===================== LOCAL STATE ===================== */
+    const [files, setFiles] = useState<File[]>([]);
+    const [primaryIndex, setPrimaryIndex] = useState<number | null>(null);
+
+    /* ===================== ACTIONS ===================== */
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files);
+            setFiles((prev) => [...prev, ...newFiles]);
+        }
+    };
+
+    const removeFile = (idx: number) => {
+        setFiles((prev) => prev.filter((_, i) => i !== idx));
+        if (primaryIndex === idx) setPrimaryIndex(null);
+        if (primaryIndex !== null && idx < primaryIndex)
+            setPrimaryIndex(primaryIndex - 1);
+    };
+
+    const handleUpload = () => {
+        if (files.length === 0) return;
+        upload({
+            carId,
+            data: {
+                images: files,
+                primaryIndex: primaryIndex !== null ? primaryIndex : undefined,
+            },
+        });
+    };
+
+    return (
+        <Section title="Car Images">
+            {/* EXISTING IMAGES */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+                {images.map((img) => (
+                    <div
+                        key={img.id}
+                        className="relative group aspect-square bg-gray-100 rounded-xl overflow-hidden border"
+                    >
+                        <img
+                            src={img.url}
+                            alt="Car"
+                            className="w-full h-full object-cover"
+                        />
+                        
+                        {/* BADGES */}
+                        {img.isPrimary && (
+                            <div className="absolute top-2 left-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">
+                                PRIMARY
+                            </div>
+                        )}
+
+                        {/* OVERLAY ACTIONS */}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
+                            {!img.isPrimary && (
+                                <button
+                                    onClick={() => setPrimary({ imageId: img.id })}
+                                    className="p-2 bg-white rounded-full hover:bg-yellow-100 text-yellow-600"
+                                    title="Set as Primary"
+                                >
+                                    <Star size={16} />
+                                </button>
+                            )}
+                            <button
+                                onClick={() => deleteImage({ imageId: img.id })}
+                                className="p-2 bg-white rounded-full hover:bg-red-100 text-red-600"
+                                title="Delete"
+                            >
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* UPLOAD AREA */}
+            <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6">
+                <div className="flex flex-col items-center justify-center text-gray-500 mb-6">
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        id="image-upload"
+                    />
+                    <label
+                        htmlFor="image-upload"
+                        className="cursor-pointer flex flex-col items-center hover:text-indigo-600 transition"
+                    >
+                        <Upload size={32} className="mb-2" />
+                        <span className="font-medium">Click to Upload Images</span>
+                    </label>
+                </div>
+
+                {/* SELECTED FILES PREVIEW */}
+                {files.length > 0 && (
+                    <div>
+                        <h3 className="text-sm font-medium mb-3">
+                            New Images ({files.length})
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
+                            {files.map((file, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`relative aspect-square rounded-xl overflow-hidden border-2 ${
+                                        primaryIndex === idx
+                                            ? "border-yellow-500"
+                                            : "border-transparent"
+                                    }`}
+                                >
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt="preview"
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <button
+                                        onClick={() => removeFile(idx)}
+                                        className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md text-red-500 hover:bg-red-50"
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                    
+                                    <button
+                                        onClick={() => setPrimaryIndex(idx)}
+                                        className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm ${
+                                            primaryIndex === idx
+                                                ? "bg-yellow-400 text-black"
+                                                : "bg-white text-gray-500 hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        {primaryIndex === idx ? "COVER" : "SET COVER"}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex justify-end">
+                            <button
+                                onClick={handleUpload}
+                                disabled={isUploading}
+                                className="bg-black text-white px-6 py-2 rounded-xl flex items-center gap-2 hover:bg-gray-800 disabled:opacity-50"
+                            >
+                                {isUploading ? "Uploading..." : "Upload Selected"}
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </Section>
+    );
+};

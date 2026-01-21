@@ -257,7 +257,7 @@ const Header: React.FC = () => {
                   </button>
                 ) : (
                   <Link
-                    to="/login"
+                    to="/admin/login"
                     className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
                   >
                     <User className="h-5 w-5" />

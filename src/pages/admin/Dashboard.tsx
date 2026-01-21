@@ -14,7 +14,12 @@ const Dashboard = () => {
     );
 };
 
-const StatCard = ({ title, value }: any) => (
+type StatCardProps = {
+    title: string;
+    value: string | number;
+};
+
+const StatCard = ({ title, value }: StatCardProps) => (
     <div className="bg-white rounded-2xl p-6 shadow-sm">
         <p className="text-gray-500 text-sm">{title}</p>
         <h2 className="text-2xl font-bold mt-2">{value}</h2>

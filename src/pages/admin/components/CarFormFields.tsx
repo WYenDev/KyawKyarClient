@@ -3,7 +3,7 @@ import {
     Fuel,
     Transmission,
     Status,
-    Steering,
+    SteeringPosition,
 } from "../../../services/api";
 
 export type CarForm = {
@@ -14,7 +14,7 @@ export type CarForm = {
     enginePower?: number | null;
     fuel: Fuel;
     transmission: Transmission;
-    steering?: Steering;
+    steering?: SteeringPosition;
     status: Status;
     colorId: string;
     showroomId?: string;
@@ -151,10 +151,10 @@ export const CarFormFields = ({
             />
 
             <Select
-                value={form.steering ?? Steering.Left}
+                value={form.steering ?? SteeringPosition.Left}
                 options={[
-                    { label: "Left", value: Steering.Left },
-                    { label: "Right", value: Steering.Right },
+                    { label: "Left", value: SteeringPosition.Left },
+                    { label: "Right", value: SteeringPosition.Right },
                 ]}
                 placeholder="Steering"
                 onChange={(v) => setForm({ ...form, steering: v })}

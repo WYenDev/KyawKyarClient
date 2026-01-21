@@ -21,7 +21,7 @@ const ForgotPassword: React.FC = () => {
       onSuccess: () => {
         navigate('/admin/reset-password');
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error('Verify recover failed', err);
         setError(t('forgot.errorVerify', 'Recovery code is invalid or expired'));
       },
