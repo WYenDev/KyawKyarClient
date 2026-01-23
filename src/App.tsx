@@ -27,6 +27,7 @@ import PasswordChange from "./pages/admin/PasswordChange";
 import CarCreatePage from "./pages/admin/CarCreatePage";
 import CarEditPage from "./pages/admin/CarEditPage";
 import Grades from "./pages/admin/Grade"; 
+import AboutPage from "./pages/admin/AboutPage";
 
 import SuperAdminGuard from "./components/SuperAdminGuard";
 import SellCarRequests from "./pages/admin/SellCarRequests";
@@ -38,6 +39,7 @@ import UserManagement from "./pages/admin/UserManagement";
 import RecoverCodesPage from "./pages/admin/RecoverCodes";
 import ForgotPassword from "./pages/admin/ForgotPassword";
 import ResetPassword from "./pages/admin/ResetPassword";
+import HomePage from "./pages/admin/HomePage";
 
 function App() {
   return (
@@ -65,6 +67,8 @@ function App() {
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
           <Route path="grades" element={<Grades />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Search, ShieldCheck, Star, Users, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useGetApiCarsFilters } from '../services/api';
+import { useGetApiCarsFilters, useGetApiHome } from '../services/api';
 import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
 import CarImage from '../assets/cars.jpg';
 
@@ -10,6 +10,7 @@ const Hero: React.FC = () => {
   const { t } = useTranslation('home');
   const navigate = useNavigate();
   const [showScrollHint, setShowScrollHint] = useState<boolean>(false);
+  const { data: homeData } = useGetApiHome();
   const [brand, setBrand] = useState<string>('');
   const [model, setModel] = useState<string>('');
 
@@ -143,7 +144,7 @@ const Hero: React.FC = () => {
             <div className="relative h-[250px] sm:h-[350px] lg:h-[500px] w-full">
               <div className="absolute inset-0 rounded-3xl lg:rounded-4xl overflow-hidden shadow-2xl border-8 lg:border-12 border-white group">
                 <img
-                  src={CarImage}
+                  src={homeData?.image?.url || CarImage}
                   className="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-105"
                   alt="Kyaw Kyar Luxury SUV"
                 />
