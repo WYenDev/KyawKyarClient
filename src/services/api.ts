@@ -299,6 +299,20 @@ export interface CarListItem {
   updatedAt: string;
 }
 
+/**
+ * @nullable
+ */
+export type CarListItemSearchFormattedLicense = {
+  region?: string;
+  number?: string;
+} | null;
+
+export type CarListItemSearch = CarListItem & {
+  formattedPrice?: string;
+  /** @nullable */
+  formattedLicense?: CarListItemSearchFormattedLicense;
+};
+
 export interface CarCreate {
   modelId: string;
   modelYear: number;
@@ -794,7 +808,7 @@ limit?: number;
 };
 
 export type GetApiCarsSearch200 = {
-  items?: CarListItem[];
+  items?: CarListItemSearch[];
   total?: number;
   page?: number;
   limit?: number;
@@ -988,7 +1002,7 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 /**
- * @summary Get the single About page including images
+ * @summary Get the About page and images
  */
 export const getApiAbout = (
     
@@ -1059,7 +1073,7 @@ export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, 
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get the single About page including images
+ * @summary Get the About page and images
  */
 
 export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>(
