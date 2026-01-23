@@ -11,7 +11,8 @@ import {
     ChevronRight,
     Building,
     Home,
-    Star, 
+    Star,
+    Info, 
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -116,6 +117,19 @@ const AdminSidebar = () => {
                     to="/admin/build-types"
                     icon={Home}
                     label="Build Types"
+                    collapsed={collapsed}
+                />
+                <MenuItem
+                    to="/admin/home"
+                    icon={LayoutDashboard}
+                    label="Home page"
+                    collapsed={collapsed}
+                    end
+                />
+                <MenuItem
+                    to="/admin/about"
+                    icon={Info}
+                    label="About Page"
                     collapsed={collapsed}
                 />
                 {/* 🔹 NEW ITEMS */}

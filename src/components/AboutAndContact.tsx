@@ -4,13 +4,15 @@ import {
   MessageCircle, MapPin, ArrowUpRight, HelpCircle
 } from 'lucide-react';
 import AboutImage from '../assets/about.jpg';
-import { useGetApiShowrooms } from '../services/api';
+import { useGetApiShowrooms, useGetApiAbout } from '../services/api';
 import { useTranslation } from 'react-i18next';
 
 const AboutContact: React.FC = () => {
   const viberNumber = import.meta.env.VITE_VIBER_NUMBER; // General Inquiry Viber
   const { t, i18n } = useTranslation('about'); // Use 'common' namespace
 
+  const { data: aboutData } = useGetApiAbout();
+  const aboutImages = (aboutData?.images ?? []).slice().sort((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0));
 
   const { data: showroomData, isLoading, isError } = useGetApiShowrooms()
 
@@ -32,28 +34,36 @@ const AboutContact: React.FC = () => {
             {/* Image Collage */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <img 
-                  src="https://images.unsplash.com/photo-1554224155-16954405a255?q=80&w=800&auto=format&fit=crop"
-                  alt="Showroom Interior"
-                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1617854818583-09e7f077a156?q=80&w=800&auto=format&fit=crop"
-                  alt="Our Team"
-                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
-                />
+                {aboutImages[0] && (
+                  <img
+                    src={aboutImages[0].url}
+                    alt="About image 0"
+                    className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
+                  />
+                )}
+                {aboutImages[1] && (
+                  <img
+                    src={aboutImages[1].url}
+                    alt="About image 1"
+                    className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
+                  />
+                )}
               </div>
               <div className="space-y-4 mt-8">
-                <img 
-                  src="https://images.unsplash.com/photo-1517999144091-3d9dca6d1649?q=80&w=800&auto=format&fit=crop"
-                  alt="Customer Service"
-                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
-                />
-                <img 
-                  src={AboutImage}
-                  alt="KyawKyar Luxury Car"
-                  className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
-                />
+                {aboutImages[2] && (
+                  <img
+                    src={aboutImages[2].url}
+                    alt="About image 2"
+                    className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
+                  />
+                )}
+                {aboutImages[3] && (
+                  <img
+                    src={aboutImages[3].url}
+                    alt="About image 3"
+                    className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
+                  />
+                )}
               </div>
             </div>
 
