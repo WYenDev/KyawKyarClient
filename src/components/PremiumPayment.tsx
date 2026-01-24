@@ -194,6 +194,7 @@ const PremiumPayment: React.FC = () => {
                             <ReceiptText size={18} className="text-blue-600" />
                             <label className="text-sm font-bold text-slate-600 uppercase">Installment Type</label>
                           </div>
+
                           <div className="flex gap-2">
                             {(["showroom", "bank"] as InstallmentMode[]).map((m) => (
                               <button
@@ -205,8 +206,10 @@ const PremiumPayment: React.FC = () => {
                               </button>
                             ))}
                           </div>
+
                         </div>
 
+                        {/* Showroom plan selection moved here */}
                         {installmentMode === "showroom" && Array.isArray(showroomInstallments) && showroomInstallments.length > 0 && (
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
@@ -231,35 +234,34 @@ const PremiumPayment: React.FC = () => {
                           </div>
                         )}
 
-                        {installmentMode === "bank" && (
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <ReceiptText size={18} className="text-blue-600" />
-                            <span>Bank installment: upfront per bank config, remaining processed via bank.</span>
+                        {/* Charges summary moved below installment-type section (compact and only amounts) */}
+                        <div className="mt-4">
+                          <div className="p-3 bg-white rounded-xl border border-slate-100 text-sm">
+                            <div className="font-semibold text-slate-700 mb-2">Charges</div>
+
+                            {installmentMode === 'bank' && bankConfig && (
+                              <div className="space-y-1 text-sm text-slate-700">
+                                <div className="flex justify-between"><span>Initial Payment</span><span className="font-bold">{bankConfig.initialPayment}%</span></div>
+                                <div className="flex justify-between"><span>Deposit</span><span className="font-bold">{bankConfig.deposit}%</span></div>
+                                <div className="flex justify-between border-t pt-2"><span>Tax & Registration</span><span className="font-extrabold">{TAX.toLocaleString()} MMK</span></div>
+                              </div>
+                            )}
+
+                            {installmentMode === 'showroom' && showroomConfig && (
+                              <div className="space-y-1 text-sm text-slate-700">
+                                <div className="flex justify-between"><span>Initial Payment</span><span className="font-bold">{showroomConfig.initialPayment}%</span></div>
+                                <div className="flex justify-between"><span>Paperwork Fee</span><span className="font-bold">{(showroomConfig as any).paperWorkFee}%</span></div>
+                                <div className="flex justify-between"><span>Interest Rate</span><span className="font-bold">{(showroomConfig.interestRate ?? 0)}%</span></div>
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </div>
+
                       </div>
                     )}
+
                   </div>
                 )}
-
-                {/* FOOTER ACTIONS */}
-                <div className="bg-slate-50 p-8 border-t border-slate-100 flex justify-between items-center">
-                  <button
-                    disabled={step === 1}
-                    onClick={() => setStep((step - 1) as any)}
-                    className={`flex items-center gap-2 font-bold px-6 py-3 rounded-xl transition-all ${step === 1 ? 'opacity-0' : 'text-slate-600 hover:bg-slate-200'}`}
-                  >
-                    <ChevronLeft size={20} /> Back
-                  </button>
-
-                  <button
-                    onClick={() => (step < 3 ? setStep((step + 1) as any) : alert("Premium Transaction Initiated"))}
-                    className={`flex items-center gap-2 font-bold px-10 py-4 rounded-2xl shadow-xl transition-all hover:-translate-y-1 ${step === 3 ? 'bg-blue-600 shadow-blue-200 text-white hover:bg-blue-700' : 'bg-slate-900 shadow-slate-200 text-white hover:bg-black'}`}
-                  >
-                    {step === 3 ? "Complete Purchase" : "Continue"}
-                    {step < 3 && <ChevronRight size={20} />}
-                  </button>
-                </div>
 
               </div>
             </div>
