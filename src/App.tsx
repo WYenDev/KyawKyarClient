@@ -40,6 +40,7 @@ import RecoverCodesPage from "./pages/admin/RecoverCodes";
 import ForgotPassword from "./pages/admin/ForgotPassword";
 import ResetPassword from "./pages/admin/ResetPassword";
 import HomePage from "./pages/admin/HomePage";
+import AdminPayments from "./pages/admin/Payments";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
           <Route path="grades" element={<Grades />} />
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="payments" element={<AdminPayments />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route
