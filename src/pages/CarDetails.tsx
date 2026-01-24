@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Gauge, Fuel, Settings, Palette, Box, ArrowLeft, ChevronLeft, ChevronRight, Badge, MapPin } from 'lucide-react';
-import CarEngine from "../assets/car-engine.webp"
-
-import type { CarImage } from '../services/api';
-
-function getImageUrl(img: CarImage, kind: 'main' | 'thumb'): string {
-  const dyn = img as unknown as Record<string, unknown>;
-  const key = kind === 'main' ? 'urlMain' : 'urlThumb';
-  const dynUrl = typeof dyn[key] === 'string' ? (dyn[key] as string) : undefined;
-  return dynUrl ?? img.storageBaseKey ?? '';
-}
-
-
-import { formatPriceLakhs } from '../utils/price';
+import { ArrowLeft } from 'lucide-react';
 import { useGetApiCarsId } from '../services/api';
+import CarDetailsGallery from '../components/CarDetailsGallery';
+import CarDetailsSummary from '../components/CarDetailsSummary';
 
 const CarDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -63,12 +52,16 @@ const CarDetails: React.FC = () => {
   }
 
 
+  const images = (carData as any)?.images ?? [];
+
   const handlePreviousImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? carData.images.length - 1 : prev - 1));
+    if (images.length === 0) return;
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev === carData.images.length - 1 ? 0 : prev + 1));
+    if (images.length === 0) return;
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
 
@@ -95,191 +88,15 @@ const CarDetails: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-10">
-          {/* Gallery */}
-          <div>
-            <div className="relative bg-white rounded-2xl shadow-sm overflow-hidden">
-              {carData.images[currentImageIndex] ? (
-                <img
-                  src={getImageUrl(carData.images[currentImageIndex], 'main') || ''}
-                  alt={`${carData.model?.brand?.name} ${carData?.model?.name}`}
-                  className="w-full h-80 sm:h-96 object-cover"
-                />
-              ) : (
+          <CarDetailsGallery
+            images={(carData as any)?.images ?? []}
+            currentIndex={currentImageIndex}
+            onPrev={handlePreviousImage}
+            onNext={handleNextImage}
+            onSelect={(i: number) => setCurrentImageIndex(i)}
+          />
 
-                <img
-                  src={'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
-                  alt={`${carData.model?.brand?.name} ${carData?.model?.name}`}
-                  className="w-full h-80 sm:h-96 object-cover"
-                />
-              )}
-
-              {carData.images.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={handlePreviousImage}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md"
-                  >
-                    <ChevronLeft className="h-5 w-5 text-gray-700" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNextImage}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md"
-                  >
-                    <ChevronRight className="h-5 w-5 text-gray-700" />
-                  </button>
-                </>
-              )}
-            </div>
-
-            {carData.images.length > 1 && (
-              <div className="mt-4 flex space-x-3 overflow-x-auto pb-2">
-                {carData.images.map((image: CarImage, index: number) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-colors duration-200 ${index === currentImageIndex ? 'border-blue-600' : 'border-transparent hover:border-gray-300'
-                      }`}
-                  >
-                    <img
-                      src={getImageUrl(image, 'thumb')}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Summary */}
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
-              {carData?.model?.brand?.name} {carData?.model?.name}
-            </h1>
-
-
-            <div className="flex items-center justify-between my-6">
-              <div>
-                <div className="text-3xl font-extrabold text-blue-700">
-                  {formatPriceLakhs(carData.price)}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mb-8 text-gray-700">
-              <div className="flex items-center">
-                <Calendar className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.year', 'Year')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData.modelYear}</div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Gauge className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.mileage', 'Mileage')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData.mileage.toLocaleString()} km</div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Fuel className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.fuel_type', 'Fuel Type')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData.fuel}</div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Settings className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.transmission', 'Transmission')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData?.transmission}</div>
-                </div>
-              </div>
-
-              <div className="flex items-center">
-                <Palette className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.color', 'Color')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData?.color?.name}</div>
-                </div>
-              </div>
-
-              {
-                carData.buildType && (
-                  <div className="flex items-center">
-                    <Box className="h-5 w-5 mr-3 text-gray-400" />
-                    <div>
-                      <div className="text-sm text-gray-600">{t('details.build_type', 'Build Type')}</div>
-                      <div className="text-lg font-semibold text-gray-900">{carData.buildType?.name}</div>
-                    </div>
-                  </div>
-
-                )
-              }
-              <div className="flex items-center">
-                <Box className="h-5 w-5 mr-3 text-gray-400" />
-                <div>
-                  <div className="text-sm text-gray-600">{t('details.steerin_position', 'Sterring Position')}</div>
-                  <div className="text-lg font-semibold text-gray-900">{carData.steering}</div>
-                </div>
-              </div>
-              {
-                carData.enginePower && (
-                  <div className="flex items-center">
-                    <img src={CarEngine} alt="Engine" className="w-6 h-6 mr-3" />
-                    <div>
-                      <div className="text-sm text-gray-600">{t('details.engine_power', 'Engine Power')}</div>
-                      <div className="text-lg font-semibold text-gray-900">{carData.enginePower} HP</div>
-                    </div>
-                  </div>
-                )
-              }
-              {
-                carData.grade && (
-                  <div className="flex items-center">
-                    <Badge className="h-5 w-5 mr-3 text-gray-400" />
-                    <div>
-                      <div className="text-sm text-gray-600">{t('details.grade', 'Grade')}</div>
-                      <div className="text-lg font-semibold text-gray-900">{carData?.grade?.name}</div>
-                    </div>
-                  </div>
-                )
-              }
-              {
-                carData.showroom?.city && (
-                  <div className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-3 text-gray-400" />
-                    <div>
-                      <div className="text-sm text-gray-600">{t('details.showroom_location', 'Showroom Location')}</div>
-                      <div className="text-lg font-semibold text-gray-900">{carData?.showroom?.city}</div>
-                    </div>
-                  </div>
-                )
-              }
-              {
-                carData.license?.region && (
-                  <div className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-3 text-gray-400" />
-                    <div>
-                      <div className="text-sm text-gray-600">{t('details.licence', 'Linence Region')}</div>
-                      <div className="text-lg font-semibold text-gray-900">{carData?.license?.region.name}</div>
-                    </div>
-                  </div>
-                )
-              }
-            </div>
-            <div className="space-y-3 mb-10">
-              <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
-                {t('details.call_now', 'Call Now: +95-9-123-456-789')}
-              </button>
-              <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
-                {'Viber'}
-              </button>
-            </div>
-          </div>
+          <CarDetailsSummary car={carData as any} />
         </div>
 
         {/* 

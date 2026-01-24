@@ -258,6 +258,16 @@ export interface Car {
   gradeId?: string | null;
   /** @nullable */
   grade?: Grade;
+  /**
+   * Formatted price string (present when server masks price; price may be set to 0 when masked)
+   * @nullable
+   */
+  formattedPrice?: string | null;
+  /**
+   * Formatted license string (present when server masks license; license field will be null when masked)
+   * @nullable
+   */
+  formattedLicense?: string | null;
 }
 
 /**
@@ -298,6 +308,20 @@ export interface CarListItem {
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * @nullable
+ */
+export type CarListItemSearchFormattedLicense = {
+  region?: string;
+  number?: string;
+} | null;
+
+export type CarListItemSearch = CarListItem & {
+  formattedPrice?: string;
+  /** @nullable */
+  formattedLicense?: CarListItemSearchFormattedLicense;
+};
 
 export interface CarCreate {
   modelId: string;
@@ -464,33 +488,28 @@ export interface SellCarRequestUpdate {
   status?: SellCarRequestUpdateStatus;
 }
 
-export type PostApiAboutImagesPresignedUrlBody = {
-  baseKeys?: string[];
-  images?: number;
-};
-
-export type PostApiAboutImagesPresignedUrl200UrlsItem = {
-  uploadUrl?: string;
-  key?: string;
-};
-
-export type PostApiAboutImagesPresignedUrl200 = {
-  urls?: PostApiAboutImagesPresignedUrl200UrlsItem[];
-};
-
-export type GetApiAboutAboutPageIdImages200Item = { [key: string]: unknown };
-
-export type PatchApiAboutImagesUpdateBodyImagesItem = {
+export type GetApiAbout200ImagesItem = {
   id?: string;
   sequenceNumber?: number;
+  key?: string;
+  url?: string;
 };
 
-export type PatchApiAboutImagesUpdateBody = {
-  aboutPageId?: string;
-  images?: PatchApiAboutImagesUpdateBodyImagesItem[];
+export type GetApiAbout200 = {
+  id?: string;
+  /** @nullable */
+  headline?: string | null;
+  /** @nullable */
+  description?: string | null;
+  images?: GetApiAbout200ImagesItem[];
 };
 
-export type DeleteApiAboutImagesImageId200 = { [key: string]: unknown };
+export type PostApiAboutImagesBody = {
+  sequenceNumber?: number;
+  image?: Blob;
+};
+
+export type PostApiAboutImages200 = { [key: string]: unknown };
 
 export type PostApiAdminBody = {
   username: string;
@@ -799,7 +818,7 @@ limit?: number;
 };
 
 export type GetApiCarsSearch200 = {
-  items?: CarListItem[];
+  items?: CarListItemSearch[];
   total?: number;
   page?: number;
   limit?: number;
@@ -890,6 +909,21 @@ export type PostApiCarsCreateBatch201 = {
   results?: PostApiCarsCreateBatch201ResultsItem[];
 };
 
+export type GetApiHome200Image = {
+  id?: string;
+  key?: string;
+  url?: string;
+};
+
+export type GetApiHome200 = {
+  id?: string;
+  image?: GetApiHome200Image;
+};
+
+export type PostApiHomeImageBody = {
+  image?: Blob;
+};
+
 export type GetApiModelsParams = {
 page?: number;
 limit?: number;
@@ -978,81 +1012,16 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 /**
- * @summary Generate presigned S3 URLs for about page image uploads (count)
+ * @summary Get the About page and images
  */
-export const postApiAboutImagesPresignedUrl = (
-    postApiAboutImagesPresignedUrlBody: PostApiAboutImagesPresignedUrlBody,
- options?: SecondParameter<typeof mutator>,signal?: AbortSignal
-) => {
-      
-      
-      return mutator<PostApiAboutImagesPresignedUrl200>(
-      {url: `/api/about/images/presigned-url`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: postApiAboutImagesPresignedUrlBody, signal
-    },
-      options);
-    }
-  
-
-
-export const getPostApiAboutImagesPresignedUrlMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, TError,{data: PostApiAboutImagesPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, TError,{data: PostApiAboutImagesPresignedUrlBody}, TContext> => {
-
-const mutationKey = ['postApiAboutImagesPresignedUrl'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, {data: PostApiAboutImagesPresignedUrlBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiAboutImagesPresignedUrl(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiAboutImagesPresignedUrlMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>>
-    export type PostApiAboutImagesPresignedUrlMutationBody = PostApiAboutImagesPresignedUrlBody
-    export type PostApiAboutImagesPresignedUrlMutationError = unknown
-
-    /**
- * @summary Generate presigned S3 URLs for about page image uploads (count)
- */
-export const usePostApiAboutImagesPresignedUrl = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>, TError,{data: PostApiAboutImagesPresignedUrlBody}, TContext>, request?: SecondParameter<typeof mutator>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postApiAboutImagesPresignedUrl>>,
-        TError,
-        {data: PostApiAboutImagesPresignedUrlBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostApiAboutImagesPresignedUrlMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
+export const getApiAbout = (
     
-/**
- * @summary Get images for an About page
- */
-export const getApiAboutAboutPageIdImages = (
-    aboutPageId: string,
  options?: SecondParameter<typeof mutator>,signal?: AbortSignal
 ) => {
       
       
-      return mutator<GetApiAboutAboutPageIdImages200Item[]>(
-      {url: `/api/about/${aboutPageId}/images`, method: 'GET', signal
+      return mutator<GetApiAbout200>(
+      {url: `/api/about`, method: 'GET', signal
     },
       options);
     }
@@ -1060,69 +1029,69 @@ export const getApiAboutAboutPageIdImages = (
 
 
 
-export const getGetApiAboutAboutPageIdImagesQueryKey = (aboutPageId?: string,) => {
+export const getGetApiAboutQueryKey = () => {
     return [
-    `/api/about/${aboutPageId}/images`
+    `/api/about`
     ] as const;
     }
 
     
-export const getGetApiAboutAboutPageIdImagesQueryOptions = <TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export const getGetApiAboutQueryOptions = <TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAbout>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetApiAboutAboutPageIdImagesQueryKey(aboutPageId);
+  const queryKey =  queryOptions?.queryKey ?? getGetApiAboutQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>> = ({ signal }) => getApiAboutAboutPageIdImages(aboutPageId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAbout>>> = ({ signal }) => getApiAbout(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(aboutPageId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiAbout>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetApiAboutAboutPageIdImagesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>>
-export type GetApiAboutAboutPageIdImagesQueryError = unknown
+export type GetApiAboutQueryResult = NonNullable<Awaited<ReturnType<typeof getApiAbout>>>
+export type GetApiAboutQueryError = unknown
 
 
-export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
- aboutPageId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>> & Pick<
+export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAbout>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>,
+          Awaited<ReturnType<typeof getApiAbout>>,
           TError,
-          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>
+          Awaited<ReturnType<typeof getApiAbout>>
         > , 'initialData'
       >, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
- aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>> & Pick<
+export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAbout>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>,
+          Awaited<ReturnType<typeof getApiAbout>>,
           TError,
-          Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>
+          Awaited<ReturnType<typeof getApiAbout>>
         > , 'initialData'
       >, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
- aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAbout>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get images for an About page
+ * @summary Get the About page and images
  */
 
-export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError = unknown>(
- aboutPageId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAboutAboutPageIdImages>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAbout>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetApiAboutAboutPageIdImagesQueryOptions(aboutPageId,options)
+  const queryOptions = getGetApiAboutQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -1136,28 +1105,36 @@ export function useGetApiAboutAboutPageIdImages<TData = Awaited<ReturnType<typeo
 
 
 /**
- * @summary Update sequence numbers for about page images
+ * @summary Upload or replace an About image at a sequence number
  */
-export const patchApiAboutImagesUpdate = (
-    patchApiAboutImagesUpdateBody: PatchApiAboutImagesUpdateBody,
- options?: SecondParameter<typeof mutator>,) => {
+export const postApiAboutImages = (
+    postApiAboutImagesBody: PostApiAboutImagesBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
       
-      
-      return mutator<void>(
-      {url: `/api/about/images/update`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: patchApiAboutImagesUpdateBody
+      const formData = new FormData();
+if(postApiAboutImagesBody.sequenceNumber !== undefined) {
+ formData.append(`sequenceNumber`, postApiAboutImagesBody.sequenceNumber.toString())
+ }
+if(postApiAboutImagesBody.image !== undefined) {
+ formData.append(`image`, postApiAboutImagesBody.image)
+ }
+
+      return mutator<PostApiAboutImages200>(
+      {url: `/api/about/images`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
     },
       options);
     }
   
 
 
-export const getPatchApiAboutImagesUpdateMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, TError,{data: PatchApiAboutImagesUpdateBody}, TContext>, request?: SecondParameter<typeof mutator>}
-): UseMutationOptions<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, TError,{data: PatchApiAboutImagesUpdateBody}, TContext> => {
+export const getPostApiAboutImagesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImages>>, TError,{data: PostApiAboutImagesBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImages>>, TError,{data: PostApiAboutImagesBody}, TContext> => {
 
-const mutationKey = ['patchApiAboutImagesUpdate'];
+const mutationKey = ['postApiAboutImages'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1167,10 +1144,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, {data: PatchApiAboutImagesUpdateBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAboutImages>>, {data: PostApiAboutImagesBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  patchApiAboutImagesUpdate(data,requestOptions)
+          return  postApiAboutImages(data,requestOptions)
         }
 
         
@@ -1178,85 +1155,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PatchApiAboutImagesUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>>
-    export type PatchApiAboutImagesUpdateMutationBody = PatchApiAboutImagesUpdateBody
-    export type PatchApiAboutImagesUpdateMutationError = unknown
+    export type PostApiAboutImagesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAboutImages>>>
+    export type PostApiAboutImagesMutationBody = PostApiAboutImagesBody
+    export type PostApiAboutImagesMutationError = unknown
 
     /**
- * @summary Update sequence numbers for about page images
+ * @summary Upload or replace an About image at a sequence number
  */
-export const usePatchApiAboutImagesUpdate = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>, TError,{data: PatchApiAboutImagesUpdateBody}, TContext>, request?: SecondParameter<typeof mutator>}
+export const usePostApiAboutImages = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAboutImages>>, TError,{data: PostApiAboutImagesBody}, TContext>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof patchApiAboutImagesUpdate>>,
+        Awaited<ReturnType<typeof postApiAboutImages>>,
         TError,
-        {data: PatchApiAboutImagesUpdateBody},
+        {data: PostApiAboutImagesBody},
         TContext
       > => {
 
-      const mutationOptions = getPatchApiAboutImagesUpdateMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-/**
- * @summary Delete an about page image
- */
-export const deleteApiAboutImagesImageId = (
-    imageId: string,
- options?: SecondParameter<typeof mutator>,) => {
-      
-      
-      return mutator<DeleteApiAboutImagesImageId200>(
-      {url: `/api/about/images/${imageId}`, method: 'DELETE'
-    },
-      options);
-    }
-  
-
-
-export const getDeleteApiAboutImagesImageIdMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, TError,{imageId: string}, TContext>, request?: SecondParameter<typeof mutator>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, TError,{imageId: string}, TContext> => {
-
-const mutationKey = ['deleteApiAboutImagesImageId'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, {imageId: string}> = (props) => {
-          const {imageId} = props ?? {};
-
-          return  deleteApiAboutImagesImageId(imageId,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteApiAboutImagesImageIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>>
-    
-    export type DeleteApiAboutImagesImageIdMutationError = unknown
-
-    /**
- * @summary Delete an about page image
- */
-export const useDeleteApiAboutImagesImageId = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>, TError,{imageId: string}, TContext>, request?: SecondParameter<typeof mutator>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteApiAboutImagesImageId>>,
-        TError,
-        {imageId: string},
-        TContext
-      > => {
-
-      const mutationOptions = getDeleteApiAboutImagesImageIdMutationOptions(options);
+      const mutationOptions = getPostApiAboutImagesMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -5042,6 +4957,168 @@ export function useGetApiHealthHealth<TData = Awaited<ReturnType<typeof getApiHe
 
 
 
+/**
+ * @summary Get the Home page image and info
+ */
+export const getApiHome = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiHome200>(
+      {url: `/api/home`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiHomeQueryKey = () => {
+    return [
+    `/api/home`
+    ] as const;
+    }
+
+    
+export const getGetApiHomeQueryOptions = <TData = Awaited<ReturnType<typeof getApiHome>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHome>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiHomeQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiHome>>> = ({ signal }) => getApiHome(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiHome>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiHomeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiHome>>>
+export type GetApiHomeQueryError = unknown
+
+
+export function useGetApiHome<TData = Awaited<ReturnType<typeof getApiHome>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHome>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiHome>>,
+          TError,
+          Awaited<ReturnType<typeof getApiHome>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiHome<TData = Awaited<ReturnType<typeof getApiHome>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHome>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiHome>>,
+          TError,
+          Awaited<ReturnType<typeof getApiHome>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiHome<TData = Awaited<ReturnType<typeof getApiHome>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHome>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get the Home page image and info
+ */
+
+export function useGetApiHome<TData = Awaited<ReturnType<typeof getApiHome>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiHome>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiHomeQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Upload or replace the Home page image
+ */
+export const postApiHomeImage = (
+    postApiHomeImageBody: PostApiHomeImageBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(postApiHomeImageBody.image !== undefined) {
+ formData.append(`image`, postApiHomeImageBody.image)
+ }
+
+      return mutator<void>(
+      {url: `/api/home/image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiHomeImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiHomeImage>>, TError,{data: PostApiHomeImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiHomeImage>>, TError,{data: PostApiHomeImageBody}, TContext> => {
+
+const mutationKey = ['postApiHomeImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiHomeImage>>, {data: PostApiHomeImageBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiHomeImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiHomeImageMutationResult = NonNullable<Awaited<ReturnType<typeof postApiHomeImage>>>
+    export type PostApiHomeImageMutationBody = PostApiHomeImageBody
+    export type PostApiHomeImageMutationError = unknown
+
+    /**
+ * @summary Upload or replace the Home page image
+ */
+export const usePostApiHomeImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiHomeImage>>, TError,{data: PostApiHomeImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiHomeImage>>,
+        TError,
+        {data: PostApiHomeImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiHomeImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Get all models (paginated)
  */

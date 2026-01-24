@@ -140,9 +140,6 @@ const Cars = () => {
                     visibleCars.map((car) => (
                         <div
                             key={car.id}
-                            onClick={() =>
-                                navigate(`/admin/cars/${car.id}`)
-                            }
                             className="bg-white rounded-xl shadow-sm
                                        hover:shadow-md transition
                                        overflow-hidden cursor-pointer group"

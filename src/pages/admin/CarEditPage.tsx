@@ -21,6 +21,8 @@ import {
     usePostApiCarImagesCarIdUpload,
     useDeleteApiCarImagesImageId,
     usePatchApiCarImagesImageIdSetPrimary,
+    usePostApiCarsIdFeature,
+    useDeleteApiCarsIdFeature,
 } from "../../services/api";
 
 /* ===================== FORM TYPE ===================== */
@@ -39,6 +41,7 @@ type CarForm = {
     buildTypeId?: string;
     gradeId?: string;
     isNewArrival?: boolean;
+    featured?: boolean;
 };
 
 /* ===================== STATIC OPTIONS ===================== */
@@ -104,6 +107,7 @@ const CarEditPage = () => {
             buildTypeId: car.buildTypeId ?? undefined,
             gradeId: car.gradeId ?? undefined,
             isNewArrival: car.isNewArrival ?? false,
+            featured: car.featured ?? false,
         });
     }, [car]);
 
@@ -173,11 +177,11 @@ const CarEditPage = () => {
     );
 
     /* ===================== MUTATION ===================== */
-    const { mutate, isPending } = usePatchApiCarsId({
-        mutation: {
-            onSuccess: () => navigate("/admin/cars"),
-        },
-    });
+    const { mutateAsync: updateCar, isPending: isUpdating } = usePatchApiCarsId();
+    const { mutateAsync: featureCar, isPending: isFeaturing } =
+        usePostApiCarsIdFeature();
+    const { mutateAsync: unfeatureCar, isPending: isUnfeaturing } =
+        useDeleteApiCarsIdFeature();
 
     /* ===================== HANDLERS ===================== */
     const onChangeBrand = (newBrandId: string) => {
@@ -200,10 +204,30 @@ const CarEditPage = () => {
         });
     };
 
-    const handleSave = () => {
-        if (!form) return;
-        mutate({ id: id!, data: form as CarUpdate });
+    const handleSave = async () => {
+        if (!form || !car) return;
+
+        try {
+            // 1. Update basic fields
+            await updateCar({ id: id!, data: form as CarUpdate });
+
+            // 2. Handle featured status
+            if (form.featured !== car.featured) {
+                if (form.featured) {
+                    await featureCar({ id: id! });
+                } else {
+                    await unfeatureCar({ id: id! });
+                }
+            }
+
+            navigate("/admin/cars");
+        } catch (error) {
+            console.error(error);
+            alert("Failed to save changes");
+        }
     };
+
+    const isPending = isUpdating || isFeaturing || isUnfeaturing;
 
     if (isLoading || !form) {
         return <div className="p-8">Loading...</div>;
@@ -220,6 +244,9 @@ const CarEditPage = () => {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm p-8">
+                    {/* ===== IMAGES ===== */}
+                    <CarImagesManager carId={id!} />
+
                     {/* ===== BASIC INFO ===== */}
                     <Section title="Basic Information">
                     <div className="grid grid-cols-2 gap-6">
@@ -354,9 +381,6 @@ const CarEditPage = () => {
                     </div>
                 </Section>
 
-                {/* ===== IMAGES ===== */}
-                <CarImagesManager carId={id!} />
-
                 {/* ===== STATUS ===== */}
                 <Section title="Status">
                     <div className="grid grid-cols-4 gap-6 items-end">
@@ -395,22 +419,51 @@ const CarEditPage = () => {
                                 setForm({ ...form, status: v })
                             }
                         />
-                    </div>
 
-                    <div className="mt-6">
-                        <label className="flex items-center gap-2 text-sm">
-                            <input
-                                type="checkbox"
-                                checked={!!form.isNewArrival}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        isNewArrival: e.target.checked,
-                                    })
-                                }
-                            />
-                            New Arrival
-                        </label>
+                        {/* CHECKBOXES */}
+                        <div className="col-span-4 flex flex-col lg:flex-row gap-6 pt-2">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={form.isNewArrival ?? false}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            isNewArrival: e.target.checked,
+                                        })
+                                    }
+                                    className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700">
+                                    New Arrival
+                                </span>
+                            </label>
+
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={form.featured ?? false}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            featured: e.target.checked,
+                                        })
+                                    }
+                                    className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
+                                    <Star
+                                        size={14}
+                                        className={
+                                            form.featured
+                                                ? "fill-indigo-600 text-indigo-600"
+                                                : ""
+                                        }
+                                    />
+                                    Featured Car
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </Section>
 
