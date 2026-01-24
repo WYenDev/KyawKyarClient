@@ -258,6 +258,16 @@ export interface Car {
   gradeId?: string | null;
   /** @nullable */
   grade?: Grade;
+  /**
+   * Formatted price string (present when server masks price; price may be set to 0 when masked)
+   * @nullable
+   */
+  formattedPrice?: string | null;
+  /**
+   * Formatted license string (present when server masks license; license field will be null when masked)
+   * @nullable
+   */
+  formattedLicense?: string | null;
 }
 
 /**

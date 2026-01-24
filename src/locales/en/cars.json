@@ -39,6 +39,7 @@
     "not_found_title": "Car not found",
     "not_found_description": "The car you are looking for does not exist or may have been removed.",
     "price_label": "Price",
+    "licnese": "License",
     "year": "Year",
     "mileage": "Mileage",
     "fuel_type": "Fuel Type",
