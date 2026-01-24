@@ -1,11 +1,12 @@
 import React from 'react';
+import PremiumPayment from '../components/PremiumPayment';
 
-const Payment: React.FC = () => {
+const Payments: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pt-8">
-      Payment
+    <div>
+      <PremiumPayment />
     </div>
   );
 };
 
-export default Payment;
+export default Payments;
