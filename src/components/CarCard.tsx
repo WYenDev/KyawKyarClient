@@ -1,13 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CarListItem } from '../services/api'
+import { CarListItemSearch } from '../services/api'
 import { Calendar, Gauge, Fuel, Settings, MapPin } from 'lucide-react';
-import { formatPriceLakhs } from '../utils/price';
- 
+
 interface CarCardProps {
-  car: CarListItem;
+  car: CarListItemSearch;
 }
- 
+
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
   //const { t } = useTranslation('cars');
   const navigate = useNavigate();
@@ -44,8 +43,8 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
       }}
     >
       <div className="relative">
-        <img 
-          src={car.primaryImage?.url || 'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'} 
+        <img
+          src={car.primaryImage?.url || 'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
           alt={`carImage} ${car.model?.name}`}
           className="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300"
         />
@@ -102,11 +101,15 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="text-2xl font-bold text-indigo-600">
-            {formatPriceLakhs(car.price || 0)}
-          </div>
-        </div>
+        {
+          car.formattedPrice && (
+            <div className="flex justify-between items-center">
+              <div className="text-2xl font-bold text-indigo-600">
+                {car.formattedPrice}
+              </div>
+            </div>
+          )
+        }
       </div>
     </div>
   );

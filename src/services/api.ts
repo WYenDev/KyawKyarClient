@@ -258,6 +258,16 @@ export interface Car {
   gradeId?: string | null;
   /** @nullable */
   grade?: Grade;
+  /**
+   * Formatted price string (present when server masks price; price may be set to 0 when masked)
+   * @nullable
+   */
+  formattedPrice?: string | null;
+  /**
+   * Formatted license string (present when server masks license; license field will be null when masked)
+   * @nullable
+   */
+  formattedLicense?: string | null;
 }
 
 /**
@@ -298,6 +308,20 @@ export interface CarListItem {
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * @nullable
+ */
+export type CarListItemSearchFormattedLicense = {
+  region?: string;
+  number?: string;
+} | null;
+
+export type CarListItemSearch = CarListItem & {
+  formattedPrice?: string;
+  /** @nullable */
+  formattedLicense?: CarListItemSearchFormattedLicense;
+};
 
 export interface CarCreate {
   modelId: string;
@@ -794,7 +818,7 @@ limit?: number;
 };
 
 export type GetApiCarsSearch200 = {
-  items?: CarListItem[];
+  items?: CarListItemSearch[];
   total?: number;
   page?: number;
   limit?: number;
@@ -988,7 +1012,7 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 /**
- * @summary Get the single About page including images
+ * @summary Get the About page and images
  */
 export const getApiAbout = (
     
@@ -1059,7 +1083,7 @@ export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, 
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get the single About page including images
+ * @summary Get the About page and images
  */
 
 export function useGetApiAbout<TData = Awaited<ReturnType<typeof getApiAbout>>, TError = unknown>(
