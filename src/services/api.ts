@@ -604,6 +604,10 @@ export type PostApiAuthRefresh401 = {
   error?: PostApiAuthRefresh401Error;
 };
 
+export type DeleteApiBankInstallmentsId200 = {
+  deleted?: boolean;
+};
+
 export type GetApiBrandsParams = {
 page?: number;
 limit?: number;
@@ -985,6 +989,10 @@ export type PostApiSellCarRequestsPresignedUrl200UrlsItem = {
 
 export type PostApiSellCarRequestsPresignedUrl200 = {
   urls?: PostApiSellCarRequestsPresignedUrl200UrlsItem[];
+};
+
+export type DeleteApiShowroomInstallmentsId200 = {
+  deleted?: boolean;
 };
 
 export type GetApiShowroomsParams = {
@@ -2012,6 +2020,291 @@ export const usePostApiAuthRefresh = <TError = PostApiAuthRefresh401,
       > => {
 
       const mutationOptions = getPostApiAuthRefreshMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get all bank installments
+ */
+export const getApiBankInstallments = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<BankInstallment[]>(
+      {url: `/api/bank-installments`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiBankInstallmentsQueryKey = () => {
+    return [
+    `/api/bank-installments`
+    ] as const;
+    }
+
+    
+export const getGetApiBankInstallmentsQueryOptions = <TData = Awaited<ReturnType<typeof getApiBankInstallments>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBankInstallments>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiBankInstallmentsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiBankInstallments>>> = ({ signal }) => getApiBankInstallments(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiBankInstallments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiBankInstallmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiBankInstallments>>>
+export type GetApiBankInstallmentsQueryError = unknown
+
+
+export function useGetApiBankInstallments<TData = Awaited<ReturnType<typeof getApiBankInstallments>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBankInstallments>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBankInstallments>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBankInstallments>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBankInstallments<TData = Awaited<ReturnType<typeof getApiBankInstallments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBankInstallments>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBankInstallments>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBankInstallments>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBankInstallments<TData = Awaited<ReturnType<typeof getApiBankInstallments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBankInstallments>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all bank installments
+ */
+
+export function useGetApiBankInstallments<TData = Awaited<ReturnType<typeof getApiBankInstallments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBankInstallments>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiBankInstallmentsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a bank installment
+ */
+export const postApiBankInstallments = (
+    bankInstallmentCreate: BankInstallmentCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<BankInstallment>(
+      {url: `/api/bank-installments`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bankInstallmentCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiBankInstallmentsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBankInstallments>>, TError,{data: BankInstallmentCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiBankInstallments>>, TError,{data: BankInstallmentCreate}, TContext> => {
+
+const mutationKey = ['postApiBankInstallments'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiBankInstallments>>, {data: BankInstallmentCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiBankInstallments(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiBankInstallmentsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBankInstallments>>>
+    export type PostApiBankInstallmentsMutationBody = BankInstallmentCreate
+    export type PostApiBankInstallmentsMutationError = unknown
+
+    /**
+ * @summary Create a bank installment
+ */
+export const usePostApiBankInstallments = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBankInstallments>>, TError,{data: BankInstallmentCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiBankInstallments>>,
+        TError,
+        {data: BankInstallmentCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiBankInstallmentsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Update a bank installment
+ */
+export const patchApiBankInstallmentsId = (
+    id: string,
+    bankInstallmentUpdate: BankInstallmentUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<BankInstallment>(
+      {url: `/api/bank-installments/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: bankInstallmentUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiBankInstallmentsIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiBankInstallmentsId>>, TError,{id: string;data: BankInstallmentUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiBankInstallmentsId>>, TError,{id: string;data: BankInstallmentUpdate}, TContext> => {
+
+const mutationKey = ['patchApiBankInstallmentsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiBankInstallmentsId>>, {id: string;data: BankInstallmentUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchApiBankInstallmentsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiBankInstallmentsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiBankInstallmentsId>>>
+    export type PatchApiBankInstallmentsIdMutationBody = BankInstallmentUpdate
+    export type PatchApiBankInstallmentsIdMutationError = unknown
+
+    /**
+ * @summary Update a bank installment
+ */
+export const usePatchApiBankInstallmentsId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiBankInstallmentsId>>, TError,{id: string;data: BankInstallmentUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiBankInstallmentsId>>,
+        TError,
+        {id: string;data: BankInstallmentUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiBankInstallmentsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a bank installment
+ */
+export const deleteApiBankInstallmentsId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiBankInstallmentsId200>(
+      {url: `/api/bank-installments/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiBankInstallmentsIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBankInstallmentsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiBankInstallmentsId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiBankInstallmentsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiBankInstallmentsId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiBankInstallmentsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiBankInstallmentsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiBankInstallmentsId>>>
+    
+    export type DeleteApiBankInstallmentsIdMutationError = unknown
+
+    /**
+ * @summary Delete a bank installment
+ */
+export const useDeleteApiBankInstallmentsId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBankInstallmentsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiBankInstallmentsId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiBankInstallmentsIdMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -6094,6 +6387,291 @@ export const usePostApiSellCarRequestsIdAssign = <TError = void,
       > => {
 
       const mutationOptions = getPostApiSellCarRequestsIdAssignMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get all showroom installments
+ */
+export const getApiShowroomInstallments = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<ShowroomInstallment[]>(
+      {url: `/api/showroom-installments`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiShowroomInstallmentsQueryKey = () => {
+    return [
+    `/api/showroom-installments`
+    ] as const;
+    }
+
+    
+export const getGetApiShowroomInstallmentsQueryOptions = <TData = Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiShowroomInstallmentsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiShowroomInstallments>>> = ({ signal }) => getApiShowroomInstallments(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiShowroomInstallmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiShowroomInstallments>>>
+export type GetApiShowroomInstallmentsQueryError = unknown
+
+
+export function useGetApiShowroomInstallments<TData = Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiShowroomInstallments>>,
+          TError,
+          Awaited<ReturnType<typeof getApiShowroomInstallments>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiShowroomInstallments<TData = Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiShowroomInstallments>>,
+          TError,
+          Awaited<ReturnType<typeof getApiShowroomInstallments>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiShowroomInstallments<TData = Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all showroom installments
+ */
+
+export function useGetApiShowroomInstallments<TData = Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShowroomInstallments>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiShowroomInstallmentsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a showroom installment
+ */
+export const postApiShowroomInstallments = (
+    showroomInstallmentCreate: ShowroomInstallmentCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<ShowroomInstallment>(
+      {url: `/api/showroom-installments`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: showroomInstallmentCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiShowroomInstallmentsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomInstallments>>, TError,{data: ShowroomInstallmentCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomInstallments>>, TError,{data: ShowroomInstallmentCreate}, TContext> => {
+
+const mutationKey = ['postApiShowroomInstallments'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiShowroomInstallments>>, {data: ShowroomInstallmentCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiShowroomInstallments(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiShowroomInstallmentsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiShowroomInstallments>>>
+    export type PostApiShowroomInstallmentsMutationBody = ShowroomInstallmentCreate
+    export type PostApiShowroomInstallmentsMutationError = unknown
+
+    /**
+ * @summary Create a showroom installment
+ */
+export const usePostApiShowroomInstallments = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomInstallments>>, TError,{data: ShowroomInstallmentCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiShowroomInstallments>>,
+        TError,
+        {data: ShowroomInstallmentCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiShowroomInstallmentsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Update a showroom installment
+ */
+export const patchApiShowroomInstallmentsId = (
+    id: string,
+    showroomInstallmentUpdate: ShowroomInstallmentUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<ShowroomInstallment>(
+      {url: `/api/showroom-installments/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: showroomInstallmentUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiShowroomInstallmentsIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiShowroomInstallmentsId>>, TError,{id: string;data: ShowroomInstallmentUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiShowroomInstallmentsId>>, TError,{id: string;data: ShowroomInstallmentUpdate}, TContext> => {
+
+const mutationKey = ['patchApiShowroomInstallmentsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiShowroomInstallmentsId>>, {id: string;data: ShowroomInstallmentUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchApiShowroomInstallmentsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiShowroomInstallmentsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiShowroomInstallmentsId>>>
+    export type PatchApiShowroomInstallmentsIdMutationBody = ShowroomInstallmentUpdate
+    export type PatchApiShowroomInstallmentsIdMutationError = unknown
+
+    /**
+ * @summary Update a showroom installment
+ */
+export const usePatchApiShowroomInstallmentsId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiShowroomInstallmentsId>>, TError,{id: string;data: ShowroomInstallmentUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiShowroomInstallmentsId>>,
+        TError,
+        {id: string;data: ShowroomInstallmentUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiShowroomInstallmentsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a showroom installment
+ */
+export const deleteApiShowroomInstallmentsId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiShowroomInstallmentsId200>(
+      {url: `/api/showroom-installments/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiShowroomInstallmentsIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomInstallmentsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomInstallmentsId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiShowroomInstallmentsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiShowroomInstallmentsId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiShowroomInstallmentsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiShowroomInstallmentsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiShowroomInstallmentsId>>>
+    
+    export type DeleteApiShowroomInstallmentsIdMutationError = unknown
+
+    /**
+ * @summary Delete a showroom installment
+ */
+export const useDeleteApiShowroomInstallmentsId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomInstallmentsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiShowroomInstallmentsId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiShowroomInstallmentsIdMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
