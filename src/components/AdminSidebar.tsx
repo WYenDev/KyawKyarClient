@@ -132,6 +132,13 @@ const AdminSidebar = () => {
                     label="About Page"
                     collapsed={collapsed}
                 />
+               <MenuItem
+                    to="/admin/payments"
+                    icon={LayoutDashboard}
+                    label="Payments"
+                    collapsed={collapsed}
+                />
+  
                 {/* 🔹 NEW ITEMS */}
  
                  <MenuItem to="/admin/sell-requests" icon={Tag} label="Sell Requests" collapsed={collapsed} />
