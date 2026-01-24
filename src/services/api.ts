@@ -779,7 +779,16 @@ export type GetApiCarsDeleted200 = {
   limit?: number;
 };
 
-export type GetApiCarsFilters200BrandsWithModels = {[key: string]: string[]};
+export type GetApiCarsFilters200BrandsWithModelsModelsItem = {
+  id?: string;
+  name?: string;
+  carCount?: number;
+};
+
+export type GetApiCarsFilters200BrandsWithModels = {[key: string]: {
+  totalCars?: number;
+  models?: GetApiCarsFilters200BrandsWithModelsModelsItem[];
+}};
 
 export type GetApiCarsFilters200 = {
   brandsWithModels?: GetApiCarsFilters200BrandsWithModels;

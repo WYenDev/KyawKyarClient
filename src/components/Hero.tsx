@@ -25,13 +25,30 @@ const Hero: React.FC = () => {
   const brandsToShow = serverBrands && serverBrands.length > 0 ? serverBrands : localBrands;
 
   const normalizeModelsForBrand = (brandKey?: string) => {
-    if (!brandKey) return [] as { id: string; name: string }[];
-    const raw = (serverBrandModels && serverBrandModels[brandKey]) ?? localBrandModels[brandKey] ?? [];
-    if (raw.length === 0) return [] as { id: string; name: string }[];
-    if (typeof raw[0] === 'string') {
-      return (raw as string[]).map(name => ({ id: name, name }));
+    if (!brandKey) return [] as { id: string; name: string; carCount?: number }[];
+    
+    // Check if we have server data for this brand
+    if (serverBrandModels && serverBrandModels[brandKey]) {
+      const models = serverBrandModels[brandKey].models || [];
+      return models.map(m => ({
+        id: m.id ?? m.name ?? String(m),
+        name: m.name ?? m.id ?? String(m),
+        carCount: m.carCount
+      }));
     }
-    return (raw as { id?: string; name?: string }[]).map(m => ({ id: m.id ?? m.name ?? String(m), name: m.name ?? m.id ?? String(m) }));
+
+    const raw = localBrandModels[brandKey] ?? [];
+    if (raw.length === 0) return [] as { id: string; name: string; carCount?: number }[];
+    
+    if (typeof raw[0] === 'string') {
+      return (raw as string[]).map(name => ({ id: name, name, carCount: undefined }));
+    }
+    // Fallback if local data somehow has objects (unlikely based on types but keeping logical structure)
+    return (raw as { id?: string; name?: string }[]).map(m => ({ 
+      id: m.id ?? m.name ?? String(m), 
+      name: m.name ?? m.id ?? String(m),
+      carCount: undefined 
+    }));
   };
 
   const availableModels = useMemo(() => normalizeModelsForBrand(brand), [brand, serverBrandModels]);
@@ -93,9 +110,14 @@ const Hero: React.FC = () => {
                 className="w-full bg-white border-slate-300 rounded-lg px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-700"
               >
                 <option value="">All Brands</option>
-                {brandsToShow.map((b) => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
+                {brandsToShow.map((b) => {
+                  const count = serverBrandModels?.[b]?.totalCars;
+                  return (
+                    <option key={b} value={b}>
+                      {b}{count !== undefined ? ` (${count})` : ''}
+                    </option>
+                  );
+                })}
               </select>
 
               <select
@@ -106,7 +128,9 @@ const Hero: React.FC = () => {
               >
                 <option value="">All Models</option>
                 {availableModels.map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
+                  <option key={m.id} value={m.id}>
+                    {m.name}{m.carCount !== undefined ? ` (${m.carCount})` : ''}
+                  </option>
                 ))}
               </select>
 

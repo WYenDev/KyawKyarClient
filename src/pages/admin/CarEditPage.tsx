@@ -29,8 +29,9 @@ import {
 type CarForm = {
     modelId: string;
     modelYear: number;
-    price: number;
-    mileage: number;
+    // keep as string while editing (avoid leading-zero issues)
+    price: number | string;
+    mileage: number | string;
     enginePower?: number | null;
     fuel: Fuel;
     transmission: Transmission;
@@ -42,6 +43,15 @@ type CarForm = {
     gradeId?: string;
     isNewArrival?: boolean;
     featured?: boolean;
+    // Optional license block
+    license?: {
+        prefixNumber?: number;
+        prefixLetter?: string;
+        registrationNumber?: number;
+        registeredName?: string;
+        expiryDate?: string;
+        regionId?: string;
+    };
 };
 
 /* ===================== STATIC OPTIONS ===================== */
@@ -95,8 +105,9 @@ const CarEditPage = () => {
         setForm({
             modelId: car.modelId,
             modelYear: car.modelYear,
-            price: car.price,
-            mileage: car.mileage,
+            // convert to string for editing
+            price: car.price ?? "",
+            mileage: car.mileage ?? "",
             enginePower: car.engineSize ?? null,
             fuel: car.fuel,
             transmission: car.transmission,
@@ -108,6 +119,17 @@ const CarEditPage = () => {
             gradeId: car.gradeId ?? undefined,
             isNewArrival: car.isNewArrival ?? false,
             featured: car.featured ?? false,
+            // initialize license from existing car. keep expiryDate as ISO string if present
+            license: car.license
+                ? {
+                    prefixNumber: car.license.prefixNumber,
+                    prefixLetter: car.license.prefixLetter,
+                    registrationNumber: car.license.registrationNumber,
+                    registeredName: car.license.registeredName ?? undefined,
+                    expiryDate: car.license.expiryDate ?? undefined,
+                    regionId: car.license.regionId ?? undefined,
+                }
+                : undefined,
         });
     }, [car]);
 
@@ -136,6 +158,15 @@ const CarEditPage = () => {
             filterData?.colors?.map((c) => ({
                 label: c.name,
                 value: c.id,
+            })) ?? [],
+        [filterData]
+    );
+
+    const regionOptions: Option<string>[] = useMemo(
+        () =>
+            filterData?.regions?.map((r) => ({
+                label: r.code, // display code (e.g. "01")
+                value: r.id,
             })) ?? [],
         [filterData]
     );
@@ -207,9 +238,45 @@ const CarEditPage = () => {
     const handleSave = async () => {
         if (!form || !car) return;
 
+        // If user started to provide license info, require the four core fields
+        const license = form.license;
+        if (license) {
+            const hasCore =
+                license.prefixNumber !== undefined ||
+                !!license.prefixLetter ||
+                license.registrationNumber !== undefined ||
+                !!license.regionId;
+
+            if (hasCore) {
+                if (
+                    license.prefixNumber === undefined ||
+                    !license.prefixLetter ||
+                    license.registrationNumber === undefined ||
+                    !license.regionId
+                ) {
+                    alert("Please provide complete license info: prefix number, prefix letter, registration number and region.");
+                    return;
+                }
+            }
+        }
+
         try {
+            // coerce price/mileage to numbers
+            const payload: any = { ...form };
+            if (typeof payload.price === "string") {
+                payload.price = payload.price === "" ? 0 : Number(payload.price);
+            }
+            if (typeof payload.mileage === "string") {
+                payload.mileage = payload.mileage === "" ? 0 : Number(payload.mileage);
+            }
+
+            // Ensure prefix letter is uppercase before sending
+            if (payload.license && payload.license.prefixLetter) {
+                payload.license.prefixLetter = String(payload.license.prefixLetter).trim().toUpperCase();
+            }
+
             // 1. Update basic fields
-            await updateCar({ id: id!, data: form as CarUpdate });
+            await updateCar({ id: id!, data: payload as CarUpdate });
 
             // 2. Handle featured status
             if (form.featured !== car.featured) {
@@ -249,241 +316,365 @@ const CarEditPage = () => {
 
                     {/* ===== BASIC INFO ===== */}
                     <Section title="Basic Information">
-                    <div className="grid grid-cols-2 gap-6">
-                        <Field label="Brand">
-                            <Select
-                                value={brandId}
-                                options={brandOptions}
-                                placeholder="Select brand"
-                                onChange={onChangeBrand}
-                            />
-                        </Field>
+                        <div className="grid grid-cols-2 gap-6">
+                            <Field label="Brand">
+                                <Select
+                                    value={brandId}
+                                    options={brandOptions}
+                                    placeholder="Select brand"
+                                    onChange={onChangeBrand}
+                                />
+                            </Field>
 
-                        <Field label="Model">
-                            <Select
-                                value={form.modelId}
-                                options={modelOptions}
-                                placeholder={
-                                    brandId
-                                        ? "Select model"
-                                        : "Select brand first"
-                                }
-                                onChange={onChangeModel}
-                                className={
-                                    !brandId
-                                        ? "opacity-50 cursor-not-allowed"
-                                        : ""
-                                }
-                            />
-                        </Field>
+                            <Field label="Model">
+                                <Select
+                                    value={form.modelId}
+                                    options={modelOptions}
+                                    placeholder={
+                                        brandId
+                                            ? "Select model"
+                                            : "Select brand first"
+                                    }
+                                    onChange={onChangeModel}
+                                    className={
+                                        !brandId
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }
+                                />
+                            </Field>
 
-                        <Field label="Color">
-                            <Select
-                                value={form.colorId}
-                                options={colorOptions}
-                                placeholder="Select color"
-                                onChange={(v) =>
-                                    setForm({ ...form, colorId: v ?? "" })
-                                }
-                            />
-                        </Field>
+                            <Field label="Color">
+                                <Select
+                                    value={form.colorId}
+                                    options={colorOptions}
+                                    placeholder="Select color"
+                                    onChange={(v) =>
+                                        setForm({ ...form, colorId: v ?? "" })
+                                    }
+                                />
+                            </Field>
 
-                        <Field label="Showroom">
-                            <Select
-                                value={form.showroomId ?? ""}
-                                options={showroomOptions}
-                                placeholder="No Showroom"
-                                onChange={(v) =>
-                                    setForm({
-                                        ...form,
-                                        showroomId: v || undefined,
-                                    })
-                                }
-                            />
-                        </Field>
-
-                        <Field label="Build Type">
-                            <Select
-                                value={form.buildTypeId ?? ""}
-                                options={buildTypeOptions}
-                                placeholder="Build Type"
-                                onChange={(v) =>
-                                    setForm({
-                                        ...form,
-                                        buildTypeId: v || undefined,
-                                    })
-                                }
-                            />
-                        </Field>
-
-                        <Field label="Grade">
-                            <Select
-                                value={form.gradeId ?? ""}
-                                options={gradeOptions}
-                                placeholder={
-                                    form.modelId
-                                        ? "Select grade"
-                                        : "Select model first"
-                                }
-                                onChange={(v) =>
-                                    setForm({
-                                        ...form,
-                                        gradeId: v || undefined,
-                                    })
-                                }
-                                className={
-                                    !form.modelId
-                                        ? "opacity-50 cursor-not-allowed"
-                                        : ""
-                                }
-                            />
-                        </Field>
-                    </div>
-                </Section>
-
-                {/* ===== SPECIFICATIONS ===== */}
-                <Section title="Specifications">
-                    <div className="grid grid-cols-4 gap-6">
-                        <Input
-                            label="Model Year"
-                            value={form.modelYear}
-                            onChange={(v) =>
-                                setForm({
-                                    ...form,
-                                    modelYear: Number(v),
-                                })
-                            }
-                        />
-                        <Input
-                            label="Price"
-                            value={form.price}
-                            onChange={(v) =>
-                                setForm({ ...form, price: Number(v) })
-                            }
-                        />
-                        <Input
-                            label="Mileage"
-                            value={form.mileage}
-                            onChange={(v) =>
-                                setForm({ ...form, mileage: Number(v) })
-                            }
-                        />
-                        <Input
-                            label="Engine Power"
-                            value={form.enginePower ?? ""}
-                            onChange={(v) =>
-                                setForm({
-                                    ...form,
-                                    enginePower: v ? Number(v) : null,
-                                })
-                            }
-                        />
-                    </div>
-                </Section>
-
-                {/* ===== STATUS ===== */}
-                <Section title="Status">
-                    <div className="grid grid-cols-4 gap-6 items-end">
-                        <Select
-                            value={form.fuel}
-                            options={fuelOptions}
-                            placeholder="Fuel"
-                            onChange={(v) =>
-                                setForm({ ...form, fuel: v })
-                            }
-                        />
-                        <Select
-                            value={form.transmission}
-                            options={transmissionOptions}
-                            placeholder="Transmission"
-                            onChange={(v) =>
-                                setForm({
-                                    ...form,
-                                    transmission: v,
-                                })
-                            }
-                        />
-                        <Select
-                            value={form.steering ?? SteeringPosition.Left}
-                            options={steeringOptions}
-                            placeholder="Steering"
-                            onChange={(v) =>
-                                setForm({ ...form, steering: v })
-                            }
-                        />
-                        <Select
-                            value={form.status}
-                            options={statusOptions}
-                            placeholder="Status"
-                            onChange={(v) =>
-                                setForm({ ...form, status: v })
-                            }
-                        />
-
-                        {/* CHECKBOXES */}
-                        <div className="col-span-4 flex flex-col lg:flex-row gap-6 pt-2">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={form.isNewArrival ?? false}
-                                    onChange={(e) =>
+                            <Field label="Showroom">
+                                <Select
+                                    value={form.showroomId ?? ""}
+                                    options={showroomOptions}
+                                    placeholder="No Showroom"
+                                    onChange={(v) =>
                                         setForm({
                                             ...form,
-                                            isNewArrival: e.target.checked,
+                                            showroomId: v || undefined,
                                         })
                                     }
-                                    className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
-                                <span className="text-sm font-medium text-gray-700">
-                                    New Arrival
-                                </span>
-                            </label>
+                            </Field>
 
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={form.featured ?? false}
-                                    onChange={(e) =>
+                            <Field label="Build Type">
+                                <Select
+                                    value={form.buildTypeId ?? ""}
+                                    options={buildTypeOptions}
+                                    placeholder="Build Type"
+                                    onChange={(v) =>
                                         setForm({
                                             ...form,
-                                            featured: e.target.checked,
+                                            buildTypeId: v || undefined,
                                         })
                                     }
-                                    className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
-                                <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
-                                    <Star
-                                        size={14}
-                                        className={
-                                            form.featured
-                                                ? "fill-indigo-600 text-indigo-600"
-                                                : ""
-                                        }
-                                    />
-                                    Featured Car
-                                </span>
-                            </label>
+                            </Field>
+
+                            <Field label="Grade">
+                                <Select
+                                    value={form.gradeId ?? ""}
+                                    options={gradeOptions}
+                                    placeholder={
+                                        form.modelId
+                                            ? "Select grade"
+                                            : "Select model first"
+                                    }
+                                    onChange={(v) =>
+                                        setForm({
+                                            ...form,
+                                            gradeId: v || undefined,
+                                        })
+                                    }
+                                    className={
+                                        !form.modelId
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }
+                                />
+                            </Field>
                         </div>
-                    </div>
-                </Section>
+                    </Section>
 
-                {/* ===== ACTIONS ===== */}
-                <div className="flex justify-end gap-4 mt-10">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="px-6 py-2 rounded-xl border"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={isPending}
-                        className="px-8 py-2 rounded-xl bg-black text-white"
-                    >
-                        Save
-                    </button>
+                    {/* ===== SPECIFICATIONS ===== */}
+                    <Section title="Specifications">
+                        <div className="grid grid-cols-4 gap-6">
+                            <Input
+                                label="Model Year"
+                                value={form.modelYear}
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        modelYear: Number(v),
+                                    })
+                                }
+                            />
+                            <div>
+                                <label className="block text-sm mb-1">Price</label>
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    value={String(form.price ?? "")}
+                                    onChange={(e) => {
+                                        const raw = e.target.value || "";
+                                        const digits = raw.replace(/\D+/g, "");
+                                        const cleaned = digits.replace(/^0+/, "");
+                                        setForm({ ...form, price: cleaned });
+                                    }}
+                                    className="w-full rounded-xl border px-4 py-3"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm mb-1">Mileage</label>
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    value={String(form.mileage ?? "")}
+                                    onChange={(e) => {
+                                        const raw = e.target.value || "";
+                                        const digits = raw.replace(/\D+/g, "");
+                                        const cleaned = digits.replace(/^0+/, "");
+                                        setForm({ ...form, mileage: cleaned });
+                                    }}
+                                    className="w-full rounded-xl border px-4 py-3"
+                                />
+                            </div>
+                            <Input
+                                label="Engine Power"
+                                value={form.enginePower ?? ""}
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        enginePower: v ? Number(v) : null,
+                                    })
+                                }
+                            />
+                        </div>
+                    </Section>
+
+                    {/* ===== STATUS ===== */}
+                    <Section title="Status">
+                        <div className="grid grid-cols-4 gap-6 items-end">
+                            <Select
+                                value={form.fuel}
+                                options={fuelOptions}
+                                placeholder="Fuel"
+                                onChange={(v) =>
+                                    setForm({ ...form, fuel: v })
+                                }
+                            />
+                            <Select
+                                value={form.transmission}
+                                options={transmissionOptions}
+                                placeholder="Transmission"
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        transmission: v,
+                                    })
+                                }
+                            />
+                            <Select
+                                value={form.steering ?? SteeringPosition.Left}
+                                options={steeringOptions}
+                                placeholder="Steering"
+                                onChange={(v) =>
+                                    setForm({ ...form, steering: v })
+                                }
+                            />
+                            <Select
+                                value={form.status}
+                                options={statusOptions}
+                                placeholder="Status"
+                                onChange={(v) =>
+                                    setForm({ ...form, status: v })
+                                }
+                            />
+
+                        </div>
+                    </Section>
+
+                    {/* ===== LICENSE ===== */}
+                    <Section title="License">
+                        <div className="grid grid-cols-4 gap-6">
+                            <Input
+                                label="Prefix Number"
+                                value={form.license?.prefixNumber ?? ""}
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        license: {
+                                            ...form.license,
+                                            prefixNumber: v ? Number(v) : undefined,
+                                        },
+                                    })
+                                }
+                            />
+
+                            <div>
+                                <label className="block text-sm mb-1">Prefix Letter</label>
+                                <input
+                                    type="text"
+                                    value={form.license?.prefixLetter ?? ""}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            license: {
+                                                ...form.license,
+                                                prefixLetter: e.target.value,
+                                            },
+                                        })
+                                    }
+                                    className="w-full rounded-xl border px-4 py-3"
+                                    maxLength={2}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm mb-1">Region</label>
+                                <Select
+                                    value={form.license?.regionId ?? ""}
+                                    options={[{ label: "No Region", value: "" }, ...regionOptions]}
+                                    placeholder="Select region"
+                                    onChange={(v) =>
+                                        setForm({
+                                            ...form,
+                                            license: {
+                                                ...form.license,
+                                                regionId: v || undefined,
+                                            },
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <Input
+                                label="Registration Number"
+                                value={form.license?.registrationNumber ?? ""}
+                                onChange={(v) =>
+                                    setForm({
+                                        ...form,
+                                        license: {
+                                            ...form.license,
+                                            registrationNumber: v ? Number(v) : undefined,
+                                        },
+                                    })
+                                }
+                            />
+
+                            <div className="col-span-2">
+                                <label className="block text-sm mb-1">Registered Name (optional)</label>
+                                <input
+                                    type="text"
+                                    value={form.license?.registeredName ?? ""}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            license: {
+                                                ...form.license,
+                                                registeredName: e.target.value ? e.target.value : undefined,
+                                            },
+                                        })
+                                    }
+                                    className="w-full rounded-xl border px-4 py-3"
+                                />
+                            </div>
+
+                            <div className="col-span-2">
+                                <label className="block text-sm mb-1">Expiry Date (optional)</label>
+                                <input
+                                    type="date"
+                                    value={form.license?.expiryDate ? form.license.expiryDate.slice(0, 10) : ""}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            license: {
+                                                ...form.license,
+                                                expiryDate: e.target.value ? new Date(e.target.value).toISOString() : undefined,
+                                            },
+                                        })
+                                    }
+                                    className="w-full rounded-xl border px-4 py-3"
+                                />
+                            </div>
+                        </div>
+                    </Section>
+
+
+                    {/* CHECKBOXES */}
+                    <div className="col-span-4 flex flex-col lg:flex-row gap-6 pt-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={form.isNewArrival ?? false}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        isNewArrival: e.target.checked,
+                                    })
+                                }
+                                className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm font-medium text-gray-700">
+                                New Arrival
+                            </span>
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={form.featured ?? false}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        featured: e.target.checked,
+                                    })
+                                }
+                                className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
+                                <Star
+                                    size={14}
+                                    className={
+                                        form.featured
+                                            ? "fill-indigo-600 text-indigo-600"
+                                            : ""
+                                    }
+                                />
+                                Featured Car
+                            </span>
+                        </label>
+                    </div>
+                    {/* ===== ACTIONS ===== */}
+                    <div className="flex justify-end gap-4 mt-10">
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="px-6 py-2 rounded-xl border"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={isPending}
+                            className="px-8 py-2 rounded-xl bg-black text-white"
+                        >
+                            Save
+                        </button>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     );
@@ -609,7 +800,7 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
                             alt="Car"
                             className="w-full h-full object-cover"
                         />
-                        
+
                         {/* BADGES */}
                         {img.isPrimary && (
                             <div className="absolute top-2 left-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">
@@ -670,11 +861,10 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
                             {files.map((file, idx) => (
                                 <div
                                     key={idx}
-                                    className={`relative aspect-square rounded-xl overflow-hidden border-2 ${
-                                        primaryIndex === idx
+                                    className={`relative aspect-square rounded-xl overflow-hidden border-2 ${primaryIndex === idx
                                             ? "border-yellow-500"
                                             : "border-transparent"
-                                    }`}
+                                        }`}
                                 >
                                     <img
                                         src={URL.createObjectURL(file)}
@@ -687,14 +877,13 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
                                     >
                                         <X size={12} />
                                     </button>
-                                    
+
                                     <button
                                         onClick={() => setPrimaryIndex(idx)}
-                                        className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm ${
-                                            primaryIndex === idx
+                                        className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm ${primaryIndex === idx
                                                 ? "bg-yellow-400 text-black"
                                                 : "bg-white text-gray-500 hover:bg-gray-100"
-                                        }`}
+                                            }`}
                                     >
                                         {primaryIndex === idx ? "COVER" : "SET COVER"}
                                     </button>

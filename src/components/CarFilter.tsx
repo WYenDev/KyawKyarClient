@@ -11,8 +11,8 @@ interface CarFilterProps {
   onToggle: () => void;
   // serverBrands may be names or ids depending on API
   serverBrands?: string[];
-  // serverBrandModels may be an array of strings or array of objects {id, name}
-  serverBrandModels?: Record<string, Array<string | { id?: string; name?: string }>>;
+  // serverBrandModels can be Record<string, any> to support both legacy array (local) and API object structure
+  serverBrandModels?: Record<string, any>;
   // serverBodyTypes (build types) may be array of strings or objects
   serverBodyTypes?: Array<string | { id?: string; name?: string }>;
   // serverShowrooms may be array of strings or objects {id, city, name}
@@ -48,19 +48,40 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
   const brandModelsRaw = serverBrandModels && Object.keys(serverBrandModels).length > 0 ? serverBrandModels : localBrandModels;
 
   const normalizeModelsForBrand = (brandKey?: string) => {
-    if (!brandKey) return [] as { id: string; name: string }[];
-    const raw = brandModelsRaw[brandKey] ?? [];
-    if (raw.length === 0) return [] as { id: string; name: string }[];
-    // if items are strings
-    if (typeof raw[0] === 'string') {
-      return (raw as string[]).map(name => ({ id: name, name }));
+    if (!brandKey) return [] as { id: string; name: string; carCount?: number }[];
+    
+    const raw: any = brandModelsRaw[brandKey];
+    if (!raw) return [] as { id: string; name: string; carCount?: number }[];
+
+    // Handle API structure: { totalCars: number, models: [...] }
+    if (raw.models && Array.isArray(raw.models)) {
+        return raw.models.map((m: any) => ({
+            id: m.id ?? m.name ?? String(m),
+            name: m.name ?? m.id ?? String(m),
+            carCount: m.carCount
+        }));
     }
-    // items are objects
-    return (raw as { id?: string; name?: string }[]).map(m => ({ id: m.id ?? m.name ?? String(m), name: m.name ?? m.id ?? String(m) }));
+
+    // Handle local data or array structure
+    if (Array.isArray(raw)) {
+        if (raw.length === 0) return [] as { id: string; name: string; carCount?: number }[];
+        
+        if (typeof raw[0] === 'string') {
+            return (raw as string[]).map(name => ({ id: name, name, carCount: undefined }));
+        }
+        
+        return (raw as { id?: string; name?: string }[]).map(m => ({
+            id: m.id ?? m.name ?? String(m),
+            name: m.name ?? m.id ?? String(m),
+            carCount: undefined
+        }));
+    }
+
+    return [] as { id: string; name: string; carCount?: number }[];
   };
 
   const getAvailableModels = () => {
-    if (!filters.brand) return [] as { id: string; name: string }[];
+    if (!filters.brand) return [] as { id: string; name: string; carCount?: number }[];
     return normalizeModelsForBrand(filters.brand);
   };
 
@@ -209,9 +230,14 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                   className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm shadow-sm bg-white"
                 >
                   <option value="">All</option>
-                  {brandsToShow.map((brand: string) => (
-                    <option key={brand} value={brand}>{brand}</option>
-                  ))}
+                  {brandsToShow.map((brand: string) => {
+                    const count = (serverBrandModels as any)?.[brand]?.totalCars;
+                    return (
+                      <option key={brand} value={brand}>
+                        {brand}{count !== undefined ? ` (${count})` : ''}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -225,7 +251,9 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 >
                   <option value="">All</option>
                   {getAvailableModels().map((model) => (
-                    <option key={model.id} value={model.id}>{model.name}</option>
+                    <option key={model.id} value={model.id}>
+                      {model.name}{model.carCount !== undefined ? ` (${model.carCount})` : ''}
+                    </option>
                   ))}
                 </select>
               </div>
