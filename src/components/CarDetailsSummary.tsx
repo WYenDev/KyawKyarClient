@@ -40,9 +40,14 @@ const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
       </h1>
 
       <div className="flex items-center justify-between my-6">
-        <div>
-          <div className="text-3xl font-extrabold text-blue-700">{car.formattedPrice}</div>
-        </div>
+        {car.formattedPrice &&
+          (
+            <div>
+
+              <div className="text-3xl font-extrabold text-blue-700">{car.formattedPrice} {t('details.lakhs', 'LAKHs')}</div>
+            </div>
+          )
+        }
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-8 text-gray-700">

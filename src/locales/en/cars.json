@@ -33,6 +33,7 @@
   },
   "details": {
     "back": "Back",
+    "lakhs": "LAKHS",
     "back_to_inventory": "Back to inventory",
     "breadcrumb_home": "Home",
     "breadcrumb_inventory": "Cars",
