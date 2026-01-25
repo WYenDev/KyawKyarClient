@@ -900,6 +900,11 @@ export type DeleteApiCarsId200 = {
   deletedCount?: number;
 };
 
+export type PostApiCarsIdRestore200 = {
+  success?: boolean;
+  car?: Car;
+};
+
 export type PatchApiCarsIdSoftDelete200 = {
   success?: boolean;
   car?: Car;
@@ -4619,6 +4624,69 @@ export const useDeleteApiCarsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiCarsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Restore a soft-deleted car (set deletedAt to null)
+ */
+export const postApiCarsIdRestore = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiCarsIdRestore200>(
+      {url: `/api/cars/${id}/restore`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiCarsIdRestoreMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdRestore>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdRestore>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiCarsIdRestore'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiCarsIdRestore>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiCarsIdRestore(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiCarsIdRestoreMutationResult = NonNullable<Awaited<ReturnType<typeof postApiCarsIdRestore>>>
+    
+    export type PostApiCarsIdRestoreMutationError = unknown
+
+    /**
+ * @summary Restore a soft-deleted car (set deletedAt to null)
+ */
+export const usePostApiCarsIdRestore = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdRestore>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiCarsIdRestore>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiCarsIdRestoreMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

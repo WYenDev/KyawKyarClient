@@ -19,7 +19,7 @@ import {
     useGetApiCarsActive,
     useGetApiCarsDeleted,
     usePatchApiCarsIdSoftDelete,
-    usePatchApiCarsId,
+    usePostApiCarsIdRestore,
 } from "../../services/api";
 
 const PLACEHOLDER_IMAGE =
@@ -71,7 +71,7 @@ const Cars = () => {
             },
         });
 
-    const { mutate: restoreCar, isPending: restoring } = usePatchApiCarsId({
+    const { mutate: restoreCar, isPending: restoring } = usePostApiCarsIdRestore({
         mutation: {
             onSuccess: () => {
                 refetchActive();
@@ -269,8 +269,7 @@ const Cars = () => {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                // @ts-ignore
-                                                restoreCar({ id: car.id, data: { deletedAt: null } });
+                                                restoreCar({ id: car.id });
                                             }}
                                             disabled={restoring}
                                             className="text-green-600 text-sm flex items-center gap-1 ml-auto disabled:opacity-50"
