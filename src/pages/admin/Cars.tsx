@@ -10,13 +10,16 @@ import {
     Fuel,
     Settings,
     MapPin,
+    RotateCcw,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import {
     CarListItem,
     useGetApiCarsActive,
+    useGetApiCarsDeleted,
     usePatchApiCarsIdSoftDelete,
+    usePatchApiCarsId,
 } from "../../services/api";
 
 const PLACEHOLDER_IMAGE =
@@ -30,6 +33,7 @@ const Cars = () => {
     const navigate = useNavigate();
 
     /* ================= STATE ================= */
+    const [activeTab, setActiveTab] = useState<'active' | 'deleted'>('active');
     const [deleteTarget, setDeleteTarget] = useState<CarListItem | null>(null);
     const [searchText, setSearchText] = useState("");
     const [page, setPage] = useState(1);
@@ -37,23 +41,48 @@ const Cars = () => {
     const isSearching = searchText.trim().length > 0;
 
     /* ================= API ================= */
-    const { data, isLoading, refetch } = useGetApiCarsActive({
+    const { 
+        data: activeData, 
+        isLoading: activeLoading, 
+        refetch: refetchActive 
+    } = useGetApiCarsActive({
         page: isSearching ? 1 : page,
         limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
-    });
+    }, { query: { enabled: activeTab === 'active' } });
+
+    const { 
+        data: deletedData, 
+        isLoading: deletedLoading, 
+        refetch: refetchDeleted 
+    } = useGetApiCarsDeleted({
+        page: isSearching ? 1 : page,
+        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
+    }, { query: { enabled: activeTab === 'deleted' } });
 
     const { mutate: softDeleteCar, isPending: deleting } =
         usePatchApiCarsIdSoftDelete({
             mutation: {
                 onSuccess: () => {
-                    refetch();
+                    refetchActive();
+                    refetchDeleted();
                     setDeleteTarget(null);
                     setPage(1);
                 },
             },
         });
 
-    const cars = data?.items ?? [];
+    const { mutate: restoreCar, isPending: restoring } = usePatchApiCarsId({
+        mutation: {
+            onSuccess: () => {
+                refetchActive();
+                refetchDeleted();
+            },
+        },
+    });
+
+    const currentData = activeTab === 'active' ? activeData : deletedData;
+    const isLoading = activeTab === 'active' ? activeLoading : deletedLoading;
+    const cars = currentData?.items ?? [];
 
     /* ================= SEARCH FILTER ================= */
     const filteredCars = useMemo(() => {
@@ -70,7 +99,7 @@ const Cars = () => {
     /* ================= PAGINATION DATA ================= */
     const total = isSearching
         ? filteredCars.length
-        : data?.total ?? 0;
+        : currentData?.total ?? 0;
 
     const totalPages = Math.ceil(total / PAGE_LIMIT);
 
@@ -83,7 +112,7 @@ const Cars = () => {
 
     useEffect(() => {
         setPage(1);
-    }, [searchText]);
+    }, [searchText, activeTab]);
 
     /* ================= RENDER ================= */
     return (
@@ -97,6 +126,30 @@ const Cars = () => {
                     className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl hover:bg-gray-800 transition"
                 >
                     <Plus size={16} /> Add Car
+                </button>
+            </div>
+
+            {/* TABS */}
+            <div className="flex gap-4 mb-6 border-b border-gray-200">
+                <button
+                    onClick={() => setActiveTab('active')}
+                    className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
+                        activeTab === 'active' 
+                            ? 'text-black border-b-2 border-black' 
+                            : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                >
+                    Active Cars
+                </button>
+                <button
+                    onClick={() => setActiveTab('deleted')}
+                    className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
+                        activeTab === 'deleted' 
+                            ? 'text-black border-b-2 border-black' 
+                            : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                >
+                    Deleted Cars
                 </button>
             </div>
 
@@ -190,25 +243,41 @@ const Cars = () => {
                                 </div>
 
                                 <div className="flex justify-between pt-3 border-t">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            navigate(`/admin/cars/${car.id}/edit`);
-                                        }}
-                                        className="text-indigo-600 text-sm flex items-center gap-1"
-                                    >
-                                        <Pencil size={14} /> Edit
-                                    </button>
+                                    {activeTab === 'active' ? (
+                                        <>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`/admin/cars/${car.id}/edit`);
+                                                }}
+                                                className="text-indigo-600 text-sm flex items-center gap-1"
+                                            >
+                                                <Pencil size={14} /> Edit
+                                            </button>
 
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setDeleteTarget(car);
-                                        }}
-                                        className="text-red-600 text-sm flex items-center gap-1"
-                                    >
-                                        <Trash2 size={14} /> Delete
-                                    </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setDeleteTarget(car);
+                                                }}
+                                                className="text-red-600 text-sm flex items-center gap-1"
+                                            >
+                                                <Trash2 size={14} /> Delete
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                // @ts-ignore
+                                                restoreCar({ id: car.id, data: { deletedAt: null } });
+                                            }}
+                                            disabled={restoring}
+                                            className="text-green-600 text-sm flex items-center gap-1 ml-auto disabled:opacity-50"
+                                        >
+                                            <RotateCcw size={14} /> Restore
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
