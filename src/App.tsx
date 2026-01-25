@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Public layout components
 import Header from "./components/Header";
@@ -45,6 +46,7 @@ import AdminPayments from "./pages/admin/Payments";
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin/login" element={<AdminLogin />} />
