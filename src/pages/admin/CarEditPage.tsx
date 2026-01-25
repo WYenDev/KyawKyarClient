@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Trash2, Star, Upload, X } from "lucide-react";
+import { Trash2, Star, Upload, X , Loader2} from "lucide-react";
 import heic2any from "heic2any";
 
 import Select, { Option } from "../../components/Select";
@@ -790,6 +790,7 @@ const resizeImage = (file: Blob | File, maxWidth: number = 1920): Promise<Blob> 
     reader.onerror = (err) => reject(err);
   });
 };
+
 /* ===================== IMAGE MANAGER ===================== */
 const CarImagesManager = ({ carId }: { carId: string }) => {
     /* ===================== QUERY ===================== */
@@ -818,54 +819,58 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
     /* ===================== LOCAL STATE ===================== */
     const [files, setFiles] = useState<File[]>([]);
     const [primaryIndex, setPrimaryIndex] = useState<number | null>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     /* ===================== ACTIONS ===================== */
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
+            setIsProcessing(true);
             const rawFiles = Array.from(e.target.files);
             const processedFiles: File[] = [];
 
             for (const file of rawFiles) {
-                // Check if file is HEIC
-                console.log('file type', file.type)
                 const isHeic = file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic");
                 const isHeif = file.type === "image/heif" || file.name.toLowerCase().endsWith(".heif");
+                
                 if (isHeif || isHeic) {
-
                     try {
                         const blob = await heic2any({
                             blob: file,
                             toType: "image/webp",
-                            quality: 0.7 // good balance for web
+                            quality: 0.7
                         });
-
-                        // heic2any can return a single Blob or an array of Blobs
                         const convertedBlob = Array.isArray(blob) ? blob[0] : blob;
                         const resizedBlob = await resizeImage(convertedBlob, 1920);
 
-
-                        // Create a new File object with .webp extension
-                        const newFileName = file.name.replace(/\.heic$/i, ".webp");
+                        const newFileName = file.name.replace(/\.(heic|heif)$/i, ".webp");
                         const newFile = new File([resizedBlob], newFileName, {
                             type: "image/webp",
                             lastModified: new Date().getTime()
                         });
-
                         processedFiles.push(newFile);
                     } catch (error) {
-                        console.error("HEIC conversion failed for", file.name, error);
-                        // Fallback: push original file if conversion fails (or alert user)
+                        console.error("HEIC conversion failed", error);
                         processedFiles.push(file);
                     }
                 } else {
-                    processedFiles.push(file);
+                    try {
+                        const resizedBlob = await resizeImage(file, 1920);
+                        const newFile = new File([resizedBlob], file.name, {
+                            type: file.type,
+                            lastModified: new Date().getTime()
+                        });
+                        processedFiles.push(newFile);
+                    } catch {
+                        processedFiles.push(file);
+                    }
                 }
             }
-
             setFiles((prev) => [...prev, ...processedFiles]);
+            setIsProcessing(false);
         }
     };
 
+    // FIXED: Added missing removeFile function
     const removeFile = (idx: number) => {
         setFiles((prev) => prev.filter((_, i) => i !== idx));
         if (primaryIndex === idx) setPrimaryIndex(null);
@@ -873,6 +878,7 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
             setPrimaryIndex(primaryIndex - 1);
     };
 
+    // FIXED: Added missing handleUpload function which uses 'upload'
     const handleUpload = () => {
         if (files.length === 0) return;
         upload({
@@ -889,39 +895,18 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
             {/* EXISTING IMAGES */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
                 {images.map((img) => (
-                    <div
-                        key={img.id}
-                        className="relative group aspect-square bg-gray-100 rounded-xl overflow-hidden border"
-                    >
-                        <img
-                            src={img.url}
-                            alt="Car"
-                            className="w-full h-full object-cover"
-                        />
-
-                        {/* BADGES */}
+                    <div key={img.id} className="relative group aspect-square bg-gray-100 rounded-xl overflow-hidden border">
+                        <img src={img.url} alt="Car" className="w-full h-full object-cover" />
                         {img.isPrimary && (
-                            <div className="absolute top-2 left-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">
-                                PRIMARY
-                            </div>
+                            <div className="absolute top-2 left-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded">PRIMARY</div>
                         )}
-
-                        {/* OVERLAY ACTIONS */}
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
                             {!img.isPrimary && (
-                                <button
-                                    onClick={() => setPrimary({ imageId: img.id })}
-                                    className="p-2 bg-white rounded-full hover:bg-yellow-100 text-yellow-600"
-                                    title="Set as Primary"
-                                >
+                                <button onClick={() => setPrimary({ imageId: img.id })} className="p-2 bg-white rounded-full text-yellow-600">
                                     <Star size={16} />
                                 </button>
                             )}
-                            <button
-                                onClick={() => deleteImage({ imageId: img.id })}
-                                className="p-2 bg-white rounded-full hover:bg-red-100 text-red-600"
-                                title="Delete"
-                            >
+                            <button onClick={() => deleteImage({ imageId: img.id })} className="p-2 bg-white rounded-full text-red-600">
                                 <Trash2 size={16} />
                             </button>
                         </div>
@@ -932,67 +917,41 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
             {/* UPLOAD AREA */}
             <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6">
                 <div className="flex flex-col items-center justify-center text-gray-500 mb-6">
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*,.heic"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                        id="image-upload"
-                    />
-                    <label
-                        htmlFor="image-upload"
-                        className="cursor-pointer flex flex-col items-center hover:text-indigo-600 transition"
-                    >
+                    <input type="file" multiple accept="image/*,.heic,.heif" onChange={handleFileSelect} className="hidden" id="image-upload" />
+                    <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center hover:text-indigo-600 transition">
                         <Upload size={32} className="mb-2" />
                         <span className="font-medium">Click to Upload Images</span>
                     </label>
                 </div>
 
-                {/* SELECTED FILES PREVIEW */}
-                {files.length > 0 && (
+                {(files.length > 0 || isProcessing) && (
                     <div>
-                        <h3 className="text-sm font-medium mb-3">
-                            New Images ({files.length})
-                        </h3>
+                        <h3 className="text-sm font-medium mb-3">New Images ({files.length})</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-4">
                             {files.map((file, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`relative aspect-square rounded-xl overflow-hidden border-2 ${primaryIndex === idx
-                                        ? "border-yellow-500"
-                                        : "border-transparent"
-                                        }`}
-                                >
-                                    <img
-                                        src={URL.createObjectURL(file)}
-                                        alt="preview"
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <button
-                                        onClick={() => removeFile(idx)}
-                                        className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md text-red-500 hover:bg-red-50"
-                                    >
+                                <div key={idx} className={`relative aspect-square rounded-xl overflow-hidden border-2 ${primaryIndex === idx ? "border-yellow-500" : "border-transparent"}`}>
+                                    <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
+                                    <button onClick={() => removeFile(idx)} className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md text-red-500 hover:bg-red-50">
                                         <X size={12} />
                                     </button>
-
-                                    <button
-                                        onClick={() => setPrimaryIndex(idx)}
-                                        className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm ${primaryIndex === idx
-                                            ? "bg-yellow-400 text-black"
-                                            : "bg-white text-gray-500 hover:bg-gray-100"
-                                            }`}
-                                    >
+                                    <button onClick={() => setPrimaryIndex(idx)} className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm ${primaryIndex === idx ? "bg-yellow-400 text-black" : "bg-white text-gray-500 hover:bg-gray-100"}`}>
                                         {primaryIndex === idx ? "COVER" : "SET COVER"}
                                     </button>
                                 </div>
                             ))}
+
+                            {isProcessing && (
+                                <div className="aspect-square rounded-xl border-2 border-dashed border-indigo-200 bg-indigo-50 flex flex-col items-center justify-center animate-pulse">
+                                    <Loader2 className="w-6 h-6 text-indigo-500 animate-spin mb-1" />
+                                    <span className="text-[10px] text-indigo-600 font-bold">PROCESSING...</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex justify-end">
                             <button
                                 onClick={handleUpload}
-                                disabled={isUploading}
+                                disabled={isUploading || isProcessing}
                                 className="bg-black text-white px-6 py-2 rounded-xl flex items-center gap-2 hover:bg-gray-800 disabled:opacity-50"
                             >
                                 {isUploading ? "Uploading..." : "Upload Selected"}
@@ -1003,4 +962,4 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
             </div>
         </Section>
     );
-};
+};/* ===================== IMAGE MANAGER ===================== */
