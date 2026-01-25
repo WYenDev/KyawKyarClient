@@ -203,7 +203,7 @@ const Showrooms = () => {
             addressMm: item.addressMm,
             city: item.city,
             googleMapUrl: item.googleMapUrl ?? "",
-            phones: [],
+            phones: item.phones?.map((p) => ({ phone: p.phone })) ?? [],
         });
         setOpenModal(true);
     };

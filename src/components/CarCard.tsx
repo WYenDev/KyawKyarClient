@@ -2,13 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CarListItemSearch } from '../services/api'
 import { Calendar, Gauge, Fuel, Settings, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface CarCardProps {
   car: CarListItemSearch;
 }
 
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
-  //const { t } = useTranslation('cars');
+  const { t } = useTranslation('cars');
   const navigate = useNavigate();
 
   {/*
@@ -105,7 +106,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
           car.formattedPrice && (
             <div className="flex justify-between items-center">
               <div className="text-2xl font-bold text-indigo-600">
-                {car.formattedPrice}
+                {car.formattedPrice} {  t('details.lakhs', 'LAKHs')}
               </div>
             </div>
           )

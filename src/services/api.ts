@@ -930,7 +930,34 @@ export type GetApiHome200Image = {
 
 export type GetApiHome200 = {
   id?: string;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  phoneNo?: string | null;
+  /** @nullable */
+  viberNo?: string | null;
   image?: GetApiHome200Image;
+};
+
+export type PatchApiHomeBody = {
+  title?: string;
+  description?: string;
+  phoneNo?: string;
+  viberNo?: string;
+};
+
+export type PatchApiHome200 = {
+  id?: string;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  phoneNo?: string | null;
+  /** @nullable */
+  viberNo?: string | null;
 };
 
 export type PostApiHomeImageBody = {
@@ -5352,6 +5379,70 @@ export function useGetApiHome<TData = Awaited<ReturnType<typeof getApiHome>>, TE
 
 
 
+/**
+ * @summary Update home page info (title, description, phoneNo, viberNo)
+ */
+export const patchApiHome = (
+    patchApiHomeBody: PatchApiHomeBody,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<PatchApiHome200>(
+      {url: `/api/home`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchApiHomeBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiHomeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiHome>>, TError,{data: PatchApiHomeBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiHome>>, TError,{data: PatchApiHomeBody}, TContext> => {
+
+const mutationKey = ['patchApiHome'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiHome>>, {data: PatchApiHomeBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchApiHome(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiHomeMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiHome>>>
+    export type PatchApiHomeMutationBody = PatchApiHomeBody
+    export type PatchApiHomeMutationError = unknown
+
+    /**
+ * @summary Update home page info (title, description, phoneNo, viberNo)
+ */
+export const usePatchApiHome = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiHome>>, TError,{data: PatchApiHomeBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiHome>>,
+        TError,
+        {data: PatchApiHomeBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiHomeMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Upload or replace the Home page image
  */

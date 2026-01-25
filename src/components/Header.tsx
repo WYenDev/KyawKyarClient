@@ -5,13 +5,18 @@ import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-with-text.png';
 import ViberIcon from '../assets/viber-icon.avif';
 import { useAuth } from '../contexts/AuthContext';
+import { useGetApiHome } from '../services/api';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { t, i18n } = useTranslation('common'); // Use 'common' namespace
   const currentLang = i18n.language;
-  const viberNumber = import.meta.env.VITE_VIBER_NUMBER; // General Inquiry Viber
+  const { data: homeData } = useGetApiHome();
+  const apiPhone = homeData?.phoneNo ?? undefined;
+  const apiViber = homeData?.viberNo ?? undefined;
+  const phoneNumber = (apiPhone ?? '').toString();
+  const viberNumber = (apiViber ??  '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
 
   const isActive = (path: string) => {
@@ -125,7 +130,7 @@ const Header: React.FC = () => {
                 {isContactOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
                     <a
-                      href="tel:+959123456789"
+                      href={`tel:${phoneNumber.replace(/\s/g, '')}` }
                       className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
                       onClick={() => setIsContactOpen(false)}
                     >
@@ -271,7 +276,7 @@ const Header: React.FC = () => {
               {isContactOpen && (
                 <div className="mt-3 px-2 space-y-2">
                   <a
-                    href="tel:+959123456789"
+                    href={`tel:${phoneNumber.replace(/\s/g, '')}` }
                     className="block w-full text-center px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
                     onClick={() => setIsContactOpen(false)}
                   >
