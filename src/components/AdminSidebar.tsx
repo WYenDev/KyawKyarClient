@@ -92,19 +92,7 @@ const AdminSidebar = () => {
                 <MenuItem
                     to="/admin/brands"
                     icon={Tag}
-                    label="Brands"
-                    collapsed={collapsed}
-                />
-                <MenuItem
-                    to="/admin/models"
-                    icon={Layers}
-                    label="Models"
-                    collapsed={collapsed}
-                />
-                <MenuItem
-                    to="/admin/grades"
-                    icon={Star}
-                    label="Grades"
+                    label="Brands & Models"
                     collapsed={collapsed}
                 />
                 <MenuItem

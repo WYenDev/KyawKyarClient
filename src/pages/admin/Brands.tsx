@@ -1,12 +1,22 @@
-import { useState, useMemo, useEffect } from "react";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Trash2, Pencil, ChevronRight, ChevronDown } from "lucide-react";
 
 import {
     Brand,
+    Model,
+    Grade,
     useGetApiBrands,
+    useGetApiModelsBrandBrandId,
+    useGetApiGradesModelId,
     usePostApiBrands,
     usePutApiBrandsId,
     useDeleteApiBrandsId,
+    usePostApiModels,
+    usePutApiModelsId,
+    useDeleteApiModelsId,
+    usePostApiGrades,
+    usePatchApiGradesId,
+    useDeleteApiGradesId,
 } from "../../services/api";
 
 type ApiError = {
@@ -15,62 +25,354 @@ type ApiError = {
     };
 };
 
+// --- Models Component ---
+const ModelList = ({ brandId }: { brandId: string }) => {
+    const { data: models = [], isLoading, refetch } = useGetApiModelsBrandBrandId(brandId);
+    const [expandedModelId, setExpandedModelId] = useState<string | null>(null);
+
+    // Modal states
+    const [isModelModalOpen, setIsModelModalOpen] = useState(false);
+    const [editingModel, setEditingModel] = useState<Model | null>(null);
+    const [modelName, setModelName] = useState("");
+
+    const [deleteTarget, setDeleteTarget] = useState<Model | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const { mutate: createModel, isPending: creating } = usePostApiModels({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeModelModal();
+            },
+            onError: (err: unknown) => setError((err as ApiError)?.payload?.error ?? "Failed to create model"),
+        },
+    });
+
+    const { mutate: updateModel, isPending: updating } = usePutApiModelsId({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeModelModal();
+            },
+            onError: (err: unknown) => setError((err as ApiError)?.payload?.error ?? "Failed to update model"),
+        },
+    });
+
+    const { mutate: deleteModel, isPending: deleting } = useDeleteApiModelsId({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                setDeleteTarget(null);
+            },
+        },
+    });
+
+    const openCreateModel = () => {
+        setEditingModel(null);
+        setModelName("");
+        setError(null);
+        setIsModelModalOpen(true);
+    };
+
+    const openEditModel = (model: Model) => {
+        setEditingModel(model);
+        setModelName(model.name);
+        setError(null);
+        setIsModelModalOpen(true);
+    };
+
+    const closeModelModal = () => {
+        setIsModelModalOpen(false);
+        setEditingModel(null);
+        setModelName("");
+        setError(null);
+    };
+
+    const handleModelSubmit = () => {
+        if (!modelName.trim()) {
+            setError("Model name is required");
+            return;
+        }
+
+        if (editingModel) {
+            updateModel({ id: editingModel.id, data: { name: modelName, brandId } });
+        } else {
+            createModel({ data: { name: modelName, brandId } });
+        }
+    };
+
+    const toggleExpand = (modelId: string) => {
+        setExpandedModelId(expandedModelId === modelId ? null : modelId);
+    };
+
+    if (isLoading) return <div className="pl-8 py-2 text-gray-400">Loading models...</div>;
+
+    return (
+        <div className="pl-6 py-2">
+             <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Models</h4>
+                 <button
+                    onClick={openCreateModel}
+                    className="flex items-center gap-1 text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200"
+                >
+                    <Plus size={12} /> Add Model
+                </button>
+            </div>
+            
+            {models.length === 0 && <div className="text-sm text-gray-400 italic">No models found</div>}
+
+            <div className="space-y-2">
+                {models.map((model) => (
+                    <div key={model.id} className="border-l-2 border-gray-100 pl-4">
+                        <div className="flex items-center justify-between group py-1">
+                            <div 
+                                className="flex items-center gap-2 cursor-pointer select-none"
+                                onClick={() => toggleExpand(model.id)}
+                            >
+                                {expandedModelId === model.id ? <ChevronDown size={14} className="text-gray-400"/> : <ChevronRight size={14} className="text-gray-400" />}
+                                <span className="font-medium text-gray-700 text-sm hover:text-black">{model.name}</span>
+                            </div>
+                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onClick={() => openEditModel(model)} className="text-gray-400 hover:text-indigo-600">
+                                    <Pencil size={12} />
+                                </button>
+                                <button onClick={() => setDeleteTarget(model)} className="text-gray-400 hover:text-red-500">
+                                    <Trash2 size={12} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {expandedModelId === model.id && (
+                             <GradeList modelId={model.id} />
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Model Modal */}
+            {isModelModalOpen && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                         <h2 className="text-lg font-semibold mb-4">{editingModel ? "Edit Model" : "Add Model"}</h2>
+                        {error && <div className="mb-4 text-red-600 text-xs">{error}</div>}
+                        <input
+                            className="border p-2 rounded-lg w-full text-sm mb-4"
+                            placeholder="Model name"
+                            value={modelName}
+                            onChange={(e) => setModelName(e.target.value)}
+                            autoFocus
+                        />
+                        <div className="flex justify-end gap-3">
+                            <button onClick={closeModelModal} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                            <button 
+                                onClick={handleModelSubmit} 
+                                disabled={creating || updating}
+                                className="bg-black text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+             {/* Delete Model Confirm */}
+             {deleteTarget && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                        <h2 className="text-lg font-semibold mb-2">Delete Model</h2>
+                        <p className="text-sm text-gray-600 mb-6">Are you sure you want to delete <span className="font-medium">{deleteTarget.name}</span>?</p>
+                        <div className="flex justify-end gap-3">
+                            <button onClick={() => setDeleteTarget(null)} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                            <button 
+                                onClick={() => deleteModel({ id: deleteTarget.id })} 
+                                disabled={deleting}
+                                className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// --- Grades Component ---
+const GradeList = ({ modelId }: { modelId: string }) => {
+    const { data: grades = [], isLoading, refetch } = useGetApiGradesModelId(modelId);
+
+    const [isGradeModalOpen, setIsGradeModalOpen] = useState(false);
+    const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
+    const [gradeName, setGradeName] = useState("");
+    const [deleteTarget, setDeleteTarget] = useState<Grade | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const { mutate: createGrade, isPending: creating } = usePostApiGrades({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeGradeModal();
+            },
+            onError: (err: unknown) => setError((err as ApiError)?.payload?.error ?? "Failed to create grade"),
+        },
+    });
+
+    const { mutate: updateGrade, isPending: updating } = usePatchApiGradesId({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeGradeModal();
+            },
+            onError: (err: unknown) => setError((err as ApiError)?.payload?.error ?? "Failed to update grade"),
+        },
+    });
+
+    const { mutate: deleteGrade, isPending: deleting } = useDeleteApiGradesId({
+        mutation: { onSuccess: () => { refetch(); setDeleteTarget(null); } },
+    });
+
+    const openCreateGrade = () => {
+        setEditingGrade(null);
+        setGradeName("");
+        setError(null);
+        setIsGradeModalOpen(true);
+    };
+
+    const openEditGrade = (grade: Grade) => {
+        setEditingGrade(grade);
+        setGradeName(grade.name);
+        setError(null);
+        setIsGradeModalOpen(true);
+    };
+
+    const closeGradeModal = () => {
+        setIsGradeModalOpen(false);
+        setEditingGrade(null);
+        setGradeName("");
+        setError(null);
+    };
+
+    const handleGradeSubmit = () => {
+        if (!gradeName.trim()) {
+            setError("Grade name is required");
+            return;
+        }
+        if (editingGrade) {
+            updateGrade({ id: editingGrade.id, data: { name: gradeName } });
+        } else {
+            createGrade({ data: { name: gradeName, modelId } });
+        }
+    };
+
+    if (isLoading) return <div className="pl-6 py-1 text-xs text-gray-400">Loading grades...</div>;
+
+    return (
+        <div className="pl-6 py-2">
+            <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Grades</h4>
+                <button
+                    onClick={openCreateGrade}
+                    className="flex items-center gap-1 text-xs bg-gray-50 px-2 py-1 rounded hover:bg-gray-100 border border-gray-100"
+                >
+                    <Plus size={10} /> Add Grade
+                </button>
+            </div>
+            
+             {grades.length === 0 && <div className="text-xs text-gray-400 italic">No grades found</div>}
+
+            <div className="grid grid-cols-2 gap-2">
+                {grades.map((grade) => (
+                    <div key={grade.id} className="flex items-center justify-between bg-gray-50 rounded px-3 py-2 group hover:bg-gray-100 transition-colors">
+                        <span className="text-xs text-gray-700 font-medium">{grade.name}</span>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => openEditGrade(grade)} className="text-gray-400 hover:text-indigo-600">
+                                <Pencil size={10} />
+                            </button>
+                            <button onClick={() => setDeleteTarget(grade)} className="text-gray-400 hover:text-red-500">
+                                <Trash2 size={10} />
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+             {/* Grade Modal */}
+             {isGradeModalOpen && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                        <h2 className="text-lg font-semibold mb-4">{editingGrade ? "Edit Grade" : "Add Grade"}</h2>
+                        {error && <div className="mb-4 text-red-600 text-xs">{error}</div>}
+                        <input
+                            className="border p-2 rounded-lg w-full text-sm mb-4"
+                            placeholder="Grade name"
+                            value={gradeName}
+                            onChange={(e) => setGradeName(e.target.value)}
+                            autoFocus
+                        />
+                        <div className="flex justify-end gap-3">
+                            <button onClick={closeGradeModal} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                            <button 
+                                onClick={handleGradeSubmit} 
+                                disabled={creating || updating}
+                                className="bg-black text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Grade Confirm */}
+            {deleteTarget && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                        <h2 className="text-lg font-semibold mb-2">Delete Grade</h2>
+                        <p className="text-sm text-gray-600 mb-6">Delete <span className="font-medium">{deleteTarget.name}</span>?</p>
+                        <div className="flex justify-end gap-3">
+                            <button onClick={() => setDeleteTarget(null)} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                            <button 
+                                onClick={() => deleteGrade({ id: deleteTarget.id })} 
+                                disabled={deleting}
+                                className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+
 const Brands = () => {
     /* ================= STATE ================= */
     const [openModal, setOpenModal] = useState(false);
     const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Brand | null>(null);
+    const [expandedBrandId, setExpandedBrandId] = useState<string | null>(null);
 
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
 
     const [search, setSearch] = useState("");
-    const [page, setPage] = useState(1);
 
-    const PAGE_LIMIT = 13;
-    const SEARCH_LIMIT = 10000;
-
-    const isSearching = search.trim().length > 0;
-
-    /* ================= QUERY ================= */
-    const {
-        data: brandData,
-        isLoading,
-        isError,
-        refetch,
-    } = useGetApiBrands({
-        page: isSearching ? 1 : page,
-        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
+    // Using refetch to ensure fresh data
+    const { data: brandData, isLoading, isError, refetch } = useGetApiBrands({
+        page: 1, // Fetching all (or large enough page to effectively get all for now, assuming not huge # of brands)
+        limit: 1000, 
     });
 
     const brands = brandData?.items ?? [];
 
-    /* ================= SEARCH FILTER ================= */
-    const filteredBrands = useMemo(() => {
-        if (!isSearching) return brands;
-
-        return brands.filter((b) =>
-            b.name.toLowerCase().includes(search.toLowerCase())
-        );
-    }, [brands, search, isSearching]);
-
-    /* ================= PAGINATION ================= */
-    const total = isSearching
-        ? filteredBrands.length
-        : brandData?.total ?? 0;
-
-    const totalPages = Math.ceil(total / PAGE_LIMIT);
-
-    const visibleBrands = useMemo(() => {
-        if (!isSearching) return filteredBrands;
-
-        const start = (page - 1) * PAGE_LIMIT;
-        return filteredBrands.slice(start, start + PAGE_LIMIT);
-    }, [filteredBrands, page, isSearching]);
-
-    useEffect(() => {
-        setPage(1);
-    }, [search]);
+    // Filter brands locally
+    const filteredBrands = brands.filter((b) =>
+        b.name.toLowerCase().includes(search.toLowerCase())
+    );
 
     /* ================= MUTATIONS ================= */
     const { mutate: createBrand, isPending: creating } = usePostApiBrands({
@@ -80,10 +382,7 @@ const Brands = () => {
                 closeModal();
             },
             onError: (err: unknown) => {
-                setError(
-                    (err as ApiError)?.payload?.error ??
-                    "Failed to create brand"
-                );
+                setError((err as ApiError)?.payload?.error ?? "Failed to create brand");
             },
         },
     });
@@ -95,10 +394,7 @@ const Brands = () => {
                 closeModal();
             },
             onError: (err: unknown) => {
-                setError(
-                    (err as ApiError)?.payload?.error ??
-                    "Failed to update brand"
-                );
+                setError((err as ApiError)?.payload?.error ?? "Failed to update brand");
             },
         },
     });
@@ -120,7 +416,6 @@ const Brands = () => {
         setError(null);
     };
 
-    /* ================= HANDLERS ================= */
     const openCreate = () => {
         setSelectedBrand(null);
         setName("");
@@ -142,14 +437,9 @@ const Brands = () => {
         }
 
         if (selectedBrand) {
-            updateBrand({
-                id: selectedBrand.id,
-                data: { name },
-            });
+            updateBrand({ id: selectedBrand.id, data: { name } });
         } else {
-            createBrand({
-                data: { name },
-            });
+            createBrand({ data: { name } });
         }
     };
 
@@ -158,13 +448,17 @@ const Brands = () => {
         deleteBrand({ id: deleteTarget.id });
     };
 
+    const toggleExpand = (brandId: string) => {
+        setExpandedBrandId(expandedBrandId === brandId ? null : brandId);
+    };
+
     /* ================= UI ================= */
     return (
         <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">
-                    Brands Management
+                    Brands, Models & Grades
                 </h1>
 
                 <div className="flex gap-3 items-center">
@@ -180,156 +474,78 @@ const Brands = () => {
                         onClick={openCreate}
                         className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
                     >
-                        <Plus size={16} />
-                        Add Brand
+                        <Plus size={16} /> Add Brand
                     </button>
                 </div>
             </div>
 
-            {/* TABLE */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-x-auto">
-                <table className="w-full text-sm">
-                    <thead className="bg-gray-50 text-gray-600">
-                        <tr>
-                            <th className="px-8 py-4 text-left">
-                                Brand Name
-                            </th>
-                            <th className="px-8 py-4 text-right w-40">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
+            {/* LIST */}
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+                 {isLoading ? (
+                    <div className="py-12 text-center text-gray-400">Loading brands...</div>
+                ) : isError ? (
+                    <div className="py-12 text-center text-red-500">Failed to load data</div>
+                ) : filteredBrands.length === 0 ? (
+                    <div className="py-12 text-center text-gray-400">No brands found</div>
+                ) : (
+                    <div className="space-y-4">
+                        {filteredBrands.map((brand) => (
+                            <div key={brand.id} className="border border-gray-100 rounded-xl overflow-hidden bg-white">
+                                <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                                    <div 
+                                        className="flex items-center gap-3 cursor-pointer select-none flex-1"
+                                        onClick={() => toggleExpand(brand.id)}
+                                    >
+                                        {expandedBrandId === brand.id ? <ChevronDown size={20} className="text-gray-500" /> : <ChevronRight size={20} className="text-gray-500" />}
+                                        <span className="font-semibold text-gray-900 text-lg">{brand.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <button 
+                                            onClick={() => openEdit(brand)} 
+                                            className="p-2 text-gray-500 hover:text-indigo-600 rounded-full hover:bg-white transition-colors"
+                                            title="Edit Brand"
+                                        >
+                                            <Pencil size={18} />
+                                        </button>
+                                        <button 
+                                            onClick={() => setDeleteTarget(brand)} 
+                                            className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-white transition-colors"
+                                            title="Delete Brand"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                </div>
 
-                    <tbody>
-                        {isLoading ? (
-                            <tr>
-                                <td colSpan={2} className="py-12 text-center text-gray-400">
-                                    Loading...
-                                </td>
-                            </tr>
-                        ) : isError ? (
-                            <tr>
-                                <td colSpan={2} className="py-12 text-center text-red-500">
-                                    Failed to load brands
-                                </td>
-                            </tr>
-                        ) : visibleBrands.length === 0 ? (
-                            <tr>
-                                <td colSpan={2} className="py-12 text-center text-gray-400">
-                                    No brands found
-                                </td>
-                            </tr>
-                        ) : (
-                            visibleBrands.map((brand) => (
-                                <tr
-                                    key={brand.id}
-                                    className="border-t hover:bg-gray-50"
-                                >
-                                    <td className="px-8 py-4 font-medium text-gray-900">
-                                        {brand.name}
-                                    </td>
-
-                                    <td className="px-8 py-4">
-                                        <div className="flex justify-end gap-4">
-                                            <button
-                                                onClick={() => openEdit(brand)}
-                                                className="text-indigo-600 hover:underline flex items-center gap-1"
-                                            >
-                                                <Pencil size={14} />
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                onClick={() => setDeleteTarget(brand)}
-                                                className="text-red-500 hover:underline flex items-center gap-1"
-                                            >
-                                                <Trash2 size={14} />
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-
-                {/* PAGINATION  */}
-                {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-8 py-4 border-t">
-                        <span className="text-sm text-gray-500">
-                            Page {page} of {totalPages}
-                        </span>
-
-                        <div className="flex gap-2">
-                            <button
-                                disabled={page === 1}
-                                onClick={() => setPage((p) => p - 1)}
-                                className="px-3 py-1 rounded-lg border text-sm disabled:opacity-40"
-                            >
-                                Previous
-                            </button>
-
-                            {Array.from(
-                                { length: totalPages },
-                                (_, i) => i + 1
-                            ).map((p) => (
-                                <button
-                                    key={p}
-                                    onClick={() => setPage(p)}
-                                    className={`px-3 py-1 rounded-lg text-sm border
-                                        ${p === page
-                                            ? "bg-black text-white"
-                                            : "hover:bg-gray-100"
-                                        }`}
-                                >
-                                    {p}
-                                </button>
-                            ))}
-
-                            <button
-                                disabled={page === totalPages}
-                                onClick={() => setPage((p) => p + 1)}
-                                className="px-3 py-1 rounded-lg border text-sm disabled:opacity-40"
-                            >
-                                Next
-                            </button>
-                        </div>
+                                {expandedBrandId === brand.id && (
+                                    <div className="border-t border-gray-100">
+                                         <ModelList brandId={brand.id} />
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
 
-            {/* CREATE / EDIT MODAL */}
+            {/* BRAND MODAL */}
             {openModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-md rounded-2xl p-6">
-                        <h2 className="text-xl font-semibold mb-4">
-                            {selectedBrand ? "Edit Brand" : "Add Brand"}
-                        </h2>
-
-                        {error && (
-                            <div className="mb-4 text-red-600 text-sm">
-                                {error}
-                            </div>
-                        )}
-
+                        <h2 className="text-xl font-semibold mb-4">{selectedBrand ? "Edit Brand" : "Add Brand"}</h2>
+                        {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
                         <input
-                            className="border p-3 rounded-xl w-full"
+                            className="border p-3 rounded-xl w-full mb-6"
                             placeholder="Brand name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                            autoFocus
                         />
-
-                        <div className="flex justify-end gap-4 mt-6">
-                            <button
-                                onClick={closeModal}
-                                className="border px-4 py-2 rounded-xl"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSubmit}
-                                disabled={creating || updating}
+                        <div className="flex justify-end gap-4">
+                            <button onClick={closeModal} className="border px-4 py-2 rounded-xl">Cancel</button>
+                            <button 
+                                onClick={handleSubmit} 
+                                disabled={creating || updating} 
                                 className="bg-black text-white px-4 py-2 rounded-xl disabled:opacity-50"
                             >
                                 Save
@@ -339,37 +555,18 @@ const Brands = () => {
                 </div>
             )}
 
-            {/* DELETE CONFIRM */}
-            {deleteTarget && (
+             {/* BRAND DELETE CONFIRM */}
+             {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-md rounded-2xl p-6">
-                        <h2 className="text-lg font-semibold mb-2">
-                            Delete Brand
-                        </h2>
-
+                        <h2 className="text-lg font-semibold mb-2">Delete Brand</h2>
                         <p className="text-sm text-gray-600 mb-6">
-                            Are you sure you want to delete
-                            <br />
-                            <span className="font-medium text-gray-900">
-                                {deleteTarget.name}
-                            </span>
-                            ?
+                            Are you sure you want to delete <span className="font-medium text-gray-900">{deleteTarget.name}</span>?
+                            <br/><span className="text-xs text-red-500 mt-2 block">Warning: This will delete all associated Models and Grades!</span>
                         </p>
-
                         <div className="flex justify-end gap-4">
-                            <button
-                                onClick={() => setDeleteTarget(null)}
-                                className="border px-4 py-2 rounded-xl"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                disabled={deleting}
-                                className="bg-red-600 text-white px-4 py-2 rounded-xl disabled:opacity-50"
-                            >
-                                Delete
-                            </button>
+                            <button onClick={() => setDeleteTarget(null)} className="border px-4 py-2 rounded-xl">Cancel</button>
+                            <button onClick={confirmDelete} disabled={deleting} className="bg-red-600 text-white px-4 py-2 rounded-xl disabled:opacity-50">Delete</button>
                         </div>
                     </div>
                 </div>

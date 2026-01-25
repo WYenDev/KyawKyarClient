@@ -20,14 +20,12 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
-import Models from "./pages/admin/Model";
 import BuildType from "./pages/admin/BuildType";
 import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
 import CarCreatePage from "./pages/admin/CarCreatePage";
 import CarEditPage from "./pages/admin/CarEditPage";
-import Grades from "./pages/admin/Grade"; 
 import AboutPage from "./pages/admin/AboutPage";
 
 import SuperAdminGuard from "./components/SuperAdminGuard";
@@ -66,10 +64,8 @@ function App() {
           <Route path="cars/create" element={<CarCreatePage />} />
           <Route path="cars/:id/edit" element={<CarEditPage />} />
           <Route path="brands" element={<Brands />} />
-          <Route path="models" element={<Models />} />
           <Route path="build-types" element={<BuildType />} />
           <Route path="showrooms" element={<Showroom />} />
-          <Route path="grades" element={<Grades />} />
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="payments" element={<AdminPayments />} />
