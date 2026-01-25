@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { usePostApiAuthVerifyRecover} from '../../services/api';
 
-const CODE_LENGTH = 12;
+const CODE_LENGTH = 5;
 
 const ForgotPassword: React.FC = () => {
   const { t } = useTranslation('admin');
