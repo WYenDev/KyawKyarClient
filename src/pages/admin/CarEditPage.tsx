@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Trash2, Star, Upload, X , Loader2} from "lucide-react";
 import heic2any from "heic2any";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Select, { Option } from "../../components/Select";
 
@@ -24,6 +25,9 @@ import {
     usePatchApiCarImagesImageIdSetPrimary,
     usePostApiCarsIdFeature,
     useDeleteApiCarsIdFeature,
+    getGetApiCarsActiveQueryKey,
+    getGetApiCarsDeletedQueryKey,
+    getGetApiCarsIdQueryKey,
 } from "../../services/api";
 
 /* ===================== FORM TYPE ===================== */
@@ -82,6 +86,7 @@ const statusOptions: Option<Status>[] = [
 const CarEditPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     /* ===================== STATE ===================== */
     const [brandId, setBrandId] = useState<string>("");
@@ -287,6 +292,11 @@ const CarEditPage = () => {
                     await unfeatureCar({ id: id! });
                 }
             }
+
+            // Invalidate queries to refresh data
+            await queryClient.invalidateQueries({ queryKey: getGetApiCarsActiveQueryKey() });
+            await queryClient.invalidateQueries({ queryKey: getGetApiCarsDeletedQueryKey() });
+            await queryClient.invalidateQueries({ queryKey: getGetApiCarsIdQueryKey(id!) });
 
             navigate("/admin/cars");
         } catch (error) {

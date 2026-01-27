@@ -11,5 +11,12 @@
     "years_experience": "Years Experience",
     "cars_available": "Cars Available",
     "branches": "Branches"
+  }, 
+  "whybuy": {
+    "title_prefix": "Experience the Confidence of",
+    "title_suffix": "Certified Quality",
+    "subtitle": "THE KYAW KYAR Standard",
+    "description": "We don't just sell cars; we sell peace of mind. Every vehicle in our multi-brand showroom is hand-selected to meet our high standards of safety and performance."
+
   }
 }

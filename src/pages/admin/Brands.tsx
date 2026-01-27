@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Pencil, ChevronRight, ChevronDown } from "lucide-react";
 
 import {
@@ -64,6 +64,7 @@ const ModelList = ({ brandId }: { brandId: string }) => {
                 refetch();
                 setDeleteTarget(null);
             },
+            onError: (err: unknown) => setError((err as ApiError)?.payload?.error ?? "Failed to delete model"),
         },
     });
 
@@ -136,7 +137,7 @@ const ModelList = ({ brandId }: { brandId: string }) => {
                                 <button onClick={() => openEditModel(model)} className="text-gray-400 hover:text-indigo-600">
                                     <Pencil size={12} />
                                 </button>
-                                <button onClick={() => setDeleteTarget(model)} className="text-gray-400 hover:text-red-500">
+                                <button onClick={() => { setDeleteTarget(model); setError(null); }} className="text-gray-400 hover:text-red-500">
                                     <Trash2 size={12} />
                                 </button>
                             </div>
@@ -180,17 +181,52 @@ const ModelList = ({ brandId }: { brandId: string }) => {
              {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
                     <div className="bg-white w-full max-w-sm rounded-xl p-6">
-                        <h2 className="text-lg font-semibold mb-2">Delete Model</h2>
-                        <p className="text-sm text-gray-600 mb-6">Are you sure you want to delete <span className="font-medium">{deleteTarget.name}</span>?</p>
-                        <div className="flex justify-end gap-3">
-                            <button onClick={() => setDeleteTarget(null)} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
-                            <button 
-                                onClick={() => deleteModel({ id: deleteTarget.id })} 
-                                disabled={deleting}
-                                className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
-                            >
-                                Delete
-                            </button>
+                        <div className="flex items-center gap-3 mb-4 text-red-600">
+                           <div className="bg-red-100 p-2 rounded-full">
+                                <Trash2 size={20} />
+                           </div>
+                           <h2 className="text-lg font-semibold">{error ? "Delete Failed" : "Delete Model"}</h2>
+                        </div>
+                        
+                        {error ? (
+                            <div className="mb-6">
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+                                    {error}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-600 font-medium">
+                                    Are you sure you want to delete <span className="font-bold text-gray-900">{deleteTarget.name}</span>?
+                                </p>
+                            </div>
+                        )}
+                        
+                        <div className="flex justify-end gap-3 pt-2">
+                            {error ? (
+                                <button 
+                                    onClick={() => { setDeleteTarget(null); setError(null); }} 
+                                    className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                                >
+                                    Close
+                                </button>
+                            ) : (
+                                <>
+                                    <button 
+                                        onClick={() => { setDeleteTarget(null); setError(null); }} 
+                                        className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        onClick={() => deleteModel({ id: deleteTarget.id })} 
+                                        disabled={deleting}
+                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+                                    >
+                                        {deleting ? "Deleting..." : "Delete Model"}
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -230,7 +266,10 @@ const GradeList = ({ modelId }: { modelId: string }) => {
     });
 
     const { mutate: deleteGrade, isPending: deleting } = useDeleteApiGradesId({
-        mutation: { onSuccess: () => { refetch(); setDeleteTarget(null); } },
+        mutation: { 
+            onSuccess: () => { refetch(); setDeleteTarget(null); },
+            onError: (err: unknown) => setError((err as ApiError)?.payload?.error ?? "Failed to delete grade"),
+        },
     });
 
     const openCreateGrade = () => {
@@ -290,7 +329,7 @@ const GradeList = ({ modelId }: { modelId: string }) => {
                             <button onClick={() => openEditGrade(grade)} className="text-gray-400 hover:text-indigo-600">
                                 <Pencil size={10} />
                             </button>
-                            <button onClick={() => setDeleteTarget(grade)} className="text-gray-400 hover:text-red-500">
+                            <button onClick={() => { setDeleteTarget(grade); setError(null); }} className="text-gray-400 hover:text-red-500">
                                 <Trash2 size={10} />
                             </button>
                         </div>
@@ -329,17 +368,52 @@ const GradeList = ({ modelId }: { modelId: string }) => {
             {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
                     <div className="bg-white w-full max-w-sm rounded-xl p-6">
-                        <h2 className="text-lg font-semibold mb-2">Delete Grade</h2>
-                        <p className="text-sm text-gray-600 mb-6">Delete <span className="font-medium">{deleteTarget.name}</span>?</p>
-                        <div className="flex justify-end gap-3">
-                            <button onClick={() => setDeleteTarget(null)} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
-                            <button 
-                                onClick={() => deleteGrade({ id: deleteTarget.id })} 
-                                disabled={deleting}
-                                className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
-                            >
-                                Delete
-                            </button>
+                        <div className="flex items-center gap-3 mb-4 text-red-600">
+                           <div className="bg-red-100 p-2 rounded-full">
+                                <Trash2 size={20} />
+                           </div>
+                           <h2 className="text-lg font-semibold">{error ? "Delete Failed" : "Delete Grade"}</h2>
+                        </div>
+
+                        {error ? (
+                            <div className="mb-6">
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+                                    {error}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-600 font-medium">
+                                    Are you sure you want to delete <span className="font-bold text-gray-900">{deleteTarget.name}</span>?
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="flex justify-end gap-3 pt-2">
+                            {error ? (
+                                <button 
+                                    onClick={() => { setDeleteTarget(null); setError(null); }} 
+                                    className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                                >
+                                    Close
+                                </button>
+                            ) : (
+                                <>
+                                    <button 
+                                        onClick={() => { setDeleteTarget(null); setError(null); }} 
+                                        className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        onClick={() => deleteGrade({ id: deleteTarget.id })} 
+                                        disabled={deleting}
+                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+                                    >
+                                        {deleting ? "Deleting..." : "Delete Grade"}
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -401,6 +475,9 @@ const Brands = () => {
 
     const { mutate: deleteBrand, isPending: deleting } = useDeleteApiBrandsId({
         mutation: {
+            onError: (err: unknown) => {
+                setError((err as ApiError)?.payload?.error ?? "Failed to delete brand");
+            },
             onSuccess: () => {
                 refetch();
                 setDeleteTarget(null);
@@ -508,7 +585,7 @@ const Brands = () => {
                                             <Pencil size={18} />
                                         </button>
                                         <button 
-                                            onClick={() => setDeleteTarget(brand)} 
+                                            onClick={() => { setDeleteTarget(brand); setError(null); }} 
                                             className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-white transition-colors"
                                             title="Delete Brand"
                                         >
@@ -559,14 +636,52 @@ const Brands = () => {
              {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white w-full max-w-md rounded-2xl p-6">
-                        <h2 className="text-lg font-semibold mb-2">Delete Brand</h2>
-                        <p className="text-sm text-gray-600 mb-6">
-                            Are you sure you want to delete <span className="font-medium text-gray-900">{deleteTarget.name}</span>?
-                            <br/><span className="text-xs text-red-500 mt-2 block">Warning: This will delete all associated Models and Grades!</span>
-                        </p>
-                        <div className="flex justify-end gap-4">
-                            <button onClick={() => setDeleteTarget(null)} className="border px-4 py-2 rounded-xl">Cancel</button>
-                            <button onClick={confirmDelete} disabled={deleting} className="bg-red-600 text-white px-4 py-2 rounded-xl disabled:opacity-50">Delete</button>
+                        <div className="flex items-center gap-3 mb-4 text-red-600">
+                           <div className="bg-red-100 p-2 rounded-full">
+                                <Trash2 size={24} />
+                           </div>
+                           <h2 className="text-xl font-semibold">{error ? "Delete Failed" : "Delete Brand"}</h2>
+                        </div>
+                        
+                        {error ? (
+                            <div className="mb-6">
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-medium">
+                                    {error}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="mb-8">
+                                <p className="text-gray-600 text-lg">
+                                    Are you sure you want to delete <span className="font-bold text-gray-900">{deleteTarget.name}</span>?
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="flex justify-end gap-3">
+                            {error ? (
+                                <button 
+                                    onClick={() => { setDeleteTarget(null); setError(null); }} 
+                                    className="px-5 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition-colors"
+                                >
+                                    Close
+                                </button>
+                            ) : (
+                                <>
+                                    <button 
+                                        onClick={() => { setDeleteTarget(null); setError(null); }} 
+                                        className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        onClick={confirmDelete} 
+                                        disabled={deleting} 
+                                        className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 disabled:opacity-50 shadow-lg shadow-red-200 transition-all"
+                                    >
+                                        {deleting ? "Deleting..." : "Yes, Delete Brand"}
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

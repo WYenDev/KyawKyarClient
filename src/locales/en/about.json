@@ -1,30 +1,96 @@
 {
-  "title": "Myanmar's Premier",
-  "title_suffix": "Car Destination",
-  "description": "For over 15 years, KyawKyaw has been the leading destination for quality cars. We've built our reputation on trust, transparency, and exceptional customer service, helping thousands of families find their perfect drive.",
-  "features": {
-    "quality": {
-      "title": "Quality Assured",
-      "desc": "Every car inspected"
+  "about": {
+    "title": "Our Legacy",
+    "title_suffix": "Car Destination",
+    "description": "For over 15 years, KyawKyaw has been the leading destination for quality cars. We've built our reputation on trust, transparency, and exceptional customer service, helping thousands of families find their perfect drive.",
+    "features": {
+      "quality": {
+        "title": "Quality Assured",
+        "desc": "Every car inspected"
+      },
+      "warranty": {
+        "sellBack": "Sell-Back Guarantee",
+        "desc": "Buy back at the current market price"
+      },
+      "expert": {
+        "title": "Expert Team",
+        "desc": "Professional service"
+      },
+      "fast": {
+        "title": "Fast Process",
+        "desc": "Quick paperwork"
+      }
     },
-    "warranty": {
-      "sellBack": "Sell-Back Guarantee",
-      "desc": "Buy back at the current market price"
+    "checklist": {
+      "inventory": "Largest inventory in Myanmar",
+      "pricing": "Transparent pricing with no hidden fees",
+      "financing": "Financing options available",
+      "support": "After-sale service and support"
     },
-    "expert": {
-      "title": "Expert Team",
-      "desc": "Professional service"
+    "image_badge": "Years of Excellence"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "To own a quality car exactly as you wish...",
+    "description": "Our team is ready and waiting to fulfill your needs with the highest level of service. You can reach out to us through your preferred method or we warmly invite you to visit our showrooms to explore our collection in person.",
+    "info": {
+      "title": "Contact Information",
+      "address": {
+        "title": "Address",
+        "line1": "123 Main Road",
+        "line2": "Yangon, Myanmar"
+      },
+      "phone": {
+        "title": "Phone Numbers",
+        "mobile": "+95-9-123-456-789",
+        "landline": "+95-1-234-567"
+      },
+      "email": {
+        "title": "Email",
+        "general": "info@automaxmyanmar.com",
+        "sales": "sales@automaxmyanmar.com"
+      },
+      "hours": {
+        "title": "Opening Hours",
+        "weekdays": "Mon-Fri: 9am - 6pm",
+        "weekends": "Sat-Sun: 10am - 4pm"
+      }
     },
-    "fast": {
-      "title": "Fast Process",
-      "desc": "Quick paperwork"
+    "form": {
+      "title": "Send Us a Message",
+      "full_name": "Full Name",
+      "full_name_placeholder": "Enter your full name",
+      "phone": "Phone Number",
+      "phone_placeholder": "Enter your phone number",
+      "email": "Email Address",
+      "email_placeholder": "Enter your email address",
+      "interest": "I'm interested in",
+      "interest_placeholder": "Select an option",
+      "interest_buying": "Buying a Car",
+      "interest_selling": "Selling a Car",
+      "interest_financing": "Car Financing",
+      "interest_other": "Other",
+      "message": "Message",
+      "message_placeholder": "How can we help you?",
+      "send_message": "Send Message"
+    },
+    "locations": {
+      "title": "Our Branches",
+      "yangon": {
+        "title": "Yangon Branch",
+        "address": "123 Main Road, Yangon",
+        "note": "Open 7 days a week"
+      },
+      "mandalay": {
+        "title": "Mandalay Branch",
+        "address": "456 Mandalay Ave, Mandalay",
+        "note": "Open Mon-Sat"
+      },
+      "naypyidaw": {
+        "title": "Naypyidaw Branch",
+        "address": "789 Capital Rd, Naypyidaw",
+        "note": "By appointment only"
+      }
     }
-  },
-  "checklist": {
-    "inventory": "Largest inventory in Myanmar",
-    "pricing": "Transparent pricing with no hidden fees",
-    "financing": "Financing options available",
-    "support": "After-sale service and support"
-  },
-  "image_badge": "Years of Excellence"
+  }
 }

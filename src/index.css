@@ -100,3 +100,9 @@ img {
   backface-visibility: hidden;
   transform-origin: center;
 }
+
+/* Myanmar/Burmese font utility - falls back safely to system fonts */
+.font-myanmar {
+  font-family: "Noto Sans Myanmar", "Noto Sans Myanmar UI", "Padauk", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  letter-spacing: 0;
+}

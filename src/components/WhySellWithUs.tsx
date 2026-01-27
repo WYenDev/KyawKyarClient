@@ -50,7 +50,7 @@ const WhySellWithUs: React.FC = () => {
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 lg:sticky top-10">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <h2 className="text-2xl font-bold text-slate-900 mb-6">
         {t('sell.why_sell_title', 'Why Sell With TKK?')}
       </h2>
       <div className="space-y-6">
@@ -62,8 +62,8 @@ const WhySellWithUs: React.FC = () => {
               <item.icon className={`h-6 w-6 ${item.color}`} strokeWidth={2} />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-800">{item.title}</h3>
-              <p className="text-gray-600 text-sm">{item.description}</p>
+              <h3 className="font-semibold text-slate-800">{item.title}</h3>
+              <p className="text-slate-600 text-sm">{item.description}</p>
             </div>
           </div>
         ))}

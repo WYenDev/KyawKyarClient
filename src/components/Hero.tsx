@@ -7,17 +7,12 @@ import { brands as localBrands, brandModels as localBrandModels } from '../data/
 import CarImage from '../assets/cars.jpg';
 
 const Hero: React.FC = () => {
-  const { t } = useTranslation('home');
+  const { t, i18n } = useTranslation('home');
+  const isMyanmar = i18n?.language?.startsWith('mm');
   const navigate = useNavigate();
-  const [showScrollHint, setShowScrollHint] = useState<boolean>(false);
   const { data: homeData } = useGetApiHome();
   const [brand, setBrand] = useState<string>('');
   const [model, setModel] = useState<string>('');
-
-  useEffect(() => {
-    const featured = document.getElementById('featured');
-    if (featured) setShowScrollHint(true);
-  }, []);
 
   const { data: filterData } = useGetApiCarsFilters();
   const serverBrands = filterData?.brandsWithModels ? Object.keys(filterData.brandsWithModels) : undefined;
@@ -89,15 +84,15 @@ const Hero: React.FC = () => {
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-4">
-                <span className="block mb-2">
+              <h1 className={`text-4xl sm:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-4 ${isMyanmar ? 'font-myanmar' : ''}`}>
+                <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
                   {t('hero.title_prefix')}
                 </span>
-                <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                <span className="block mb-2">
                   {t('hero.title_suffix')}
                 </span>
               </h1>
-              <p className="text-base sm:text-lg text-slate-600 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+              <p className={`text-base sm:text-lg text-slate-600 max-w-lg mx-auto lg:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
                 {t('hero.description')}
               </p>
             </div>

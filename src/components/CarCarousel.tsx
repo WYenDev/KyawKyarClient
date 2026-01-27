@@ -9,6 +9,7 @@ const SCROLL_AMOUNT = 300;
 interface CarCarouselProps {
   id: string;
   badgeText: string;
+  bg: string;
   badgeIcon: React.ReactElement<LucideProps>;
   title: string;
   highlightedTitle: string;
@@ -48,7 +49,7 @@ const themeClasses = {
   },
 };
 
-const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, description, useDataHook, theme }) => {
+const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, title, highlightedTitle, description, useDataHook, theme }) => {
   const { data, isLoading, isError } = useDataHook();
   const cars: CarListItem[] = (data as any)?.items ?? (data as CarListItem[]) ?? [];
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
   };
 
   return (
-    <section id={id} className="py-12 lg:py-16 bg-white relative overflow-hidden">
+    <section id={id} className={`py-12 lg:py-16 ${bg} relative overflow-hidden`}>
       <div className={`absolute top-0 right-0 w-[30%] h-[30%] ${theme === 'indigo' ? 'bg-indigo-50/50' : 'bg-amber-50/40'} blur-[100px] -z-10`} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,7 +103,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
               {badgeText}
             </div>
             <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              {title} <span className={classes.highlight}>{highlightedTitle}</span>
+              <span className={classes.highlight}>{title} </span>{highlightedTitle}
             </h2>
             <p className="text-slate-500 max-w-xl text-lg leading-relaxed">
               {description}

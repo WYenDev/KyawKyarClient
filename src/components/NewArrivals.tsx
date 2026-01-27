@@ -10,6 +10,7 @@ const NewArrivals: React.FC = () => {
       badgeText="New Arrivals"
       badgeIcon={<Star />}
       title="Fresh"
+      bg='bg-white'
       highlightedTitle="Inventory"
       description="Recently added vehicles inspected and ready for the road."
       useDataHook={useGetApiCarsNewArrivals}
