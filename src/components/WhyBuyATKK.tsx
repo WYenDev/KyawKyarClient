@@ -7,38 +7,38 @@ const WhyBuyAtKyawKyar: React.FC = () => {
   const isMyanmar = i18n?.language?.startsWith('mm');
   const benefits = [
     {
-      title: "150-Point Inspection",
-      description: "Every vehicle is rigorously tested for engine, body, and electronics quality before it enters our showroom.",
+      title: t('whybuy.benefits.inspection.title'),
+      description: t('whybuy.benefits.inspection.description'),
       icon: <ShieldCheck className="w-6 h-6 text-indigo-600" />,
       bg: "bg-indigo-50"
     },
     {
-      title: "Flexible Financing",
-      description: "Partnered with major banks (AYA, CB, KBZ) to offer you the lowest down payments and monthly installments.",
+      title: t('whybuy.benefits.financing.title'),
+      description: t('whybuy.benefits.financing.description'),
       icon: <Banknote className="w-6 h-6 text-emerald-600" />,
       bg: "bg-emerald-50"
     },
     {
-      title: "Clean History Only",
-      description: "We strictly avoid auction-grade cars with accidental histories. What you see is genuine quality.",
+      title: t('whybuy.benefits.swift-processing.title'),
+      description: t('whybuy.benefits.swift-processing.description'),
       icon: <History className="w-6 h-6 text-blue-600" />,
       bg: "bg-blue-50"
     },
     {
-      title: "Swift Processing",
-      description: "Documentation and ownership transfers are handled by our experts. Drive home your new car in 24 hours.",
+      title: t('whybuy.benefits.clean-history.title'),
+      description: t('whybuy.benefits.clean-history.description'),
       icon: <Zap className="w-6 h-6 text-amber-600" />,
       bg: "bg-amber-50"
     },
     {
-      title: "Certified Luxury",
-      description: "Our high-end models come with specialized international certifications and maintenance history.",
+      title: t('whybuy.benefits.buy-at-market-price.title'),
+      description: t('whybuy.benefits.buy-at-market-price.description'),
       icon: <BadgeCheck className="w-6 h-6 text-violet-600" />,
       bg: "bg-violet-50"
     },
     {
-      title: "24/7 Support",
-      description: "Our relationship doesn't end at the sale. Our customer service team is always here for your questions.",
+      title: t('whybuy.benefits.support.title'),
+      description: t('whybuy.benefits.support.description'),
       icon: <Contact className="w-6 h-6 text-rose-600" />,
       bg: "bg-rose-50"
     }

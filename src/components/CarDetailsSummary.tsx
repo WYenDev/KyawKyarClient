@@ -14,8 +14,8 @@ interface Car {
   modelYear: number;
   formattedLicense?: string;
   mileage: number;
-  fuel: string;
-  transmission: string;
+  fuelType?: { name: string };
+  transmissionType?: { name: string };
   color?: { name: string };
   buildType?: { name: string } | number; // Handling the potential number/object mix
   steering: string;
@@ -85,7 +85,7 @@ const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
           <Fuel className="h-5 w-5 mr-3 text-gray-400" />
           <div>
             <div className="text-sm text-gray-600">{t('details.fuel_type', 'Fuel Type')}</div>
-            <div className="text-lg font-semibold text-gray-900">{car.fuel}</div>
+            <div className="text-lg font-semibold text-gray-900">{car.fuelType?.name}</div>
           </div>
         </div>
 
@@ -94,7 +94,7 @@ const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
           <Settings className="h-5 w-5 mr-3 text-gray-400" />
           <div>
             <div className="text-sm text-gray-600">{t('details.transmission', 'Transmission')}</div>
-            <div className="text-lg font-semibold text-gray-900">{car.transmission}</div>
+            <div className="text-lg font-semibold text-gray-900">{car.transmissionType?.name}</div>
           </div>
         </div>
 

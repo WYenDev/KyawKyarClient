@@ -94,11 +94,11 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
           </div>
           <div className="flex items-center">
             <Fuel className="h-4 w-4 mr-2 text-gray-400" />
-            {car.fuel}
+            {car.fuelType?.name}
           </div>
           <div className="flex items-center">
             <Settings className="h-4 w-4 mr-2 text-gray-400" />
-            {car.transmission}
+            {car.transmissionType?.name}
           </div>
         </div>
 

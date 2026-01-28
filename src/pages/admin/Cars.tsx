@@ -13,10 +13,11 @@ import {
     RotateCcw,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { keepPreviousData } from '@tanstack/react-query';
 
 import {
     CarListItem,
-    useGetApiCarsActive,
+    useGetApiCars,
     useGetApiCarsDeleted,
     usePatchApiCarsIdSoftDelete,
     usePostApiCarsIdRestore,
@@ -27,7 +28,7 @@ const PLACEHOLDER_IMAGE =
 
 /* ================= CONSTANTS ================= */
 const PAGE_LIMIT = 8;        // ⭐ 1 page = 8 cars (4 x 2 grid)
-const SEARCH_LIMIT = 10000;
+
 
 const Cars = () => {
     const navigate = useNavigate();
@@ -41,29 +42,40 @@ const Cars = () => {
     const isSearching = searchText.trim().length > 0;
 
     /* ================= API ================= */
-    const { 
-        data: activeData, 
-        isLoading: activeLoading, 
-        refetch: refetchActive 
-    } = useGetApiCarsActive({
-        page: isSearching ? 1 : page,
-        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
-    }, { query: { enabled: activeTab === 'active' } });
+    // Use server-side search for the Active tab (supports rich filtering & correct pagination)
+    const LIMIT = PAGE_LIMIT; // pagesize (8)
+
+    const apiSearchParams = useMemo(() => {
+        const params: Record<string, unknown> = {};
+        if (searchText.trim()) {
+            // send the free-text term to both brand and model (backend supports partial matches)
+            params.model = searchText.trim();
+            params.brand = searchText.trim();
+        }
+        params.page = page;
+        params.limit = LIMIT;
+        return params;
+    }, [searchText, page]);
+
+    const searchHookParams = activeTab === 'active' ? (apiSearchParams as any) : undefined;
+
+    const { data: searchResponse, isLoading: searchLoading, refetch: refetchSearch } =
+        useGetApiCars(searchHookParams, { query: { placeholderData: keepPreviousData } });
 
     const { 
         data: deletedData, 
         isLoading: deletedLoading, 
         refetch: refetchDeleted 
     } = useGetApiCarsDeleted({
-        page: isSearching ? 1 : page,
-        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
+        page,
+        limit: LIMIT,
     }, { query: { enabled: activeTab === 'deleted' } });
 
     const { mutate: softDeleteCar, isPending: deleting } =
         usePatchApiCarsIdSoftDelete({
             mutation: {
                 onSuccess: () => {
-                    refetchActive();
+                    refetchSearch();
                     refetchDeleted();
                     setDeleteTarget(null);
                     setPage(1);
@@ -74,15 +86,16 @@ const Cars = () => {
     const { mutate: restoreCar, isPending: restoring } = usePostApiCarsIdRestore({
         mutation: {
             onSuccess: () => {
-                refetchActive();
+                refetchSearch();
                 refetchDeleted();
             },
         },
     });
 
-    const currentData = activeTab === 'active' ? activeData : deletedData;
-    const isLoading = activeTab === 'active' ? activeLoading : deletedLoading;
-    const cars = currentData?.items ?? [];
+    // currentData / loading / cars source
+    const currentData = activeTab === 'active' ? searchResponse : deletedData;
+    const isLoading = activeTab === 'active' ? searchLoading : deletedLoading;
+    const cars = activeTab === 'active' ? (searchResponse?.items ?? []) : (deletedData?.items ?? []);
 
     /* ================= SEARCH FILTER ================= */
     const filteredCars = useMemo(() => {
@@ -230,11 +243,11 @@ const Cars = () => {
                                     </div>
                                     <div className="flex items-center">
                                         <Fuel className="w-4 h-4 mr-2" />
-                                        {car.fuel}
+                                        {car.fuelType?.name}
                                     </div>
                                     <div className="flex items-center">
                                         <Settings className="w-4 h-4 mr-2" />
-                                        {car.transmission}
+                                        {car.transmissionType?.name}
                                     </div>
                                 </div>
 
@@ -285,41 +298,24 @@ const Cars = () => {
             </div>
 
             {/* PAGINATION */}
-            {totalPages > 1 && (
-                <div className="flex justify-between items-center mt-8">
-                    <span className="text-sm text-gray-500">
-                        Page {page} of {totalPages}
-                    </span>
-
-                    <div className="flex gap-2">
+            {total > 0 && (
+                <div className="mt-6 flex items-center justify-between">
+                    <div className="text-sm text-slate-600">
+                        Showing {(page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, total)} of {total}
+                    </div>
+                    <div className="flex items-center gap-3">
                         <button
-                            disabled={page === 1}
-                            onClick={() => setPage((p) => p - 1)}
-                            className="px-3 py-1 border rounded disabled:opacity-40"
+                            onClick={() => setPage(Math.max(1, page - 1))}
+                            disabled={page <= 1}
+                            className={`px-3 py-1 rounded-md border ${page <= 1 ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                         >
-                            Previous
+                            Prev
                         </button>
-
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                            (p) => (
-                                <button
-                                    key={p}
-                                    onClick={() => setPage(p)}
-                                    className={`px-3 py-1 border rounded
-                                        ${p === page
-                                            ? "bg-black text-white"
-                                            : "hover:bg-gray-100"
-                                        }`}
-                                >
-                                    {p}
-                                </button>
-                            )
-                        )}
-
+                        <div className="text-sm text-slate-700">Page {page} of {totalPages}</div>
                         <button
-                            disabled={page === totalPages}
-                            onClick={() => setPage((p) => p + 1)}
-                            className="px-3 py-1 border rounded disabled:opacity-40"
+                            onClick={() => setPage(Math.min(totalPages, page + 1))}
+                            disabled={page >= totalPages}
+                            className={`px-3 py-1 rounded-md border ${page >= totalPages ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                         >
                             Next
                         </button>

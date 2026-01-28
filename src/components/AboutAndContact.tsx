@@ -3,15 +3,20 @@ import {
   Award, Shield, Users, Clock, Phone,
   MessageCircle, MapPin, ArrowUpRight, HelpCircle
 } from 'lucide-react';
-import { useGetApiShowrooms, useGetApiAbout } from '../services/api';
+import { useGetApiShowrooms, useGetApiAbout, useGetApiHome } from '../services/api';
 import { useTranslation } from 'react-i18next';
 
 const AboutContact: React.FC = () => {
-  const viberNumber = import.meta.env.VITE_VIBER_NUMBER; // General Inquiry Viber
   const { t } = useTranslation('about');
 
   const { data: aboutData } = useGetApiAbout();
   const aboutImages = (aboutData?.images ?? []).slice().sort((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0));
+
+  const { data: homeData } = useGetApiHome();
+  const apiPhone = homeData?.phoneNo ?? undefined;
+  const apiViber = homeData?.viberNo ?? undefined;
+  const phoneNumber = (apiPhone ?? '+959123456789').toString();
+  const viberNumber = (apiViber ?? import.meta.env.VITE_VIBER_NUMBER ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
   const { data: showroomData, isLoading, isError } = useGetApiShowrooms()
 
@@ -126,7 +131,7 @@ const AboutContact: React.FC = () => {
                 <h3 className="font-bold text-lg text-slate-900 mb-4">Direct Contact</h3>
                 <div className="flex flex-col gap-4">
                   <a
-                    href="tel:+959123456789"
+                    href={`tel:${phoneNumber.replace(/\s/g, '')}` }
                     className="flex-1 flex items-center justify-center gap-3 bg-slate-900 text-white px-6 py-4 rounded-lg font-bold hover:bg-slate-800 transition-all group"
                   >
                     <Phone size={18} />

@@ -34,17 +34,6 @@ export const Status = {
   Available: 'Available',
 } as const;
 
-export type Fuel = typeof Fuel[keyof typeof Fuel];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Fuel = {
-  Petrol: 'Petrol',
-  Diesel: 'Diesel',
-  Electric: 'Electric',
-  Hybrid: 'Hybrid',
-} as const;
-
 export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosition];
 
 
@@ -52,16 +41,6 @@ export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosi
 export const SteeringPosition = {
   Left: 'Left',
   Right: 'Right',
-} as const;
-
-export type Transmission = typeof Transmission[keyof typeof Transmission];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Transmission = {
-  Manual: 'Manual',
-  Automatic: 'Automatic',
-  CVT: 'CVT',
 } as const;
 
 export type Visibility = typeof Visibility[keyof typeof Visibility];
@@ -134,6 +113,20 @@ export interface BuildTypeCreate {
 
 export interface BuildTypeUpdate {
   name?: string;
+}
+
+export interface FuelType {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TransmissionType {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ModelCreate {
@@ -237,8 +230,10 @@ export interface Car {
   mileage: number;
   /** @nullable */
   engineSize?: number | null;
-  fuel: Fuel;
-  transmission: Transmission;
+  fuelTypeId: string;
+  fuelType?: FuelType;
+  transmissionTypeId: string;
+  transmissionType?: TransmissionType;
   status: Status;
   /** @nullable */
   license?: License;
@@ -289,8 +284,8 @@ export interface CarListItem {
   price: number;
   mileage: number;
   status: Status;
-  fuel?: Fuel;
-  transmission?: Transmission;
+  fuelType?: FuelType;
+  transmissionType?: TransmissionType;
   /** @nullable */
   enginePower?: number | null;
   /** @nullable */
@@ -334,8 +329,8 @@ export interface CarCreate {
   engineSize?: number | null;
   /** @nullable */
   gradeId?: string | null;
-  fuel: Fuel;
-  transmission: Transmission;
+  fuelTypeId: string;
+  transmissionTypeId: string;
   status: Status;
   /** @nullable */
   steering?: SteeringPosition;
@@ -358,8 +353,8 @@ export interface CarUpdate {
   enginePower?: number;
   engineSize?: number;
   gradeId?: string;
-  fuel?: Fuel;
-  transmission?: Transmission;
+  fuelTypeId?: string;
+  transmissionTypeId?: string;
   status?: Status;
   steering?: SteeringPosition;
   colorId?: string;
@@ -796,6 +791,8 @@ export type GetApiCarsFilters200 = {
   colors?: Color[];
   showrooms?: Showroom[];
   buildTypes?: BuildType[];
+  fuelTypes?: FuelType[];
+  transmissionTypes?: TransmissionType[];
   steeringPositions?: SteeringPosition[];
 };
 
@@ -812,8 +809,14 @@ priceMin?: number;
 priceMax?: number;
 yearMin?: number;
 yearMax?: number;
-fuel?: Fuel;
-transmission?: Transmission;
+/**
+ * Fuel Type ID
+ */
+fuelTypeId?: string;
+/**
+ * Transmission Type ID
+ */
+transmissionTypeId?: string;
 /**
  * Build type name (partial match, e.g. "Hatchback")
  */
@@ -943,6 +946,8 @@ export type GetApiHome200 = {
   phoneNo?: string | null;
   /** @nullable */
   viberNo?: string | null;
+  /** @nullable */
+  facebookLink?: string | null;
   image?: GetApiHome200Image;
 };
 
@@ -951,6 +956,7 @@ export type PatchApiHomeBody = {
   description?: string;
   phoneNo?: string;
   viberNo?: string;
+  facebookLink?: unknown;
 };
 
 export type PatchApiHome200 = {
@@ -963,6 +969,8 @@ export type PatchApiHome200 = {
   phoneNo?: string | null;
   /** @nullable */
   viberNo?: string | null;
+  /** @nullable */
+  facebookLink?: string | null;
 };
 
 export type PostApiHomeImageBody = {
@@ -4127,7 +4135,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
 
 
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel type, transmission type, buildType, showroom, steeringPosition)
  */
 export const getApiCarsSearch = (
     params?: GetApiCarsSearchParams,
@@ -4199,7 +4207,7 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel type, transmission type, buildType, showroom, steeringPosition)
  */
 
 export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCarsSearch>>, TError = unknown>(
