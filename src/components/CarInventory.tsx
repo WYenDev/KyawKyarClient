@@ -6,7 +6,6 @@ import CarFilter from './CarFilter';
 //import { Search } from 'lucide-react';
 import { useGetApiCarsSearch, useGetApiCarsFilters, Status } from '../services/api';
 import type { GetApiCarsSearchParams } from '../services/api';
-import type { Fuel, Transmission } from '../services/api';
 import { useSearchParams } from 'react-router-dom';
 import { keepPreviousData } from '@tanstack/react-query';
 
@@ -45,6 +44,8 @@ const CarInventory: React.FC = () => {
   const serverBodyTypes = filterData?.buildTypes ?? [];
   const serverShowrooms = filterData?.showrooms ?? [];
   const serverSteeringPositions = filterData?.steeringPositions ?? [];
+  const serverFuelTypes = filterData?.fuelTypes ?? [];
+  const serverTransmissionTypes = filterData?.transmissionTypes ?? [];
 
   // Helpers: parse & serialize URL search params
   const parseFiltersFromSearchParams = (sp: URLSearchParams): { filters: FilterOptions; search: string; page?: number } => {
@@ -54,8 +55,8 @@ const CarInventory: React.FC = () => {
     const priceMax = sp.get('priceMax');
     const yearMin = sp.get('yearMin');
     const yearMax = sp.get('yearMax');
-    const fuel = sp.get('fuel') ?? '';
-    const transmission = sp.get('transmission') ?? '';
+    const fuel = sp.get('fuelTypeId') ?? '';
+    const transmission = sp.get('transmissionTypeId') ?? '';
     const status = sp.get('status') ?? ''; // comma separated
     const bodyTypesParam = sp.get('buildType') ?? '';
     const showroomsParam = sp.get('showroom') ?? '';
@@ -98,11 +99,11 @@ const CarInventory: React.FC = () => {
       params.yearMin = String(f.yearRange[0]);
       params.yearMax = String(f.yearRange[1]);
     }
-    if (f.fuelTypes && f.fuelTypes.length > 0) params.fuel = String(f.fuelTypes[0]);
+    if (f.fuelTypes && f.fuelTypes.length > 0) params.fuelTypeId = String(f.fuelTypes[0]);
     if (f.bodyTypes && f.bodyTypes.length > 0) params.buildType = f.bodyTypes.join(',');
     if (f.showrooms && f.showrooms.length > 0) params.showroom = f.showrooms.join(',');
     if (f.steeringPositions && f.steeringPositions.length > 0) params.steeringPosition = f.steeringPositions.join(',');
-    if (f.transmissions && f.transmissions.length > 0) params.transmission = String(f.transmissions[0]);
+    if (f.transmissions && f.transmissions.length > 0) params.transmissionTypeId = String(f.transmissions[0]);
     if (f.status && f.status.length > 0) params.status = f.status.join(',');
     if (q) params.q = q;
     // always include page (default 1)
@@ -167,8 +168,8 @@ const CarInventory: React.FC = () => {
       params.yearMin = filters.yearRange[0];
       params.yearMax = filters.yearRange[1];
     }
-    if (filters.fuelTypes && filters.fuelTypes.length > 0) params.fuel = filters.fuelTypes[0] as unknown as Fuel;
-    if (filters.transmissions && filters.transmissions.length > 0) params.transmission = filters.transmissions[0] as unknown as Transmission;
+    if (filters.fuelTypes && filters.fuelTypes.length > 0) params.fuelTypeId = filters.fuelTypes[0];
+    if (filters.transmissions && filters.transmissions.length > 0) params.transmissionTypeId = filters.transmissions[0];
 
     // create a runtime params record to append non-generated query keys
     const runtimeParams: Record<string, unknown> = { ...(params as unknown as Record<string, unknown>) };
@@ -231,6 +232,8 @@ const CarInventory: React.FC = () => {
               serverBodyTypes={serverBodyTypes}
               serverShowrooms={serverShowrooms}
               serverSteeringPositions={serverSteeringPositions}
+              serverFuelTypes={serverFuelTypes}
+              serverTransmissionTypes={serverTransmissionTypes}
             />
           )}
         </div>

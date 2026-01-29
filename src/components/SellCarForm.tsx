@@ -234,9 +234,9 @@ const SellCarForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('sell.form_title')}</h2>
-      <p className="text-sm text-gray-600 mb-6">{t('sell.form_subtitle')}</p>
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8">
+      <h2 className="text-2xl font-bold text-slate-900 mb-2">{t('sell.form_title')}</h2>
+      <p className="text-sm text-slate-600 mb-6">{t('sell.form_subtitle')}</p>
 
       {isSubmitted && (
         <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
@@ -455,7 +455,7 @@ const SellCarForm: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full inline-flex items-center justify-center px-4 py-3 rounded-lg bg-blue-700 text-white text-sm font-semibold hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full inline-flex items-center justify-center px-4 py-3 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70 disabled:cursor-not-allowed"
         >
           <MessageCircle className="h-4 w-4 mr-2" />
           {isSubmitting ? t('buttons.sending', 'Sending...') : t('sell.form.submit')}

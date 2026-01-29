@@ -9,6 +9,7 @@ const FeaturedCars: React.FC = () => {
       id="featured"
       badgeText="Featured Showroom"
       badgeIcon={<Star />}
+      bg='bg-gray-50'
       title="Top Tier"
       highlightedTitle="Selection"
       description="Carefully inspected vehicles ranging from city commuters to luxury SUVs. Quality guaranteed for the Myanmar roads."

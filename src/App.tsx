@@ -4,6 +4,7 @@ import ScrollToTop from "./components/ScrollToTop";
 // Public layout components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Banner from "./components/Banner";
 
 // Public pages
 import Home from "./pages/Home";
@@ -20,14 +21,12 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
-import Models from "./pages/admin/Model";
 import BuildType from "./pages/admin/BuildType";
 import Showroom from "./pages/admin/Showroom";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
 import CarCreatePage from "./pages/admin/CarCreatePage";
 import CarEditPage from "./pages/admin/CarEditPage";
-import Grades from "./pages/admin/Grade"; 
 import AboutPage from "./pages/admin/AboutPage";
 
 import SuperAdminGuard from "./components/SuperAdminGuard";
@@ -42,6 +41,8 @@ import ForgotPassword from "./pages/admin/ForgotPassword";
 import ResetPassword from "./pages/admin/ResetPassword";
 import HomePage from "./pages/admin/HomePage";
 import AdminPayments from "./pages/admin/Payments";
+import VehicleSpecs from "./pages/admin/VehicleSpecs";
+import Banners from "./pages/admin/Banners";
 
 function App() {
   return (
@@ -66,13 +67,13 @@ function App() {
           <Route path="cars/create" element={<CarCreatePage />} />
           <Route path="cars/:id/edit" element={<CarEditPage />} />
           <Route path="brands" element={<Brands />} />
-          <Route path="models" element={<Models />} />
           <Route path="build-types" element={<BuildType />} />
+          <Route path="vehicle-specs" element={<VehicleSpecs />} />
           <Route path="showrooms" element={<Showroom />} />
-          <Route path="grades" element={<Grades />} />
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="payments" element={<AdminPayments />} />
+          <Route path="banners" element={<Banners />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route
@@ -109,6 +110,7 @@ function App() {
               </main>
 
               <Footer />
+              <Banner />
             </div>
           }
         />

@@ -11,8 +11,8 @@ import {
     ChevronRight,
     Building,
     Home,
-    Star,
     Info, 
+    Megaphone 
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -92,19 +92,7 @@ const AdminSidebar = () => {
                 <MenuItem
                     to="/admin/brands"
                     icon={Tag}
-                    label="Brands"
-                    collapsed={collapsed}
-                />
-                <MenuItem
-                    to="/admin/models"
-                    icon={Layers}
-                    label="Models"
-                    collapsed={collapsed}
-                />
-                <MenuItem
-                    to="/admin/grades"
-                    icon={Star}
-                    label="Grades"
+                    label="Brands & Models"
                     collapsed={collapsed}
                 />
                 <MenuItem
@@ -112,11 +100,21 @@ const AdminSidebar = () => {
                     icon={Building}
                     label="Showrooms"
                     collapsed={collapsed}
-                />
-                <MenuItem
+                />                 <MenuItem
+                    to="/admin/banners"
+                    icon={Megaphone}
+                    label="Banners"
+                    collapsed={collapsed}
+                />                <MenuItem
                     to="/admin/build-types"
                     icon={Home}
                     label="Build Types"
+                    collapsed={collapsed}
+                />
+                <MenuItem
+                    to="/admin/vehicle-specs"
+                    icon={Settings}
+                    label="Vehicle Specs"
                     collapsed={collapsed}
                 />
                 <MenuItem

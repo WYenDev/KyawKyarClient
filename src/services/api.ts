@@ -34,17 +34,6 @@ export const Status = {
   Available: 'Available',
 } as const;
 
-export type Fuel = typeof Fuel[keyof typeof Fuel];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Fuel = {
-  Petrol: 'Petrol',
-  Diesel: 'Diesel',
-  Electric: 'Electric',
-  Hybrid: 'Hybrid',
-} as const;
-
 export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosition];
 
 
@@ -52,16 +41,6 @@ export type SteeringPosition = typeof SteeringPosition[keyof typeof SteeringPosi
 export const SteeringPosition = {
   Left: 'Left',
   Right: 'Right',
-} as const;
-
-export type Transmission = typeof Transmission[keyof typeof Transmission];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Transmission = {
-  Manual: 'Manual',
-  Automatic: 'Automatic',
-  CVT: 'CVT',
 } as const;
 
 export type Visibility = typeof Visibility[keyof typeof Visibility];
@@ -134,6 +113,20 @@ export interface BuildTypeCreate {
 
 export interface BuildTypeUpdate {
   name?: string;
+}
+
+export interface FuelType {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TransmissionType {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ModelCreate {
@@ -237,8 +230,10 @@ export interface Car {
   mileage: number;
   /** @nullable */
   engineSize?: number | null;
-  fuel: Fuel;
-  transmission: Transmission;
+  fuelTypeId: string;
+  fuelType?: FuelType;
+  transmissionTypeId: string;
+  transmissionType?: TransmissionType;
   status: Status;
   /** @nullable */
   license?: License;
@@ -289,8 +284,8 @@ export interface CarListItem {
   price: number;
   mileage: number;
   status: Status;
-  fuel?: Fuel;
-  transmission?: Transmission;
+  fuelType?: FuelType;
+  transmissionType?: TransmissionType;
   /** @nullable */
   enginePower?: number | null;
   /** @nullable */
@@ -334,8 +329,8 @@ export interface CarCreate {
   engineSize?: number | null;
   /** @nullable */
   gradeId?: string | null;
-  fuel: Fuel;
-  transmission: Transmission;
+  fuelTypeId: string;
+  transmissionTypeId: string;
   status: Status;
   /** @nullable */
   steering?: SteeringPosition;
@@ -358,8 +353,8 @@ export interface CarUpdate {
   enginePower?: number;
   engineSize?: number;
   gradeId?: string;
-  fuel?: Fuel;
-  transmission?: Transmission;
+  fuelTypeId?: string;
+  transmissionTypeId?: string;
   status?: Status;
   steering?: SteeringPosition;
   colorId?: string;
@@ -608,6 +603,138 @@ export type DeleteApiBankInstallmentsId200 = {
   deleted?: boolean;
 };
 
+export type GetApiBanners200Item = {
+  id?: string;
+  text?: string;
+  /**
+   * Hex color code (e.g.,
+   * @nullable
+   */
+  backgroundColor?: string | null;
+  /**
+   * URL of the background image
+   * @nullable
+   */
+  backgroundImageUrl?: string | null;
+  isActive?: boolean;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type PostApiBannersBody = {
+  /**
+   * The banner text content
+   * @maxLength 500
+   */
+  text: string;
+  /**
+   * Hex color code for background (e.g.,
+   * @nullable
+   * @pattern ^#[0-9A-Fa-f]{6}$
+   */
+  backgroundColor?: string | null;
+  /** Optional background image file (jpg, png, webp, gif) */
+  backgroundImage?: Blob;
+  /**
+   * Display order (lower numbers appear first)
+   * @minimum 0
+   */
+  order?: number;
+  /** Whether the banner is active */
+  isActive?: boolean;
+};
+
+export type PostApiBanners201 = {
+  id?: string;
+  text?: string;
+  /** @nullable */
+  backgroundColor?: string | null;
+  /** @nullable */
+  backgroundImageUrl?: string | null;
+  isActive?: boolean;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type GetApiBannersActive200Item = {
+  id?: string;
+  text?: string;
+  /**
+   * Hex color code (e.g.,
+   * @nullable
+   */
+  backgroundColor?: string | null;
+  /**
+   * URL of the background image
+   * @nullable
+   */
+  backgroundImageUrl?: string | null;
+  isActive?: boolean;
+  order?: number;
+};
+
+export type GetApiBannersId200 = {
+  id?: string;
+  text?: string;
+  /**
+   * Hex color code (e.g.,
+   * @nullable
+   */
+  backgroundColor?: string | null;
+  /**
+   * URL of the background image
+   * @nullable
+   */
+  backgroundImageUrl?: string | null;
+  isActive?: boolean;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type PatchApiBannersIdBody = {
+  /**
+   * The banner text content
+   * @maxLength 500
+   */
+  text?: string;
+  /**
+   * Hex color code for background (e.g.,
+   * @nullable
+   * @pattern ^#[0-9A-Fa-f]{6}$
+   */
+  backgroundColor?: string | null;
+  /** Optional new background image file (jpg, png, webp, gif) */
+  backgroundImage?: Blob;
+  /**
+   * Display order
+   * @minimum 0
+   */
+  order?: number;
+  /** Whether the banner is active */
+  isActive?: boolean;
+};
+
+export type PatchApiBannersId200 = {
+  id?: string;
+  text?: string;
+  /** @nullable */
+  backgroundColor?: string | null;
+  /** @nullable */
+  backgroundImageUrl?: string | null;
+  isActive?: boolean;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type DeleteApiBannersId200 = {
+  message?: string;
+  id?: string;
+};
+
 export type GetApiBrandsParams = {
 page?: number;
 limit?: number;
@@ -796,6 +923,8 @@ export type GetApiCarsFilters200 = {
   colors?: Color[];
   showrooms?: Showroom[];
   buildTypes?: BuildType[];
+  fuelTypes?: FuelType[];
+  transmissionTypes?: TransmissionType[];
   steeringPositions?: SteeringPosition[];
 };
 
@@ -812,8 +941,14 @@ priceMin?: number;
 priceMax?: number;
 yearMin?: number;
 yearMax?: number;
-fuel?: Fuel;
-transmission?: Transmission;
+/**
+ * Fuel Type ID
+ */
+fuelTypeId?: string;
+/**
+ * Transmission Type ID
+ */
+transmissionTypeId?: string;
 /**
  * Build type name (partial match, e.g. "Hatchback")
  */
@@ -900,6 +1035,11 @@ export type DeleteApiCarsId200 = {
   deletedCount?: number;
 };
 
+export type PostApiCarsIdRestore200 = {
+  success?: boolean;
+  car?: Car;
+};
+
 export type PatchApiCarsIdSoftDelete200 = {
   success?: boolean;
   car?: Car;
@@ -922,6 +1062,28 @@ export type PostApiCarsCreateBatch201 = {
   results?: PostApiCarsCreateBatch201ResultsItem[];
 };
 
+export type GetApiFuelTypesParams = {
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Items per page
+ */
+limit?: number;
+};
+
+export type GetApiFuelTypes200 = {
+  items?: FuelType[];
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type DeleteApiFuelTypesId200 = {
+  deleted?: boolean;
+};
+
 export type GetApiHome200Image = {
   id?: string;
   key?: string;
@@ -938,6 +1100,8 @@ export type GetApiHome200 = {
   phoneNo?: string | null;
   /** @nullable */
   viberNo?: string | null;
+  /** @nullable */
+  facebookLink?: string | null;
   image?: GetApiHome200Image;
 };
 
@@ -946,6 +1110,7 @@ export type PatchApiHomeBody = {
   description?: string;
   phoneNo?: string;
   viberNo?: string;
+  facebookLink?: unknown;
 };
 
 export type PatchApiHome200 = {
@@ -958,6 +1123,8 @@ export type PatchApiHome200 = {
   phoneNo?: string | null;
   /** @nullable */
   viberNo?: string | null;
+  /** @nullable */
+  facebookLink?: string | null;
 };
 
 export type PostApiHomeImageBody = {
@@ -1048,6 +1215,28 @@ export type DeleteApiShowroomsId200 = {
 };
 
 export type DeleteApiShowroomsShowroomIdPhonesPhoneId200 = {
+  deleted?: boolean;
+};
+
+export type GetApiTransmissionTypesParams = {
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Items per page
+ */
+limit?: number;
+};
+
+export type GetApiTransmissionTypes200 = {
+  items?: TransmissionType[];
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type DeleteApiTransmissionTypesId200 = {
   deleted?: boolean;
 };
 
@@ -2341,6 +2530,513 @@ export const useDeleteApiBankInstallmentsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiBankInstallmentsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Retrieve all banners (admin-only endpoint)
+ * @summary Get all banners
+ */
+export const getApiBanners = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiBanners200Item[]>(
+      {url: `/api/banners`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiBannersQueryKey = () => {
+    return [
+    `/api/banners`
+    ] as const;
+    }
+
+    
+export const getGetApiBannersQueryOptions = <TData = Awaited<ReturnType<typeof getApiBanners>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBanners>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiBannersQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiBanners>>> = ({ signal }) => getApiBanners(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiBanners>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiBannersQueryResult = NonNullable<Awaited<ReturnType<typeof getApiBanners>>>
+export type GetApiBannersQueryError = void
+
+
+export function useGetApiBanners<TData = Awaited<ReturnType<typeof getApiBanners>>, TError = void>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBanners>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBanners>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBanners>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBanners<TData = Awaited<ReturnType<typeof getApiBanners>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBanners>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBanners>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBanners>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBanners<TData = Awaited<ReturnType<typeof getApiBanners>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBanners>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all banners
+ */
+
+export function useGetApiBanners<TData = Awaited<ReturnType<typeof getApiBanners>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBanners>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiBannersQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Create a new banner with optional background image upload (admin-only)
+ * @summary Create a new banner
+ */
+export const postApiBanners = (
+    postApiBannersBody: PostApiBannersBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+formData.append(`text`, postApiBannersBody.text)
+if(postApiBannersBody.backgroundColor !== undefined && postApiBannersBody.backgroundColor !== null) {
+ formData.append(`backgroundColor`, postApiBannersBody.backgroundColor)
+ }
+if(postApiBannersBody.backgroundImage !== undefined) {
+ formData.append(`backgroundImage`, postApiBannersBody.backgroundImage)
+ }
+if(postApiBannersBody.order !== undefined) {
+ formData.append(`order`, postApiBannersBody.order.toString())
+ }
+if(postApiBannersBody.isActive !== undefined) {
+ formData.append(`isActive`, postApiBannersBody.isActive.toString())
+ }
+
+      return mutator<PostApiBanners201>(
+      {url: `/api/banners`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiBannersMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBanners>>, TError,{data: PostApiBannersBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiBanners>>, TError,{data: PostApiBannersBody}, TContext> => {
+
+const mutationKey = ['postApiBanners'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiBanners>>, {data: PostApiBannersBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiBanners(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiBannersMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBanners>>>
+    export type PostApiBannersMutationBody = PostApiBannersBody
+    export type PostApiBannersMutationError = void
+
+    /**
+ * @summary Create a new banner
+ */
+export const usePostApiBanners = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBanners>>, TError,{data: PostApiBannersBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiBanners>>,
+        TError,
+        {data: PostApiBannersBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiBannersMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Retrieve only active banners for public display
+ * @summary Get active banners
+ */
+export const getApiBannersActive = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiBannersActive200Item[]>(
+      {url: `/api/banners/active`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiBannersActiveQueryKey = () => {
+    return [
+    `/api/banners/active`
+    ] as const;
+    }
+
+    
+export const getGetApiBannersActiveQueryOptions = <TData = Awaited<ReturnType<typeof getApiBannersActive>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersActive>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiBannersActiveQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiBannersActive>>> = ({ signal }) => getApiBannersActive(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiBannersActive>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiBannersActiveQueryResult = NonNullable<Awaited<ReturnType<typeof getApiBannersActive>>>
+export type GetApiBannersActiveQueryError = unknown
+
+
+export function useGetApiBannersActive<TData = Awaited<ReturnType<typeof getApiBannersActive>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersActive>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBannersActive>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBannersActive>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBannersActive<TData = Awaited<ReturnType<typeof getApiBannersActive>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersActive>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBannersActive>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBannersActive>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBannersActive<TData = Awaited<ReturnType<typeof getApiBannersActive>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersActive>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get active banners
+ */
+
+export function useGetApiBannersActive<TData = Awaited<ReturnType<typeof getApiBannersActive>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersActive>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiBannersActiveQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Retrieve a specific banner by its ID (admin-only)
+ * @summary Get a banner by ID
+ */
+export const getApiBannersId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiBannersId200>(
+      {url: `/api/banners/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiBannersIdQueryKey = (id?: string,) => {
+    return [
+    `/api/banners/${id}`
+    ] as const;
+    }
+
+    
+export const getGetApiBannersIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiBannersId>>, TError = void>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiBannersIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiBannersId>>> = ({ signal }) => getApiBannersId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiBannersId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiBannersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiBannersId>>>
+export type GetApiBannersIdQueryError = void
+
+
+export function useGetApiBannersId<TData = Awaited<ReturnType<typeof getApiBannersId>>, TError = void>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBannersId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBannersId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBannersId<TData = Awaited<ReturnType<typeof getApiBannersId>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiBannersId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiBannersId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiBannersId<TData = Awaited<ReturnType<typeof getApiBannersId>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get a banner by ID
+ */
+
+export function useGetApiBannersId<TData = Awaited<ReturnType<typeof getApiBannersId>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiBannersId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiBannersIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Update an existing banner with optional new background image (admin-only)
+ * @summary Update a banner
+ */
+export const patchApiBannersId = (
+    id: string,
+    patchApiBannersIdBody?: PatchApiBannersIdBody,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      const formData = new FormData();
+if(patchApiBannersIdBody?.text !== undefined) {
+ formData.append(`text`, patchApiBannersIdBody.text)
+ }
+if(patchApiBannersIdBody?.backgroundColor !== undefined && patchApiBannersIdBody.backgroundColor !== null) {
+ formData.append(`backgroundColor`, patchApiBannersIdBody.backgroundColor)
+ }
+if(patchApiBannersIdBody?.backgroundImage !== undefined) {
+ formData.append(`backgroundImage`, patchApiBannersIdBody.backgroundImage)
+ }
+if(patchApiBannersIdBody?.order !== undefined) {
+ formData.append(`order`, patchApiBannersIdBody.order.toString())
+ }
+if(patchApiBannersIdBody?.isActive !== undefined) {
+ formData.append(`isActive`, patchApiBannersIdBody.isActive.toString())
+ }
+
+      return mutator<PatchApiBannersId200>(
+      {url: `/api/banners/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiBannersIdMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiBannersId>>, TError,{id: string;data: PatchApiBannersIdBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiBannersId>>, TError,{id: string;data: PatchApiBannersIdBody}, TContext> => {
+
+const mutationKey = ['patchApiBannersId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiBannersId>>, {id: string;data: PatchApiBannersIdBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchApiBannersId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiBannersIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiBannersId>>>
+    export type PatchApiBannersIdMutationBody = PatchApiBannersIdBody
+    export type PatchApiBannersIdMutationError = void
+
+    /**
+ * @summary Update a banner
+ */
+export const usePatchApiBannersId = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiBannersId>>, TError,{id: string;data: PatchApiBannersIdBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiBannersId>>,
+        TError,
+        {id: string;data: PatchApiBannersIdBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiBannersIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Delete a banner and its associated background image (admin-only)
+ * @summary Delete a banner
+ */
+export const deleteApiBannersId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiBannersId200>(
+      {url: `/api/banners/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiBannersIdMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBannersId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiBannersId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiBannersId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiBannersId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiBannersId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiBannersIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiBannersId>>>
+    
+    export type DeleteApiBannersIdMutationError = void
+
+    /**
+ * @summary Delete a banner
+ */
+export const useDeleteApiBannersId = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBannersId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiBannersId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiBannersIdMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -4122,7 +4818,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
 
 
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel type, transmission type, buildType, showroom, steeringPosition)
  */
 export const getApiCarsSearch = (
     params?: GetApiCarsSearchParams,
@@ -4194,7 +4890,7 @@ export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCars
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Search cars using filters (model, brand, price range, year range, fuel, transmission, buildType, showroom, steeringPosition)
+ * @summary Search cars using filters (model, brand, price range, year range, fuel type, transmission type, buildType, showroom, steeringPosition)
  */
 
 export function useGetApiCarsSearch<TData = Awaited<ReturnType<typeof getApiCarsSearch>>, TError = unknown>(
@@ -4624,6 +5320,69 @@ export const useDeleteApiCarsId = <TError = unknown,
     }
     
 /**
+ * @summary Restore a soft-deleted car (set deletedAt to null)
+ */
+export const postApiCarsIdRestore = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<PostApiCarsIdRestore200>(
+      {url: `/api/cars/${id}/restore`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiCarsIdRestoreMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdRestore>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdRestore>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiCarsIdRestore'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiCarsIdRestore>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiCarsIdRestore(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiCarsIdRestoreMutationResult = NonNullable<Awaited<ReturnType<typeof postApiCarsIdRestore>>>
+    
+    export type PostApiCarsIdRestoreMutationError = unknown
+
+    /**
+ * @summary Restore a soft-deleted car (set deletedAt to null)
+ */
+export const usePostApiCarsIdRestore = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdRestore>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiCarsIdRestore>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiCarsIdRestoreMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Soft-delete a car by setting deletedAt timestamp
  */
 export const patchApiCarsIdSoftDelete = (
@@ -4908,6 +5667,385 @@ export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCa
 
 
 
+/**
+ * @summary Get all fuel types (paginated)
+ */
+export const getApiFuelTypes = (
+    params?: GetApiFuelTypesParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiFuelTypes200>(
+      {url: `/api/fuel-types`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiFuelTypesQueryKey = (params?: GetApiFuelTypesParams,) => {
+    return [
+    `/api/fuel-types`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiFuelTypesQueryOptions = <TData = Awaited<ReturnType<typeof getApiFuelTypes>>, TError = unknown>(params?: GetApiFuelTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiFuelTypesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiFuelTypes>>> = ({ signal }) => getApiFuelTypes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiFuelTypesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiFuelTypes>>>
+export type GetApiFuelTypesQueryError = unknown
+
+
+export function useGetApiFuelTypes<TData = Awaited<ReturnType<typeof getApiFuelTypes>>, TError = unknown>(
+ params: undefined |  GetApiFuelTypesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFuelTypes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFuelTypes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFuelTypes<TData = Awaited<ReturnType<typeof getApiFuelTypes>>, TError = unknown>(
+ params?: GetApiFuelTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFuelTypes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFuelTypes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFuelTypes<TData = Awaited<ReturnType<typeof getApiFuelTypes>>, TError = unknown>(
+ params?: GetApiFuelTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all fuel types (paginated)
+ */
+
+export function useGetApiFuelTypes<TData = Awaited<ReturnType<typeof getApiFuelTypes>>, TError = unknown>(
+ params?: GetApiFuelTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiFuelTypesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a fuel type
+ */
+export const postApiFuelTypes = (
+    fuelTypeCreate: FuelTypeCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<FuelType>(
+      {url: `/api/fuel-types`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: fuelTypeCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiFuelTypesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiFuelTypes>>, TError,{data: FuelTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiFuelTypes>>, TError,{data: FuelTypeCreate}, TContext> => {
+
+const mutationKey = ['postApiFuelTypes'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiFuelTypes>>, {data: FuelTypeCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiFuelTypes(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiFuelTypesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiFuelTypes>>>
+    export type PostApiFuelTypesMutationBody = FuelTypeCreate
+    export type PostApiFuelTypesMutationError = unknown
+
+    /**
+ * @summary Create a fuel type
+ */
+export const usePostApiFuelTypes = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiFuelTypes>>, TError,{data: FuelTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiFuelTypes>>,
+        TError,
+        {data: FuelTypeCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiFuelTypesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get fuel type by id
+ */
+export const getApiFuelTypesId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<FuelType>(
+      {url: `/api/fuel-types/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiFuelTypesIdQueryKey = (id?: string,) => {
+    return [
+    `/api/fuel-types/${id}`
+    ] as const;
+    }
+
+    
+export const getGetApiFuelTypesIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiFuelTypesId>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypesId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiFuelTypesIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiFuelTypesId>>> = ({ signal }) => getApiFuelTypesId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypesId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiFuelTypesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiFuelTypesId>>>
+export type GetApiFuelTypesIdQueryError = unknown
+
+
+export function useGetApiFuelTypesId<TData = Awaited<ReturnType<typeof getApiFuelTypesId>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypesId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFuelTypesId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFuelTypesId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFuelTypesId<TData = Awaited<ReturnType<typeof getApiFuelTypesId>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypesId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFuelTypesId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFuelTypesId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFuelTypesId<TData = Awaited<ReturnType<typeof getApiFuelTypesId>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypesId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get fuel type by id
+ */
+
+export function useGetApiFuelTypesId<TData = Awaited<ReturnType<typeof getApiFuelTypesId>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFuelTypesId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiFuelTypesIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Update a fuel type
+ */
+export const putApiFuelTypesId = (
+    id: string,
+    fuelTypeCreate: FuelTypeCreate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<FuelType>(
+      {url: `/api/fuel-types/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: fuelTypeCreate
+    },
+      options);
+    }
+  
+
+
+export const getPutApiFuelTypesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiFuelTypesId>>, TError,{id: string;data: FuelTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof putApiFuelTypesId>>, TError,{id: string;data: FuelTypeCreate}, TContext> => {
+
+const mutationKey = ['putApiFuelTypesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putApiFuelTypesId>>, {id: string;data: FuelTypeCreate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  putApiFuelTypesId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutApiFuelTypesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiFuelTypesId>>>
+    export type PutApiFuelTypesIdMutationBody = FuelTypeCreate
+    export type PutApiFuelTypesIdMutationError = unknown
+
+    /**
+ * @summary Update a fuel type
+ */
+export const usePutApiFuelTypesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiFuelTypesId>>, TError,{id: string;data: FuelTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof putApiFuelTypesId>>,
+        TError,
+        {id: string;data: FuelTypeCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPutApiFuelTypesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a fuel type
+ */
+export const deleteApiFuelTypesId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiFuelTypesId200>(
+      {url: `/api/fuel-types/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiFuelTypesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiFuelTypesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiFuelTypesId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiFuelTypesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiFuelTypesId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiFuelTypesId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiFuelTypesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiFuelTypesId>>>
+    
+    export type DeleteApiFuelTypesIdMutationError = unknown
+
+    /**
+ * @summary Delete a fuel type
+ */
+export const useDeleteApiFuelTypesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiFuelTypesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiFuelTypesId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiFuelTypesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Get grades by modelId
  */
@@ -7253,6 +8391,385 @@ export const usePostApiShowroomsShowroomIdPhones = <TError = unknown,
       > => {
 
       const mutationOptions = getPostApiShowroomsShowroomIdPhonesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get all transmission types (paginated)
+ */
+export const getApiTransmissionTypes = (
+    params?: GetApiTransmissionTypesParams,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiTransmissionTypes200>(
+      {url: `/api/transmission-types`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiTransmissionTypesQueryKey = (params?: GetApiTransmissionTypesParams,) => {
+    return [
+    `/api/transmission-types`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetApiTransmissionTypesQueryOptions = <TData = Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError = unknown>(params?: GetApiTransmissionTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTransmissionTypesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTransmissionTypes>>> = ({ signal }) => getApiTransmissionTypes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTransmissionTypesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTransmissionTypes>>>
+export type GetApiTransmissionTypesQueryError = unknown
+
+
+export function useGetApiTransmissionTypes<TData = Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError = unknown>(
+ params: undefined |  GetApiTransmissionTypesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTransmissionTypes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTransmissionTypes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTransmissionTypes<TData = Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError = unknown>(
+ params?: GetApiTransmissionTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTransmissionTypes>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTransmissionTypes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTransmissionTypes<TData = Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError = unknown>(
+ params?: GetApiTransmissionTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all transmission types (paginated)
+ */
+
+export function useGetApiTransmissionTypes<TData = Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError = unknown>(
+ params?: GetApiTransmissionTypesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypes>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTransmissionTypesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Create a transmission type
+ */
+export const postApiTransmissionTypes = (
+    transmissionTypeCreate: TransmissionTypeCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<TransmissionType>(
+      {url: `/api/transmission-types`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: transmissionTypeCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiTransmissionTypesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTransmissionTypes>>, TError,{data: TransmissionTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTransmissionTypes>>, TError,{data: TransmissionTypeCreate}, TContext> => {
+
+const mutationKey = ['postApiTransmissionTypes'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTransmissionTypes>>, {data: TransmissionTypeCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTransmissionTypes(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTransmissionTypesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTransmissionTypes>>>
+    export type PostApiTransmissionTypesMutationBody = TransmissionTypeCreate
+    export type PostApiTransmissionTypesMutationError = unknown
+
+    /**
+ * @summary Create a transmission type
+ */
+export const usePostApiTransmissionTypes = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTransmissionTypes>>, TError,{data: TransmissionTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTransmissionTypes>>,
+        TError,
+        {data: TransmissionTypeCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiTransmissionTypesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get transmission type by id
+ */
+export const getApiTransmissionTypesId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<TransmissionType>(
+      {url: `/api/transmission-types/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiTransmissionTypesIdQueryKey = (id?: string,) => {
+    return [
+    `/api/transmission-types/${id}`
+    ] as const;
+    }
+
+    
+export const getGetApiTransmissionTypesIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTransmissionTypesIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTransmissionTypesId>>> = ({ signal }) => getApiTransmissionTypesId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTransmissionTypesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTransmissionTypesId>>>
+export type GetApiTransmissionTypesIdQueryError = unknown
+
+
+export function useGetApiTransmissionTypesId<TData = Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTransmissionTypesId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTransmissionTypesId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTransmissionTypesId<TData = Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTransmissionTypesId>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTransmissionTypesId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTransmissionTypesId<TData = Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get transmission type by id
+ */
+
+export function useGetApiTransmissionTypesId<TData = Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTransmissionTypesId>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTransmissionTypesIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Update a transmission type
+ */
+export const putApiTransmissionTypesId = (
+    id: string,
+    transmissionTypeCreate: TransmissionTypeCreate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<TransmissionType>(
+      {url: `/api/transmission-types/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: transmissionTypeCreate
+    },
+      options);
+    }
+  
+
+
+export const getPutApiTransmissionTypesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiTransmissionTypesId>>, TError,{id: string;data: TransmissionTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof putApiTransmissionTypesId>>, TError,{id: string;data: TransmissionTypeCreate}, TContext> => {
+
+const mutationKey = ['putApiTransmissionTypesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putApiTransmissionTypesId>>, {id: string;data: TransmissionTypeCreate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  putApiTransmissionTypesId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutApiTransmissionTypesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiTransmissionTypesId>>>
+    export type PutApiTransmissionTypesIdMutationBody = TransmissionTypeCreate
+    export type PutApiTransmissionTypesIdMutationError = unknown
+
+    /**
+ * @summary Update a transmission type
+ */
+export const usePutApiTransmissionTypesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiTransmissionTypesId>>, TError,{id: string;data: TransmissionTypeCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof putApiTransmissionTypesId>>,
+        TError,
+        {id: string;data: TransmissionTypeCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPutApiTransmissionTypesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete a transmission type
+ */
+export const deleteApiTransmissionTypesId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiTransmissionTypesId200>(
+      {url: `/api/transmission-types/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiTransmissionTypesIdMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiTransmissionTypesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiTransmissionTypesId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiTransmissionTypesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiTransmissionTypesId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiTransmissionTypesId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiTransmissionTypesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiTransmissionTypesId>>>
+    
+    export type DeleteApiTransmissionTypesIdMutationError = unknown
+
+    /**
+ * @summary Delete a transmission type
+ */
+export const useDeleteApiTransmissionTypesId = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiTransmissionTypesId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiTransmissionTypesId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiTransmissionTypesIdMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

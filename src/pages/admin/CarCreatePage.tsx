@@ -7,8 +7,6 @@ import { Star } from "lucide-react";
 import { Steering } from "../../types";
 
 import {
-    Fuel,
-    Transmission,
     Status,
     CarCreate,
     usePostApiCars,
@@ -26,8 +24,8 @@ type CarForm = {
     price: number | string;
     mileage: number | string;
     enginePower?: number | null;
-    fuel: Fuel;
-    transmission: Transmission;
+    fuelTypeId: string;
+    transmissionTypeId: string;
     steering?: string;
     status: Status;
     colorId: string;
@@ -49,19 +47,6 @@ type CarForm = {
 };
 
 /* ===================== STATIC OPTIONS ===================== */
-const fuelOptions: Option<Fuel>[] = [
-    { label: "Petrol", value: Fuel.Petrol },
-    { label: "Diesel", value: Fuel.Diesel },
-    { label: "Electric", value: Fuel.Electric },
-    { label: "Hybrid", value: Fuel.Hybrid },
-];
-
-const transmissionOptions: Option<Transmission>[] = [
-    { label: "Manual", value: Transmission.Manual },
-    { label: "Automatic", value: Transmission.Automatic },
-    { label: "CVT", value: Transmission.CVT },
-];
-
 const steeringOptions: Option<Steering>[] = [
     { label: "Left", value: Steering.Left },
     { label: "Right", value: Steering.Right },
@@ -95,8 +80,8 @@ const CarCreatePage = () => {
         price: "",
         mileage: "",
         enginePower: null,
-        fuel: Fuel.Petrol,
-        transmission: Transmission.Manual,
+        fuelTypeId: "",
+        transmissionTypeId: "",
         steering: Steering.Left,
         status: Status.Available,
         colorId: "",
@@ -162,6 +147,24 @@ const CarCreatePage = () => {
             filterData?.buildTypes?.map((b) => ({
                 label: b.name,
                 value: b.id,
+            })) ?? [],
+        [filterData]
+    );
+
+    const fuelOptions: Option<string>[] = useMemo(
+        () =>
+            filterData?.fuelTypes?.map((f) => ({
+                label: f.name,
+                value: f.id,
+            })) ?? [],
+        [filterData]
+    );
+
+    const transmissionOptions: Option<string>[] = useMemo(
+        () =>
+            filterData?.transmissionTypes?.map((t) => ({
+                label: t.name,
+                value: t.id,
             })) ?? [],
         [filterData]
     );
@@ -413,18 +416,18 @@ const CarCreatePage = () => {
                     <Section title="Status">
                         <div className="grid grid-cols-4 gap-6 items-end">
                             <Select
-                                value={form.fuel}
+                                value={form.fuelTypeId}
                                 options={fuelOptions}
                                 placeholder="Fuel"
-                                onChange={(v) => setForm({ ...form, fuel: v })}
+                                onChange={(v) => setForm({ ...form, fuelTypeId: v ?? "" })}
                             />
 
                             <Select
-                                value={form.transmission}
+                                value={form.transmissionTypeId}
                                 options={transmissionOptions}
                                 placeholder="Transmission"
                                 onChange={(v) =>
-                                    setForm({ ...form, transmission: v })
+                                    setForm({ ...form, transmissionTypeId: v ?? "" })
                                 }
                             />
 

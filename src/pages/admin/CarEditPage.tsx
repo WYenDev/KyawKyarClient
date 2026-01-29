@@ -2,13 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Trash2, Star, Upload, X , Loader2} from "lucide-react";
 import heic2any from "heic2any";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Select, { Option } from "../../components/Select";
 
 
 import {
-    Fuel,
-    Transmission,
     Status,
     CarUpdate,
     SteeringPosition,
@@ -24,6 +23,9 @@ import {
     usePatchApiCarImagesImageIdSetPrimary,
     usePostApiCarsIdFeature,
     useDeleteApiCarsIdFeature,
+    getGetApiCarsActiveQueryKey,
+    getGetApiCarsDeletedQueryKey,
+    getGetApiCarsIdQueryKey,
 } from "../../services/api";
 
 /* ===================== FORM TYPE ===================== */
@@ -34,8 +36,8 @@ type CarForm = {
     price: number | string;
     mileage: number | string;
     enginePower?: number | null;
-    fuel: Fuel;
-    transmission: Transmission;
+    fuelTypeId: string;
+    transmissionTypeId: string;
     steering?: SteeringPosition;
     status: Status;
     colorId: string;
@@ -56,19 +58,6 @@ type CarForm = {
 };
 
 /* ===================== STATIC OPTIONS ===================== */
-const fuelOptions: Option<Fuel>[] = [
-    { label: "Petrol", value: Fuel.Petrol },
-    { label: "Diesel", value: Fuel.Diesel },
-    { label: "Electric", value: Fuel.Electric },
-    { label: "Hybrid", value: Fuel.Hybrid },
-];
-
-const transmissionOptions: Option<Transmission>[] = [
-    { label: "Manual", value: Transmission.Manual },
-    { label: "Automatic", value: Transmission.Automatic },
-    { label: "CVT", value: Transmission.CVT },
-];
-
 const steeringOptions: Option<SteeringPosition>[] = [
     { label: "Left", value: SteeringPosition.Left },
     { label: "Right", value: SteeringPosition.Right },
@@ -82,6 +71,7 @@ const statusOptions: Option<Status>[] = [
 const CarEditPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     /* ===================== STATE ===================== */
     const [brandId, setBrandId] = useState<string>("");
@@ -110,8 +100,8 @@ const CarEditPage = () => {
             price: car.price ?? "",
             mileage: car.mileage ?? "",
             enginePower: car.engineSize ?? null,
-            fuel: car.fuel,
-            transmission: car.transmission,
+            fuelTypeId: car.fuelTypeId,
+            transmissionTypeId: car.transmissionTypeId,
             steering: car.steering || SteeringPosition.Left,
             status: car.status,
             colorId: car.colorId,
@@ -188,6 +178,24 @@ const CarEditPage = () => {
             filterData?.buildTypes?.map((b) => ({
                 label: b.name,
                 value: b.id,
+            })) ?? [],
+        [filterData]
+    );
+
+    const fuelOptions: Option<string>[] = useMemo(
+        () =>
+            filterData?.fuelTypes?.map((f) => ({
+                label: f.name,
+                value: f.id,
+            })) ?? [],
+        [filterData]
+    );
+
+    const transmissionOptions: Option<string>[] = useMemo(
+        () =>
+            filterData?.transmissionTypes?.map((t) => ({
+                label: t.name,
+                value: t.id,
             })) ?? [],
         [filterData]
     );
@@ -287,6 +295,11 @@ const CarEditPage = () => {
                     await unfeatureCar({ id: id! });
                 }
             }
+
+            // Invalidate queries to refresh data
+            await queryClient.invalidateQueries({ queryKey: getGetApiCarsActiveQueryKey() });
+            await queryClient.invalidateQueries({ queryKey: getGetApiCarsDeletedQueryKey() });
+            await queryClient.invalidateQueries({ queryKey: getGetApiCarsIdQueryKey(id!) });
 
             navigate("/admin/cars");
         } catch (error) {
@@ -470,21 +483,21 @@ const CarEditPage = () => {
                     <Section title="Status">
                         <div className="grid grid-cols-4 gap-6 items-end">
                             <Select
-                                value={form.fuel}
+                                value={form.fuelTypeId}
                                 options={fuelOptions}
                                 placeholder="Fuel"
                                 onChange={(v) =>
-                                    setForm({ ...form, fuel: v })
+                                    setForm({ ...form, fuelTypeId: v ?? "" })
                                 }
                             />
                             <Select
-                                value={form.transmission}
+                                value={form.transmissionTypeId}
                                 options={transmissionOptions}
                                 placeholder="Transmission"
                                 onChange={(v) =>
                                     setForm({
                                         ...form,
-                                        transmission: v,
+                                        transmissionTypeId: v ?? "",
                                     })
                                 }
                             />

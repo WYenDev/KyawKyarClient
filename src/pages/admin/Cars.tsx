@@ -10,13 +10,18 @@ import {
     Fuel,
     Settings,
     MapPin,
+    RotateCcw,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { keepPreviousData } from '@tanstack/react-query';
 
 import {
     CarListItem,
-    useGetApiCarsActive,
+    useGetApiCars,
+    useGetApiCarsDeleted,
+    useGetApiCarsSold,
     usePatchApiCarsIdSoftDelete,
+    usePostApiCarsIdRestore,
 } from "../../services/api";
 
 const PLACEHOLDER_IMAGE =
@@ -24,12 +29,13 @@ const PLACEHOLDER_IMAGE =
 
 /* ================= CONSTANTS ================= */
 const PAGE_LIMIT = 8;        // ⭐ 1 page = 8 cars (4 x 2 grid)
-const SEARCH_LIMIT = 10000;
+
 
 const Cars = () => {
     const navigate = useNavigate();
 
     /* ================= STATE ================= */
+    const [activeTab, setActiveTab] = useState<'active' | 'sold' | 'deleted'>('active');
     const [deleteTarget, setDeleteTarget] = useState<CarListItem | null>(null);
     const [searchText, setSearchText] = useState("");
     const [page, setPage] = useState(1);
@@ -37,23 +43,72 @@ const Cars = () => {
     const isSearching = searchText.trim().length > 0;
 
     /* ================= API ================= */
-    const { data, isLoading, refetch } = useGetApiCarsActive({
-        page: isSearching ? 1 : page,
-        limit: isSearching ? SEARCH_LIMIT : PAGE_LIMIT,
-    });
+    // Use server-side search for the Active tab (supports rich filtering & correct pagination)
+    const LIMIT = PAGE_LIMIT; // pagesize (8)
+
+    const apiSearchParams = useMemo(() => {
+        const params: Record<string, unknown> = {};
+        if (searchText.trim()) {
+            // send the free-text term to both brand and model (backend supports partial matches)
+            params.model = searchText.trim();
+            params.brand = searchText.trim();
+        }
+        params.page = page;
+        params.limit = LIMIT;
+        return params;
+    }, [searchText, page]);
+
+    const searchHookParams = activeTab === 'active' ? (apiSearchParams as any) : undefined;
+
+    const { data: searchResponse, isLoading: searchLoading, refetch: refetchSearch } =
+        useGetApiCars(searchHookParams, { query: { placeholderData: keepPreviousData } });
+
+    const { 
+        data: soldData, 
+        isLoading: soldLoading
+    } = useGetApiCarsSold({
+        page,
+        limit: LIMIT,
+    }, { query: { enabled: activeTab === 'sold' } });
+
+    const { 
+        data: deletedData, 
+        isLoading: deletedLoading, 
+        refetch: refetchDeleted 
+    } = useGetApiCarsDeleted({
+        page,
+        limit: LIMIT,
+    }, { query: { enabled: activeTab === 'deleted' } });
 
     const { mutate: softDeleteCar, isPending: deleting } =
         usePatchApiCarsIdSoftDelete({
             mutation: {
                 onSuccess: () => {
-                    refetch();
+                    refetchSearch();
+                    refetchDeleted();
                     setDeleteTarget(null);
                     setPage(1);
                 },
             },
         });
 
-    const cars = data?.items ?? [];
+    const { mutate: restoreCar, isPending: restoring } = usePostApiCarsIdRestore({
+        mutation: {
+            onSuccess: () => {
+                refetchSearch();
+                refetchDeleted();
+            },
+        },
+    });
+
+    // currentData / loading / cars source
+    const currentData = activeTab === 'active' ? searchResponse : activeTab === 'sold' ? soldData : deletedData;
+    const isLoading = activeTab === 'active' ? searchLoading : activeTab === 'sold' ? soldLoading : deletedLoading;
+    const cars = activeTab === 'active' 
+        ? (searchResponse?.items ?? []) 
+        : activeTab === 'sold' 
+            ? (soldData?.items ?? []) 
+            : (deletedData?.items ?? []);
 
     /* ================= SEARCH FILTER ================= */
     const filteredCars = useMemo(() => {
@@ -70,7 +125,7 @@ const Cars = () => {
     /* ================= PAGINATION DATA ================= */
     const total = isSearching
         ? filteredCars.length
-        : data?.total ?? 0;
+        : currentData?.total ?? 0;
 
     const totalPages = Math.ceil(total / PAGE_LIMIT);
 
@@ -83,7 +138,7 @@ const Cars = () => {
 
     useEffect(() => {
         setPage(1);
-    }, [searchText]);
+    }, [searchText, activeTab]);
 
     /* ================= RENDER ================= */
     return (
@@ -98,6 +153,40 @@ const Cars = () => {
                 >
                     <Plus size={16} /> Add Car
                 </button>
+            </div>
+
+            {/* TABS */}
+            <div className="flex gap-4 mb-6 border-b border-gray-200">
+                    <button
+                        onClick={() => setActiveTab('active')}
+                        className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
+                            activeTab === 'active' 
+                                ? 'text-black border-b-2 border-black' 
+                                : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        Active Cars
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('sold')}
+                        className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
+                            activeTab === 'sold' 
+                                ? 'text-black border-b-2 border-black' 
+                                : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        Sold Cars
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('deleted')}
+                        className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
+                            activeTab === 'deleted' 
+                                ? 'text-black border-b-2 border-black' 
+                                : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    >
+                        Deleted Cars
+                    </button>
             </div>
 
             {/* SEARCH */}
@@ -177,11 +266,11 @@ const Cars = () => {
                                     </div>
                                     <div className="flex items-center">
                                         <Fuel className="w-4 h-4 mr-2" />
-                                        {car.fuel}
+                                        {car.fuelType?.name}
                                     </div>
                                     <div className="flex items-center">
                                         <Settings className="w-4 h-4 mr-2" />
-                                        {car.transmission}
+                                        {car.transmissionType?.name}
                                     </div>
                                 </div>
 
@@ -190,25 +279,42 @@ const Cars = () => {
                                 </div>
 
                                 <div className="flex justify-between pt-3 border-t">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            navigate(`/admin/cars/${car.id}/edit`);
-                                        }}
-                                        className="text-indigo-600 text-sm flex items-center gap-1"
-                                    >
-                                        <Pencil size={14} /> Edit
-                                    </button>
+                    {activeTab === 'active' ? (
+                        <>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/admin/cars/${car.id}/edit`);
+                                }}
+                                className="text-indigo-600 text-sm flex items-center gap-1"
+                            >
+                                <Pencil size={14} /> Edit
+                            </button>
 
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setDeleteTarget(car);
-                                        }}
-                                        className="text-red-600 text-sm flex items-center gap-1"
-                                    >
-                                        <Trash2 size={14} /> Delete
-                                    </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteTarget(car);
+                                }}
+                                className="text-red-600 text-sm flex items-center gap-1"
+                            >
+                                <Trash2 size={14} /> Delete
+                            </button>
+                        </>
+                    ) : activeTab === 'sold' ? (
+                        <div className="text-sm text-slate-500 ml-auto">Sold</div>
+                    ) : (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                restoreCar({ id: car.id });
+                            }}
+                            disabled={restoring}
+                            className="text-green-600 text-sm flex items-center gap-1 ml-auto disabled:opacity-50"
+                        >
+                            <RotateCcw size={14} /> Restore
+                        </button>
+                    )}
                                 </div>
                             </div>
                         </div>
@@ -217,41 +323,24 @@ const Cars = () => {
             </div>
 
             {/* PAGINATION */}
-            {totalPages > 1 && (
-                <div className="flex justify-between items-center mt-8">
-                    <span className="text-sm text-gray-500">
-                        Page {page} of {totalPages}
-                    </span>
-
-                    <div className="flex gap-2">
+            {total > 0 && (
+                <div className="mt-6 flex items-center justify-between">
+                    <div className="text-sm text-slate-600">
+                        Showing {(page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, total)} of {total}
+                    </div>
+                    <div className="flex items-center gap-3">
                         <button
-                            disabled={page === 1}
-                            onClick={() => setPage((p) => p - 1)}
-                            className="px-3 py-1 border rounded disabled:opacity-40"
+                            onClick={() => setPage(Math.max(1, page - 1))}
+                            disabled={page <= 1}
+                            className={`px-3 py-1 rounded-md border ${page <= 1 ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                         >
-                            Previous
+                            Prev
                         </button>
-
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                            (p) => (
-                                <button
-                                    key={p}
-                                    onClick={() => setPage(p)}
-                                    className={`px-3 py-1 border rounded
-                                        ${p === page
-                                            ? "bg-black text-white"
-                                            : "hover:bg-gray-100"
-                                        }`}
-                                >
-                                    {p}
-                                </button>
-                            )
-                        )}
-
+                        <div className="text-sm text-slate-700">Page {page} of {totalPages}</div>
                         <button
-                            disabled={page === totalPages}
-                            onClick={() => setPage((p) => p + 1)}
-                            className="px-3 py-1 border rounded disabled:opacity-40"
+                            onClick={() => setPage(Math.min(totalPages, page + 1))}
+                            disabled={page >= totalPages}
+                            className={`px-3 py-1 rounded-md border ${page >= totalPages ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                         >
                             Next
                         </button>

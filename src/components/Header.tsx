@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Phone, Menu, X, Globe, User, ChevronDown } from 'lucide-react';
+import { Phone, Menu, X, Globe, User, ChevronDown, Facebook } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-with-text.png';
 import ViberIcon from '../assets/viber-icon.avif';
@@ -15,6 +15,7 @@ const Header: React.FC = () => {
   const { data: homeData } = useGetApiHome();
   const apiPhone = homeData?.phoneNo ?? undefined;
   const apiViber = homeData?.viberNo ?? undefined;
+  const apiFacebook = homeData?.facebookLink ?? undefined;
   const phoneNumber = (apiPhone ?? '').toString();
   const viberNumber = (apiViber ??  '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
@@ -134,9 +135,9 @@ const Header: React.FC = () => {
                       className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
                       onClick={() => setIsContactOpen(false)}
                     >
-                      <span className='border border-gray-500 p-1 rounded-md'>
-                      <Phone className="h-5 w-5 text-slate-500 " />
-                      </span>
+                      <div className="flex items-center justify-center w-8 h-8 bg-red-600 rounded-full">
+                        <Phone className="h-4 w-4 text-white" />
+                      </div>
                       <span>{t('buttons.call_us', 'Call Us')}</span>
                     </a>
                     <a
@@ -146,6 +147,19 @@ const Header: React.FC = () => {
                     >
                       <img src={ViberIcon} alt="Viber" className="h-8 w-8 rounded-md" />
                       <span>{t('buttons.viber', 'Viber')}</span>
+                    </a>
+                    
+                    <a
+                      href={apiFacebook || '#'}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
+                      onClick={() => setIsContactOpen(false)}
+                    >
+                      <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full">
+                        <Facebook className="h-5 w-5 text-white" />
+                      </div>
+                      <span>{t('buttons.facebook', 'Facebook')}</span>
                     </a>
                   </div>
                 )}
@@ -277,10 +291,12 @@ const Header: React.FC = () => {
                 <div className="mt-3 px-2 space-y-2">
                   <a
                     href={`tel:${phoneNumber.replace(/\s/g, '')}` }
-                    className="block w-full text-center px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
                     onClick={() => setIsContactOpen(false)}
                   >
-                    <Phone className="inline h-5 w-5 mr-2 text-slate-600" />
+                     <div className="flex items-center justify-center w-6 h-6 mr-2 bg-red-600 rounded-full">
+                        <Phone className="h-3.5 w-3.5 text-white" />
+                      </div>
                     <span className="font-medium">{t('buttons.call_us')}</span>
                   </a>
                   <a
@@ -290,6 +306,19 @@ const Header: React.FC = () => {
                   >
                     <img src={ViberIcon} alt="Viber" className="inline h-5 w-5 mr-2 rounded-full" />
                     <span className="font-medium">{t('buttons.viber', 'Viber')}</span>
+                  </a>
+                  
+                  <a
+                    href={apiFacebook || '#'}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                    onClick={() => setIsContactOpen(false)}
+                  >
+                     <div className="flex items-center justify-center w-6 h-6 mr-2 bg-blue-600 rounded-full">
+                        <Facebook className="h-3.5 w-3.5 text-white" />
+                      </div>
+                    <span className="font-medium">{t('buttons.facebook', 'Facebook')}</span>
                   </a>
                 </div>
               )}

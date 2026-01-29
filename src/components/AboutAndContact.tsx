@@ -3,16 +3,20 @@ import {
   Award, Shield, Users, Clock, Phone,
   MessageCircle, MapPin, ArrowUpRight, HelpCircle
 } from 'lucide-react';
-import AboutImage from '../assets/about.jpg';
-import { useGetApiShowrooms, useGetApiAbout } from '../services/api';
+import { useGetApiShowrooms, useGetApiAbout, useGetApiHome } from '../services/api';
 import { useTranslation } from 'react-i18next';
 
 const AboutContact: React.FC = () => {
-  const viberNumber = import.meta.env.VITE_VIBER_NUMBER; // General Inquiry Viber
-  const { t, i18n } = useTranslation('about'); // Use 'common' namespace
+  const { t } = useTranslation('about');
 
   const { data: aboutData } = useGetApiAbout();
   const aboutImages = (aboutData?.images ?? []).slice().sort((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0));
+
+  const { data: homeData } = useGetApiHome();
+  const apiPhone = homeData?.phoneNo ?? undefined;
+  const apiViber = homeData?.viberNo ?? undefined;
+  const phoneNumber = (apiPhone ?? '+959123456789').toString();
+  const viberNumber = (apiViber ?? import.meta.env.VITE_VIBER_NUMBER ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
   const { data: showroomData, isLoading, isError } = useGetApiShowrooms()
 
@@ -71,16 +75,16 @@ const AboutContact: React.FC = () => {
             <div className="space-y-8">
               <div>
                 <span className="text-indigo-600 font-bold tracking-widest text-xs uppercase mb-3 inline-block">
+                  {t(`about.title`)}
                   Our Legacy
                 </span>
                 <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
-                  {t('title')} <br />
-                  <span className="text-indigo-600">{t("title_suffix")}</span>
+                  {t('about.title')} <br />
                 </h2>
               </div>
 
               <p className="text-lg text-slate-500 leading-relaxed">
-                {t('description')}
+                {t('about.description')}
               </p>
 
               <div className="grid grid-cols-2 gap-6 pt-6 border-t border-slate-200">
@@ -109,13 +113,14 @@ const AboutContact: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="text-indigo-600 font-bold tracking-widest text-xs uppercase mb-3 inline-block">
-              Get In Touch
+              {t('contact.title')}
             </span>
-            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
-              Let's Get You On The Road
+            <h2 className="text-4xl lg:text-4xl font-black text-slate-900 leading-tight">
+              {t('contact.subtitle')}
             </h2>
-            <p className="mt-4 text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">
-              Our team is ready to assist you. Reach out via your preferred method or visit us at one of our showroom locations.
+            <p className="mt-4 text-lg text-slate-500 leading-relaxed max-w-3xl mx-auto">
+
+              {t('contact.description')}
             </p>
           </div>
 
@@ -126,7 +131,7 @@ const AboutContact: React.FC = () => {
                 <h3 className="font-bold text-lg text-slate-900 mb-4">Direct Contact</h3>
                 <div className="flex flex-col gap-4">
                   <a
-                    href="tel:+959123456789"
+                    href={`tel:${phoneNumber.replace(/\s/g, '')}` }
                     className="flex-1 flex items-center justify-center gap-3 bg-slate-900 text-white px-6 py-4 rounded-lg font-bold hover:bg-slate-800 transition-all group"
                   >
                     <Phone size={18} />

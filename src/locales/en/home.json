@@ -11,5 +11,37 @@
     "years_experience": "Years Experience",
     "cars_available": "Cars Available",
     "branches": "Branches"
+  }, 
+  "whybuy": {
+    "title_prefix": "Experience the Confidence of",
+    "title_suffix": "Certified Quality",
+    "subtitle": "THE KYAW KYAR Standard",
+    "description": "We don't just sell cars; we sell peace of mind. Every vehicle in our multi-brand showroom is hand-selected to meet our high standards of safety and performance.",
+    "benefits": {
+      "inspection": {
+        "title": "Rigorous Quality Inspection", 
+        "description": "Every vehicle undergoes a rigorous inspection of the engine, chassis, and all mechanical components to ensure the highest quality before arriving at our showroom."
+      },
+      "financing": {
+        "title": "Flexible Financing", 
+        "description": "we offer flexible payment plans, including direct showroom installments and bank financing options through our partners AYA, CB, and KBZ."
+      },
+      "clean-history": {
+        "title": "Clean History Only", 
+        "description": "We guarantee a 100% clean history for every vehicle. Our selection excludes 'Owner Book' copies, illegal modifications, and any legal complications, ensuring you drive away with total confidence."
+      },
+      "swift-processing": {
+        "title": "Swift Processing", 
+        "description": "Documentation and ownership transfers are handled by our experts. Drive home your new car in 24 hours."
+      },
+      "buy-at-market-price": {
+        "title": "Resell at Market Price", 
+        "description": "For vehicles purchased from our showroom, we offer a guaranteed buy-back option at current market value whenever you are ready to sell."
+      },
+      "support": {
+        "title": "After-Sales Support", 
+        "description": "Our dedicated After-Sales Service team is always here to assist you with routine maintenance, expert repairs, and any technical support you need long after your purchase."
+      }
+    }
   }
 }

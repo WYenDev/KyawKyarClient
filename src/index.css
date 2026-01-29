@@ -100,3 +100,17 @@ img {
   backface-visibility: hidden;
   transform-origin: center;
 }
+
+.font-myanmar {
+  /* Added Masterpiece Uni Sans for the headline look, kept Noto as fallback */
+  font-family: "Masterpiece Uni Sans", "Pyidaungsu", "Noto Sans Myanmar", "Noto Sans Myanmar UI", "Padauk", sans-serif;
+  
+  /* Critical for the 'Heavy' look in the image */
+  font-weight: 700; 
+  
+  /* Burmese scripts need slightly more line height than Latin to prevent clipping */
+  line-height: 1.6;
+  
+  /* Removing letter spacing as Burmese characters should stay connected */
+  letter-spacing: 0;
+}/* Myanmar/Burmese font utility - falls back safely to system fonts */

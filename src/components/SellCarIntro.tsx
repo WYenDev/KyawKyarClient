@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DollarSign, FastForward, ShieldCheck, Car } from 'lucide-react';
+import { Car } from 'lucide-react';
 
 const SellCarIntro: React.FC = () => {
   const { t } = useTranslation('cars');
@@ -11,10 +11,10 @@ const SellCarIntro: React.FC = () => {
         <Car className="h-4 w-4 mr-2" />
         <span>{t('sell.intro_badge', 'Simple & Quick')}</span>
       </div>
-      <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+      <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
         {t('sell.title', 'Sell Your Car With Confidence')}
       </h1>
-      <p className="text-lg text-gray-600 mb-8">
+      <p className="text-lg text-slate-600 mb-8">
         {t(
           'sell.description',
           'Fill out the form with your car’s details, and our team will get back to you with a competitive offer. Selling your car has never been easier.',

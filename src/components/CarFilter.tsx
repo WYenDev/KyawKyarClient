@@ -1,6 +1,6 @@
 import React from 'react';
 import { FilterOptions } from '../types';
-import { brands as localBrands, fuelTypes, transmissions, brandModels as localBrandModels } from '../data/cars';
+import { brands as localBrands, fuelTypes as localFuelTypes, transmissions as localTransmissions, brandModels as localBrandModels } from '../data/cars';
 import { Filter, X } from 'lucide-react';
 import { formatPriceLakhs } from '../utils/price';
 
@@ -18,9 +18,13 @@ interface CarFilterProps {
   // serverShowrooms may be array of strings or objects {id, city, name}
   serverShowrooms?: Array<string | { id?: string; city?: string; name?: string }>;
   serverSteeringPositions?: Array<string | { id?: string; name?: string }>;
+  // serverFuelTypes may be array of strings or objects {id, name}
+  serverFuelTypes?: Array<string | { id?: string; name?: string }>;
+  // serverTransmissionTypes may be array of strings or objects {id, name}
+  serverTransmissionTypes?: Array<string | { id?: string; name?: string }>;
 }
 
-const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions }) => {
+const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes }) => {
 
   const updateFilters = (key: keyof FilterOptions, value: FilterOptions[keyof FilterOptions]) => {
     onFiltersChange({ ...filters, [key]: value } as FilterOptions);
@@ -55,10 +59,11 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
 
     // Handle API structure: { totalCars: number, models: [...] }
     if (raw.models && Array.isArray(raw.models)) {
-        return raw.models.map((m: any) => ({
-            id: m.id ?? m.name ?? String(m),
-            name: m.name ?? m.id ?? String(m),
-            carCount: m.carCount
+        const modelsArr = raw.models as Array<{ id?: string; name?: string; carCount?: number } | string>;
+        return modelsArr.map((m) => ({
+            id: (typeof m === 'string' ? m : (m.id ?? m.name ?? String(m))),
+            name: (typeof m === 'string' ? m : (m.name ?? m.id ?? String(m))),
+            carCount: typeof m === 'string' ? undefined : (m.carCount)
         }));
     }
 
@@ -111,6 +116,24 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
 
   const showroomsToShow = normalizeShowrooms(serverShowrooms);
   const steeringToShow = normalizeStringsOrObjects(serverSteeringPositions).map(s => s.name);
+
+  // Fuel and Transmission: prefer server-provided lists when available, otherwise fall back to local data
+  const normalizeIdNameList = (arr?: Array<string | { id?: string; name?: string }>) => {
+    if (!arr) return [] as { id: string; name: string }[];
+    if (arr.length === 0) return [] as { id: string; name: string }[];
+    if (typeof arr[0] === 'string') {
+      return (arr as string[]).map(s => ({ id: s, name: s }));
+    }
+    return (arr as { id?: string; name?: string }[]).map(o => ({ id: o.id ?? o.name ?? String(o), name: o.name ?? o.id ?? String(o) }));
+  };
+
+  const fuelTypesToShow = serverFuelTypes && serverFuelTypes.length > 0
+    ? normalizeIdNameList(serverFuelTypes)
+    : (localFuelTypes || []).map((f: string) => ({ id: f, name: f }));
+
+  const transmissionsToShow = serverTransmissionTypes && serverTransmissionTypes.length > 0
+    ? normalizeIdNameList(serverTransmissionTypes)
+    : (localTransmissions || []).map((t: string) => ({ id: t, name: t }));
 
   return (
     <>
@@ -250,11 +273,12 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                   disabled={!filters.brand}
                 >
                   <option value="">All</option>
-                  {getAvailableModels().map((model) => (
-                    <option key={model.id} value={model.id}>
-                      {model.name}{model.carCount !== undefined ? ` (${model.carCount})` : ''}
-                    </option>
-                  ))}
+                   {getAvailableModels().map((model: { id: string; name: string; carCount?: number }) => (
+                     <option key={model.id} value={model.id}>
+                       {model.name}{model.carCount !== undefined ? ` (${model.carCount})` : ''}
+                     </option>
+                   ))}
+
                 </select>
               </div>
 
@@ -288,23 +312,23 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
               <div className="border-t border-slate-100 pt-4">
                 <label className="block text-sm font-medium text-slate-800 mb-2">Fuel Type</label>
                 <div className="flex flex-wrap gap-2">
-                  {fuelTypes.map((fuelType) => (
+                  {fuelTypesToShow.map((fuelType: { id: string; name: string }) => (
                     <button
-                      key={fuelType}
+                      key={fuelType.id}
                       onClick={() => {
-                        const selected = filters.fuelTypes.includes(fuelType);
+                        const selected = filters.fuelTypes.includes(fuelType.id);
                         if (selected) {
                           // deselect if already selected
                           updateFilters('fuelTypes', []);
                         } else {
                           // single-select: selecting one clears others
-                          updateFilters('fuelTypes', [fuelType]);
+                          updateFilters('fuelTypes', [fuelType.id]);
                         }
                       }}
-                      aria-pressed={filters.fuelTypes.includes(fuelType)}
-                      className={`px-3 py-1 rounded-full text-sm border ${filters.fuelTypes.includes(fuelType) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                      aria-pressed={filters.fuelTypes.includes(fuelType.id)}
+                      className={`px-3 py-1 rounded-full text-sm border ${filters.fuelTypes.includes(fuelType.id) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
                     >
-                      {fuelType}
+                      {fuelType.name}
                     </button>
                   ))}
                 </div>
@@ -313,17 +337,17 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
               <div className="border-t border-slate-100 pt-4">
                 <label className="block text-sm font-medium text-slate-800 mb-2">Transmission</label>
                 <div className="flex flex-wrap gap-2">
-                  {transmissions.map((transmission) => (
+                  {transmissionsToShow.map((transmission: { id: string; name: string }) => (
                     <button
-                      key={transmission}
+                      key={transmission.id}
                       onClick={() => {
-                        const selected = filters.transmissions.includes(transmission);
-                        if (selected) updateFilters('transmissions', filters.transmissions.filter(t => t !== transmission));
-                        else updateFilters('transmissions', [...filters.transmissions, transmission]);
+                        const selected = filters.transmissions.includes(transmission.id);
+                        if (selected) updateFilters('transmissions', filters.transmissions.filter(t => t !== transmission.id));
+                        else updateFilters('transmissions', [...filters.transmissions, transmission.id]);
                       }}
-                      className={`px-3 py-1 rounded-full text-sm border ${filters.transmissions.includes(transmission) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                      className={`px-3 py-1 rounded-full text-sm border ${filters.transmissions.includes(transmission.id) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
                     >
-                      {transmission}
+                      {transmission.name}
                     </button>
                   ))}
                 </div>

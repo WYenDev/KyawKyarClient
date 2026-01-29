@@ -14,10 +14,12 @@ const HomePage = () => {
   // ----- LOCAL FORM STATE -----
   const [phoneNo, setPhoneNo] = useState<string>(homeData?.phoneNo ?? "");
   const [viberNo, setViberNo] = useState<string>(homeData?.viberNo ?? "");
+  const [facebookLink, setFacebookLink] = useState<string>(homeData?.facebookLink ?? "")
 
   useEffect(() => {
     setPhoneNo(homeData?.phoneNo ?? "");
     setViberNo(homeData?.viberNo ?? "");
+    setFacebookLink(homeData?.facebookLink ?? "")
   }, [homeData]);
 
   // ----- MUTATIONS -----
@@ -66,9 +68,10 @@ const HomePage = () => {
   };
 
   const handleSaveContact = () => {
-    const payload: { phoneNo?: string; viberNo?: string } = {};
+    const payload: { phoneNo?: string; viberNo?: string, facebookLink?: string } = {};
     payload.phoneNo = phoneNo?.trim() || undefined;
     payload.viberNo = viberNo?.trim() || undefined;
+    payload.facebookLink = facebookLink?.trim() || undefined;
 
     patchHome({ data: payload });
   };
@@ -148,6 +151,17 @@ const HomePage = () => {
                   value={viberNo}
                   onChange={(e) => setViberNo(e.target.value)}
                   placeholder="e.g. +959123456789"
+                  className="w-full border border-slate-200 rounded-lg px-4 py-2"
+                />
+              </label>
+
+              <label className="flex flex-col">
+                <span className="text-sm font-medium text-gray-700 mb-2">Facebook Link</span>
+                <input
+                  type="text"
+                  value={facebookLink}
+                  onChange={(e) => setFacebookLink(e.target.value)}
+                  placeholder="http://facebook.com"
                   className="w-full border border-slate-200 rounded-lg px-4 py-2"
                 />
               </label>

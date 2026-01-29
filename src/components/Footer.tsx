@@ -1,9 +1,19 @@
 import React from 'react';
-import { Car, Facebook, MessageCircle, Phone, Mail } from 'lucide-react';
+import {  Facebook, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useGetApiHome } from '../services/api';
+import ViberIcon from '../assets/viber-icon.avif';
+import Logo from '../assets/logo-removebg.png';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation('footer');
+  
+  const { data: homeData } = useGetApiHome();
+  const apiPhone = homeData?.phoneNo ?? undefined;
+  const apiViber = homeData?.viberNo ?? undefined;
+  const apiFacebook = homeData?.facebookLink ?? undefined;
+  const phoneNumber = (apiPhone ?? '').toString();
+  const viberNumber = (apiViber ??  '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
   return (
     <footer className="bg-slate-900 text-slate-50">
@@ -12,23 +22,22 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-              <Car className="h-8 w-8 text-indigo-400" />
+              <img src={Logo} className='h-10 w-10'/>
               <div>
-                <h3 className="text-2xl font-bold text-slate-50">KyawKyaw</h3>
-                <p className="text-sm text-slate-300">{t('tagline')}</p>
+                <h3 className="text-2xl font-bold text-red-500">{t('name')}</h3>
               </div>
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
               {t('description')}
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+              <a href={apiFacebook || '#'} target="_blank" rel="noreferrer" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
-                <MessageCircle className="h-5 w-5" />
+              <a href={`viber://chat?number=%2B${viberNumber}`} className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors overflow-hidden">
+                 <img src={ViberIcon} alt="Viber" className="h-full w-full object-cover" />
               </a>
-              <a href="#" className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors">
+              <a href={`tel:${phoneNumber.replace(/\s/g, '')}`} className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors">
                 <Phone className="h-5 w-5" />
               </a>
             </div>
@@ -60,23 +69,6 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="grid md:grid-cols-2 gap-4 items-center">
-            <div className="text-gray-400 text-sm">
-              <p>{t('copyright')}</p>
-              <p>{t('license')}</p>
-            </div>
-            <div className="md:text-right">
-              <div className="flex items-center justify-start md:justify-end space-x-4 text-sm text-gray-300">
-                <Phone className="h-4 w-4" />
-                <span>+95-9-123-456-789</span>
-                <Mail className="h-4 w-4" />
-                <span>info@automaxmyanmar.com</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </footer>
   );
