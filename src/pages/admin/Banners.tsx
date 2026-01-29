@@ -21,6 +21,8 @@ import {
     usePostApiBanners,
     usePatchApiBannersId,
     useDeleteApiBannersId,
+    usePostApiBannersIdImage,
+    useDeleteApiBannersIdImage,
     GetApiBanners200Item
 } from "../../services/api";
 import { Edit2, Trash2, Plus, Image as ImageIcon, Loader2 } from "lucide-react";
@@ -31,7 +33,7 @@ type BannerFormInputs = {
     backgroundColor: string;
     order: number;
     isActive: boolean;
-    backgroundImage?: FileList;
+    // Removed backgroundImage from here as it's handled separately for edits
 };
 
 const Banners = () => {
@@ -39,6 +41,10 @@ const Banners = () => {
     const { data: banners, isLoading, error, isError } = useGetApiBanners();
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    
+    // We use the hooks' pending state instead of local state
+    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiBannersIdImage();
+    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiBannersIdImage();
 
     const { mutate: createBanner, isPending: isCreatingBanner } = usePostApiBanners();
     const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiBannersId();
@@ -70,21 +76,12 @@ const Banners = () => {
             backgroundColor: data.backgroundColor,
             order: Number(data.order),
             isActive: data.isActive,
-            backgroundImage: data.backgroundImage?.[0], 
         };
-
-        // Orval generated hooks for multipart might need specific handling or just passing the object if the mutator handles it.
-        // Usually, generated hooks for multipart expect an object where fields are properties.
-        // Let's verify if we need to manually create FormData or if the hook handles it.
-        // Based on typical Orval generation for multipart, it usually takes an object and converts.
-        // However, if we need to be safe, sometimes we might need to cast.
-        // Let's rely on the generated types. 
-        // PostApiBannersBody has backgroundImage as Blob.
         
         if (isEditing) {
             updateBanner({
                 id: isEditing,
-                data: formData
+                data: formData as any
             }, {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
@@ -93,7 +90,7 @@ const Banners = () => {
             });
         } else {
             createBanner({
-                data: formData
+                data: formData as any
             }, {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
@@ -110,7 +107,37 @@ const Banners = () => {
         setValue("backgroundColor", banner.backgroundColor || "#FFFFFF");
         setValue("order", banner.order || 0);
         setValue("isActive", banner.isActive || false);
-        // Can't set file input value programmatically
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!isEditing || !e.target.files?.[0]) return;
+        
+        const file = e.target.files[0];
+        try {
+            await uploadImage({
+                id: isEditing,
+                data: { image: file } 
+            });
+            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+        } catch (error) {
+            console.error("Failed to upload image", error);
+            alert("Failed to upload image");
+        } finally {
+             // Reset file input value
+            e.target.value = '';
+        }
+    };
+
+    const handleImageRemove = async () => {
+        if (!isEditing || !window.confirm("Remove this image?")) return;
+        
+        try {
+            await deleteImage({ id: isEditing });
+            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+        } catch (error) {
+            console.error("Failed to delete image", error);
+            alert("Failed to delete image");
+        }
     };
 
     const handleDelete = (id: string) => {
@@ -227,16 +254,50 @@ const Banners = () => {
                             </div>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Background Image (Optional)</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                {...register("backgroundImage")}
-                                className="w-full p-2 border rounded"
-                            />
-                            <p className="text-xs text-gray-500 mt-1">Overrides background color if set.</p>
-                        </div>
+                        {isEditing && (
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Background Image</label>
+                                
+                                {/* Show image preview info if current banner has one */}
+                                {safeBanners.find(b => b.id === isEditing)?.backgroundImageUrl ? (
+                                    <div className="mb-2 p-2 border rounded flex items-center justify-between bg-gray-50">
+                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                            <ImageIcon size={16} />
+                                            <span>Current Image Set</span>
+                                            <a href={safeBanners.find(b => b.id === isEditing)?.backgroundImageUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">(View)</a>
+                                        </div>
+                                        <button 
+                                            type="button" 
+                                            onClick={handleImageRemove}
+                                            disabled={isDeletingImage}
+                                            className="text-red-500 text-xs hover:text-red-700 font-medium disabled:opacity-50"
+                                        >
+                                            {isDeletingImage ? "Removing..." : "Remove Image"}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-gray-500 mb-2">No image set.</p>
+                                )}
+
+                                <div className="flex items-center gap-2">
+                                     <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        disabled={isUploadingImage}
+                                        className="w-full p-2 border rounded text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    />
+                                    {isUploadingImage && <Loader2 className="animate-spin text-blue-600" size={20} />}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">Upload happens immediately. Overrides background color.</p>
+                            </div>
+                        )}
+                        
+                        {!isEditing && (
+                            <div className="p-3 bg-blue-50 text-blue-800 text-sm rounded">
+                                To add a background image, please create the banner first, then edit it.
+                            </div>
+                        )}
 
                         <div className="flex items-center gap-2">
                             <input

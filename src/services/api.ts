@@ -603,6 +603,10 @@ export type DeleteApiBankInstallmentsId200 = {
   deleted?: boolean;
 };
 
+export type PostApiBannersIdImageBody = {
+  image?: Blob;
+};
+
 export type GetApiBanners200Item = {
   id?: string;
   text?: string;
@@ -2530,6 +2534,138 @@ export const useDeleteApiBankInstallmentsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiBankInstallmentsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Upload banner image
+ */
+export const postApiBannersIdImage = (
+    id: string,
+    postApiBannersIdImageBody: PostApiBannersIdImageBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(postApiBannersIdImageBody.image !== undefined) {
+ formData.append(`image`, postApiBannersIdImageBody.image)
+ }
+
+      return mutator<void>(
+      {url: `/api/banners/${id}/image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiBannersIdImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBannersIdImage>>, TError,{id: string;data: PostApiBannersIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiBannersIdImage>>, TError,{id: string;data: PostApiBannersIdImageBody}, TContext> => {
+
+const mutationKey = ['postApiBannersIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiBannersIdImage>>, {id: string;data: PostApiBannersIdImageBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postApiBannersIdImage(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiBannersIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBannersIdImage>>>
+    export type PostApiBannersIdImageMutationBody = PostApiBannersIdImageBody
+    export type PostApiBannersIdImageMutationError = unknown
+
+    /**
+ * @summary Upload banner image
+ */
+export const usePostApiBannersIdImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBannersIdImage>>, TError,{id: string;data: PostApiBannersIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiBannersIdImage>>,
+        TError,
+        {id: string;data: PostApiBannersIdImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiBannersIdImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete banner image
+ */
+export const deleteApiBannersIdImage = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/banners/${id}/image`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiBannersIdImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBannersIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiBannersIdImage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiBannersIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiBannersIdImage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiBannersIdImage(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiBannersIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiBannersIdImage>>>
+    
+    export type DeleteApiBannersIdImageMutationError = unknown
+
+    /**
+ * @summary Delete banner image
+ */
+export const useDeleteApiBannersIdImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBannersIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiBannersIdImage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiBannersIdImageMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

@@ -31,7 +31,8 @@ const Banner = () => {
                     {/* Overlay if image is used to ensure text readability? Maybe not for now unless requested */}
                     <div className="container mx-auto max-w-7xl px-8">
                         {/* Use ql-editor to ensure Quill styles (classes or inline) render correctly */}
-                        <div className="ql-editor !p-0 !min-h-0 [&>p]:mb-0 !text-center [&>*]:!text-center" dangerouslySetInnerHTML={{ __html: banner.text || '' }}></div>
+                        {/* Increased line-height (!leading-relaxed) to prevent clipping of Burmese characters (tall glyphs) */}
+                        <div className="ql-editor banner-rich-text !p-0 !min-h-0 [&>p]:mb-0 !text-center [&>*]:!text-center !leading-[1.8]" dangerouslySetInnerHTML={{ __html: banner.text || '' }}></div>
                     </div>
 
                     <button 
