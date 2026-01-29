@@ -43,3 +43,19 @@ interface BankInstallmentUpdate {
   initialPayment?: number;
   deposit?: number;
 }
+
+interface FuelTypeCreate {
+  name: string;
+}
+
+interface FuelTypeUpdate {
+  name?: string;
+}
+
+interface TransmissionTypeCreate {
+  name: string;
+}
+
+interface TransmissionTypeUpdate {
+  name?: string;
+}

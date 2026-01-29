@@ -40,6 +40,7 @@ import ForgotPassword from "./pages/admin/ForgotPassword";
 import ResetPassword from "./pages/admin/ResetPassword";
 import HomePage from "./pages/admin/HomePage";
 import AdminPayments from "./pages/admin/Payments";
+import VehicleSpecs from "./pages/admin/VehicleSpecs";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           <Route path="cars/:id/edit" element={<CarEditPage />} />
           <Route path="brands" element={<Brands />} />
           <Route path="build-types" element={<BuildType />} />
+          <Route path="vehicle-specs" element={<VehicleSpecs />} />
           <Route path="showrooms" element={<Showroom />} />
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />

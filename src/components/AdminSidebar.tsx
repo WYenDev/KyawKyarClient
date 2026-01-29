@@ -11,7 +11,6 @@ import {
     ChevronRight,
     Building,
     Home,
-    Star,
     Info, 
 } from "lucide-react";
 
@@ -105,6 +104,12 @@ const AdminSidebar = () => {
                     to="/admin/build-types"
                     icon={Home}
                     label="Build Types"
+                    collapsed={collapsed}
+                />
+                <MenuItem
+                    to="/admin/vehicle-specs"
+                    icon={Settings}
+                    label="Vehicle Specs"
                     collapsed={collapsed}
                 />
                 <MenuItem
