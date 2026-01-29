@@ -4,6 +4,7 @@ import ScrollToTop from "./components/ScrollToTop";
 // Public layout components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Banner from "./components/Banner";
 
 // Public pages
 import Home from "./pages/Home";
@@ -41,6 +42,7 @@ import ResetPassword from "./pages/admin/ResetPassword";
 import HomePage from "./pages/admin/HomePage";
 import AdminPayments from "./pages/admin/Payments";
 import VehicleSpecs from "./pages/admin/VehicleSpecs";
+import Banners from "./pages/admin/Banners";
 
 function App() {
   return (
@@ -71,6 +73,7 @@ function App() {
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="payments" element={<AdminPayments />} />
+          <Route path="banners" element={<Banners />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route
@@ -107,6 +110,7 @@ function App() {
               </main>
 
               <Footer />
+              <Banner />
             </div>
           }
         />

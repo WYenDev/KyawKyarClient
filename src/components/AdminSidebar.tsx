@@ -12,6 +12,7 @@ import {
     Building,
     Home,
     Info, 
+    Megaphone 
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -99,8 +100,12 @@ const AdminSidebar = () => {
                     icon={Building}
                     label="Showrooms"
                     collapsed={collapsed}
-                />
-                <MenuItem
+                />                 <MenuItem
+                    to="/admin/banners"
+                    icon={Megaphone}
+                    label="Banners"
+                    collapsed={collapsed}
+                />                <MenuItem
                     to="/admin/build-types"
                     icon={Home}
                     label="Build Types"
