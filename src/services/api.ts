@@ -55,12 +55,16 @@ export const Visibility = {
 export interface Brand {
   id: string;
   name: string;
+  /** @nullable */
+  imageKey?: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface BrandCreate {
   name: string;
+  /** @nullable */
+  imageKey?: string | null;
 }
 
 export interface Model {
@@ -757,6 +761,10 @@ export type GetApiBrands200 = {
 
 export type DeleteApiBrandsId200 = {
   deleted?: boolean;
+};
+
+export type PostApiBrandsIdImageBody = {
+  image?: Blob;
 };
 
 export type DeleteApiBuildTypesId200 = {
@@ -3560,6 +3568,138 @@ export const useDeleteApiBrandsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiBrandsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Upload brand image
+ */
+export const postApiBrandsIdImage = (
+    id: string,
+    postApiBrandsIdImageBody: PostApiBrandsIdImageBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(postApiBrandsIdImageBody.image !== undefined) {
+ formData.append(`image`, postApiBrandsIdImageBody.image)
+ }
+
+      return mutator<Brand>(
+      {url: `/api/brands/${id}/image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiBrandsIdImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBrandsIdImage>>, TError,{id: string;data: PostApiBrandsIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiBrandsIdImage>>, TError,{id: string;data: PostApiBrandsIdImageBody}, TContext> => {
+
+const mutationKey = ['postApiBrandsIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiBrandsIdImage>>, {id: string;data: PostApiBrandsIdImageBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postApiBrandsIdImage(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiBrandsIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBrandsIdImage>>>
+    export type PostApiBrandsIdImageMutationBody = PostApiBrandsIdImageBody
+    export type PostApiBrandsIdImageMutationError = unknown
+
+    /**
+ * @summary Upload brand image
+ */
+export const usePostApiBrandsIdImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBrandsIdImage>>, TError,{id: string;data: PostApiBrandsIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiBrandsIdImage>>,
+        TError,
+        {id: string;data: PostApiBrandsIdImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiBrandsIdImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete brand image
+ */
+export const deleteApiBrandsIdImage = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<Brand>(
+      {url: `/api/brands/${id}/image`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiBrandsIdImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBrandsIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiBrandsIdImage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiBrandsIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiBrandsIdImage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiBrandsIdImage(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiBrandsIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiBrandsIdImage>>>
+    
+    export type DeleteApiBrandsIdImageMutationError = unknown
+
+    /**
+ * @summary Delete brand image
+ */
+export const useDeleteApiBrandsIdImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBrandsIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiBrandsIdImage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiBrandsIdImageMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

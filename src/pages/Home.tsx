@@ -6,6 +6,7 @@ import AboutTeaser from '../components/AboutTeaser';
 //import ShopByBrand from '../components/ShopByBrand';
 import NewArrivals from '../components/NewArrivals';
 import BrowseCarByBuildTypes from '../components/BrowseCarByBuildTypes';
+import BrowseCarByBrands from '../components/BrowseCarByBrands';
 
 const Home: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
       <FeaturedCars />
       <NewArrivals />
       <BrowseCarByBuildTypes />
+      <BrowseCarByBrands />
       <WhyBuyATKK />
       <AboutTeaser />
     </div>

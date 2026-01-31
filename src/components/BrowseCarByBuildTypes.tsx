@@ -123,36 +123,27 @@ const BrowseCarByBuildTypes: React.FC = () => {
               <div 
                 key={type.id}
                 onClick={() => handleBuildTypeClick(type.name)}
-                className="flex-shrink-0 w-[240px] sm:w-[280px] snap-center group cursor-pointer"
+                className="flex-shrink-0 w-[240px] snap-center group cursor-pointer flex flex-col items-center text-center gap-4 transition-all duration-300"
               >
-                <div className="relative h-[320px] rounded-3xl overflow-hidden bg-white shadow-md group-hover:shadow-xl transition-all duration-300 border border-slate-100">
-                  {/* Image Background */}
-                  <div className="absolute inset-0 bg-slate-200">
-                    <img
+                 {/* Circle Image Wrapper with minimal hover effect */}
+                <div className="w-[220px] h-[220px] rounded-full bg-slate-100 flex items-center justify-center p-6 relative overflow-hidden group-hover:bg-white group-hover:shadow-2xl group-hover:shadow-indigo-100/50 transition-all duration-500 ease-out border border-transparent group-hover:border-slate-50">
+                   
+                   {/* Subtle Background Blob */}
+                   <div className="absolute inset-0 bg-gradient-to-tr from-slate-200/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                   
+                   <img
                       src={type.imageUrl || fallbackImage}
                       alt={type.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-full object-contain drop-shadow-sm group-hover:drop-shadow-lg group-hover:scale-110 transition-all duration-500 z-10"
                     />
-                    {/* Gradient Overlay for Text Readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
-                  </div>
-                  
-                  {/* Content Content - Centered Style like Modern Show Pages */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-6 z-10">
-                    <div className="transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
-                      <h3 className="text-2xl font-bold text-white mb-2 tracking-wide">
-                        {type.name}
-                      </h3>
-                      
-                      <div className="flex items-center gap-2 text-indigo-300 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                        <span className="text-sm font-semibold uppercase tracking-wider">Browse Cars</span>
-                        <ChevronRight size={14} />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Decorative Border on Hover */}
-                  <div className="absolute inset-0 border-2 border-transparent group-hover:border-indigo-500/50 rounded-3xl transition-colors duration-300 pointer-events-none" />
+                </div>
+                
+                {/* Floating Label */}
+                <div className="flex flex-col items-center">
+                    <h3 className="text-xl font-bold text-slate-700 group-hover:text-indigo-600 transition-colors duration-300">
+                      {type.name}
+                    </h3>
+                    <div className="h-0.5 w-0 bg-indigo-600 mt-2 group-hover:w-12 transition-all duration-300 rounded-full" />
                 </div>
               </div>
             ))}
