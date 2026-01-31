@@ -35,7 +35,7 @@ type CarForm = {
     // keep as string while editing (avoid leading-zero issues)
     price: number | string;
     mileage: number | string;
-    enginePower?: number | null;
+    engineSize?: number | null;
     fuelTypeId: string;
     transmissionTypeId: string;
     steering?: SteeringPosition;
@@ -99,7 +99,7 @@ const CarEditPage = () => {
             // convert to string for editing
             price: car.price ?? "",
             mileage: car.mileage ?? "",
-            enginePower: car.engineSize ?? null,
+            engineSize: car.engineSize ?? null,
             fuelTypeId: car.fuelTypeId,
             transmissionTypeId: car.transmissionTypeId,
             steering: car.steering || SteeringPosition.Left,
@@ -468,11 +468,11 @@ const CarEditPage = () => {
                             </div>
                             <Input
                                 label="Engine Power"
-                                value={form.enginePower ?? ""}
+                                value={form.engineSize ?? ""}
                                 onChange={(v) =>
                                     setForm({
                                         ...form,
-                                        enginePower: v ? Number(v) : null,
+                                        engineSize: v ? Number(v) : null,
                                     })
                                 }
                             />

@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Select, { Option } from "../../components/Select";
@@ -23,7 +23,7 @@ type CarForm = {
     // Keep as string while typing to avoid input quirks (leading zeros). We'll coerce before submit.
     price: number | string;
     mileage: number | string;
-    enginePower?: number | null;
+    engineSize?: number | null;
     fuelTypeId: string;
     transmissionTypeId: string;
     steering?: string;
@@ -58,8 +58,6 @@ const statusOptions: Option<Status>[] = [
 ];
 
 const CarCreatePage = () => {
-    const featuredInputRef = useRef<HTMLInputElement | null>(null);
-    const newArrivalInputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
 
     /* ===================== STATE ===================== */
@@ -79,7 +77,7 @@ const CarCreatePage = () => {
         // initialize as empty strings so inputs don't show 0
         price: "",
         mileage: "",
-        enginePower: null,
+        engineSize: null,
         fuelTypeId: "",
         transmissionTypeId: "",
         steering: Steering.Left,
@@ -234,6 +232,8 @@ const CarCreatePage = () => {
             }
         }
 
+        console.log('featured', form.featured)
+
         if (!form.modelId || !form.colorId) return;
 
         // build payload coercing price and mileage to numbers if provided
@@ -249,13 +249,6 @@ const CarCreatePage = () => {
         if (payload.license && payload.license.prefixLetter) {
             payload.license.prefixLetter = String(payload.license.prefixLetter).trim().toUpperCase();
         }
-
-        // Ensure boolean flags reflect the current form state.
-        // Prefer reading from the DOM ref if present (handles immediate toggles + submit).
-        (payload as any).featured = featuredInputRef?.current ? !!featuredInputRef.current.checked : !!form.featured;
-        (payload as any).isNewArrival = newArrivalInputRef?.current ? !!newArrivalInputRef.current.checked : !!form.isNewArrival;
-
-        console.debug("Submitting payload featured/isNewArrival:", (payload as any).featured, (payload as any).isNewArrival);
 
         mutate({ data: payload as CarCreate });
     };
@@ -401,11 +394,11 @@ const CarCreatePage = () => {
                             </div>
                             <Input
                                 label="Engine Power"
-                                value={form.enginePower ?? ""}
+                                value={form.engineSize ?? ""}
                                 onChange={(v) =>
                                     setForm({
                                         ...form,
-                                        enginePower: v ? Number(v) : null,
+                                        engineSize: v ? Number(v) : null,
                                     })
                                 }
                             />
@@ -453,7 +446,6 @@ const CarCreatePage = () => {
                             <div className="col-span-4 flex flex-col lg:flex-row gap-6 pt-2">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
-                                        ref={newArrivalInputRef}
                                         type="checkbox"
                                         checked={!!form.isNewArrival}
                                         onChange={(e) => {
@@ -472,15 +464,16 @@ const CarCreatePage = () => {
 
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
-                                        ref={featuredInputRef}
                                         type="checkbox"
-                                        checked={form.featured ?? false}
-                                        onChange={(e) =>
+                                        checked={!!form.featured}
+                                        onChange={(e) =>{
+                                            const checked = e.target.checked;
+                                            console.log('checkted', checked)
                                             setForm((prev) => ({
                                                 ...prev,
-                                                featured: e.target.checked,
+                                                featured: checked, 
                                             }))
-                                        }
+                                        }}
                                         className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     />
                                     <span className="flex items-center gap-1 text-sm font-medium text-gray-700">

@@ -17,7 +17,7 @@ import { keepPreviousData } from '@tanstack/react-query';
 
 import {
     CarListItem,
-    useGetApiCars,
+    useGetApiCarsActive,
     useGetApiCarsDeleted,
     useGetApiCarsSold,
     usePatchApiCarsIdSoftDelete,
@@ -43,25 +43,18 @@ const Cars = () => {
     const isSearching = searchText.trim().length > 0;
 
     /* ================= API ================= */
-    // Use server-side search for the Active tab (supports rich filtering & correct pagination)
+    // Active tab uses /api/cars/active with server pagination; search is client-side
     const LIMIT = PAGE_LIMIT; // pagesize (8)
 
-    const apiSearchParams = useMemo(() => {
-        const params: Record<string, unknown> = {};
-        if (searchText.trim()) {
-            // send the free-text term to both brand and model (backend supports partial matches)
-            params.model = searchText.trim();
-            params.brand = searchText.trim();
-        }
-        params.page = page;
-        params.limit = LIMIT;
-        return params;
-    }, [searchText, page]);
+    const activeParams = useMemo(() => ({
+        page,
+        limit: LIMIT,
+    }), [page]);
 
-    const searchHookParams = activeTab === 'active' ? (apiSearchParams as any) : undefined;
+    const activeHookParams = activeTab === 'active' ? activeParams : undefined;
 
-    const { data: searchResponse, isLoading: searchLoading, refetch: refetchSearch } =
-        useGetApiCars(searchHookParams, { query: { placeholderData: keepPreviousData } });
+    const { data: activeResponse, isLoading: activeLoading, refetch: refetchActive } =
+        useGetApiCarsActive(activeHookParams, { query: { placeholderData: keepPreviousData, enabled: activeTab === 'active' } });
 
     const { 
         data: soldData, 
@@ -84,7 +77,7 @@ const Cars = () => {
         usePatchApiCarsIdSoftDelete({
             mutation: {
                 onSuccess: () => {
-                    refetchSearch();
+                    refetchActive();
                     refetchDeleted();
                     setDeleteTarget(null);
                     setPage(1);
@@ -95,27 +88,27 @@ const Cars = () => {
     const { mutate: restoreCar, isPending: restoring } = usePostApiCarsIdRestore({
         mutation: {
             onSuccess: () => {
-                refetchSearch();
+                refetchActive();
                 refetchDeleted();
             },
         },
     });
 
     // currentData / loading / cars source
-    const currentData = activeTab === 'active' ? searchResponse : activeTab === 'sold' ? soldData : deletedData;
-    const isLoading = activeTab === 'active' ? searchLoading : activeTab === 'sold' ? soldLoading : deletedLoading;
-    const cars = activeTab === 'active' 
-        ? (searchResponse?.items ?? []) 
-        : activeTab === 'sold' 
-            ? (soldData?.items ?? []) 
+    const currentData = activeTab === 'active' ? activeResponse : activeTab === 'sold' ? soldData : deletedData;
+    const isLoading = activeTab === 'active' ? activeLoading : activeTab === 'sold' ? soldLoading : deletedLoading;
+    const cars: CarListItem[] = activeTab === 'active'
+        ? (activeResponse?.items ?? [])
+        : activeTab === 'sold'
+            ? (soldData?.items ?? [])
             : (deletedData?.items ?? []);
 
     /* ================= SEARCH FILTER ================= */
-    const filteredCars = useMemo(() => {
+    const filteredCars: CarListItem[] = useMemo(() => {
         if (!isSearching) return cars;
 
         const q = searchText.toLowerCase();
-        return cars.filter((c) => {
+        return cars.filter((c: CarListItem) => {
             const brand = c.model?.brand?.name ?? "";
             const model = c.model?.name ?? "";
             return `${brand} ${model}`.toLowerCase().includes(q);
@@ -129,7 +122,7 @@ const Cars = () => {
 
     const totalPages = Math.ceil(total / PAGE_LIMIT);
 
-    const visibleCars = useMemo(() => {
+    const visibleCars: CarListItem[] = useMemo(() => {
         if (!isSearching) return filteredCars;
 
         const start = (page - 1) * PAGE_LIMIT;
@@ -226,7 +219,7 @@ const Cars = () => {
                         No cars found
                     </div>
                 ) : (
-                    visibleCars.map((car) => (
+                    visibleCars.map((car: CarListItem) => (
                         <div
                             key={car.id}
                             className="bg-white rounded-xl shadow-sm

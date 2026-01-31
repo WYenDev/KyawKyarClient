@@ -287,7 +287,7 @@ export interface CarListItem {
   fuelType?: FuelType;
   transmissionType?: TransmissionType;
   /** @nullable */
-  enginePower?: number | null;
+  engineSize?: number | null;
   /** @nullable */
   steering?: SteeringPosition;
   /** @nullable */
@@ -324,8 +324,6 @@ export interface CarCreate {
   price: number;
   mileage: number;
   /** @nullable */
-  enginePower?: number | null;
-  /** @nullable */
   engineSize?: number | null;
   /** @nullable */
   gradeId?: string | null;
@@ -342,6 +340,8 @@ export interface CarCreate {
   /** @nullable */
   isNewArrival?: boolean | null;
   /** @nullable */
+  featured?: boolean | null;
+  /** @nullable */
   license?: License;
 }
 
@@ -350,7 +350,6 @@ export interface CarUpdate {
   modelYear?: number;
   price?: number;
   mileage?: number;
-  enginePower?: number;
   engineSize?: number;
   gradeId?: string;
   fuelTypeId?: string;
@@ -361,6 +360,7 @@ export interface CarUpdate {
   showroomId?: string;
   buildTypeId?: string;
   isNewArrival?: boolean;
+  featured?: boolean;
   license?: License;
 }
 
