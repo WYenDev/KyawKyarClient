@@ -50,22 +50,40 @@ const BrowseCarByBrands: React.FC = () => {
           </div>
         )}
 
-        {/* Logo Grid */}
+        {/* Logo Marquee */}
         {!isLoading && !isError && brands.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-            {brands.map((brand) => (
-              <div
-                key={brand.id}
-                onClick={() => handleBrandClick(brand.name)}
-                className="group cursor-pointer bg-slate-50 hover:bg-white rounded-2xl p-5 flex items-center justify-center aspect-video transition-all duration-300 ease-out hover:shadow-2xl hover:shadow-slate-200/70 hover:-translate-y-2 border border-slate-100 hover:border-white"
-              >
-                <img
-                  src={brand.imageUrl || fallbackLogo}
-                  alt={`${brand.name} logo`}
-                  className="max-h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
-                />
-              </div>
-            ))}
+          <div className="relative overflow-hidden">
+            <style>
+              {`
+                @keyframes brand-marquee {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+              `}
+            </style>
+            <div
+              className="flex gap-8 items-center py-4"
+              style={{
+                width: '200%',
+                animation: 'brand-marquee 30s linear infinite',
+              }}
+            >
+              {[...brands, ...brands].map((brand, idx) => (
+                <button
+                  type="button"
+                  key={`${brand.id}-${idx}`}
+                  onClick={() => handleBrandClick(brand.name)}
+                  className="shrink-0 flex items-center justify-center bg-slate-50 hover:bg-white rounded-2xl px-6 py-4 border border-slate-100 hover:border-white shadow-sm hover:shadow-lg transition transform hover:-translate-y-1"
+                  title={brand.name}
+                >
+                  <img
+                    src={(brand as unknown as { imageUrl?: string | null }).imageUrl || fallbackLogo}
+                    alt={`${brand.name} logo`}
+                    className="h-12 w-auto object-contain"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
