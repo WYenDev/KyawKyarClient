@@ -255,16 +255,16 @@ const CarCreatePage = () => {
 
     /* ===================== RENDER ===================== */
     return (
-        <div className="bg-[#F8F9FB] h-full overflow-y-auto p-8">
-            <div className="max-w-5xl mx-auto">
-                <h1 className="text-2xl font-semibold mb-6 text-gray-900">
+        <div className="bg-[#F8F9FB] h-full overflow-y-auto w-full">
+            <div className="max-w-5xl mx-auto p-4 md:p-8">
+                <h1 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900">
                     Create Car
                 </h1>
 
-                <div className="bg-white rounded-2xl shadow-sm p-8">
+                <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
                     {/* ===== BASIC INFO ===== */}
                     <Section title="Basic Information">
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
                             <Field label="Brand">
                                 <Select
                                     value={brandId}
@@ -352,7 +352,7 @@ const CarCreatePage = () => {
 
                     {/* ===== SPECIFICATIONS ===== */}
                     <Section title="Specifications">
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             <Input
                                 label="Model Year"
                                 value={form.modelYear}
@@ -407,7 +407,7 @@ const CarCreatePage = () => {
 
                     {/* ===== STATUS ===== */}
                     <Section title="Status">
-                        <div className="grid grid-cols-4 gap-6 items-end">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
                             <Select
                                 value={form.fuelTypeId}
                                 options={fuelOptions}
@@ -442,9 +442,10 @@ const CarCreatePage = () => {
                                 }
                             />
 
-                            {/* CHECKBOXES */}
-                            <div className="col-span-4 flex flex-col lg:flex-row gap-6 pt-2">
-                                <label className="flex items-center gap-2 cursor-pointer">
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
+                                <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
                                     <input
                                         type="checkbox"
                                         checked={!!form.isNewArrival}
@@ -455,14 +456,14 @@ const CarCreatePage = () => {
                                                 isNewArrival: checked,
                                             }));
                                         }}
-                                        className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        className="w-5 h-5 ml-auto"
                                     />
                                     <span className="text-sm font-medium text-gray-700">
                                         New Arrival
                                     </span>
                                 </label>
 
-                                <label className="flex items-center gap-2 cursor-pointer">
+                                <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
                                     <input
                                         type="checkbox"
                                         checked={!!form.featured}
@@ -474,7 +475,7 @@ const CarCreatePage = () => {
                                                 featured: checked, 
                                             }))
                                         }}
-                                        className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        className="w-5 h-5 ml-auto"
                                     />
                                     <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
                                         <Star
@@ -489,13 +490,11 @@ const CarCreatePage = () => {
                                     </span>
                                 </label>
                             </div>
-                        </div>
-
                     </Section>
 
                     {/* ===== LICENSE ===== */}
                     <Section title="License">
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             <Input
                                 label="Prefix Number"
                                 value={form.license?.prefixNumber ?? ""}
@@ -561,7 +560,7 @@ const CarCreatePage = () => {
                                 }
                             />
 
-                            <div className="col-span-2">
+                            <div className="col-span-1 sm:col-span-2">
                                 <label className="block text-sm mb-1">Registered Name (optional)</label>
                                 <input
                                     type="text"
@@ -579,7 +578,7 @@ const CarCreatePage = () => {
                                 />
                             </div>
 
-                            <div className="col-span-2">
+                            <div className="col-span-1 sm:col-span-2">
                                 <label className="block text-sm mb-1">Expiry Date (optional)</label>
                                 <input
                                     type="date"
@@ -596,6 +595,32 @@ const CarCreatePage = () => {
                                     className="w-full rounded-xl border px-4 py-3"
                                 />
                             </div>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
+                             <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
+                                <label className="text-sm font-medium text-gray-700 min-w-max">New Arrival</label>
+                                <input
+                                    type="checkbox"
+                                    checked={form.isNewArrival ?? false}
+                                    onChange={(e) =>
+                                        setForm({ ...form, isNewArrival: e.target.checked })
+                                    }
+                                    className="w-5 h-5 ml-auto"
+                                />
+                             </div>
+
+                             <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
+                                <label className="text-sm font-medium text-gray-700 min-w-max">Featured</label>
+                                <input
+                                    type="checkbox"
+                                    checked={form.featured ?? false}
+                                    onChange={(e) =>
+                                        setForm({ ...form, featured: e.target.checked })
+                                    }
+                                    className="w-5 h-5 ml-auto"
+                                />
+                             </div>
                         </div>
                     </Section>
 

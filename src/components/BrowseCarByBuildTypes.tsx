@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useGetApiBuildTypes } from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutGrid } from 'lucide-react';
 
 const BrowseCarByBuildTypes: React.FC = () => {
   const { data: buildTypes = [], isLoading, isError } = useGetApiBuildTypes();
@@ -45,47 +45,51 @@ const BrowseCarByBuildTypes: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-slate-50 relative overflow-hidden">
+    <section className="py-12 lg:py-16 bg-slate-50 relative overflow-hidden">
         {/* Background Decorative Element */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-indigo-100/40 rounded-full blur-[100px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-100/40 rounded-full blur-[100px] -z-10" />
+      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-indigo-50/50 blur-[100px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-[30%] h-[30%] bg-blue-50/30 blur-[120px] -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
-              Browse by <span className="text-indigo-600">Build Type</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-8">
+          <div className="space-y-4">
+             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+               <LayoutGrid className="w-3 h-3 fill-indigo-700" />
+               Vehicle Categories
+             </div>
+            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+              Browse by <span className="text-indigo-600">Body Type</span>
             </h2>
-            <p className="mt-3 text-slate-600 text-lg max-w-2xl">
+            <p className="text-slate-500 max-w-xl text-lg leading-relaxed">
               Find the perfect match for your lifestyle. Select a body style to see what's available.
             </p>
           </div>
           
           {/* External Navigation Controls */}
-           <div className="hidden md:flex gap-3">
+           <div className="hidden md:flex gap-3 pb-2">
              <button 
                onClick={() => scroll('left')}
                disabled={!canScrollLeft}
-               className={`p-3 rounded-full border border-slate-200 transition-all duration-300 flex items-center justify-center
+               className={`w-12 h-12 rounded-full border border-slate-200 transition-all duration-300 flex items-center justify-center
                  ${!canScrollLeft 
                    ? 'opacity-40 cursor-not-allowed text-slate-400' 
-                   : 'hover:bg-indigo-600 hover:text-white hover:border-indigo-600 text-slate-700 bg-white shadow-sm'}`}
+                   : 'hover:bg-indigo-600 hover:text-white hover:border-indigo-600 text-slate-700 bg-white shadow-lg shadow-indigo-100'}`}
                aria-label="Scroll left"
              >
-               <ChevronLeft size={20} />
+               <ChevronLeft size={24} />
              </button>
              <button 
                onClick={() => scroll('right')}
                disabled={!canScrollRight}
-               className={`p-3 rounded-full border border-slate-200 transition-all duration-300 flex items-center justify-center
+               className={`w-12 h-12 rounded-full border border-slate-200 transition-all duration-300 flex items-center justify-center
                  ${!canScrollRight 
                    ? 'opacity-40 cursor-not-allowed text-slate-400' 
-                   : 'hover:bg-indigo-600 hover:text-white hover:border-indigo-600 text-slate-700 bg-white shadow-sm'}`}
+                   : 'hover:bg-indigo-600 hover:text-white hover:border-indigo-600 text-slate-700 bg-white shadow-lg shadow-indigo-100'}`}
                aria-label="Scroll right"
              >
-               <ChevronRight size={20} />
+               <ChevronRight size={24} />
              </button>
            </div>
         </div>

@@ -316,21 +316,21 @@ const CarEditPage = () => {
 
     /* ===================== RENDER ===================== */
     return (
-        <div className="bg-[#F8F9FB] h-full overflow-y-auto p-8">
-            <div className="max-w-5xl mx-auto">
+        <div className="bg-[#F8F9FB] h-full overflow-y-auto w-full">
+            <div className="max-w-5xl mx-auto p-4 md:p-8">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-semibold text-gray-900">
+                    <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
                         Edit Car
                     </h1>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-sm p-8">
+                <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
                     {/* ===== IMAGES ===== */}
                     <CarImagesManager carId={id!} />
 
                     {/* ===== BASIC INFO ===== */}
                     <Section title="Basic Information">
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
                             <Field label="Brand">
                                 <Select
                                     value={brandId}
@@ -424,7 +424,7 @@ const CarEditPage = () => {
 
                     {/* ===== SPECIFICATIONS ===== */}
                     <Section title="Specifications">
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             <Input
                                 label="Model Year"
                                 value={form.modelYear}
@@ -481,7 +481,7 @@ const CarEditPage = () => {
 
                     {/* ===== STATUS ===== */}
                     <Section title="Status">
-                        <div className="grid grid-cols-4 gap-6 items-end">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
                             <Select
                                 value={form.fuelTypeId}
                                 options={fuelOptions}
@@ -523,7 +523,7 @@ const CarEditPage = () => {
 
                     {/* ===== LICENSE ===== */}
                     <Section title="License">
-                        <div className="grid grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             <Input
                                 label="Prefix Number"
                                 value={form.license?.prefixNumber ?? ""}
@@ -589,7 +589,7 @@ const CarEditPage = () => {
                                 }
                             />
 
-                            <div className="col-span-2">
+                            <div className="col-span-1 sm:col-span-2">
                                 <label className="block text-sm mb-1">Registered Name (optional)</label>
                                 <input
                                     type="text"
@@ -607,7 +607,7 @@ const CarEditPage = () => {
                                 />
                             </div>
 
-                            <div className="col-span-2">
+                            <div className="col-span-1 sm:col-span-2">
                                 <label className="block text-sm mb-1">Expiry Date (optional)</label>
                                 <input
                                     type="date"
@@ -629,8 +629,8 @@ const CarEditPage = () => {
 
 
                     {/* CHECKBOXES */}
-                    <div className="col-span-4 flex flex-col lg:flex-row gap-6 pt-2">
-                        <label className="flex items-center gap-2 cursor-pointer">
+                    <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
+                        <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
                             <input
                                 type="checkbox"
                                 checked={form.isNewArrival ?? false}
@@ -647,7 +647,7 @@ const CarEditPage = () => {
                             </span>
                         </label>
 
-                        <label className="flex items-center gap-2 cursor-pointer">
+                        <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
                             <input
                                 type="checkbox"
                                 checked={form.featured ?? false}
@@ -905,9 +905,8 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
 
     return (
         <Section title="Car Images">
-            {/* EXISTING IMAGES */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
-                {images.map((img) => (
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+                            {images.map((img) => (
                     <div key={img.id} className="relative group aspect-square bg-gray-100 rounded-xl overflow-hidden border">
                         <img src={img.url} alt="Car" className="w-full h-full object-cover" />
                         {img.isPrimary && (
