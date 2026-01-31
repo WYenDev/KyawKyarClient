@@ -7,6 +7,8 @@ import {
     usePostApiBuildTypes,
     usePatchApiBuildTypesId,
     useDeleteApiBuildTypesId,
+    usePostApiBuildTypesIdImage,
+    useDeleteApiBuildTypesIdImage,
 } from "../../services/api";
 
 type ApiError = {
@@ -23,6 +25,7 @@ const BuildTypes = () => {
     const [deleteTarget, setDeleteTarget] = useState<BuildType | null>(null);
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     /* ===== CLIENT SIDE PAGINATION ===== */
     const [page, setPage] = useState(1);
@@ -66,9 +69,14 @@ const BuildTypes = () => {
     const { mutate: updateBuildType, isPending: updating } =
         usePatchApiBuildTypesId({
             mutation: {
-                onSuccess: () => {
-                    refetch();
-                    closeModal();
+                onSuccess: (updated) => {
+                    const id = selectedItem?.id ?? updated?.id;
+                    if (id && imageFile) {
+                        uploadImage({ id, data: { image: imageFile } });
+                    } else {
+                        refetch();
+                        closeModal();
+                    }
                 },
                 onError: (err: unknown) => {
                     const msg =
@@ -92,6 +100,34 @@ const BuildTypes = () => {
                 },
             },
         });
+
+    const { mutate: uploadImage } = usePostApiBuildTypesIdImage({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeModal();
+                setImageFile(null);
+            },
+            onError: (err: unknown) => {
+                const msg =
+                    (err as ApiError)?.payload?.error ??
+                    "Failed to upload image";
+                setError(msg);
+            },
+        },
+    });
+
+    const { mutate: removeImage } = useDeleteApiBuildTypesIdImage({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeModal();
+            },
+            onError: () => {
+                setError("Failed to remove image");
+            },
+        },
+    });
 
     /* ================= HELPERS ================= */
     const closeModal = () => {
@@ -162,12 +198,9 @@ const BuildTypes = () => {
                 <table className="w-full text-sm">
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
-                            <th className="px-8 py-4 text-left">
-                                Build Type Name
-                            </th>
-                            <th className="px-8 py-4 text-right w-40">
-                                Actions
-                            </th>
+                            <th className="px-8 py-4 text-left w-28">Image</th>
+                            <th className="px-8 py-4 text-left">Build Type Name</th>
+                            <th className="px-8 py-4 text-right w-40">Actions</th>
                         </tr>
                     </thead>
 
@@ -205,6 +238,17 @@ const BuildTypes = () => {
                                     key={item.id}
                                     className="border-t hover:bg-gray-50"
                                 >
+                                    <td className="px-8 py-4">
+                                        {item.imageUrl ? (
+                                            <img
+                                                src={item.imageUrl}
+                                                alt={item.name}
+                                                className="w-16 h-10 object-cover rounded border"
+                                            />
+                                        ) : (
+                                            <span className="text-gray-400 text-xs">No image</span>
+                                        )}
+                                    </td>
                                     <td className="px-8 py-4 font-medium text-gray-900">
                                         {item.name}
                                     </td>
@@ -308,7 +352,39 @@ const BuildTypes = () => {
                             onChange={(e) => setName(e.target.value)}
                         />
 
+                        {selectedItem && (
+                            <div className="mt-4">
+                                <label className="block text-sm text-gray-600 mb-2">
+                                    Replace image (optional)
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                                    className="border p-3 rounded-xl w-full"
+                                />
+                                {selectedItem.imageUrl && (
+                                    <div className="mt-2">
+                                        <span className="block text-xs text-gray-500 mb-1">Current image</span>
+                                        <img
+                                            src={selectedItem.imageUrl}
+                                            alt={selectedItem.name}
+                                            className="w-full h-32 object-cover rounded-md border"
+                                        />
+                                        <button
+                                            onClick={() => selectedItem && removeImage({ id: selectedItem.id })}
+                                            className="mt-2 text-xs text-red-600 hover:underline"
+                                        >
+                                            Remove image
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         <div className="flex justify-end gap-4 mt-6">
+
+
                             <button
                                 onClick={closeModal}
                                 className="border px-4 py-2 rounded-xl"

@@ -103,6 +103,10 @@ export interface Color {
 export interface BuildType {
   id: string;
   name: string;
+  /** @nullable */
+  imageUrl?: string | null;
+  /** @nullable */
+  imageKey?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -757,6 +761,10 @@ export type DeleteApiBrandsId200 = {
 
 export type DeleteApiBuildTypesId200 = {
   deleted?: boolean;
+};
+
+export type PostApiBuildTypesIdImageBody = {
+  image?: Blob;
 };
 
 export type PostApiCarImagesCarIdUploadBody = {
@@ -3837,6 +3845,138 @@ export const useDeleteApiBuildTypesId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiBuildTypesIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Upload build type image
+ */
+export const postApiBuildTypesIdImage = (
+    id: string,
+    postApiBuildTypesIdImageBody: PostApiBuildTypesIdImageBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(postApiBuildTypesIdImageBody.image !== undefined) {
+ formData.append(`image`, postApiBuildTypesIdImageBody.image)
+ }
+
+      return mutator<BuildType>(
+      {url: `/api/buildTypes/${id}/image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiBuildTypesIdImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBuildTypesIdImage>>, TError,{id: string;data: PostApiBuildTypesIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiBuildTypesIdImage>>, TError,{id: string;data: PostApiBuildTypesIdImageBody}, TContext> => {
+
+const mutationKey = ['postApiBuildTypesIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiBuildTypesIdImage>>, {id: string;data: PostApiBuildTypesIdImageBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postApiBuildTypesIdImage(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiBuildTypesIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBuildTypesIdImage>>>
+    export type PostApiBuildTypesIdImageMutationBody = PostApiBuildTypesIdImageBody
+    export type PostApiBuildTypesIdImageMutationError = unknown
+
+    /**
+ * @summary Upload build type image
+ */
+export const usePostApiBuildTypesIdImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiBuildTypesIdImage>>, TError,{id: string;data: PostApiBuildTypesIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiBuildTypesIdImage>>,
+        TError,
+        {id: string;data: PostApiBuildTypesIdImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiBuildTypesIdImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete build type image
+ */
+export const deleteApiBuildTypesIdImage = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<BuildType>(
+      {url: `/api/buildTypes/${id}/image`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiBuildTypesIdImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBuildTypesIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiBuildTypesIdImage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiBuildTypesIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiBuildTypesIdImage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiBuildTypesIdImage(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiBuildTypesIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiBuildTypesIdImage>>>
+    
+    export type DeleteApiBuildTypesIdImageMutationError = unknown
+
+    /**
+ * @summary Delete build type image
+ */
+export const useDeleteApiBuildTypesIdImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiBuildTypesIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiBuildTypesIdImage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiBuildTypesIdImageMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
