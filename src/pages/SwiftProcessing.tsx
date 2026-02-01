@@ -60,7 +60,7 @@ const SwiftProcessing = () => {
                             </p>
 
                             <button
-                                onClick={() => navigate("/cars")}
+                                onClick={() => navigate("/Buycars")}
                                 className="inline-flex items-center gap-4 px-14 py-4 bg-black text-white text-sm tracking-wide rounded-full hover:bg-gray-800 transition"
                             >
                                 Explore Cars
@@ -169,7 +169,7 @@ const SwiftProcessing = () => {
                     </p>
 
                     <button
-                        onClick={() => navigate("/cars")}
+                        onClick={() => navigate("/Buycars")}
                         className="inline-flex items-center gap-4 px-16 py-4 bg-black text-white text-sm tracking-wide rounded-full hover:bg-gray-800 transition"
                     >
                         Browse Cars with Confidence
