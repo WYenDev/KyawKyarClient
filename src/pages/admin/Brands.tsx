@@ -435,6 +435,7 @@ const Brands = () => {
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const placeholderImage = "https://storage.googleapis.com/kyaw-kyar.appspot.com/brands/default-brand.png";
 
     const [search, setSearch] = useState("");
 
@@ -466,14 +467,10 @@ const Brands = () => {
 
     const { mutate: updateBrand, isPending: updating } = usePutApiBrandsId({
         mutation: {
-            onSuccess: (updated) => {
-                const id = selectedBrand?.id ?? updated?.id;
-                if (id && imageFile) {
-                    uploadBrandImage({ id, data: { image: imageFile } });
-                } else {
-                    refetch();
-                    closeModal();
-                }
+            onSuccess: () => {
+                // Only patch name on save; image uploads happen immediately on selection
+                refetch();
+                closeModal();
             },
             onError: (err: unknown) => {
                 setError((err as ApiError)?.payload?.error ?? "Failed to update brand");
@@ -496,8 +493,13 @@ const Brands = () => {
     const { mutate: uploadBrandImage } = usePostApiBrandsIdImage({
         mutation: {
             onSuccess: () => {
+                // Update selected brand preview to show the newly uploaded image
+                setSelectedBrand((prev) => {
+                    if (!prev) return prev;
+                    const blobUrl = imageFile ? URL.createObjectURL(imageFile) : undefined;
+                    return ({ ...(prev as unknown as { imageUrl?: string | null }), imageUrl: blobUrl ?? (prev as unknown as { imageUrl?: string | null }).imageUrl ?? null } as unknown as Brand);
+                });
                 refetch();
-                closeModal();
                 setImageFile(null);
             },
             onError: (err: unknown) => {
@@ -509,14 +511,26 @@ const Brands = () => {
     const { mutate: removeBrandImage } = useDeleteApiBrandsIdImage({
         mutation: {
             onSuccess: () => {
+                // Remove image from local preview and show placeholder
+                setSelectedBrand((prev) => {
+                    if (!prev) return prev;
+                    return ({ ...(prev as unknown as { imageUrl?: string | null }), imageUrl: null } as unknown as Brand);
+                });
+                setImageFile(null);
                 refetch();
-                closeModal();
             },
             onError: () => {
                 setError("Failed to remove image");
             },
         },
     });
+    const handleBrandImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setImageFile(file);
+        if (file && selectedBrand) {
+            uploadBrandImage({ id: selectedBrand.id, data: { image: file } });
+        }
+    };
 
     /* ================= HELPERS ================= */
     const closeModal = () => {
@@ -667,17 +681,27 @@ const Brands = () => {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                                    onChange={handleBrandImageChange}
                                     className="border p-3 rounded-xl w-full"
                                 />
                                 <div className="mt-2">
-                                    <span className="block text-xs text-gray-500 mb-1">Image preview</span>
-                                    <img
-                                        src={imageFile ? URL.createObjectURL(imageFile) : (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl || ''}
-                                        alt={selectedBrand.name}
-                                        className="w-full h-32 object-cover rounded-md border"
-                                    />
-                                    {!(imageFile) && (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl && (
+                                    <span className="block text-xs text-gray-500 mb-1">Image</span>
+                                    <div className="w-full h-32 rounded-md border bg-gray-50 overflow-hidden flex items-center justify-center">
+                                        {imageFile || (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl ? (
+                                            <img
+                                                src={imageFile ? URL.createObjectURL(imageFile) : ((selectedBrand as unknown as { imageUrl?: string | null }).imageUrl as string)}
+                                                alt={selectedBrand.name}
+                                                className="w-full h-full object-contain"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={placeholderImage}
+                                                alt="placeholder"
+                                                className="w-24 h-16 object-contain opacity-60"
+                                            />
+                                        )}
+                                    </div>
+                                    {(selectedBrand as unknown as { imageUrl?: string | null }).imageUrl && !imageFile && (
                                         <button
                                             onClick={() => removeBrandImage({ id: selectedBrand.id })}
                                             className="mt-2 text-xs text-red-600 hover:underline"

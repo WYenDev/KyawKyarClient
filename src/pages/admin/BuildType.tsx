@@ -26,6 +26,7 @@ const BuildTypes = () => {
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const placeholderImage = "https://storage.googleapis.com/kyaw-kyar.appspot.com/brands/default-brand.png";
 
     /* ===== CLIENT SIDE PAGINATION ===== */
     const [page, setPage] = useState(1);
@@ -69,14 +70,10 @@ const BuildTypes = () => {
     const { mutate: updateBuildType, isPending: updating } =
         usePatchApiBuildTypesId({
             mutation: {
-                onSuccess: (updated) => {
-                    const id = selectedItem?.id ?? updated?.id;
-                    if (id && imageFile) {
-                        uploadImage({ id, data: { image: imageFile } });
-                    } else {
-                        refetch();
-                        closeModal();
-                    }
+                onSuccess: () => {
+                    // Only patch name on save; image uploads happen immediately on selection
+                    refetch();
+                    closeModal();
                 },
                 onError: (err: unknown) => {
                     const msg =
@@ -104,8 +101,16 @@ const BuildTypes = () => {
     const { mutate: uploadImage } = usePostApiBuildTypesIdImage({
         mutation: {
             onSuccess: () => {
+                // Update the selected item preview to show the newly uploaded image
+                setSelectedItem((prev) => {
+                    if (!prev) return prev;
+                    return {
+                        ...prev,
+                        imageUrl: imageFile ? URL.createObjectURL(imageFile) : prev.imageUrl ?? null,
+                    };
+                });
                 refetch();
-                closeModal();
+                // Clear the local file once preview is set
                 setImageFile(null);
             },
             onError: (err: unknown) => {
@@ -120,8 +125,13 @@ const BuildTypes = () => {
     const { mutate: removeImage } = useDeleteApiBuildTypesIdImage({
         mutation: {
             onSuccess: () => {
+                // Remove image from local preview and show placeholder
+                setSelectedItem((prev) => {
+                    if (!prev) return prev;
+                    return { ...prev, imageUrl: null };
+                });
+                setImageFile(null);
                 refetch();
-                closeModal();
             },
             onError: () => {
                 setError("Failed to remove image");
@@ -155,6 +165,14 @@ const BuildTypes = () => {
         setOpenModal(true);
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setImageFile(file);
+        if (file && selectedItem) {
+            uploadImage({ id: selectedItem.id, data: { image: file } });
+        }
+    };
+
     const handleSubmit = () => {
         if (!name.trim()) {
             setError("Build type name is required");
@@ -162,6 +180,7 @@ const BuildTypes = () => {
         }
 
         if (selectedItem) {
+            // The image is already uploaded via handleImageChange, so we only patch the name
             updateBuildType({
                 id: selectedItem.id,
                 data: { name },
@@ -363,29 +382,35 @@ const BuildTypes = () => {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                                    onChange={handleImageChange}
                                     className="border p-3 rounded-xl w-full"
                                 />
-                                {(imageFile || selectedItem.imageUrl) && (
-                                    <div className="mt-2">
-                                        <span className="block text-xs text-gray-500 mb-1">
-                                            {imageFile ? "Preview" : "Current image"}
-                                        </span>
-                                        <img
-                                            src={imageFile ? URL.createObjectURL(imageFile) : (selectedItem?.imageUrl ?? undefined)}
-                                            alt={selectedItem?.name ?? "preview"}
-                                            className="w-full h-32 object-cover rounded-md border"
-                                        />
-                                        {!imageFile && selectedItem?.imageUrl && (
-                                            <button
-                                                onClick={() => selectedItem && removeImage({ id: selectedItem.id })}
-                                                className="mt-2 text-xs text-red-600 hover:underline"
-                                            >
-                                                Remove image
-                                            </button>
+                                <div className="mt-2">
+                                    <span className="block text-xs text-gray-500 mb-1">Image</span>
+                                    <div className="w-full h-32 object-center rounded-md border bg-gray-50 overflow-hidden flex items-center justify-center">
+                                        {imageFile || selectedItem?.imageUrl ? (
+                                            <img
+                                                src={imageFile ? URL.createObjectURL(imageFile) : (selectedItem?.imageUrl as string)}
+                                                alt={selectedItem?.name ?? "preview"}
+                                                className="w-full h-full object-contain"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={placeholderImage}
+                                                alt="placeholder"
+                                                className="w-24 h-16 object-contain opacity-60"
+                                            />
                                         )}
                                     </div>
-                                )}
+                                    {selectedItem?.imageUrl && (
+                                        <button
+                                            onClick={() => selectedItem && removeImage({ id: selectedItem.id })}
+                                            className="mt-2 text-xs text-red-600 hover:underline"
+                                        >
+                                            Remove image
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         )}
 
