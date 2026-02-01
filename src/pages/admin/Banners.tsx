@@ -1,10 +1,28 @@
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import ReactQuill, { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+// Configure Quill to use inline styles instead of classes
+const Size = Quill.import('attributors/style/size');
+// Add pixel values to allow precise control
+const fontSizeArr = ['10px', '12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px', '48px', '60px', '72px'];
+Size.whitelist = fontSizeArr;
+Quill.register(Size, true);
+
+const Font = Quill.import('attributors/style/font');
+Quill.register(Font, true);
+
+const Align = Quill.import('attributors/style/align');
+Quill.register(Align, true);
+
 import {
     useGetApiBanners,
     usePostApiBanners,
     usePatchApiBannersId,
     useDeleteApiBannersId,
+    usePostApiBannersIdImage,
+    useDeleteApiBannersIdImage,
     GetApiBanners200Item
 } from "../../services/api";
 import { Edit2, Trash2, Plus, Image as ImageIcon, Loader2 } from "lucide-react";
@@ -15,7 +33,7 @@ type BannerFormInputs = {
     backgroundColor: string;
     order: number;
     isActive: boolean;
-    backgroundImage?: FileList;
+    // Removed backgroundImage from here as it's handled separately for edits
 };
 
 const Banners = () => {
@@ -23,12 +41,16 @@ const Banners = () => {
     const { data: banners, isLoading, error, isError } = useGetApiBanners();
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    
+    // We use the hooks' pending state instead of local state
+    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiBannersIdImage();
+    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiBannersIdImage();
 
     const { mutate: createBanner, isPending: isCreatingBanner } = usePostApiBanners();
     const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiBannersId();
     const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiBannersId();
 
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<BannerFormInputs>({
+    const { register, handleSubmit, reset, setValue, watch, control, formState: { errors } } = useForm<BannerFormInputs>({
         defaultValues: {
             text: "",
             backgroundColor: "#FFFFFF",
@@ -36,6 +58,8 @@ const Banners = () => {
             isActive: true,
         }
     });
+
+    const watchedBgColor = watch("backgroundColor");
 
     if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
     if (isError) return <div className="p-8 text-red-500">Error loading banners: {(error as Error).message}</div>;
@@ -52,21 +76,12 @@ const Banners = () => {
             backgroundColor: data.backgroundColor,
             order: Number(data.order),
             isActive: data.isActive,
-            backgroundImage: data.backgroundImage?.[0], 
         };
-
-        // Orval generated hooks for multipart might need specific handling or just passing the object if the mutator handles it.
-        // Usually, generated hooks for multipart expect an object where fields are properties.
-        // Let's verify if we need to manually create FormData or if the hook handles it.
-        // Based on typical Orval generation for multipart, it usually takes an object and converts.
-        // However, if we need to be safe, sometimes we might need to cast.
-        // Let's rely on the generated types. 
-        // PostApiBannersBody has backgroundImage as Blob.
         
         if (isEditing) {
             updateBanner({
                 id: isEditing,
-                data: formData
+                data: formData as any
             }, {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
@@ -75,7 +90,7 @@ const Banners = () => {
             });
         } else {
             createBanner({
-                data: formData
+                data: formData as any
             }, {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
@@ -92,7 +107,37 @@ const Banners = () => {
         setValue("backgroundColor", banner.backgroundColor || "#FFFFFF");
         setValue("order", banner.order || 0);
         setValue("isActive", banner.isActive || false);
-        // Can't set file input value programmatically
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!isEditing || !e.target.files?.[0]) return;
+        
+        const file = e.target.files[0];
+        try {
+            await uploadImage({
+                id: isEditing,
+                data: { image: file } 
+            });
+            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+        } catch (error) {
+            console.error("Failed to upload image", error);
+            alert("Failed to upload image");
+        } finally {
+             // Reset file input value
+            e.target.value = '';
+        }
+    };
+
+    const handleImageRemove = async () => {
+        if (!isEditing || !window.confirm("Remove this image?")) return;
+        
+        try {
+            await deleteImage({ id: isEditing });
+            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+        } catch (error) {
+            console.error("Failed to delete image", error);
+            alert("Failed to delete image");
+        }
     };
 
     const handleDelete = (id: string) => {
@@ -150,12 +195,32 @@ const Banners = () => {
                     <h2 className="text-xl font-semibold mb-4">{isEditing ? "Edit Banner" : "Create Banner"}</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1">Text Content (HTML allowed)</label>
-                            <input
-                                {...register("text", { required: "Text is required" })}
-                                className="w-full p-2 border rounded"
-                                placeholder="Enter banner text..."
-                            />
+                            <label className="block text-sm font-medium mb-1">Text Content</label>
+                            <div className="bg-white">
+                                <Controller
+                                    name="text"
+                                    control={control}
+                                    rules={{ required: "Text is required" }}
+                                    render={({ field }) => (
+                                        <ReactQuill 
+                                            theme="snow"
+                                            value={field.value} 
+                                            onChange={field.onChange}
+                                            className="h-40 mb-12" // Add margin bottom to account for toolbar/toolbar height
+                                            modules={{
+                                                toolbar: [
+                                                    [{ 'font': [] }],
+                                                    [{ 'size': fontSizeArr }],
+                                                    ['bold', 'italic', 'underline', 'strike'],
+                                                    [{ 'color': [] }, { 'background': [] }],
+                                                    [{ 'align': [] }],
+                                                    ['clean']
+                                                ],
+                                            }}
+                                        />
+                                    )}
+                                />
+                            </div>
                             {errors.text && <span className="text-red-500 text-sm">{errors.text.message}</span>}
                         </div>
 
@@ -166,13 +231,15 @@ const Banners = () => {
                                     <input
                                         type="color"
                                         {...register("backgroundColor")}
+                                        value={watchedBgColor || "#FFFFFF"}
                                         className="h-10 w-20 p-1 border rounded"
                                     />
                                     <input
                                         type="text"
                                         {...register("backgroundColor", { pattern: /^#[0-9A-Fa-f]{6}$/ })}
-                                        className="flex-1 p-2 border rounded"
+                                        value={watchedBgColor || "#FFFFFF"}
                                         placeholder="#FFFFFF"
+                                        className="flex-1 p-2 border rounded"
                                     />
                                 </div>
                             </div>
@@ -187,16 +254,50 @@ const Banners = () => {
                             </div>
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Background Image (Optional)</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                {...register("backgroundImage")}
-                                className="w-full p-2 border rounded"
-                            />
-                            <p className="text-xs text-gray-500 mt-1">Overrides background color if set.</p>
-                        </div>
+                        {isEditing && (
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Background Image</label>
+                                
+                                {/* Show image preview info if current banner has one */}
+                                {safeBanners.find(b => b.id === isEditing)?.backgroundImageUrl ? (
+                                    <div className="mb-2 p-2 border rounded flex items-center justify-between bg-gray-50">
+                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                            <ImageIcon size={16} />
+                                            <span>Current Image Set</span>
+                                            <a href={safeBanners.find(b => b.id === isEditing)?.backgroundImageUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">(View)</a>
+                                        </div>
+                                        <button 
+                                            type="button" 
+                                            onClick={handleImageRemove}
+                                            disabled={isDeletingImage}
+                                            className="text-red-500 text-xs hover:text-red-700 font-medium disabled:opacity-50"
+                                        >
+                                            {isDeletingImage ? "Removing..." : "Remove Image"}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-gray-500 mb-2">No image set.</p>
+                                )}
+
+                                <div className="flex items-center gap-2">
+                                     <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        disabled={isUploadingImage}
+                                        className="w-full p-2 border rounded text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    />
+                                    {isUploadingImage && <Loader2 className="animate-spin text-blue-600" size={20} />}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">Upload happens immediately. Overrides background color.</p>
+                            </div>
+                        )}
+                        
+                        {!isEditing && (
+                            <div className="p-3 bg-blue-50 text-blue-800 text-sm rounded">
+                                To add a background image, please create the banner first, then edit it.
+                            </div>
+                        )}
 
                         <div className="flex items-center gap-2">
                             <input
@@ -257,9 +358,11 @@ const Banners = () => {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <div className="max-w-xs truncate text-sm text-gray-900" title={banner.text}>
-                                        {banner.text}
-                                    </div>
+                                    <div 
+                                        className="max-w-xs text-sm text-gray-900 ql-editor !p-0 !min-h-0 !overflow-hidden !max-h-16" 
+                                        dangerouslySetInnerHTML={{ __html: banner.text || '' }}
+                                        title="Banner Preview"
+                                    />
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     <div>Order: {banner.order}</div>

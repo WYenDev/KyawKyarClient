@@ -269,8 +269,6 @@ const CarInventory: React.FC = () => {
           */}
           {/* Results Summary */}
           <div className="mb-6 flex flex-wrap gap-4 text-sm">
-            <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Available: {availableCars?.length}</div>
-            <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Sold: {soldCars?.length}</div>
             <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Total Results: {totalCount}</div>
           </div>
 

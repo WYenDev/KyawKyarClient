@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useGetApiBannersActive } from "../services/api";
+import 'react-quill/dist/quill.snow.css'; // Import Quill styles for proper rendering
 
 const Banner = () => {
     const { data: banners, isLoading } = useGetApiBannersActive();
@@ -14,11 +15,11 @@ const Banner = () => {
     }
     
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center">
+        <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-col w-full">
             {safeBanners.map((banner) => (
                 <div 
                     key={banner.id}
-                    className="relative w-full p-4 md:p-3 flex items-center justify-center text-center shadow-lg"
+                    className="relative w-full p-4 md:py-6 flex items-center justify-center text-center shadow-[0_-4px_20px_rgba(0,0,0,0.15)]"
                     style={{
                         backgroundColor: banner.backgroundColor || '#ffffff',
                         backgroundImage: banner.backgroundImageUrl ? `url(${banner.backgroundImageUrl})` : 'none',
@@ -29,12 +30,14 @@ const Banner = () => {
                 >
                     {/* Overlay if image is used to ensure text readability? Maybe not for now unless requested */}
                     <div className="container mx-auto max-w-7xl px-8">
-                        <span className="font-medium text-sm md:text-base" dangerouslySetInnerHTML={{ __html: banner.text || '' }}></span>
+                        {/* Use ql-editor to ensure Quill styles (classes or inline) render correctly */}
+                        {/* Increased line-height (!leading-relaxed) to prevent clipping of Burmese characters (tall glyphs) */}
+                        <div className="ql-editor banner-rich-text !p-0 !min-h-0 [&>p]:mb-0 !text-center [&>*]:!text-center !leading-[1.8]" dangerouslySetInnerHTML={{ __html: banner.text || '' }}></div>
                     </div>
 
                     <button 
                         onClick={() => setIsVisible(false)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-black/10 transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-black/10 transition-colors"
                         aria-label="Close banner"
                     >
                         <X size={18} />
