@@ -19,7 +19,7 @@ interface Car {
   color?: { name: string };
   buildType?: { name: string } | number; // Handling the potential number/object mix
   steering: string;
-  enginePower?: number;
+  engineSize?: number;
   grade?: { name: string };
   showroom?: { city: string };
   license?: { region?: { name: string } };
@@ -128,12 +128,12 @@ const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
         </div>
 
         {/* Engine Power */}
-        {!!car.enginePower && (
+        {!!car.engineSize && (
           <div className="flex items-center">
             <img src={CarEngine} alt="Engine" className="w-6 h-6 mr-3" />
             <div>
-              <div className="text-sm text-gray-600">{t('details.engine_power', 'Engine Power')}</div>
-              <div className="text-lg font-semibold text-gray-900">{car.enginePower} HP</div>
+              <div className="text-sm text-gray-600">{t('details.engine_power', 'Engine Size')}</div>
+              <div className="text-lg font-semibold text-gray-900">{car.engineSize} CC</div>
             </div>
           </div>
         )}

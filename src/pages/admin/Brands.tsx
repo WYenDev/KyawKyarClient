@@ -11,6 +11,8 @@ import {
     usePostApiBrands,
     usePutApiBrandsId,
     useDeleteApiBrandsId,
+    usePostApiBrandsIdImage,
+    useDeleteApiBrandsIdImage,
     usePostApiModels,
     usePutApiModelsId,
     useDeleteApiModelsId,
@@ -432,6 +434,7 @@ const Brands = () => {
 
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const [search, setSearch] = useState("");
 
@@ -463,9 +466,14 @@ const Brands = () => {
 
     const { mutate: updateBrand, isPending: updating } = usePutApiBrandsId({
         mutation: {
-            onSuccess: () => {
-                refetch();
-                closeModal();
+            onSuccess: (updated) => {
+                const id = selectedBrand?.id ?? updated?.id;
+                if (id && imageFile) {
+                    uploadBrandImage({ id, data: { image: imageFile } });
+                } else {
+                    refetch();
+                    closeModal();
+                }
             },
             onError: (err: unknown) => {
                 setError((err as ApiError)?.payload?.error ?? "Failed to update brand");
@@ -485,12 +493,38 @@ const Brands = () => {
         },
     });
 
+    const { mutate: uploadBrandImage } = usePostApiBrandsIdImage({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeModal();
+                setImageFile(null);
+            },
+            onError: (err: unknown) => {
+                setError((err as ApiError)?.payload?.error ?? "Failed to upload image");
+            },
+        },
+    });
+
+    const { mutate: removeBrandImage } = useDeleteApiBrandsIdImage({
+        mutation: {
+            onSuccess: () => {
+                refetch();
+                closeModal();
+            },
+            onError: () => {
+                setError("Failed to remove image");
+            },
+        },
+    });
+
     /* ================= HELPERS ================= */
     const closeModal = () => {
         setOpenModal(false);
         setSelectedBrand(null);
         setName("");
         setError(null);
+        setImageFile(null);
     };
 
     const openCreate = () => {
@@ -574,6 +608,15 @@ const Brands = () => {
                                         onClick={() => toggleExpand(brand.id)}
                                     >
                                         {expandedBrandId === brand.id ? <ChevronDown size={20} className="text-gray-500" /> : <ChevronRight size={20} className="text-gray-500" />}
+                                        {(brand as unknown as { imageUrl?: string | null }).imageUrl ? (
+                                            <img
+                                                src={(brand as unknown as { imageUrl?: string | null }).imageUrl as string}
+                                                alt={brand.name}
+                                                className="w-10 h-6 object-cover rounded border"
+                                            />
+                                        ) : (
+                                            <span className="w-10 h-6 rounded border bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">—</span>
+                                        )}
                                         <span className="font-semibold text-gray-900 text-lg">{brand.name}</span>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -618,7 +661,35 @@ const Brands = () => {
                             onChange={(e) => setName(e.target.value)}
                             autoFocus
                         />
-                        <div className="flex justify-end gap-4">
+                        {selectedBrand && (
+                            <div className="mt-4">
+                                <label className="block text-sm text-gray-600 mb-2">Replace image (optional)</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                                    className="border p-3 rounded-xl w-full"
+                                />
+                                <div className="mt-2">
+                                    <span className="block text-xs text-gray-500 mb-1">Image preview</span>
+                                    <img
+                                        src={imageFile ? URL.createObjectURL(imageFile) : (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl || ''}
+                                        alt={selectedBrand.name}
+                                        className="w-full h-32 object-cover rounded-md border"
+                                    />
+                                    {!(imageFile) && (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl && (
+                                        <button
+                                            onClick={() => removeBrandImage({ id: selectedBrand.id })}
+                                            className="mt-2 text-xs text-red-600 hover:underline"
+                                        >
+                                            Remove image
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex justify-end gap-4 mt-6">
                             <button onClick={closeModal} className="border px-4 py-2 rounded-xl">Cancel</button>
                             <button 
                                 onClick={handleSubmit} 
