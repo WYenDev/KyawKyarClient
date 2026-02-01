@@ -670,22 +670,22 @@ const Brands = () => {
                                     onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
                                     className="border p-3 rounded-xl w-full"
                                 />
-                                {(selectedBrand as unknown as { imageUrl?: string | null }).imageUrl && (
-                                    <div className="mt-2">
-                                        <span className="block text-xs text-gray-500 mb-1">Current image</span>
-                                        <img
-                                            src={(selectedBrand as unknown as { imageUrl?: string | null }).imageUrl as string}
-                                            alt={selectedBrand.name}
-                                            className="w-full h-32 object-cover rounded-md border"
-                                        />
+                                <div className="mt-2">
+                                    <span className="block text-xs text-gray-500 mb-1">Image preview</span>
+                                    <img
+                                        src={imageFile ? URL.createObjectURL(imageFile) : (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl || ''}
+                                        alt={selectedBrand.name}
+                                        className="w-full h-32 object-cover rounded-md border"
+                                    />
+                                    {!(imageFile) && (selectedBrand as unknown as { imageUrl?: string | null }).imageUrl && (
                                         <button
                                             onClick={() => removeBrandImage({ id: selectedBrand.id })}
                                             className="mt-2 text-xs text-red-600 hover:underline"
                                         >
                                             Remove image
                                         </button>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         )}
 

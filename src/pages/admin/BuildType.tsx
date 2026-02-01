@@ -135,6 +135,7 @@ const BuildTypes = () => {
         setSelectedItem(null);
         setName("");
         setError(null);
+        setImageFile(null);
     };
 
     /* ================= HANDLERS ================= */
@@ -142,6 +143,7 @@ const BuildTypes = () => {
         setSelectedItem(null);
         setName("");
         setError(null);
+        setImageFile(null);
         setOpenModal(true);
     };
 
@@ -149,6 +151,7 @@ const BuildTypes = () => {
         setSelectedItem(item);
         setName(item.name);
         setError(null);
+        setImageFile(null);
         setOpenModal(true);
     };
 
@@ -363,20 +366,24 @@ const BuildTypes = () => {
                                     onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
                                     className="border p-3 rounded-xl w-full"
                                 />
-                                {selectedItem.imageUrl && (
+                                {(imageFile || selectedItem.imageUrl) && (
                                     <div className="mt-2">
-                                        <span className="block text-xs text-gray-500 mb-1">Current image</span>
+                                        <span className="block text-xs text-gray-500 mb-1">
+                                            {imageFile ? "Preview" : "Current image"}
+                                        </span>
                                         <img
-                                            src={selectedItem.imageUrl}
-                                            alt={selectedItem.name}
+                                            src={imageFile ? URL.createObjectURL(imageFile) : (selectedItem?.imageUrl ?? undefined)}
+                                            alt={selectedItem?.name ?? "preview"}
                                             className="w-full h-32 object-cover rounded-md border"
                                         />
-                                        <button
-                                            onClick={() => selectedItem && removeImage({ id: selectedItem.id })}
-                                            className="mt-2 text-xs text-red-600 hover:underline"
-                                        >
-                                            Remove image
-                                        </button>
+                                        {!imageFile && selectedItem?.imageUrl && (
+                                            <button
+                                                onClick={() => selectedItem && removeImage({ id: selectedItem.id })}
+                                                className="mt-2 text-xs text-red-600 hover:underline"
+                                            >
+                                                Remove image
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
