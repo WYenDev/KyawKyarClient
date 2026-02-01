@@ -15,6 +15,9 @@ import Reviews from "./pages/Reviews";
 import Contact from "./pages/Contact";
 import CarDetails from "./pages/CarDetails";
 import Payments from "./pages/Payments";
+import RigorousQualityInspection from "./pages/RigorousQualityInspection";
+import SwiftProcessing from "./pages/SwiftProcessing";
+import CleanHistory from "./pages/CleanHistory";
 
 // Admin pages
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -106,6 +109,12 @@ function App() {
                   <Route path="/payments" element={<Payments />} />
                   <Route path="/reviews" element={<Reviews />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route
+                    path="/why-kyawkyar/rigorous-quality-inspection"
+                    element={<RigorousQualityInspection />}
+                  />
+                  <Route path="/why-kyawkyar/swift-processing" element={<SwiftProcessing />}  />
+                  <Route path="/why-kyawkyar/clean-history" element={<CleanHistory />} />
                 </Routes>
               </main>
 
