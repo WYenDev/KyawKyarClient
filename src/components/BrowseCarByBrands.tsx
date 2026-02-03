@@ -2,8 +2,11 @@ import React from 'react';
 import { useGetApiBrands } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const BrowseCarByBrands: React.FC = () => {
+  const { t, i18n } = useTranslation('home');
+  const isMyanmar = i18n?.language?.startsWith('mm');
   const { data: brandData, isLoading, isError } = useGetApiBrands({ limit: 100 });
   const navigate = useNavigate();
 
@@ -25,10 +28,11 @@ const BrowseCarByBrands: React.FC = () => {
                <Shield className="w-3 h-3 fill-amber-800" />
                Trusted Manufacturers
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              Shop by <span className="text-amber-600">Popular Brands</span>
+            <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
+
+              <span className={`${isMyanmar ? 'font-myanmar text-indigo-600' : ""}`}>{t('browse_by_brand.title')}</span> <span className={`${isMyanmar ? 'font-myanmar' : "text-indigo-600"}`}>{t('browse_by_brand.highlightedText')}</span>
             </h2>
-            <p className="mt-4 text-slate-500 max-w-2xl text-lg leading-relaxed">
+            <p className={`mt-4 text-slate-500 max-w-2xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
               We partner with the world's leading car manufacturers to bring you a diverse selection of quality vehicles.
             </p>
           </div>

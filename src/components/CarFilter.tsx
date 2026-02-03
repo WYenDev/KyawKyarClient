@@ -148,11 +148,20 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
         </button>
       </div>
 
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden glass-effect"
+          onClick={onToggle}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Filter Sidebar */}
       <div className={`
         fixed inset-y-0 left-0 z-40 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out
         lg:relative lg:translate-x-0 lg:shadow-none lg:bg-transparent lg:rounded-xl lg:p-0
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="p-6 lg:p-6 h-full lg:h-auto overflow-y-auto lg:overflow-visible bg-white lg:bg-slate-50 rounded-xl lg:rounded-none shadow-lg lg:shadow-none">
           {/* Header */}

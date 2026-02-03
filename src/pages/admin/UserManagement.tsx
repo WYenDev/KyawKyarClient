@@ -90,25 +90,28 @@ const UserManagement: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">User Management</h1>
+    <div className="bg-[#F8F9FB] px-4 py-6 md:p-8 h-full overflow-y-auto">
+      <div className="flex items-center justify-between gap-3 flex-nowrap mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900 flex-1 min-w-0 break-words leading-tight">User Management</h1>
 
         {adminList.length < 5 ? (
           <button
             onClick={openModal}
-            className="bg-black text-white px-5 py-2 rounded-xl text-sm"
+            className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 w-10 h-10 shrink-0"
+            aria-label="Add admin"
           >
-            Add Admin
+            <span className="sr-only">Add admin</span>
+            +
           </button>
         ) : (
           <button
             type="button"
-            className="bg-gray-300 text-gray-700 px-5 py-2 rounded-xl text-sm cursor-not-allowed"
+            className="flex items-center justify-center bg-gray-300 text-gray-700 rounded-full w-10 h-10 cursor-not-allowed shrink-0"
             disabled
             title="Maximum admins reached"
+            aria-label="Add admin disabled"
           >
-            Add Admin
+            +
           </button>
         )}
       </div>

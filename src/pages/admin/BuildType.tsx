@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, MoreVertical } from "lucide-react";
 
 import {
     BuildType,
@@ -23,6 +23,7 @@ const BuildTypes = () => {
     const [openModal, setOpenModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState<BuildType | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<BuildType | null>(null);
+    const [openActionId, setOpenActionId] = useState<string | null>(null);
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -199,19 +200,20 @@ const BuildTypes = () => {
 
     /* ================= UI ================= */
     return (
-        <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
+        <div className="bg-[#F8F9FB] px-4 py-6 md:p-8 h-full overflow-y-auto">
             {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">
+            <div className="flex items-center justify-between gap-3 flex-nowrap mb-6">
+                <h1 className="text-2xl font-semibold text-gray-900 flex-1 min-w-0 break-words leading-tight">
                     Build Types Management
                 </h1>
 
                 <button
                     onClick={openCreate}
-                    className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
+                    className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 w-10 h-10 shrink-0"
+                    aria-label="Add build type"
                 >
-                    <Plus size={16} />
-                    Add Build Type
+                    <Plus size={18} />
+                    <span className="sr-only">Add build type</span>
                 </button>
             </div>
 
@@ -220,9 +222,9 @@ const BuildTypes = () => {
                 <table className="w-full text-sm">
                     <thead className="bg-gray-50 text-gray-600">
                         <tr>
-                            <th className="px-8 py-4 text-left w-28">Image</th>
-                            <th className="px-8 py-4 text-left">Build Type Name</th>
-                            <th className="px-8 py-4 text-right w-40">Actions</th>
+                            <th className="px-8 py-4 text-left w-28"><span className="sr-only">Image</span></th>
+                            <th className="px-8 py-4 text-left"><span className="sr-only">Build Type Name</span></th>
+                            <th className="px-8 py-4 text-right w-40"><span className="sr-only">Actions</span></th>
                         </tr>
                     </thead>
 
@@ -260,42 +262,52 @@ const BuildTypes = () => {
                                     key={item.id}
                                     className="border-t hover:bg-gray-50"
                                 >
-                                    <td className="px-8 py-4">
-                                        {item.imageUrl ? (
-                                            <img
-                                                src={item.imageUrl}
-                                                alt={item.name}
-                                                className="w-16 h-10 object-cover rounded border"
-                                            />
-                                        ) : (
-                                            <span className="text-gray-400 text-xs">No image</span>
-                                        )}
+                                    <td className="pl-4 pr-8 py-4">
+                                        <div className="w-20 h-12 sm:w-24 sm:h-14 rounded border bg-white flex items-center justify-center overflow-hidden">
+                                            {item.imageUrl ? (
+                                                <img
+                                                    src={item.imageUrl}
+                                                    alt={item.name}
+                                                    className="max-w-full max-h-full object-contain"
+                                                />
+                                            ) : (
+                                                <span className="text-gray-400 text-xs">No image</span>
+                                            )}
+                                        </div>
                                     </td>
                                     <td className="px-8 py-4 font-medium text-gray-900">
                                         {item.name}
                                     </td>
 
                                     <td className="px-8 py-4">
-                                        <div className="flex justify-end gap-4">
-                                            <button
-                                                onClick={() =>
-                                                    openEdit(item)
-                                                }
-                                                className="text-indigo-600 hover:underline flex items-center gap-1"
-                                            >
-                                                <Pencil size={14} />
-                                                Edit
-                                            </button>
+                                        <div className="flex justify-end">
+                                            <div className="relative">
+                                                <button
+                                                    onClick={() => setOpenActionId(openActionId === item.id ? null : item.id)}
+                                                    className="p-2 rounded-md hover:bg-gray-100"
+                                                    aria-label="Row actions"
+                                                >
+                                                    <MoreVertical size={16} />
+                                                </button>
 
-                                            <button
-                                                onClick={() =>
-                                                    setDeleteTarget(item)
-                                                }
-                                                className="text-red-500 hover:underline flex items-center gap-1"
-                                            >
-                                                <Trash2 size={14} />
-                                                Delete
-                                            </button>
+                                                {openActionId === item.id && (
+                                                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
+                                                        <button
+                                                            onClick={() => { openEdit(item); setOpenActionId(null); }}
+                                                            className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                                                        >
+                                                            <Pencil size={14} /> Edit
+                                                        </button>
+
+                                                        <button
+                                                            onClick={() => { setDeleteTarget(item); setOpenActionId(null); }}
+                                                            className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
+                                                        >
+                                                            <Trash2 size={14} /> Delete
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

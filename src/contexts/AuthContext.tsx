@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { client } from '../services/mutator'; // Import the axios instance
+import { AUTH_EVENTS } from '../utils/auth';
 import { usePostApiAuthRefresh, PostApiAuthRefresh200, usePostApiAuthRecoverCodesSaved } from '../services/api';
 import type { User, Role } from '../types';
 
@@ -11,6 +12,8 @@ interface AuthContextType {
   markPasswordChanged: () => void;
   markRecoverCodesSaved: () => void;
   authLoading: boolean;
+  logoutMessage: string | null;
+  clearLogoutMessage: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
+  const [logoutMessage, setLogoutMessage] = useState<string | null>(null);
 
   // THE BRIDGE: Whenever the token changes, update the Axios Client
   useEffect(() => {
@@ -37,6 +41,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     // You would also call your backend /logout to clear the HttpOnly cookie
   };
+
+  const clearLogoutMessage = () => setLogoutMessage(null);
 
 
   const markPasswordChanged = () => {
@@ -89,8 +95,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     refreshSession();
   }, []);
 
+  // Listen for invalid token events broadcast by axios interceptor
+  useEffect(() => {
+    const handler = () => {
+      setLogoutMessage('Your session has expired. Please log in again.');
+      logout();
+      setAuthLoading(false);
+    };
+    window.addEventListener(AUTH_EVENTS.ACCESS_TOKEN_INVALID, handler);
+    return () => window.removeEventListener(AUTH_EVENTS.ACCESS_TOKEN_INVALID, handler);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout,  markPasswordChanged, markRecoverCodesSaved, authLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, markPasswordChanged, markRecoverCodesSaved, authLoading, logoutMessage, clearLogoutMessage }}>
       {children}
     </AuthContext.Provider>
   );

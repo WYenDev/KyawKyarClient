@@ -177,15 +177,17 @@ const Banners = () => {
     const isSubmitting = isCreatingBanner || isUpdatingBanner;
 
     return (
-        <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Banner Management</h1>
+        <div className="px-4 py-6 md:p-6">
+            <div className="flex items-center justify-between gap-3 flex-nowrap mb-6">
+                <h1 className="text-2xl font-bold flex-1 min-w-0 break-words leading-tight">Banner Management</h1>
                 {!isCreating && !isEditing && (
                     <button
                         onClick={handleCreate}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 w-10 h-10 shrink-0"
+                        aria-label="Create banner"
                     >
-                        <Plus size={20} /> Create New Banner
+                        <Plus size={18} />
+                        <span className="sr-only">Create banner</span>
                     </button>
                 )}
             </div>

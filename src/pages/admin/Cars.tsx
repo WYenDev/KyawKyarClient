@@ -135,21 +135,23 @@ const Cars = () => {
 
     /* ================= RENDER ================= */
     return (
-        <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
+        <div className="bg-[#F8F9FB] px-4 py-6 md:p-8 h-full overflow-y-auto">
             {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold">Cars Management</h1>
+            <div className="flex items-center justify-between gap-3 flex-wrap mb-6">
+                <h1 className="text-2xl font-semibold text-left flex-1 min-w-[200px]">Cars Management</h1>
 
                 <button
                     onClick={() => navigate("/admin/cars/create")}
-                    className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl hover:bg-gray-800 transition"
+                    className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 transition w-10 h-10 shrink-0"
+                    aria-label="Add car"
                 >
-                    <Plus size={16} /> Add Car
+                    <Plus size={18} />
+                    <span className="sr-only">Add car</span>
                 </button>
             </div>
 
             {/* TABS */}
-            <div className="flex gap-4 mb-6 border-b border-gray-200">
+            <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 border-b border-gray-200">
                     <button
                         onClick={() => setActiveTab('active')}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
@@ -184,7 +186,7 @@ const Cars = () => {
 
             {/* SEARCH */}
             <div className="mb-6">
-                <div className="relative max-w-md">
+                <div className="relative max-w-md w-full">
                     <Search
                         size={16}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -209,7 +211,7 @@ const Cars = () => {
             </div>
 
             {/* CAR CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 {isLoading ? (
                     <div className="col-span-full py-12 text-center text-gray-400">
                         Loading...
@@ -317,11 +319,11 @@ const Cars = () => {
 
             {/* PAGINATION */}
             {total > 0 && (
-                <div className="mt-6 flex items-center justify-between">
-                    <div className="text-sm text-slate-600">
+                <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="text-sm text-slate-600 text-center sm:text-left">
                         Showing {(page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, total)} of {total}
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center gap-3">
                         <button
                             onClick={() => setPage(Math.max(1, page - 1))}
                             disabled={page <= 1}
@@ -343,7 +345,7 @@ const Cars = () => {
 
             {/* DELETE MODAL */}
             {deleteTarget && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center px-4">
                     <div className="bg-white p-6 rounded-xl w-full max-w-md">
                         <h2 className="font-semibold mb-2">Delete Car</h2>
                         <p className="text-sm mb-6">
@@ -355,10 +357,10 @@ const Cars = () => {
                             ?
                         </p>
 
-                        <div className="flex justify-end gap-4">
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-4">
                             <button
                                 onClick={() => setDeleteTarget(null)}
-                                className="border px-4 py-2 rounded"
+                                className="border px-4 py-2 rounded w-full sm:w-auto"
                             >
                                 Cancel
                             </button>
@@ -367,7 +369,7 @@ const Cars = () => {
                                     softDeleteCar({ id: deleteTarget.id })
                                 }
                                 disabled={deleting}
-                                className="bg-red-600 text-white px-4 py-2 rounded"
+                                className="bg-red-600 text-white px-4 py-2 rounded w-full sm:w-auto"
                             >
                                 Delete
                             </button>

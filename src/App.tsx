@@ -26,6 +26,7 @@ import Cars from "./pages/admin/Cars";
 import Brands from "./pages/admin/Brands";
 import BuildType from "./pages/admin/BuildType";
 import Showroom from "./pages/admin/Showroom";
+import ShowroomEdit from "./pages/admin/ShowroomEdit";
 import AdminLogin from "./pages/admin/Login";
 import PasswordChange from "./pages/admin/PasswordChange";
 import CarCreatePage from "./pages/admin/CarCreatePage";
@@ -73,6 +74,7 @@ function App() {
           <Route path="build-types" element={<BuildType />} />
           <Route path="vehicle-specs" element={<VehicleSpecs />} />
           <Route path="showrooms" element={<Showroom />} />
+          <Route path="showrooms/:id/edit" element={<ShowroomEdit />} />
           <Route path="home" element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="payments" element={<AdminPayments />} />

@@ -25,7 +25,7 @@ const VehicleSpecs: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>("fuel");
 
   return (
-    <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
+    <div className="bg-[#F8F9FB] px-4 py-6 md:p-8 h-full overflow-y-auto">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Vehicle Specifications</h1>
@@ -148,13 +148,15 @@ const FuelTypesTab: React.FC = () => {
   return (
     <div className="overflow-x-auto">
       {/* Header actions */}
-      <div className="flex items-center justify-between px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-900">Fuel Types Management</h2>
+      <div className="flex items-center justify-between gap-3 flex-nowrap px-6 py-4 border-b">
+        <h2 className="text-lg font-semibold text-gray-900 flex-1 min-w-0 break-words leading-tight">Fuel Types Management</h2>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm hover:bg-gray-800"
+          className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 w-9 h-9 sm:w-10 sm:h-10 shrink-0"
+          aria-label="Add fuel type"
         >
-          <Plus size={16} /> Add Fuel Type
+          <Plus size={16} />
+          <span className="sr-only">Add fuel type</span>
         </button>
       </div>
 
@@ -373,13 +375,15 @@ const TransmissionTypesTab: React.FC = () => {
   return (
     <div className="overflow-x-auto">
       {/* Header actions */}
-      <div className="flex items-center justify-between px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-900">Transmission Types Management</h2>
+      <div className="flex items-center justify-between gap-3 flex-nowrap px-6 py-4 border-b">
+        <h2 className="text-lg font-semibold text-gray-900 flex-1 min-w-0 break-words leading-tight">Transmission Types Management</h2>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-xl text-sm hover:bg-gray-800"
+          className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 w-9 h-9 sm:w-10 sm:h-10 shrink-0"
+          aria-label="Add transmission type"
         >
-          <Plus size={16} /> Add Transmission Type
+          <Plus size={16} />
+          <span className="sr-only">Add transmission type</span>
         </button>
       </div>
 
