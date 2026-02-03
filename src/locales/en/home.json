@@ -5,13 +5,29 @@
     "title_suffix": "With Full Accountability",
     "description": " From daily use cars to high-end luxury cars, a full variety of your favorite vehicles are available all in one place at Kyaw Kyar."
   },
+  "meta": {
+    "title": "Kyaw Kyar Car Showroom | Buy & Sell Quality Vehicles",
+    "description": "Myanmar’s trusted destination for inspected cars, transparent pricing, flexible payments, and premium after-sales service."
+  },
   "stats": {
     "cars_sold": "Cars Sold",
     "happy_customers": "Happy Customers",
     "years_experience": "Years Experience",
     "cars_available": "Cars Available",
     "branches": "Branches"
-  }, 
+  },
+  "featured" : {
+    "title": "Top Tier",
+    "highlightedText": "Selection",
+    "subtitle": "Handpicked Just for You",
+    "description": "Explore our exclusive selection of featured vehicles, meticulously chosen to meet the highest standards of quality and performance. Each car in this collection has been thoroughly inspected and is ready to provide you with an exceptional driving experience."
+  },
+  "new_arrivals": {
+    "title": "Fresh",
+    "highlightedText": "Inventory",
+    "subtitle": "Latest Additions to Our Showroom",
+    "description": "Discover the newest additions to our showroom, featuring the latest models and innovations in the automotive world. These vehicles have just arrived and are ready for you to explore, test drive, and make your own."
+  },
   "whybuy": {
     "title_prefix": "Experience the Confidence of",
     "title_suffix": "Certified Quality",
@@ -43,5 +59,17 @@
         "description": "Our dedicated After-Sales Service team is always here to assist you with routine maintenance, expert repairs, and any technical support you need long after your purchase."
       }
     }
+  }, 
+  "browse_by_body_type": {
+    "title": "Browse by",
+    "highlightedText": "Body Type",
+    "subtitle": "Find Your Perfect Match",
+    "description": "Explore our diverse range of vehicles categorized by body type. Whether you're looking for a sleek sedan, a spacious SUV, or a versatile hatchback, we have the perfect car to suit your lifestyle and preferences."
+  },
+  "browse_by_brand": {
+    "title": "Browse by",
+    "highlightedText": "Popular Brands",
+    "subtitle": "Find Your Perfect Match",
+    "description": "Explore our diverse range of vehicles categorized by body type. Whether you're looking for a sleek sedan, a spacious SUV, or a versatile hatchback, we have the perfect car to suit your lifestyle and preferences."
   }
 }
