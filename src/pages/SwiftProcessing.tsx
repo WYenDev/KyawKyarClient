@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import SEO from '../components/SEO';
 
 /* ===== Image ===== */
 import heroImg from "../assets/swift-processing.jpg";
@@ -15,6 +16,10 @@ const SwiftProcessing = () => {
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
+            <SEO 
+                title="Swift Processing - Kyaw Kyar"
+                description="Fast and hassle-free paperwork processing for your car purchase. We handle the bureaucracy so you don't have to."
+            />
             {/* ======================================================
           HERO – SPLIT EDITORIAL (PAGE LOAD)
       ====================================================== */}
@@ -60,7 +65,7 @@ const SwiftProcessing = () => {
                             </p>
 
                             <button
-                                onClick={() => navigate("/cars")}
+                                onClick={() => navigate("/Buycars")}
                                 className="inline-flex items-center gap-4 px-14 py-4 bg-black text-white text-sm tracking-wide rounded-full hover:bg-gray-800 transition"
                             >
                                 Explore Cars
@@ -169,7 +174,7 @@ const SwiftProcessing = () => {
                     </p>
 
                     <button
-                        onClick={() => navigate("/cars")}
+                        onClick={() => navigate("/Buycars")}
                         className="inline-flex items-center gap-4 px-16 py-4 bg-black text-white text-sm tracking-wide rounded-full hover:bg-gray-800 transition"
                     >
                         Browse Cars with Confidence

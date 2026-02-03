@@ -157,6 +157,8 @@ export type ShowroomCreatePhonesItem = {
 };
 
 export interface ShowroomCreate {
+  /** @nullable */
+  name?: string | null;
   addressMm: string;
   addressEn: string;
   city: string;
@@ -172,6 +174,8 @@ export type ShowroomUpdatePhonesItem = {
 };
 
 export interface ShowroomUpdate {
+  /** @nullable */
+  name?: string | null;
   addressMm?: string;
   addressEn?: string;
   city?: string;
@@ -188,6 +192,8 @@ export interface ShowroomPhoneUpdate {
 
 export interface Showroom {
   id: string;
+  /** @nullable */
+  name?: string | null;
   addressMm: string;
   addressEn: string;
   city: string;
@@ -1080,6 +1086,30 @@ export type PostApiCarsCreateBatch201ResultsItem = { [key: string]: unknown };
 export type PostApiCarsCreateBatch201 = {
   createdCount?: number;
   results?: PostApiCarsCreateBatch201ResultsItem[];
+};
+
+export type GetApiDashboardSummary200BrandsItem = {
+  id?: string;
+  name?: string;
+  modelCount?: number;
+};
+
+export type GetApiDashboardSummary200 = {
+  totalCars?: number;
+  /** Number of cars with status 'Sold' */
+  soldCars?: number;
+  /** Number of soft-deleted cars */
+  deletedCars?: number;
+  totalBrands?: number;
+  totalModels?: number;
+  brands?: GetApiDashboardSummary200BrandsItem[];
+  totalBuildTypes?: number;
+  totalShowrooms?: number;
+  totalColors?: number;
+  totalSellRequests?: number;
+  totalBanners?: number;
+  /** @nullable */
+  totalAdmins?: number | null;
 };
 
 export type GetApiFuelTypesParams = {
@@ -6071,6 +6101,100 @@ export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCa
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetApiCarsFeaturedQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Returns counts for cars, brands, models, build types, showrooms, colors, sell requests, banners, and for super-admins, admin count.
+ * @summary Get dashboard summary metrics
+ */
+export const getApiDashboardSummary = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiDashboardSummary200>(
+      {url: `/api/dashboard/summary`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiDashboardSummaryQueryKey = () => {
+    return [
+    `/api/dashboard/summary`
+    ] as const;
+    }
+
+    
+export const getGetApiDashboardSummaryQueryOptions = <TData = Awaited<ReturnType<typeof getApiDashboardSummary>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDashboardSummary>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiDashboardSummaryQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiDashboardSummary>>> = ({ signal }) => getApiDashboardSummary(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiDashboardSummary>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiDashboardSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getApiDashboardSummary>>>
+export type GetApiDashboardSummaryQueryError = unknown
+
+
+export function useGetApiDashboardSummary<TData = Awaited<ReturnType<typeof getApiDashboardSummary>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDashboardSummary>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiDashboardSummary>>,
+          TError,
+          Awaited<ReturnType<typeof getApiDashboardSummary>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiDashboardSummary<TData = Awaited<ReturnType<typeof getApiDashboardSummary>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDashboardSummary>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiDashboardSummary>>,
+          TError,
+          Awaited<ReturnType<typeof getApiDashboardSummary>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiDashboardSummary<TData = Awaited<ReturnType<typeof getApiDashboardSummary>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDashboardSummary>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get dashboard summary metrics
+ */
+
+export function useGetApiDashboardSummary<TData = Awaited<ReturnType<typeof getApiDashboardSummary>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDashboardSummary>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiDashboardSummaryQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

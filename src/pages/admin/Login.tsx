@@ -16,7 +16,7 @@ interface LoginForm {
 const AdminLogin: React.FC = () => {
   const { t } = useTranslation('admin');
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, logoutMessage, clearLogoutMessage } = useAuth();
 
   const [form, setForm] = useState<LoginForm>({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -98,8 +98,16 @@ const AdminLogin: React.FC = () => {
               <p className="text-sm text-slate-500 mt-1">{t('login.hint', 'Use your admin credentials to sign in')}</p>
             </div>
 
-            {error && (
-              <div className="mb-4 text-sm text-red-700 bg-red-50 p-3 rounded">{error}</div>
+            {(logoutMessage || error) && (
+              <div className="mb-4 text-sm flex items-start gap-3 p-3 rounded border"
+                   style={{ backgroundColor: logoutMessage ? '#FEF3F2' : '#FEF2F2', borderColor: '#FEE2E2', color: '#991B1B' }}>
+                <span className="flex-1">
+                  {logoutMessage ?? error}
+                </span>
+                {(logoutMessage) && (
+                  <button type="button" onClick={clearLogoutMessage} className="text-xs underline">{t('common.dismiss', 'Dismiss')}</button>
+                )}
+              </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">

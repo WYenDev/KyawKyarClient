@@ -245,31 +245,49 @@ const Header: React.FC = () => {
             </nav>
 
             <div className="pt-4 border-t border-gray-100">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col space-y-4 items-center">
                 <button
                   onClick={() => {
                     handleLanguageChange();
                   }}
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full max-w-xs"
                 >
                   <Globe className="h-5 w-5 text-gray-500" />
                   <span className="font-medium text-slate-700">{t('nav.language')}</span>
                 </button>
 
-                <div>
-                  <button
-                    onClick={() => setIsContactOpen((s) => !s)}
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm w-full"
-                  >
-                    <Phone className="h-5 w-5" />
-                    <span className="font-medium">{t('buttons.contact', 'Contact')}</span>
-                  </button>
-                </div>
+                <a
+                  href={`tel:${phoneNumber.replace(/\s/g, '')}`}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                >
+                  <div className="flex items-center justify-center w-6 h-6 bg-red-600 rounded-full">
+                    <Phone className="h-3.5 w-3.5 text-white" />
+                  </div>
+                  <span className="font-medium">{t('buttons.call_us')}</span>
+                </a>
+                <a
+                  href={`viber://chat?number=%2B${viberNumber}`}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                >
+                  <img src={ViberIcon} alt="Viber" className="h-5 w-5 rounded-full" />
+                  <span className="font-medium">{t('buttons.viber', 'Viber')}</span>
+                </a>
+                <a
+                  href={apiFacebook || '#'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                >
+                  <div className="flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
+                    <Facebook className="h-3.5 w-3.5 text-white" />
+                  </div>
+                  <span className="font-medium">{t('buttons.facebook', 'Facebook')}</span>
+                </a>
 
                 {user ? (
                   <button
                     onClick={() => navigate('/admin')}
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full"
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full max-w-xs"
                   >
                     <User className="h-5 w-5" />
                     <span className="font-medium">Admin</span>
@@ -277,51 +295,13 @@ const Header: React.FC = () => {
                 ) : (
                   <Link
                     to="/admin/login"
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full max-w-xs"
                   >
                     <User className="h-5 w-5" />
                     <span className="font-medium">{t('buttons.login', 'Login')}</span>
                   </Link>
                 )}
-
-                <div />
               </div>
-
-              {isContactOpen && (
-                <div className="mt-3 px-2 space-y-2">
-                  <a
-                    href={`tel:${phoneNumber.replace(/\s/g, '')}` }
-                    className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
-                    onClick={() => setIsContactOpen(false)}
-                  >
-                     <div className="flex items-center justify-center w-6 h-6 mr-2 bg-red-600 rounded-full">
-                        <Phone className="h-3.5 w-3.5 text-white" />
-                      </div>
-                    <span className="font-medium">{t('buttons.call_us')}</span>
-                  </a>
-                  <a
-                    href={`viber://chat?number=%2B${viberNumber}`}
-                    className="block w-full text-center px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
-                    onClick={() => setIsContactOpen(false)}
-                  >
-                    <img src={ViberIcon} alt="Viber" className="inline h-5 w-5 mr-2 rounded-full" />
-                    <span className="font-medium">{t('buttons.viber', 'Viber')}</span>
-                  </a>
-                  
-                  <a
-                    href={apiFacebook || '#'}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
-                    onClick={() => setIsContactOpen(false)}
-                  >
-                     <div className="flex items-center justify-center w-6 h-6 mr-2 bg-blue-600 rounded-full">
-                        <Facebook className="h-3.5 w-3.5 text-white" />
-                      </div>
-                    <span className="font-medium">{t('buttons.facebook', 'Facebook')}</span>
-                  </a>
-                </div>
-              )}
 
             </div>
           </div>

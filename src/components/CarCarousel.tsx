@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, ArrowRight, Plus, LucideProps } from 'lucide
 import { useNavigate } from 'react-router-dom';
 import FeaturedCard from './FeaturedCard';
 import type { CarListItem } from '../services/api';
+import { useTranslation } from 'react-i18next';
 
 const SCROLL_AMOUNT = 300;
 
@@ -50,6 +51,8 @@ const themeClasses = {
 };
 
 const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, title, highlightedTitle, description, useDataHook, theme }) => {
+  const { t, i18n } = useTranslation('home');
+  const isMyanmar = i18n?.language?.startsWith('mm');
   const { data, isLoading, isError } = useDataHook();
   const cars: CarListItem[] = (data as any)?.items ?? (data as CarListItem[]) ?? [];
   const navigate = useNavigate();
@@ -102,10 +105,10 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
               {React.cloneElement(badgeIcon, { className: `w-3 h-3 ${classes.fill}` })}
               {badgeText}
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+            <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
               <span className={classes.highlight}>{title} </span>{highlightedTitle}
             </h2>
-            <p className="text-slate-500 max-w-xl text-lg leading-relaxed">
+            <p className={`text-slate-500 max-w-xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
               {description}
             </p>
           </div>

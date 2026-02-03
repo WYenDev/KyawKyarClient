@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useGetApiBuildTypes } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, LayoutGrid } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const BrowseCarByBuildTypes: React.FC = () => {
+  const { t, i18n } = useTranslation('home');
+  const isMyanmar = i18n?.language?.startsWith('mm');
   const { data: buildTypes = [], isLoading, isError } = useGetApiBuildTypes();
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -70,10 +73,10 @@ const BrowseCarByBuildTypes: React.FC = () => {
                <LayoutGrid className="w-3 h-3 fill-indigo-700" />
                Vehicle Categories
              </div>
-            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              Browse by <span className="text-indigo-600">Body Type</span>
+            <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
+              <span className={`${isMyanmar ? 'font-myanmar text-indigo-600' : ""}`}>{t('browse_by_body_type.title')}</span> <span className={`${isMyanmar ? 'font-myanmar' : "text-indigo-600"}`}>{t('browse_by_body_type.highlightedText')}</span>
             </h2>
-            <p className="text-slate-500 max-w-xl text-lg leading-relaxed">
+            <p className={`text-slate-500 max-w-xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
               Find the perfect match for your lifestyle. Select a body style to see what's available.
             </p>
           </div>

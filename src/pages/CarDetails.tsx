@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useGetApiCarsId } from '../services/api';
 import CarDetailsGallery from '../components/CarDetailsGallery';
 import CarDetailsSummary from '../components/CarDetailsSummary';
+import SEO from '../components/SEO';
 
 const CarDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -64,9 +65,36 @@ const CarDetails: React.FC = () => {
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
+  const carTitle = `${(carData as any)?.year ?? ''} ${(carData as any)?.model?.brand?.name ?? ''} ${(carData as any)?.model?.name ?? ''}`.trim();
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <SEO 
+        title={carTitle}
+        description={(carData as any)?.description?.substring(0, 160)}
+        image={images[0]}
+        type="product"
+        structuredData={{
+          "@context": "https://schema.org/",
+          "@type": "Vehicle",
+          "name": carTitle,
+          "image": images,
+          "description": (carData as any)?.description,
+          "manufacturer": {
+            "@type": "Organization",
+            "name": (carData as any)?.model?.brand?.name
+          },
+          "model": (carData as any)?.model?.name,
+          "vehicleModelDate": (carData as any)?.year,
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "MMK",
+            "price": (carData as any)?.price,
+            "availability": (carData as any)?.status === 'available' ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
+            "itemCondition": "https://schema.org/UsedCondition"
+          }
+        }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Breadcrumb / Back */}
         <div className="flex items-center justify-between mb-6">

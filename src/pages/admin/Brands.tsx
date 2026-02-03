@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Pencil, ChevronRight, ChevronDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ChevronRight, ChevronDown, MoreVertical } from "lucide-react";
 
 import {
     Brand,
@@ -111,14 +111,16 @@ const ModelList = ({ brandId }: { brandId: string }) => {
     if (isLoading) return <div className="pl-8 py-2 text-gray-400">Loading models...</div>;
 
     return (
-        <div className="pl-6 py-2">
-             <div className="flex items-center justify-between mb-2">
+        <div className="pl-4 sm:pl-6 py-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-2">
                 <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Models</h4>
-                 <button
+                <button
                     onClick={openCreateModel}
-                    className="flex items-center gap-1 text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200"
+                    className="flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 w-8 h-8 self-end sm:self-auto"
+                    aria-label="Add model"
                 >
-                    <Plus size={12} /> Add Model
+                    <Plus size={14} />
+                    <span className="sr-only">Add model</span>
                 </button>
             </div>
             
@@ -126,8 +128,8 @@ const ModelList = ({ brandId }: { brandId: string }) => {
 
             <div className="space-y-2">
                 {models.map((model) => (
-                    <div key={model.id} className="border-l-2 border-gray-100 pl-4">
-                        <div className="flex items-center justify-between group py-1">
+                    <div key={model.id} className="border-l-2 border-gray-100 pl-3 sm:pl-4">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between group py-1">
                             <div 
                                 className="flex items-center gap-2 cursor-pointer select-none"
                                 onClick={() => toggleExpand(model.id)}
@@ -135,7 +137,7 @@ const ModelList = ({ brandId }: { brandId: string }) => {
                                 {expandedModelId === model.id ? <ChevronDown size={14} className="text-gray-400"/> : <ChevronRight size={14} className="text-gray-400" />}
                                 <span className="font-medium text-gray-700 text-sm hover:text-black">{model.name}</span>
                             </div>
-                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity self-end sm:self-auto">
                                 <button onClick={() => openEditModel(model)} className="text-gray-400 hover:text-indigo-600">
                                     <Pencil size={12} />
                                 </button>
@@ -155,7 +157,7 @@ const ModelList = ({ brandId }: { brandId: string }) => {
             {/* Model Modal */}
             {isModelModalOpen && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
-                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6 mx-4">
                          <h2 className="text-lg font-semibold mb-4">{editingModel ? "Edit Model" : "Add Model"}</h2>
                         {error && <div className="mb-4 text-red-600 text-xs">{error}</div>}
                         <input
@@ -165,12 +167,12 @@ const ModelList = ({ brandId }: { brandId: string }) => {
                             onChange={(e) => setModelName(e.target.value)}
                             autoFocus
                         />
-                        <div className="flex justify-end gap-3">
-                            <button onClick={closeModelModal} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3">
+                            <button onClick={closeModelModal} className="text-sm text-gray-500 hover:text-gray-700 w-full sm:w-auto">Cancel</button>
                             <button 
                                 onClick={handleModelSubmit} 
                                 disabled={creating || updating}
-                                className="bg-black text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
+                                className="bg-black text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50 w-full sm:w-auto"
                             >
                                 Save
                             </button>
@@ -182,7 +184,7 @@ const ModelList = ({ brandId }: { brandId: string }) => {
              {/* Delete Model Confirm */}
              {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
-                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6 mx-4">
                         <div className="flex items-center gap-3 mb-4 text-red-600">
                            <div className="bg-red-100 p-2 rounded-full">
                                 <Trash2 size={20} />
@@ -204,11 +206,11 @@ const ModelList = ({ brandId }: { brandId: string }) => {
                             </div>
                         )}
                         
-                        <div className="flex justify-end gap-3 pt-2">
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 pt-2">
                             {error ? (
                                 <button 
                                     onClick={() => { setDeleteTarget(null); setError(null); }} 
-                                    className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                                    className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors w-full sm:w-auto"
                                 >
                                     Close
                                 </button>
@@ -216,14 +218,14 @@ const ModelList = ({ brandId }: { brandId: string }) => {
                                 <>
                                     <button 
                                         onClick={() => { setDeleteTarget(null); setError(null); }} 
-                                        className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                                        className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors w-full sm:w-auto"
                                     >
                                         Cancel
                                     </button>
                                     <button 
                                         onClick={() => deleteModel({ id: deleteTarget.id })} 
                                         disabled={deleting}
-                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors w-full sm:w-auto"
                                     >
                                         {deleting ? "Deleting..." : "Delete Model"}
                                     </button>
@@ -310,24 +312,26 @@ const GradeList = ({ modelId }: { modelId: string }) => {
     if (isLoading) return <div className="pl-6 py-1 text-xs text-gray-400">Loading grades...</div>;
 
     return (
-        <div className="pl-6 py-2">
-            <div className="flex items-center justify-between mb-2">
+        <div className="pl-4 sm:pl-6 py-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-2">
                 <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Grades</h4>
                 <button
                     onClick={openCreateGrade}
-                    className="flex items-center gap-1 text-xs bg-gray-50 px-2 py-1 rounded hover:bg-gray-100 border border-gray-100"
+                    className="flex items-center justify-center bg-gray-50 rounded-full hover:bg-gray-100 border border-gray-100 w-8 h-8 self-end sm:self-auto"
+                    aria-label="Add grade"
                 >
-                    <Plus size={10} /> Add Grade
+                    <Plus size={12} />
+                    <span className="sr-only">Add grade</span>
                 </button>
             </div>
             
              {grades.length === 0 && <div className="text-xs text-gray-400 italic">No grades found</div>}
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {grades.map((grade) => (
                     <div key={grade.id} className="flex items-center justify-between bg-gray-50 rounded px-3 py-2 group hover:bg-gray-100 transition-colors">
                         <span className="text-xs text-gray-700 font-medium">{grade.name}</span>
-                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity self-end sm:self-auto">
                             <button onClick={() => openEditGrade(grade)} className="text-gray-400 hover:text-indigo-600">
                                 <Pencil size={10} />
                             </button>
@@ -342,7 +346,7 @@ const GradeList = ({ modelId }: { modelId: string }) => {
              {/* Grade Modal */}
              {isGradeModalOpen && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
-                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6 mx-4">
                         <h2 className="text-lg font-semibold mb-4">{editingGrade ? "Edit Grade" : "Add Grade"}</h2>
                         {error && <div className="mb-4 text-red-600 text-xs">{error}</div>}
                         <input
@@ -352,12 +356,12 @@ const GradeList = ({ modelId }: { modelId: string }) => {
                             onChange={(e) => setGradeName(e.target.value)}
                             autoFocus
                         />
-                        <div className="flex justify-end gap-3">
-                            <button onClick={closeGradeModal} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3">
+                            <button onClick={closeGradeModal} className="text-sm text-gray-500 hover:text-gray-700 w-full sm:w-auto">Cancel</button>
                             <button 
                                 onClick={handleGradeSubmit} 
                                 disabled={creating || updating}
-                                className="bg-black text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
+                                className="bg-black text-white px-3 py-1.5 rounded-lg text-sm disabled:opacity-50 w-full sm:w-auto"
                             >
                                 Save
                             </button>
@@ -369,7 +373,7 @@ const GradeList = ({ modelId }: { modelId: string }) => {
             {/* Delete Grade Confirm */}
             {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={(e) => e.stopPropagation()}>
-                    <div className="bg-white w-full max-w-sm rounded-xl p-6">
+                    <div className="bg-white w-full max-w-sm rounded-xl p-6 mx-4">
                         <div className="flex items-center gap-3 mb-4 text-red-600">
                            <div className="bg-red-100 p-2 rounded-full">
                                 <Trash2 size={20} />
@@ -391,11 +395,11 @@ const GradeList = ({ modelId }: { modelId: string }) => {
                             </div>
                         )}
 
-                        <div className="flex justify-end gap-3 pt-2">
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 pt-2">
                             {error ? (
                                 <button 
                                     onClick={() => { setDeleteTarget(null); setError(null); }} 
-                                    className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                                    className="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors w-full sm:w-auto"
                                 >
                                     Close
                                 </button>
@@ -403,14 +407,14 @@ const GradeList = ({ modelId }: { modelId: string }) => {
                                 <>
                                     <button 
                                         onClick={() => { setDeleteTarget(null); setError(null); }} 
-                                        className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                                        className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors w-full sm:w-auto"
                                     >
                                         Cancel
                                     </button>
                                     <button 
                                         onClick={() => deleteGrade({ id: deleteTarget.id })} 
                                         disabled={deleting}
-                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+                                        className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors w-full sm:w-auto"
                                     >
                                         {deleting ? "Deleting..." : "Delete Grade"}
                                     </button>
@@ -431,6 +435,7 @@ const Brands = () => {
     const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Brand | null>(null);
     const [expandedBrandId, setExpandedBrandId] = useState<string | null>(null);
+    const [openActionBrandId, setOpenActionBrandId] = useState<string | null>(null);
 
     const [name, setName] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -579,33 +584,34 @@ const Brands = () => {
 
     /* ================= UI ================= */
     return (
-        <div className="bg-[#F8F9FB] p-8 h-full overflow-y-auto">
+        <div className="bg-[#F8F9FB] px-4 py-6 md:p-8 h-full overflow-y-auto">
             {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">
-                    Brands, Models & Grades
-                </h1>
+            <div className="flex flex-col gap-4 mb-6">
+                <div className="flex items-center justify-between gap-3 flex-nowrap">
+                    <h1 className="text-2xl font-semibold text-gray-900 flex-1 min-w-0 break-words leading-tight">Brands, Models & Grades</h1>
+                    <button
+                        onClick={openCreate}
+                        className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 w-10 h-10 shrink-0"
+                        aria-label="Add brand"
+                    >
+                        <Plus size={18} />
+                        <span className="sr-only">Add brand</span>
+                    </button>
+                </div>
 
-                <div className="flex gap-3 items-center">
+                <div className="w-full sm:max-w-xs">
                     <input
                         type="text"
                         placeholder="Search brand..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="border px-4 py-2 rounded-xl text-sm w-64"
+                        className="border px-4 py-2 rounded-xl text-sm w-full"
                     />
-
-                    <button
-                        onClick={openCreate}
-                        className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-xl text-sm hover:bg-gray-800"
-                    >
-                        <Plus size={16} /> Add Brand
-                    </button>
                 </div>
             </div>
 
             {/* LIST */}
-            <div className="bg-white rounded-2xl shadow-sm p-6">
+            <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
                  {isLoading ? (
                     <div className="py-12 text-center text-gray-400">Loading brands...</div>
                 ) : isError ? (
@@ -615,10 +621,10 @@ const Brands = () => {
                 ) : (
                     <div className="space-y-4">
                         {filteredBrands.map((brand) => (
-                            <div key={brand.id} className="border border-gray-100 rounded-xl overflow-hidden bg-white">
-                                <div className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                            <div key={brand.id} className="border border-gray-100 rounded-xl bg-white overflow-visible">
+                                <div className="flex items-center justify-between gap-4 p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
                                     <div 
-                                        className="flex items-center gap-3 cursor-pointer select-none flex-1"
+                                        className="flex items-center gap-3 cursor-pointer select-none flex-1 min-w-0"
                                         onClick={() => toggleExpand(brand.id)}
                                     >
                                         {expandedBrandId === brand.id ? <ChevronDown size={20} className="text-gray-500" /> : <ChevronRight size={20} className="text-gray-500" />}
@@ -634,26 +640,39 @@ const Brands = () => {
                                         <span className="font-semibold text-gray-900 text-lg">{brand.name}</span>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <button 
-                                            onClick={() => openEdit(brand)} 
-                                            className="p-2 text-gray-500 hover:text-indigo-600 rounded-full hover:bg-white transition-colors"
-                                            title="Edit Brand"
-                                        >
-                                            <Pencil size={18} />
-                                        </button>
-                                        <button 
-                                            onClick={() => { setDeleteTarget(brand); setError(null); }} 
-                                            className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-white transition-colors"
-                                            title="Delete Brand"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
+                                        <div className="relative">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setOpenActionBrandId(openActionBrandId === brand.id ? null : brand.id); }}
+                                                className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-white transition-colors"
+                                                title="Actions"
+                                                aria-expanded={openActionBrandId === brand.id}
+                                            >
+                                                <MoreVertical size={18} />
+                                            </button>
+
+                                            {openActionBrandId === brand.id && (
+                                                <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-50">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); openEdit(brand); setOpenActionBrandId(null); }}
+                                                        className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                                                    >
+                                                        <Pencil size={14} /> Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(brand); setError(null); setOpenActionBrandId(null); }}
+                                                        className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
+                                                    >
+                                                        <Trash2 size={14} /> Delete
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
                                 {expandedBrandId === brand.id && (
                                     <div className="border-t border-gray-100">
-                                         <ModelList brandId={brand.id} />
+                                        <ModelList brandId={brand.id} />
                                     </div>
                                 )}
                             </div>
@@ -665,7 +684,7 @@ const Brands = () => {
             {/* BRAND MODAL */}
             {openModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-md rounded-2xl p-6">
+                    <div className="bg-white w-full max-w-md rounded-2xl p-6 mx-4">
                         <h2 className="text-xl font-semibold mb-4">{selectedBrand ? "Edit Brand" : "Add Brand"}</h2>
                         {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
                         <input
@@ -713,12 +732,12 @@ const Brands = () => {
                             </div>
                         )}
 
-                        <div className="flex justify-end gap-4 mt-6">
-                            <button onClick={closeModal} className="border px-4 py-2 rounded-xl">Cancel</button>
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-4 mt-6">
+                            <button onClick={closeModal} className="border px-4 py-2 rounded-xl w-full sm:w-auto">Cancel</button>
                             <button 
                                 onClick={handleSubmit} 
                                 disabled={creating || updating} 
-                                className="bg-black text-white px-4 py-2 rounded-xl disabled:opacity-50"
+                                className="bg-black text-white px-4 py-2 rounded-xl disabled:opacity-50 w-full sm:w-auto"
                             >
                                 Save
                             </button>
@@ -730,7 +749,7 @@ const Brands = () => {
              {/* BRAND DELETE CONFIRM */}
              {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-md rounded-2xl p-6">
+                    <div className="bg-white w-full max-w-md rounded-2xl p-6 mx-4">
                         <div className="flex items-center gap-3 mb-4 text-red-600">
                            <div className="bg-red-100 p-2 rounded-full">
                                 <Trash2 size={24} />
@@ -752,11 +771,11 @@ const Brands = () => {
                             </div>
                         )}
 
-                        <div className="flex justify-end gap-3">
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3">
                             {error ? (
                                 <button 
                                     onClick={() => { setDeleteTarget(null); setError(null); }} 
-                                    className="px-5 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition-colors"
+                                    className="px-5 py-2.5 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition-colors w-full sm:w-auto"
                                 >
                                     Close
                                 </button>
@@ -764,14 +783,14 @@ const Brands = () => {
                                 <>
                                     <button 
                                         onClick={() => { setDeleteTarget(null); setError(null); }} 
-                                        className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                                        className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors w-full sm:w-auto"
                                     >
                                         Cancel
                                     </button>
                                     <button 
                                         onClick={confirmDelete} 
                                         disabled={deleting} 
-                                        className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 disabled:opacity-50 shadow-lg shadow-red-200 transition-all"
+                                        className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 disabled:opacity-50 shadow-lg shadow-red-200 transition-all w-full sm:w-auto"
                                     >
                                         {deleting ? "Deleting..." : "Yes, Delete Brand"}
                                     </button>
