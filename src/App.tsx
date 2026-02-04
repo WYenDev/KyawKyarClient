@@ -18,6 +18,7 @@ import Payments from "./pages/Payments";
 import RigorousQualityInspection from "./pages/RigorousQualityInspection";
 import SwiftProcessing from "./pages/SwiftProcessing";
 import CleanHistory from "./pages/CleanHistory";
+import ShowroomInstallmentDetail from "./pages/ShowroomInstallmentDetail";
 
 // Admin pages
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -117,6 +118,7 @@ function App() {
                   />
                   <Route path="/why-kyawkyar/swift-processing" element={<SwiftProcessing />}  />
                   <Route path="/why-kyawkyar/clean-history" element={<CleanHistory />} />
+                  <Route path="/showroom-installment" element={<ShowroomInstallmentDetail />} />
                 </Routes>
               </main>
 

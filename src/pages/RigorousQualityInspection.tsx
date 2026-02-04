@@ -4,10 +4,10 @@ import SEO from '../components/SEO';
 
 /* ===== Images ===== */
 import heroImg from "../assets/Servicce.png";
-import documentImg from "../assets/rqi-1.png";
-import inspectionImg from "../assets/rqi-2.png";
-import performanceImg from "../assets/rqi-3.png";
-import approvalImg from "../assets/rqi-4.png";
+import step1Img from "../assets/rqi-1.png";
+import step2Img from "../assets/rqi-2.png";
+import step3Img from "../assets/rqi-3.png";
+import step4Img from "../assets/rqi-4.png";
 
 /* ===== Animations ===== */
 const fadeUp = {
@@ -25,6 +25,8 @@ const RigorousQualityInspection = () => {
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
+
+
             <SEO 
                 title="Rigorous Quality Inspection - Kyaw Kyar"
                 description="Our certified mechanics perform a comprehensive 360-degree check on every vehicle to ensure quality and safety."
@@ -32,13 +34,13 @@ const RigorousQualityInspection = () => {
             {/* ======================================================
           HERO
       ====================================================== */}
-            <section className="relative h-[620px]">
+               <section className="relative h-[520px] md:h-[620px]">
                 <motion.img
                     src={heroImg}
                     alt="Rigorous Quality Inspection"
                     initial={{ opacity: 0, scale: 1.05 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
+                    transition={{ duration: 1 }}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/55" />
@@ -48,13 +50,12 @@ const RigorousQualityInspection = () => {
                         initial="hidden"
                         animate="visible"
                         variants={fadeUp}
-                        transition={{ duration: 0.8, delay: 0.3 }}
-                        className="max-w-6xl mx-auto px-6 text-white"
+                        className="max-w-5xl mx-auto px-6 text-white"
                     >
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6 max-w-3xl">
+                        <h1 className="text-3xl md:text-5xl font-bold mb-6">
                             Rigorous Quality Inspection
                         </h1>
-                        <p className="text-lg text-gray-200 max-w-2xl leading-relaxed">
+                        <p className="text-gray-200 max-w-2xl leading-relaxed">
                             Kyaw Kyar တွင် ကားတစ်စီးကို showroom မှာတင်မီ
                             လက်တင်စီးအဆင့်အထိ စစ်ဆေးမှုအဆင့်ဆင့်ကို
                             တင်းကြပ်စွာ ကျော်ဖြတ်ရပါသည်။
@@ -63,113 +64,74 @@ const RigorousQualityInspection = () => {
                 </div>
             </section>
 
-            {/* ======================================================
-          INTRO
-      ====================================================== */}
-            <section className="py-28">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={fadeUp}
-                    transition={{ duration: 0.6 }}
-                    className="max-w-4xl mx-auto px-6 text-center"
-                >
-                    <h2 className="text-3xl font-semibold mb-6">
-                        Why Our Inspection Is Different
-                    </h2>
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                        ၀ယ်ယူသူများအတွက် ယုံကြည်စိတ်ချရသော ကားများကို လက်တင်စီးနိုင်သောအဆင့်ထိ အဆင့်ဆင့်စစ်ဆေးမှုများ ပြုလုပ်ပါသည်။
-                    </p>
-                </motion.div>
-            </section>
-
-            {/* ======================================================
-          PROCESS – LEFT / RIGHT FLOW
-      ====================================================== */}
-            <section className="py-32 bg-gray-50">
+            {/* ================= PROCESS ================= */}
+            <section className="py-24 bg-gray-50">
                 <div className="max-w-6xl mx-auto px-6">
                     <motion.h2
                         initial="hidden"
                         whileInView="visible"
                         variants={fadeUp}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="text-3xl font-semibold text-center mb-24"
+                        className="text-2xl md:text-3xl font-semibold text-center mb-20"
                     >
-                        How We Rigorously Inspect Every Car
+                        How We Inspect Every Car
                     </motion.h2>
 
-                    {/* STEP 01 */}
-                    <ProcessRow
+                    <Step
                         step="01"
                         title="Document & History Verification"
-                        desc="Registration, ownership history နှင့် mileage data များကို  
-            ပထမဆုံး စစ်ဆေးပါသည်။  
-            ကိုက်ညီမှုမရှိပါက showroom သို့ မတင်မီ ဖယ်ရှားပါသည်။"
-                        image={documentImg}
+                        desc="Registration၊ ownership history နှင့် mileage data များကို စစ်ဆေးပြီး မကိုက်ညီပါက showroom မတင်ပါ။"
+                        image={step1Img}
                         imageSide="left"
                     />
 
-                    {/* STEP 02 */}
-                    <ProcessRow
+                    <Step
                         step="02"
-                        title="Deep Physical & Mechanical Inspection"
-                        desc="Engine, transmission နှင့် chassis များကို  
-            ကျွမ်းကျင်သော technician များမှ  
-            လက်တွေ့စစ်ဆေးပါသည်။"
-                        image={inspectionImg}
+                        title="Physical & Mechanical Inspection"
+                        desc="Engine၊ transmission နှင့် chassis များကို ကျွမ်းကျင်သော technician များမှ စစ်ဆေးပါသည်။"
+                        image={step2Img}
                         imageSide="right"
                     />
 
-                    {/* STEP 03 */}
-                    <ProcessRow
+                    <Step
                         step="03"
                         title="Performance & Road Test"
-                        desc="လမ်းမပေါ်တွင် လက်တင်စီးအဆင့်အထိ မောင်းနှင်စမ်းသပ်ပြီး  
-            braking၊ vibration နှင့် handling များကို စစ်ဆေးပါသည်။"
-                        image={performanceImg}
+                        desc="လမ်းမပေါ်တွင် လက်တင်စီးစမ်းသပ်ပြီး braking နှင့် handling ကို စစ်ဆေးပါသည်။"
+                        image={step3Img}
                         imageSide="left"
                     />
 
-                    {/* STEP 04 */}
-                    <ProcessRow
+                    <Step
                         step="04"
                         title="Independent Quality Approval"
-                        desc="Quality team မှ သီးခြားပြန်လည်စစ်ဆေးပြီး  
-            စံနှုန်းပြည့်မီသောကားများကိုသာ  
-            showroom တွင် တင်ရောင်းခွင့်ပေးပါသည်။"
-                        image={approvalImg}
+                        desc="Quality team မှ ပြန်လည်စစ်ဆေးပြီး စံနှုန်းပြည့်မီမှသာ showroom တင်ပါသည်။"
+                        image={step4Img}
                         imageSide="right"
                     />
                 </div>
             </section>
 
-            {/* ======================================================
-          CLOSING
-      ====================================================== */}
-            <section className="py-28">
+            {/* ================= CTA ================= */}
+            <section className="py-24">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
                     variants={fadeUp}
-                    transition={{ duration: 0.6 }}
                     className="max-w-4xl mx-auto px-6 text-center"
                 >
-                    <h2 className="text-3xl font-semibold mb-6">
+                    <h2 className="text-2xl md:text-3xl font-semibold mb-6">
                         Quality Comes Before Everything
                     </h2>
-                    <p className="text-gray-600 text-lg leading-relaxed mb-10">
-                        လက်တင်စီးအဆင့်မရောက်သေးသောကားများကို
-                        ကျွန်ုပ်တို့ showroom တွင် မည်သည့်အခါမျှ မတင်ပါ။
+                    <p className="text-gray-600 mb-10">
+                        စံနှုန်းမပြည့်မီသော ကားများကို
+                        မည်သည့်အခါမျှ မတင်ပါ။
                     </p>
 
                     <button
                         onClick={() => navigate("/buyCars")}
                         className="px-10 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition"
                     >
-                        Browse Quality-Inspected Cars
+                        Browse Quality Cars
                     </button>
                 </motion.div>
             </section>
@@ -177,11 +139,8 @@ const RigorousQualityInspection = () => {
     );
 };
 
-/* ======================================================
-   PROCESS ROW
-====================================================== */
-
-const ProcessRow = ({
+/* ================= STEP ================= */
+const Step = ({
     step,
     title,
     desc,
@@ -194,39 +153,33 @@ const ProcessRow = ({
     image: string;
     imageSide: "left" | "right";
 }) => {
-    const imageFirst = imageSide === "left";
-
     return (
         <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-120px" }}
+            viewport={{ once: true }}
             variants={fadeSide(imageSide)}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="grid md:grid-cols-2 gap-16 items-center mb-32"
+            transition={{ duration: 0.6 }}
+            className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-24"
         >
-            {/* IMAGE */}
-            <div className={imageFirst ? "order-1" : "order-2"}>
-                <div className="h-[340px] rounded-xl overflow-hidden bg-gray-100 shadow-md">
-                    <img
-                        src={image}
-                        alt={title}
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            </div>
-
-            {/* TEXT */}
-            <div className={imageFirst ? "order-2" : "order-1"}>
+            {/* TEXT – always first on mobile */}
+            <div className={imageSide === "left" ? "md:order-2" : "md:order-1"}>
                 <span className="text-sm font-semibold text-gray-400">
                     STEP {step}
                 </span>
-                <h3 className="text-2xl font-semibold mt-3 mb-6">
+                <h3 className="text-xl md:text-2xl font-semibold mt-3 mb-4">
                     {title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed text-lg max-w-xl">
+                <p className="text-gray-600 leading-relaxed max-w-xl">
                     {desc}
                 </p>
+            </div>
+
+            {/* IMAGE – always below text on mobile */}
+            <div className={imageSide === "left" ? "md:order-1" : "md:order-2"}>
+                <div className="h-[220px] md:h-[340px] rounded-xl overflow-hidden shadow-md mt-6 md:mt-0">
+                    <img src={image} alt={title} className="w-full h-full object-cover" />
+                </div>
             </div>
         </motion.div>
     );
