@@ -79,6 +79,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
     <section className="bg-white py-16 lg:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= Header ================= */}
+
         <div className="text-center max-w-3xl mx-auto mb-14">
           <h2 className="text-sm font-bold text-indigo-600 uppercase tracking-[0.25em] mb-4">
             The KyawKyar Standard
@@ -87,7 +88,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
           <h3
             className={`text-4xl lg:text-5xl font-black text-slate-900 mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-tight"
               }`}
-          >
+>
             <span className={isMyanmar ? "text-indigo-600" : ""}>
               {t("whybuy.title_prefix")}
             </span>

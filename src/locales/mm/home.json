@@ -9,12 +9,28 @@
       "label": "အတွေ့အကြုံ"
     }
   },
+  "meta": {
+    "title": "ကျော်ကြား ကားရောင်းပြခန်း | အရည်အသွေးရှိ ကားများ",
+    "description": "စစ်မှန်တိကျစွာ စစ်ဆေးပြီးသော ကားများကို တရားဝင်စျေးနှုန်း၊ လွယ်ကူသော ငွေပေးချေမှု၊ ပြည့်စုံသည့် အရောင်းပြီးနောက် ဝန်ဆောင်မှုတို့ဖြင့် ဝယ်ယူရရှိနိုင်ပါသည်။"
+  },
   "stats": {
     "cars_sold": "ရောင်းချပြီးသောကားများ",
     "happy_customers": "စိတ်ကျေနပ်မှုရရှိသော ဖောက်သည်များ",
     "years_experience": "နှစ်ပေါင်းများစွာ အတွေ့အကြုံ",
     "cars_available": "ရရှိနိုင်သော ကားများ",
     "branches": "ဆိုင်ခွဲများ"
+  },
+  "featured" : {
+    "title": "အထူးရွေးချယ်ထားသော",
+    "highlightedText": "ကားများ",
+    "subtitle": "Handpicked Just for You",
+    "description": "Explore our exclusive selection of featured vehicles, meticulously chosen to meet the highest standards of quality and performance. Each car in this collection has been thoroughly inspected and is ready to provide you with an exceptional driving experience."
+  },
+  "new_arrivals": {
+    "title": "အသစ်ရောက်ရှိထားသော",
+    "highlightedText": "ကားများ",
+    "subtitle": "Latest Additions to Our Showroom",
+    "description": "Discover the newest additions to our showroom, featuring the latest models and innovations in the automotive world. These vehicles have just arrived and are ready for you to explore, test drive, and make your own."
   },
   "whybuy": {
     "title_prefix": "စစ်မှန်တဲ့ အရည်အသွေးကို ",
@@ -47,5 +63,17 @@
         "description": "ကားဝယ်ပြီးနောက် ခရီးတစ်ကြောင်းအာမခံဖြင့် စမ်းမောင်းနိုင်ပြီး အဆင်မပြေပါက ကျွန်ုပ်တို့မှ ပြန်လည်စစ်ဆေးကူညီပေးပါသည်။"
       }
     }
+  },
+  "browse_by_body_type": {
+    "title": "တည်ဆောက်ပုံအမျိုးအစားအလိုက်",
+    "highlightedText": "ကြည့်ရှုရန်",
+    "subtitle": "သင့်နှစ်သက်ရာ ကားကို ရှာဖွေလိုက်ပါ",
+    "description": "ကားအမျိုးအစားအလိုက် ကားများကို စုစည်းထားသော ကျွန်ုပ်တို့၏ ကားများစွာထဲမှ သင့်ဘဝနှင့် နှစ်သက်မှုများနှင့် ကိုက်ညီသော စတိုင်လ်ရှိသော ဆီဒန်ကား၊ ကျယ်ပြန့်သော SUV ကား သို့မဟုတ် အမျိုးမျိုး အသုံးပြုနိုင်သော ဟတ်ခ်ဘတ်ကားများကို ရှာဖွေနိုင်ပါသည်။"
+  }, 
+  "browse_by_brand": {
+    "title": "အမှတ်တံဆိပ်အမျိုးအစားအလိုက်",
+    "highlightedText": "ကြည့်ရှုရန်",
+    "subtitle": "သင့်နှစ်သက်ရာ ကားကို ရှာဖွေလိုက်ပါ",
+    "description": "ကားအမျိုးအစားအလိုက် ကားများကို စုစည်းထားသော ကျွန်ုပ်တို့၏ ကားများစွာထဲမှ သင့်ဘဝနှင့် နှစ်သက်မှုများနှင့် ကိုက်ညီသော စတိုင်လ်ရှိသော ဆီဒန်ကား၊ ကျယ်ပြန့်သော SUV ကား သို့မဟုတ် အမျိုးမျိုး အသုံးပြုနိုင်သော ဟတ်ခ်ဘတ်ကားများကို ရှာဖွေနိုင်ပါသည်။"
   }
 }

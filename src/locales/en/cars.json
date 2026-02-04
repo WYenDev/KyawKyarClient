@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Browse Cars for Sale in Myanmar",
+    "description": "Filter Kyaw Kyar’s inspected inventory by brand, model year, mileage, price range, and showroom to find your next vehicle."
+  },
   "title": "Our Car Inventory",
   "subtitle": "Browse through Myanmar's largest collection of quality cars",
   "filters": {
@@ -55,6 +59,10 @@
     "call_now": "Call Now: +95-9-123-456-789",
     "request_info": "Request More Info",
     "schedule_test_drive": "Schedule Test Drive"
+  },
+  "sell_meta": {
+    "title": "Sell Your Car - Fast & Easy Service",
+    "description": "Sell your car quickly with Kyaw Kyar. Get a competitive offer and handle paperwork hassle-free."
   },
   "sell": {
     "title": "Sell Your Car",

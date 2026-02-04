@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import SEO from '../components/SEO';
 
 /* ===== Images ===== */
 import heroImg from "../assets/Servicce.png";
@@ -24,8 +25,16 @@ const RigorousQualityInspection = () => {
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
-            {/* ================= HERO ================= */}
-            <section className="relative h-[520px] md:h-[620px]">
+
+
+            <SEO 
+                title="Rigorous Quality Inspection - Kyaw Kyar"
+                description="Our certified mechanics perform a comprehensive 360-degree check on every vehicle to ensure quality and safety."
+            />
+            {/* ======================================================
+          HERO
+      ====================================================== */}
+               <section className="relative h-[520px] md:h-[620px]">
                 <motion.img
                     src={heroImg}
                     alt="Rigorous Quality Inspection"
