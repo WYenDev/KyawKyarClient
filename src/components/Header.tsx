@@ -175,7 +175,7 @@ const Header: React.FC = () => {
                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white">
                       <User className="h-4 w-4" />
                     </span>
-                    <span className="hidden sm:inline">Admin</span>
+                    <span className="hidden sm:inline">{user.username}</span>
                   </button>
                 ) : (
                   <>
@@ -198,7 +198,7 @@ const Header: React.FC = () => {
                           onClick={() => setIsAccountOpen(false)}
                         >
                           <User className="h-4 w-4 text-slate-500" />
-                          <span>{t('buttons.login', 'Login')}</span>
+                          <span>{t('buttons.admin_login', 'Admin Login')}</span>
                         </Link>
                         {/* Register removed: admin-only login; no public signup */}
                       </div>
@@ -252,7 +252,7 @@ const Header: React.FC = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold transition-all active:scale-[0.98]"
                 >
                   <User className="h-5 w-5" />
-                  <span>Admin Dashboard</span>
+                  <span>{user.username}</span>
                 </button>
               ) : (
                 <Link
@@ -261,7 +261,7 @@ const Header: React.FC = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold transition-all active:scale-[0.98]"
                 >
                   <User className="h-5 w-5" />
-                  <span>{t('buttons.login', 'Login')}</span>
+                  <span>{t('buttons.admin_login', 'Admin Login')}</span>
                 </Link>
               )}
 

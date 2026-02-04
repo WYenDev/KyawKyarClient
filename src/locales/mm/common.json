@@ -15,7 +15,8 @@
     "view_details": "အသေးစိတ်ကြည့်ရှုမည်",
     "call_us": "ဖုန်းဆက်မည်",
     "send_message": "စာပို့မည်",
-      "login": "Login"
+      "login": "Login",
+      "admin_login": "Admin Login"
     },
   "labels": {
     "phone": "ဖုန်း",

@@ -34,11 +34,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = (user: User) => {
     console.log("Logging in user:", user);
+    if (user.accessToken) {
+      client.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
+      try {
+        localStorage.setItem('token', user.accessToken);
+      } catch (e) {
+        console.error('Failed to save token to localStorage', e);
+      }
+    }
     setUser(user);
   };
 
   const logout = () => {
     setUser(null);
+    delete client.defaults.headers.common['Authorization'];
+    try {
+      localStorage.removeItem('token');
+    } catch (e) {
+        console.error('Failed to remove token from localStorage', e);
+    }
     // You would also call your backend /logout to clear the HttpOnly cookie
   };
 

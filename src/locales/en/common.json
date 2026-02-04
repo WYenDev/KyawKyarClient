@@ -15,7 +15,8 @@
     "view_details": "View Details",
     "call_us": "Call Us",
 "send_message": "Send Message",
-      "login": "Login"
+      "login": "Login",
+      "admin_login": "Admin Login"
     },
   "labels": {
     "phone": "Phone",
