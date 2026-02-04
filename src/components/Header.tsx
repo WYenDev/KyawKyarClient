@@ -94,7 +94,7 @@ const Header: React.FC = () => {
             </Link>
 
             {/* Desktop Navigation - Centered Pill */}
-            <nav className="hidden md:flex items-center gap-1 bg-gray-100/50 p-1.5 rounded-full border border-gray-200/50 backdrop-blur-sm">
+            <nav className="hidden xl:flex items-center gap-1 bg-gray-100/50 p-1.5 rounded-full border border-gray-200/50 backdrop-blur-sm">
               {navItems.map((item) => (
                 <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
                   {item.label}
@@ -103,7 +103,7 @@ const Header: React.FC = () => {
             </nav>
 
             {/* Right Side Actions */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden xl:flex items-center gap-3">
               <button
                 onClick={handleLanguageChange}
                 className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-200 group"
@@ -210,7 +210,7 @@ const Header: React.FC = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="xl:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle Menu"
             >
@@ -226,7 +226,7 @@ const Header: React.FC = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl animate-in slide-in-from-top-5 duration-200">
+        <div className="xl:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl animate-in slide-in-from-top-5 duration-200">
           <div className="px-4 py-6 space-y-4">
             <nav className="flex flex-col space-y-2">
               {navItems.map((item) => (
@@ -244,65 +244,70 @@ const Header: React.FC = () => {
               ))}
             </nav>
 
-            <div className="pt-4 border-t border-gray-100">
-              <div className="flex flex-col space-y-4 items-center">
+            <div className="pt-4 border-t border-gray-100 space-y-2">
+              {/* Admin/Login */}
+              {user ? (
                 <button
-                  onClick={() => {
-                    handleLanguageChange();
-                  }}
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                  onClick={() => { navigate('/admin'); setIsMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold transition-all active:scale-[0.98]"
                 >
-                  <Globe className="h-5 w-5 text-gray-500" />
-                  <span className="font-medium text-slate-700">{t('nav.language')}</span>
+                  <User className="h-5 w-5" />
+                  <span>Admin Dashboard</span>
                 </button>
+              ) : (
+                <Link
+                  to="/admin/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold transition-all active:scale-[0.98]"
+                >
+                  <User className="h-5 w-5" />
+                  <span>{t('buttons.login', 'Login')}</span>
+                </Link>
+              )}
 
+              {/* Language Toggle */}
+              <button
+                onClick={() => { handleLanguageChange(); setIsMenuOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-slate-200 text-slate-700 font-semibold transition-all active:scale-[0.98]"
+              >
+                <Globe className="h-5 w-5 text-slate-500" />
+                <span>{t('nav.language')}</span>
+              </button>
+
+              {/* Contact Actions */}
+              <div className="grid grid-cols-1 gap-2 pt-2">
                 <a
                   href={`tel:${phoneNumber.replace(/\s/g, '')}`}
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 text-red-700 border border-red-100 font-semibold active:scale-[0.98] transition-all"
                 >
-                  <div className="flex items-center justify-center w-6 h-6 bg-red-600 rounded-full">
-                    <Phone className="h-3.5 w-3.5 text-white" />
+                  <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center shadow-sm">
+                    <Phone className="h-4 w-4 text-white" />
                   </div>
-                  <span className="font-medium">{t('buttons.call_us')}</span>
+                  <span>{t('buttons.call_us')}</span>
                 </a>
+                
                 <a
                   href={`viber://chat?number=%2B${viberNumber}`}
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#7360f2]/10 text-[#7360f2] border border-[#7360f2]/20 font-semibold active:scale-[0.98] transition-all"
                 >
-                  <img src={ViberIcon} alt="Viber" className="h-5 w-5 rounded-full" />
-                  <span className="font-medium">{t('buttons.viber', 'Viber')}</span>
+                  <div className="w-8 h-8 rounded-full overflow-hidden shadow-sm">
+                    <img src={ViberIcon} alt="Viber" className="h-full w-full object-cover" />
+                  </div>
+                  <span>{t('buttons.viber', 'Chat on Viber')}</span>
                 </a>
+
                 <a
                   href={apiFacebook || '#'}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors w-full max-w-xs"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 font-semibold active:scale-[0.98] transition-all"
                 >
-                  <div className="flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
-                    <Facebook className="h-3.5 w-3.5 text-white" />
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                    <Facebook className="h-4 w-4 text-white" />
                   </div>
-                  <span className="font-medium">{t('buttons.facebook', 'Facebook')}</span>
+                  <span>{t('buttons.facebook', 'Connect on Facebook')}</span>
                 </a>
-
-                {user ? (
-                  <button
-                    onClick={() => navigate('/admin')}
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full max-w-xs"
-                  >
-                    <User className="h-5 w-5" />
-                    <span className="font-medium">Admin</span>
-                  </button>
-                ) : (
-                  <Link
-                    to="/admin/login"
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors w-full max-w-xs"
-                  >
-                    <User className="h-5 w-5" />
-                    <span className="font-medium">{t('buttons.login', 'Login')}</span>
-                  </Link>
-                )}
               </div>
-
             </div>
           </div>
         </div>

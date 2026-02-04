@@ -138,7 +138,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
   return (
     <>
       {/* Mobile Filter Button */}
-      <div className="lg:hidden mb-6">
+      <div className="xl:hidden mb-6">
         <button
           onClick={onToggle}
           className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:shadow-md transition-shadow"
@@ -151,7 +151,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
       {/* Overlay for mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden glass-effect"
+          className="fixed inset-0 bg-black/50 z-30 xl:hidden glass-effect"
           onClick={onToggle}
           aria-hidden="true"
         />
@@ -160,17 +160,17 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
       {/* Filter Sidebar */}
       <div className={`
         fixed inset-y-0 left-0 z-40 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out
-        lg:relative lg:translate-x-0 lg:shadow-none lg:bg-transparent lg:rounded-xl lg:p-0
-        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        xl:relative xl:translate-x-0 xl:shadow-none xl:bg-transparent xl:rounded-xl xl:p-0
+        ${isOpen ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'}
       `}>
-        <div className="p-6 lg:p-6 h-full lg:h-auto overflow-y-auto lg:overflow-visible bg-white lg:bg-slate-50 rounded-xl lg:rounded-none shadow-lg lg:shadow-none">
+        <div className="p-6 xl:p-6 h-full xl:h-auto overflow-y-auto xl:overflow-visible bg-white xl:bg-slate-50 rounded-xl xl:rounded-none shadow-lg xl:shadow-none">
           {/* Header */}
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-slate-900">Filters</h3>
             <div className="flex items-center space-x-2">
               <button
                 onClick={onToggle}
-                className="lg:hidden text-slate-500 hover:text-slate-700"
+                className="xl:hidden text-slate-500 hover:text-slate-700"
                 aria-label="Close filters"
               >
                 <X className="h-5 w-5" />
@@ -448,7 +448,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
       {/* Mobile Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 xl:hidden"
           onClick={onToggle}
         />
       )}

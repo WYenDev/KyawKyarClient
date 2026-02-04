@@ -19,8 +19,8 @@ const SellCars: React.FC = () => {
       <ScrollToTop />
       <div className="pt-8 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-12 items-start">
-            <div className="lg:col-span-2">
+          <div className="grid xl:grid-cols-3 gap-12 items-start">
+            <div className="xl:col-span-2">
               <div className="mb-8">
                 <SellCarIntro />
               </div>
@@ -28,7 +28,7 @@ const SellCars: React.FC = () => {
               <SellCarForm />
             </div>
 
-            <div className="lg:col-span-1">
+            <div className="xl:col-span-1">
               <WhySellWithUs />
             </div>
           </div>

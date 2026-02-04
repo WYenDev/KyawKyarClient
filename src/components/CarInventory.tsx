@@ -214,9 +214,9 @@ const CarInventory: React.FC = () => {
         <p className="text-xl text-slate-600">{t('subtitle')}</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col xl:flex-row gap-8">
         {/* Filter Sidebar */}
-        <div className="lg:w-80 flex-shrink-0">
+        <div className="xl:w-80 flex-shrink-0">
           {filtersLoading ? (
             <div className="p-4 text-sm text-slate-500">Loading filters...</div>
           ) : filtersError ? (

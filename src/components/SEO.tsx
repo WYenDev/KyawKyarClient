@@ -11,8 +11,8 @@ export const SITE_URL = (() => {
   return '';
 })();
 
-const buildUrl = (path?: string) => {
-  if (!path) {
+const buildUrl = (path?: any) => {
+  if (!path || typeof path !== 'string') {
     return SITE_URL;
   }
   const normalizedPath = path.startsWith('http') ? path : `${SITE_URL}${path.startsWith('/') ? '' : '/'}${path}`;

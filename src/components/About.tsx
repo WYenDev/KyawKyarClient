@@ -3,9 +3,9 @@ import { Award, Shield, Users, Clock, CheckCircle } from 'lucide-react';
 
 const About: React.FC = () => {
   return (
-    <section id="about" className="py-16 lg:py-24 bg-white">
+    <section id="about" className="py-16 xl:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid xl:grid-cols-2 gap-12 xl:gap-16 items-center">
           
           {/* Image Collage */}
           <div className="grid grid-cols-2 gap-4">

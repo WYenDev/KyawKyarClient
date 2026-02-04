@@ -66,19 +66,20 @@ const CarDetails: React.FC = () => {
   };
 
   const carTitle = `${(carData as any)?.year ?? ''} ${(carData as any)?.model?.brand?.name ?? ''} ${(carData as any)?.model?.name ?? ''}`.trim();
+  const mainImageUrl = images[0]?.url || images[0]?.storageBaseKey || '';
 
   return (
     <div className="bg-gray-50 min-h-screen">
       <SEO 
         title={carTitle}
         description={(carData as any)?.description?.substring(0, 160)}
-        image={images[0]}
+        image={mainImageUrl}
         type="product"
         structuredData={{
           "@context": "https://schema.org/",
           "@type": "Vehicle",
           "name": carTitle,
-          "image": images,
+          "image": images.map((img: any) => img.url || img.storageBaseKey || ''),
           "description": (carData as any)?.description,
           "manufacturer": {
             "@type": "Organization",
@@ -115,7 +116,7 @@ const CarDetails: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-10">
+        <div className="grid xl:grid-cols-2 gap-10">
           <CarDetailsGallery
             images={(carData as any)?.images ?? []}
             currentIndex={currentImageIndex}

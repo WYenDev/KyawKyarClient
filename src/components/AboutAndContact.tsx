@@ -34,7 +34,7 @@ const AboutContact: React.FC = () => {
       {/* --- SECTION 1: ABOUT US --- */}
       <section id="about" className="py-16 sm:py-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid xl:grid-cols-2 gap-12 xl:gap-16 items-center">
             {/* Image Collage */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
@@ -124,9 +124,9 @@ const AboutContact: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 items-start">
+          <div className="grid xl:grid-cols-3 gap-8 items-start">
             {/* Left Column: Contact Actions */}
-            <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-10">
+            <div className="xl:col-span-1 space-y-6 xl:sticky xl:top-10">
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
                 <h3 className="font-bold text-lg text-slate-900 mb-4">Direct Contact</h3>
                 <div className="flex flex-col gap-4">
@@ -167,7 +167,7 @@ const AboutContact: React.FC = () => {
             </div>
 
             {/* Right Column: Branch Cards */}
-            <div className="lg:col-span-2 grid gap-6">
+            <div className="xl:col-span-2 grid gap-6">
               {showroomData.items && showroomData.items.map((loc: any, i: number) => (
                 <div
                   key={i}

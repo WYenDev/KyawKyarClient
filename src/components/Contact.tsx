@@ -15,9 +15,9 @@ const Contact: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid xl:grid-cols-3 gap-8">
           {/* Contact Info */}
-          <div className="lg:col-span-1">
+          <div className="xl:col-span-1">
             <h3 className="text-2xl font-bold mb-6">{t('info.title')}</h3>
             
             <div className="space-y-6">
@@ -68,7 +68,7 @@ const Contact: React.FC = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="lg:col-span-2">
+          <div className="xl:col-span-2">
             <div className="bg-white rounded-2xl p-8 text-gray-900">
               <h3 className="text-2xl font-bold mb-6">{t('form.title')}</h3>
               
