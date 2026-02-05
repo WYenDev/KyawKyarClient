@@ -1,11 +1,15 @@
-import React from 'react';
-import PremiumPayment from '../components/PremiumPayment';
+import React from "react";
+import PremiumPayment from "../components/PremiumPayment";
+import CarPurchaseGuide from "../components/CarPurchaseGuide";
 
 const Payments: React.FC = () => {
   return (
-    <div>
-      <PremiumPayment />
-    </div>
+    <main className="bg-slate-50 min-h-screen py-10">
+      <div className="max-w-7xl mx-auto px-4 space-y-10">
+        <CarPurchaseGuide />
+        <PremiumPayment />
+      </div>
+    </main>
   );
 };
 
