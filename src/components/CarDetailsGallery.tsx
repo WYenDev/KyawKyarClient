@@ -42,13 +42,13 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
             src={getImageUrl(images[currentIndex], 'main') || ''}
             alt="car"
             onClick={() => setIsLightboxOpen(true)}
-            className="w-full h-80 sm:h-96 object-cover cursor-pointer hover:opacity-95 transition-opacity"
+            className="w-full h-auto aspect-[4/3] sm:h-96 sm:aspect-auto object-cover cursor-pointer hover:opacity-95 transition-opacity"
           />
         ) : (
           <img
             src={'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
             alt="car"
-            className="w-full h-80 sm:h-96 object-cover"
+            className="w-full h-auto aspect-[4/3] sm:h-96 sm:aspect-auto object-cover"
           />
         )}
 
