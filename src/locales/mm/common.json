@@ -23,5 +23,35 @@
     "email": "အီးမေးလ်",
     "address": "လိပ်စာ",
     "opening_hours": "ဖွင့်ချိန်"
+  },
+  "payments_info": {
+    "title": "ငွေပေးချေမှု ရွေးချယ်စရာများ",
+    "description": "Kyaw Kyar တွင် <highlight>လက်ငင်းငွေချေစနစ်</highlight>ဖြင့် ဝယ်ယူနိုင်သလို၊ လွယ်ကူလျင်မြန်သော <highlight>Showroom Installment</highlight> (သို့မဟုတ်) ဘဏ်အတိုးနှုန်းသက်သာသော <highlight>Bank Installment</highlight> အစီအစဉ်များဖြင့်လည်း စိတ်ကြိုက်ရွေးချယ် ဝယ်ယူနိုင်ပါသည်။",
+    "installment_title": "အရစ်ကျ အမျိုးအစားများ",
+    "installment_items": {
+      "showroom": "Showroom Installment",
+      "bank": "Bank Installment"
+    },
+    "showroom_details": "အကယ်၍ လူကြီးမင်းသည် {{duration}} လ အရစ်ကျစနစ်ကို ရွေးချယ်ပါက၊ ကနဦးပေးချေမှုအဖြစ် {{initialPayment}}% ၊ စာရွက်စာတမ်းကြေးအဖြစ် ကားတန်ဖိုး၏ {{paperworkFee}}% ကို ပေးချေရမည်ဖြစ်ပါသည်။ ကျန်ရှိသော {{remainingPct}}% အပေါ်တွင် အတိုးနှုန်း {{interestRate}}% ပေးချေရမည်ဖြစ်ပါသည်။"
+  },
+  "purchase_guide": {
+    "title": "ဘဏ်အရစ်ကျလျှောက်ထားရန် လိုအပ်သော စာရွက်စာတမ်းများ",
+    "subtitle": "အောက်ပါစာရွက်စာတမ်းများကို ယူလာရန် လိုအပ်ပါသည်။",
+    "customer_base_title": "ဝယ်ယူသူ (Customer) – အခြေခံလိုအပ်ချက်",
+    "nrc_household": "မှတ်ပုံတင် (NRC) သို့မဟုတ် အိမ်ထောင်စုဇယား",
+    "license_photo": "လိုင်စင်ဓာတ်ပုံ (၂) ပုံ",
+    "ward_recommendation": "ရပ်ကွက်ထောက်ခံစာ (မူရင်း)",
+    "business_owner": "လုပ်ငန်းရှင်",
+    "employee": "ဝန်ထမ်း",
+    "if_business_owner": "လုပ်ငန်းရှင် ဖြစ်ပါက",
+    "business_license": "လုပ်ငန်းလိုင်စင်",
+    "profit_loss": "အရှုး / အမြတ် စာရင်း (၂) နှစ်",
+    "tax_receipt": "အမြတ်ခွန် ပြေစာ (၂) နှစ်",
+    "if_employee": "ဝန်ထမ်း ဖြစ်ပါက",
+    "salary_slip": "လစာ ပြေစာ (နောက်ဆုံး ၃ လ)",
+    "employment_recommendation": "ဝန်ထမ်းဖြစ်ကြောင်း ထောက်ခံစာ",
+    "income_tax_receipt": "ဝင်ငွေခွန် ပြေစာ (၂) နှစ်",
+    "guarantor_title": "အာမခံသူ (Guarantor)",
+    "bank_approval_note": "* Bank Approval ရရှိပြီးမှသာ အရစ်ကျလုပ်ငန်းစဉ်ကို ဆက်လက်ဆောင်ရွက်နိုင်ပါသည်။"
   }
 }

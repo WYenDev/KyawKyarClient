@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation, Trans } from "react-i18next";
 import {
   ShieldCheck,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   Gem,
   Clock,
   MapPin,
@@ -14,6 +16,7 @@ import {
   Calculator
 } from "lucide-react";
 import { useGetApiBankInstallments, useGetApiShowroomInstallments } from "../services/api";
+import CarPurchaseGuide from "./CarPurchaseGuide";
 
 /* ===== Premium Car Data ===== */
 const car = {
@@ -33,12 +36,20 @@ const car = {
 
 const TAX = 200000;
 
+const toBurmeseNum = (n: number | string) => {
+  const nums: Record<string, string> = {
+    '0': '၀', '1': '၁', '2': '၂', '3': '၃', '4': '၄',
+    '5': '၅', '6': '၆', '7': '၇', '8': '၈', '9': '၉'
+  };
+  return n.toString().replace(/[0-9]/g, (match) => nums[match]);
+};
+
 type InstallmentMode = "bank" | "showroom";
 
 const PremiumPayment: React.FC = () => {
-  const [step, setStep] = useState<1 | 2 | 3>(3);
-  const [paymentType, setPaymentType] = useState<"full" | "installment">("installment");
-  const [installmentMode, setInstallmentMode] = useState<InstallmentMode | null>(null);
+  const { t, i18n } = useTranslation("common");
+  const isMyanmar = i18n?.language?.startsWith('mm');
+  const [installmentMode, setInstallmentMode] = useState<InstallmentMode | null>("showroom");
 
   /* ===== NEW: Calculator State ===== */
   const [customPrice, setCustomPrice] = useState(car.price);
@@ -68,13 +79,6 @@ const PremiumPayment: React.FC = () => {
       setSelectedShowroomIndex(null);
     }
   }, [installmentMode, showroomInstallments]);
-
-  // When user picks "Installment" as payment type, default to showroom mode
-  useEffect(() => {
-    if (paymentType === 'installment' && installmentMode == null) {
-      setInstallmentMode('showroom');
-    }
-  }, [paymentType, installmentMode]);
 
   /* ===== Financial Calculations ===== */
   const bankDerived = useMemo(() => {
@@ -111,126 +115,135 @@ const PremiumPayment: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
 
           {/* LEFT: INTERACTIVE FORM AREA */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-6">
+            <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+              <header>
+                 <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-full shadow-sm mb-4">
+                    <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                    <span className="text-indigo-900 text-[11px] font-bold tracking-widest uppercase">
+                      Payment Plans
+                    </span>
+                 </div>
+                <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 tracking-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
+                   <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                      {t("payments_info.title", "Flexible Payment Options")}
+                   </span>
+                </h2>
+                <p className={`text-base sm:text-lg text-slate-600 mt-4 leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
+                  <Trans
+                    i18nKey="payments_info.description"
+                    ns="common"
+                    components={{
+                      highlight: <span className="text-indigo-600 font-bold" />
+                    }}
+                  />
+                </p>
+              </header>
+            </div>
+
             <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-10">
-                {step === 1 && (
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <header className="mb-10">
-                      <span className="text-blue-600 font-semibold text-sm uppercase tracking-widest">Step 01</span>
-                      <h2 className="text-3xl font-bold mt-2">Vehicle Verification</h2>
-                      <p className="text-slate-500 mt-2">Review your selected model's specialized certifications.</p>
-                    </header>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="group p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all">
-                        <InfoIcon icon={<Settings2 size={18} />} label="Model & Year" value={`${car.model} — ${car.modelYear}`} />
-                        <InfoIcon icon={<MapPin size={18} />} label="Showroom" value={car.showroom} />
-                        <InfoIcon icon={<Fuel size={18} />} label="Fuel System" value={car.fuel} />
-                      </div>
-                      <div className="group p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 transition-all">
-                        <InfoIcon icon={<ShieldCheck size={18} />} label="Engine Status" value="150-Point Certified" />
-                        <InfoIcon icon={<Clock size={18} />} label="Mileage" value={`${car.mileage} km (Genuine)`} />
-                        <InfoIcon icon={<Gem size={18} />} label="Grade" value="S-Class Premium" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {step === 2 && (
+              <div className="p-8 sm:p-10">
                   <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                    <header className="mb-10">
-                      <span className="text-blue-600 font-semibold text-sm uppercase tracking-widest">Step 02</span>
-                      <h2 className="text-3xl font-bold mt-2">Personal Details</h2>
-                      <p className="text-slate-500 mt-2">Enter ownership details for legal documentation.</p>
-                    </header>
-                    <div className="space-y-6 max-w-2xl">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase text-slate-400 ml-1">Full Name</label>
-                          <input className="premium-input w-full" placeholder="e.g. U Kyaw Zay Ya" />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase text-slate-400 ml-1">Phone</label>
-                          <input className="premium-input w-full" placeholder="09 xxxxxxxx" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
-                {step === 3 && (
-                  <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                    <header className="mb-8">
-                      <span className="text-blue-600 font-semibold text-sm uppercase tracking-widest">Step 03</span>
-                      <h2 className="text-3xl font-bold mt-2">Payment Strategy</h2>
-                      <p className="text-slate-500 mt-2">Choose between full payment or tailored installment plans.</p>
-                    </header>
+                    {/* Mobile: Scroll to Calculator Button */}
+                    <button
+                      onClick={() => document.getElementById('calculator-section')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="w-full lg:hidden mb-8 bg-slate-900 text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                    >
+                      <Calculator size={20} className="text-blue-400" />
+                      <span>{t('buttons.calculate_payment', 'Calculate with Payment Calculator')}</span>
+                      <ChevronDown size={20} className="text-slate-400" />
+                    </button>
 
-                    <div className="grid grid-cols-2 gap-4 mb-8">
+                    <div className="grid sm:grid-cols-2 gap-4 mb-10">
                       <button
-                        onClick={() => {
-                          setPaymentType("full");
-                          setInstallmentMode(null);
-                        }}
-                        className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 ${paymentType === "full" ? "border-blue-600 bg-blue-50 ring-4 ring-blue-50" : "border-slate-100 bg-white"}`}
+                         onClick={() => setInstallmentMode('showroom')}
+                        className={`p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'showroom'
+                          ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500 shadow-md'
+                          : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm'}`}
                       >
-                        <Wallet className={paymentType === "full" ? "text-blue-600" : "text-slate-400"} />
-                        <span className="font-bold">Full Cash Pay</span>
+                        <div className={`w-12 h-12 rounded-full shadow-sm flex items-center justify-center transition-colors ${installmentMode === 'showroom' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500 group-hover:text-indigo-600'}`}>
+                          <Gem size={24} />
+                        </div>
+                        <div>
+                           <span className={`block font-bold text-lg ${installmentMode === 'showroom' ? 'text-indigo-900' : 'text-slate-700'} ${isMyanmar ? 'font-myanmar' : ''}`}>
+                           {t("payments_info.installment_items.showroom", "Showroom Installment")}
+                           </span>
+                           <span className={`text-sm ${installmentMode === 'showroom' ? 'text-indigo-700' : 'text-slate-500'}`}>
+                             {isMyanmar ? 'ပြင်ဆင်ထားသော လစဉ်ကြေး' : 'Flexible months & rates'}
+                          </span>
+                        </div>
                       </button>
-
+                      
                       <button
-                        onClick={() => setPaymentType("installment")}
-                        className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 ${paymentType === "installment" ? "border-blue-600 bg-blue-50 ring-4 ring-blue-50" : "border-slate-100 bg-white"}`}
+                        onClick={() => setInstallmentMode('bank')}
+                         className={`p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'bank'
+                          ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500 shadow-md'
+                          : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm'}`}
                       >
-                        <Percent className={paymentType === "installment" ? "text-blue-600" : "text-slate-400"} />
-                        <span className="font-bold">Installment Plan</span>
+                         <div className={`w-12 h-12 rounded-full shadow-sm flex items-center justify-center transition-colors ${installmentMode === 'bank' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500 group-hover:text-indigo-600'}`}>
+                          <Wallet size={24} />
+                        </div>
+                         <div>
+                           <span className={`block font-bold text-lg ${installmentMode === 'bank' ? 'text-indigo-900' : 'text-slate-700'} ${isMyanmar ? 'font-myanmar' : ''}`}>
+                           {t("payments_info.installment_items.bank", "Bank Installment")}
+                           </span>
+                           <span className={`text-sm ${installmentMode === 'bank' ? 'text-indigo-700' : 'text-slate-500'}`}>
+                             {isMyanmar ? 'ဘဏ်လုပ်ထုံးလုပ်နည်းများအတိုင်း' : 'Standard banking procedures'}
+                          </span>
+                        </div>
                       </button>
                     </div>
 
-                    {paymentType === "installment" && (
-                      <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-8 space-y-4 animate-in zoom-in-95 duration-300">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <ReceiptText size={18} className="text-blue-600" />
-                            <label className="text-sm font-bold text-slate-600 uppercase">Installment Type</label>
-                          </div>
-
-                          <div className="flex gap-2">
-                            {(["showroom", "bank"] as InstallmentMode[]).map((m) => (
-                              <button
-                                key={m}
-                                onClick={() => setInstallmentMode(m)}
-                                className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${installmentMode === m ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200 shadow-sm"}`}
-                              >
-                                {m.toUpperCase()}
-                              </button>
-                            ))}
-                          </div>
-
-                        </div>
-
-                        {/* Showroom plan selection moved here */}
+                    <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-8 space-y-4 animate-in zoom-in-95 duration-300">
+                      
+                      {/* Showroom plan selection moved here */}
                         {installmentMode === "showroom" && Array.isArray(showroomInstallments) && showroomInstallments.length > 0 && (
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <ReceiptText size={18} className="text-blue-600" />
-                              <label className="text-sm font-bold text-slate-600 uppercase">Choose Showroom Plan</label>
+                          <div className="space-y-6">
+                            <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                <ReceiptText size={18} className="text-blue-600" />
+                                <label className="text-sm font-bold text-slate-600 uppercase">Choose Showroom Plan</label>
+                              </div>
+                              <div className="flex gap-2 flex-wrap justify-end">
+                                {showroomInstallments.map((plan, idx) => {
+                                  const months = Math.max(1, Math.round(Number(plan?.duration ?? 0) * 12));
+                                  const active = selectedShowroomIndex === idx;
+                                  return (
+                                    <button
+                                      key={idx}
+                                      onClick={() => setSelectedShowroomIndex(idx)}
+                                      className={`px-3 py-2 rounded-xl text-xs font-black transition-all ${active ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200 shadow-sm"}`}
+                                    >
+                                      {months} MONTHS
+                                    </button>
+                                  );
+                                })}
+                              </div>
                             </div>
-                            <div className="flex gap-2 flex-wrap justify-end">
-                              {showroomInstallments.map((plan, idx) => {
-                                const months = Math.max(1, Math.round(Number(plan?.duration ?? 0) * 12));
-                                const active = selectedShowroomIndex === idx;
-                                return (
-                                  <button
-                                    key={idx}
-                                    onClick={() => setSelectedShowroomIndex(idx)}
-                                    className={`px-3 py-2 rounded-xl text-xs font-black transition-all ${active ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200 shadow-sm"}`}
-                                  >
-                                    {months} MONTHS
-                                  </button>
-                                );
-                              })}
-                            </div>
+                            
+                            {/* Dynamic Showroom Explanation Text */}
+                            {showroomConfig && (
+                              <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-slate-700 text-sm leading-relaxed">
+                                {(() => {
+                                   const durationVal = Math.max(1, Math.round(Number(showroomConfig.duration ?? 0) * 12));
+                                   const initialVal = showroomConfig.initialPayment ?? 0;
+                                   const paperworkVal = (showroomConfig as any).paperWorkFee ?? 0;
+                                   const interestVal = showroomConfig.interestRate ?? 0;
+                                   const remainingVal = 100 - Number(initialVal);
+                                   
+                                   const formatNum = (n: number | string) => isMyanmar ? toBurmeseNum(n) : n;
+
+                                   return t("payments_info.showroom_details", {
+                                      duration: formatNum(durationVal),
+                                      initialPayment: formatNum(initialVal),
+                                      paperworkFee: formatNum(paperworkVal),
+                                      interestRate: formatNum(interestVal),
+                                      remainingPct: formatNum(remainingVal)
+                                   });
+                                })()}
+                              </div>
+                            )}
                           </div>
                         )}
 
@@ -257,19 +270,22 @@ const PremiumPayment: React.FC = () => {
                           </div>
                         </div>
 
+                        {installmentMode === "bank" && (
+                          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            <CarPurchaseGuide />
+                          </div>
+                        )}
+
                       </div>
-                    )}
 
                   </div>
-                )}
-
               </div>
             </div>
           </div>
 
           {/* RIGHT: SUMMARY CARD + CONDITIONAL CALCULATOR */}
-          <div className="lg:col-span-4 sticky top-28 space-y-6">
-            {paymentType === "installment" && (
+          <div id="calculator-section" className="lg:col-span-4 sticky top-28 space-y-6">
+            
               <div className="bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden text-white p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <Calculator className="text-blue-400" size={24} />
@@ -398,7 +414,7 @@ const PremiumPayment: React.FC = () => {
 
                 </div>
               </div>
-            )}
+            
           </div>
 
         </div>

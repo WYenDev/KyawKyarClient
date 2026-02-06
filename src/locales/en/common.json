@@ -23,5 +23,35 @@
     "email": "Email",
     "address": "Address",
     "opening_hours": "Opening Hours"
+  },
+  "payments_info": {
+    "title": "Flexible Payment Options",
+    "description": "At Kyaw Kyar, you can purchase with <highlight>Cash Payment</highlight>, or choose easy <highlight>Showroom Installment</highlight> or low-interest <highlight>Bank Installment</highlight> plans.",
+    "installment_title": "Installment Types",
+    "installment_items": {
+      "showroom": "Showroom Installment",
+      "bank": "Bank Installment"
+    },
+    "showroom_details": "If you choose showroom installment for {{duration}} months duration, you pay {{initialPayment}}% as initial deposit, and {{paperworkFee}}% of car price for paperwork fee. Then you have to give {{interestRate}}% interest rate on the remaining {{remainingPct}}%."
+  },
+  "purchase_guide": {
+    "title": "Required Documents for Bank Installment",
+    "subtitle": "Please bring the following documents for processing.",
+    "customer_base_title": "Customer - Basic Requirements",
+    "nrc_household": "NRC or Household List",
+    "license_photo": "License Photo (2) pieces",
+    "ward_recommendation": "Ward Recommendation (Original)",
+    "business_owner": "Business Owner",
+    "employee": "Employee",
+    "if_business_owner": "If Business Owner",
+    "business_license": "Business License",
+    "profit_loss": "Profit & Loss Account (2 Years)",
+    "tax_receipt": "Tax Receipt (2 Years)",
+    "if_employee": "If Employee",
+    "salary_slip": "Salary Slip (Last 3 Months)",
+    "employment_recommendation": "Employment Recommendation Letter",
+    "income_tax_receipt": "Income Tax Receipt (2 Years)",
+    "guarantor_title": "Guarantor Requirements",
+    "bank_approval_note": "* The installment process can only proceed after receiving Bank Approval."
   }
 }
