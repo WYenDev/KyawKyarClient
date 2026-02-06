@@ -32,7 +32,33 @@
       "showroom": "Showroom Installment",
       "bank": "Bank Installment"
     },
-    "showroom_details": "If you choose showroom installment for {{duration}} months duration, you pay {{initialPayment}}% as initial deposit, and {{paperworkFee}}% of car price for paperwork fee. Then you have to give {{interestRate}}% interest rate on the remaining {{remainingPct}}%."
+    "showroom_details": "If you choose showroom installment for {{duration}} months duration, you pay {{initialPayment}}% as initial deposit, and {{paperworkFee}}% of car price for paperwork fee. Then you have to give {{interestRate}}% interest rate on the remaining {{remainingPct}}%.",
+    "calculator": {
+      "title": "Installment Calculator",
+      "vehicle_price": "Vehicle Price (MMK)",
+      "select_hint": "Select an installment type to see calculations.",
+      "bank_upfront_desc": "Upfront: Initial Payment {{initial}}% + Deposit {{deposit}}% + Tax",
+      "showroom_upfront_desc": "Upfront: Initial {{initial}}% + Paperwork {{paperwork}} MMK",
+      "labels": {
+        "initial_payment": "Initial Payment",
+        "deposit": "Deposit",
+        "tax_registration": "Tax & Registration",
+        "total_upfront": "Total Upfront",
+        "remaining_bank": "Remaining (Bank processed)",
+        "remaining": "Remaining",
+        "paperwork_fee": "Paperwork Fee",
+        "monthly_base": "Monthly Base ({{months}} months)",
+        "monthly_interest": "Monthly Interest ({{rate}}%)",
+        "total_monthly": "Total Monthly",
+        "pay_to_bank": "Pay to bank upfront",
+        "includes_paperwork": "Includes paperwork (excl. tax)",
+        "est_monthly": "Est. Monthly"
+      },
+      "summary": {
+        "bank_title": "Bank — Upfront",
+        "showroom_title": "Showroom — Summary"
+      }
+    }
   },
   "purchase_guide": {
     "title": "Required Documents for Bank Installment",

@@ -32,7 +32,33 @@
       "showroom": "Showroom Installment",
       "bank": "Bank Installment"
     },
-    "showroom_details": "အကယ်၍ လူကြီးမင်းသည် {{duration}} လ အရစ်ကျစနစ်ကို ရွေးချယ်ပါက၊ ကနဦးပေးချေမှုအဖြစ် {{initialPayment}}% ၊ စာရွက်စာတမ်းကြေးအဖြစ် ကားတန်ဖိုး၏ {{paperworkFee}}% ကို ပေးချေရမည်ဖြစ်ပါသည်။ ကျန်ရှိသော {{remainingPct}}% အပေါ်တွင် အတိုးနှုန်း {{interestRate}}% ပေးချေရမည်ဖြစ်ပါသည်။"
+    "showroom_details": "အကယ်၍ လူကြီးမင်းသည် {{duration}} လ အရစ်ကျစနစ်ကို ရွေးချယ်ပါက၊ ကနဦးပေးချေမှုအဖြစ် {{initialPayment}}% ၊ စာရွက်စာတမ်းကြေးအဖြစ် ကားတန်ဖိုး၏ {{paperworkFee}}% ကို ပေးချေရမည်ဖြစ်ပါသည်။ ကျန်ရှိသော {{remainingPct}}% အပေါ်တွင် အတိုးနှုန်း {{interestRate}}% ပေးချေရမည်ဖြစ်ပါသည်။",
+    "calculator": {
+      "title": "အရစ်ကျ တွက်ချက်စက်",
+      "vehicle_price": "ကားတန်ဖိုး (ကျပ်)",
+      "select_hint": "တွက်ချက်မှုများ ကြည့်ရန် အရစ်ကျ အမျိုးအစားကို ရွေးချယ်ပါ။",
+      "bank_upfront_desc": "ကနဦးပေးသွင်းငွေ- ကနဦးပေးချေမှု {{initial}}% + အပ်ငွေ {{deposit}}% + အခွန်",
+      "showroom_upfront_desc": "ကနဦးပေးသွင်းငွေ- ကနဦး {{initial}}% + စာရွက်စာတမ်းကြေး {{paperwork}} ကျပ်",
+      "labels": {
+        "initial_payment": "ကနဦး ပေးချေမှု",
+        "deposit": "အပ်ငွေ",
+        "tax_registration": "အခွန်နှင့် မှတ်ပုံတင်ကြေး",
+        "total_upfront": "စုစုပေါင်း ကနဦးပေးသွင်းငွေ",
+        "remaining_bank": "ကျန်ရှိငွေ (ဘဏ်မှ ဆောင်ရွက်ပေးမည်)",
+        "remaining": "ကျန်ရှိငွေ",
+        "paperwork_fee": "စာရွက်စာတမ်းကြေး",
+        "monthly_base": "လစဉ် အခြေခံပေးသွင်းငွေ ({{months}} လ)",
+        "monthly_interest": "လစဉ် အတိုးနှုန်း ({{rate}}%)",
+        "total_monthly": "လစဉ် ပေးသွင်းငွေ စုစုပေါင်း",
+        "pay_to_bank": "ဘဏ်သို့ ကနဦး ပေးသွင်းရန်",
+        "includes_paperwork": "စာရွက်စာတမ်းကြေး ပါဝင်ပြီး (အခွန်မပါ)",
+        "est_monthly": "လစဉ် ခန့်မှန်းပေးသွင်းငွေ"
+      },
+      "summary": {
+        "bank_title": "Bank — Upfront",
+        "showroom_title": "Showroom — Summary"
+      }
+    }
   },
   "purchase_guide": {
     "title": "ဘဏ်အရစ်ကျလျှောက်ထားရန် လိုအပ်သော စာရွက်စာတမ်းများ",

@@ -2,16 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import {
   ShieldCheck,
-  ChevronRight,
-  ChevronLeft,
   ChevronDown,
   Gem,
-  Clock,
-  MapPin,
-  Fuel,
-  Settings2,
   Wallet,
-  Percent,
   ReceiptText,
   Calculator
 } from "lucide-react";
@@ -111,8 +104,8 @@ const PremiumPayment: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100">
-      <main className="max-w-7xl mx-auto py-12 px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <main className="max-w-7xl mx-auto py-6 px-4 sm:py-12 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
           {/* LEFT: INTERACTIVE FORM AREA */}
           <div className="lg:col-span-8 space-y-6">
@@ -141,8 +134,8 @@ const PremiumPayment: React.FC = () => {
               </header>
             </div>
 
-            <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-8 sm:p-10">
+            <div className="bg-white rounded-3xl sm:rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-5 sm:p-10">
                   <div className="animate-in fade-in slide-in-from-right-4 duration-500">
 
                     {/* Mobile: Scroll to Calculator Button */}
@@ -200,12 +193,12 @@ const PremiumPayment: React.FC = () => {
                       {/* Showroom plan selection moved here */}
                         {installmentMode === "showroom" && Array.isArray(showroomInstallments) && showroomInstallments.length > 0 && (
                           <div className="space-y-6">
-                            <div className="flex justify-between items-center">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                               <div className="flex items-center gap-2">
                                 <ReceiptText size={18} className="text-blue-600" />
                                 <label className="text-sm font-bold text-slate-600 uppercase">Choose Showroom Plan</label>
                               </div>
-                              <div className="flex gap-2 flex-wrap justify-end">
+                              <div className="flex gap-2 flex-wrap sm:justify-end">
                                 {showroomInstallments.map((plan, idx) => {
                                   const months = Math.max(1, Math.round(Number(plan?.duration ?? 0) * 12));
                                   const active = selectedShowroomIndex === idx;
@@ -213,7 +206,7 @@ const PremiumPayment: React.FC = () => {
                                     <button
                                       key={idx}
                                       onClick={() => setSelectedShowroomIndex(idx)}
-                                      className={`px-3 py-2 rounded-xl text-xs font-black transition-all ${active ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200 shadow-sm"}`}
+                                      className={`px-4 py-2.5 sm:px-3 sm:py-2 rounded-xl text-xs font-black transition-all flex-1 sm:flex-none ${active ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200 shadow-sm"}`}
                                     >
                                       {months} MONTHS
                                     </button>
@@ -286,15 +279,15 @@ const PremiumPayment: React.FC = () => {
           {/* RIGHT: SUMMARY CARD + CONDITIONAL CALCULATOR */}
           <div id="calculator-section" className="lg:col-span-4 sticky top-28 space-y-6">
             
-              <div className="bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden text-white p-8">
+              <div className="bg-slate-900 rounded-3xl sm:rounded-[2rem] shadow-2xl overflow-hidden text-white p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <Calculator className="text-blue-400" size={24} />
-                  <h3 className="text-lg font-bold">Installment Calculator</h3>
+                  <h3 className="text-lg font-bold">{t("payments_info.calculator.title")}</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Vehicle Price (MMK)</label>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("payments_info.calculator.vehicle_price")}</label>
                     <input
                       type="number"
                       value={customPrice}
@@ -304,33 +297,36 @@ const PremiumPayment: React.FC = () => {
                   </div>
 
                   {!installmentMode && (
-                    <p className="text-xs text-slate-400">Select an installment type to see calculations.</p>
+                    <p className="text-xs text-slate-400">{t("payments_info.calculator.select_hint")}</p>
                   )}
 
                   {installmentMode === "bank" && bankDerived && (
                     <div className="space-y-3">
                       <p className="text-sm text-slate-300">
-                        Upfront: Initial Payment {((bankConfig?.initialPayment ?? 0)).toString()}% + Deposit {((bankConfig?.deposit ?? 0)).toString()}% + Tax
+                        {t("payments_info.calculator.bank_upfront_desc", {
+                          initial: (bankConfig?.initialPayment ?? 0).toString(),
+                          deposit: (bankConfig?.deposit ?? 0).toString()
+                        })}
                       </p>
                       <div className="flex justify-between text-sm">
-                        <span>Initial Payment</span>
+                        <span>{t("payments_info.calculator.labels.initial_payment")}</span>
                         <span className="font-bold">{Math.round(bankDerived.initialPaymentAmt).toLocaleString()} MMK</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Deposit</span>
+                        <span>{t("payments_info.calculator.labels.deposit")}</span>
                         <span className="font-bold">{Math.round(bankDerived.depositAmt).toLocaleString()} MMK</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Tax & Registration</span>
+                        <span>{t("payments_info.calculator.labels.tax_registration")}</span>
                         <span className="font-bold">{TAX.toLocaleString()} MMK</span>
                       </div>
                       <div className="my-3 border-t border-slate-800/60" />
                       <div className="flex justify-between text-sm">
-                        <span>Total Upfront</span>
+                        <span>{t("payments_info.calculator.labels.total_upfront")}</span>
                         <span className="font-black text-blue-400">{Math.round(bankDerived.upfront).toLocaleString()} MMK</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Remaining (Bank processed)</span>
+                        <span>{t("payments_info.calculator.labels.remaining_bank")}</span>
                         <span className="font-bold">{Math.round(bankDerived.remaining).toLocaleString()} MMK</span>
                       </div>
                     </div>
@@ -339,37 +335,40 @@ const PremiumPayment: React.FC = () => {
                   {installmentMode === "showroom" && showroomDerived && (
                     <div className="space-y-3">
                       <p className="text-sm text-slate-300">
-                        Upfront: Initial {(showroomConfig?.initialPayment ?? 0).toString()}% + Paperwork {Math.round(showroomDerived.paperworkAmt).toLocaleString()} MMK
+                        {t("payments_info.calculator.showroom_upfront_desc", {
+                          initial: (showroomConfig?.initialPayment ?? 0).toString(),
+                          paperwork: Math.round(showroomDerived.paperworkAmt).toLocaleString()
+                        })}
                       </p>
                       <div className="flex justify-between text-sm">
-                        <span>Initial Payment</span>
+                        <span>{t("payments_info.calculator.labels.initial_payment")}</span>
                         <span className="font-bold">{Math.round(showroomDerived.initialPaymentAmt).toLocaleString()} MMK</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Paperwork Fee</span>
+                        <span>{t("payments_info.calculator.labels.paperwork_fee")}</span>
                         <span className="font-bold">{Math.round(showroomDerived.paperworkAmt).toLocaleString()} MMK</span>
                       </div>
                       <div className="my-3 border-t border-slate-800/60" />
                       <div className="flex justify-between text-sm">
-                        <span>Total Upfront</span>
+                        <span>{t("payments_info.calculator.labels.total_upfront")}</span>
                         <span className="font-black text-blue-400">{Math.round(showroomDerived.upfront).toLocaleString()} MMK</span>
                       </div>
 
                       <div className="flex justify-between text-sm">
-                        <span>Remaining</span>
+                        <span>{t("payments_info.calculator.labels.remaining")}</span>
                         <span className="font-bold">{Math.round(showroomDerived.remaining).toLocaleString()} MMK</span>
                       </div>
                       <div className="my-3 border-t border-slate-800/60" />
                       <div className="flex justify-between text-sm">
-                        <span>Monthly Base ({showroomDerived.months} months)</span>
+                        <span>{t("payments_info.calculator.labels.monthly_base", { months: showroomDerived.months })}</span>
                         <span className="font-bold">{showroomDerived.baseMonthly.toLocaleString()} MMK</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Monthly Interest ({(showroomConfig?.interestRate ?? 0)}%)</span>
+                        <span>{t("payments_info.calculator.labels.monthly_interest", { rate: (showroomConfig?.interestRate ?? 0) })}</span>
                         <span className="font-bold">{showroomDerived.interestMonthly.toLocaleString()} MMK</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Total Monthly</span>
+                        <span>{t("payments_info.calculator.labels.total_monthly")}</span>
                         <span className="font-black text-blue-400">{showroomDerived.totalMonthly.toLocaleString()} MMK</span>
                       </div>
                     </div>
@@ -381,11 +380,11 @@ const PremiumPayment: React.FC = () => {
                       <div className="rounded-xl p-4 bg-gradient-to-r from-blue-900 to-slate-800 border border-blue-700 shadow-lg ring-1 ring-blue-600/30">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="text-xs text-blue-200 font-semibold">Bank — Upfront</div>
-                            <div className="text-sm text-slate-200">Pay to bank upfront</div>
+                            <div className="text-xs text-blue-200 font-semibold">{t("payments_info.calculator.summary.bank_title")}</div>
+                            <div className="text-sm text-slate-200">{t("payments_info.calculator.labels.pay_to_bank")}</div>
                           </div>
                           <div className="text-right">
-                            <div className="text-sm text-slate-300">Total Upfront</div>
+                            <div className="text-sm text-slate-300">{t("payments_info.calculator.labels.total_upfront")}</div>
                             <div className="text-xl font-extrabold text-white">{Math.round(bankDerived.upfront).toLocaleString()} MMK</div>
                           </div>
                         </div>
@@ -396,16 +395,16 @@ const PremiumPayment: React.FC = () => {
                       <div className="rounded-xl p-4 bg-gradient-to-r from-emerald-900 to-slate-800 border border-emerald-700 shadow-lg ring-1 ring-emerald-600/30">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="text-xs text-emerald-200 font-semibold">Showroom — Summary</div>
-                            <div className="text-sm text-slate-200">Includes paperwork (excl. tax)</div>
+                            <div className="text-xs text-emerald-200 font-semibold">{t("payments_info.calculator.summary.showroom_title")}</div>
+                            <div className="text-sm text-slate-200">{t("payments_info.calculator.labels.includes_paperwork")}</div>
                           </div>
                           <div className="text-right">
-                            <div className="text-sm text-slate-300">Upfront</div>
+                            <div className="text-sm text-slate-300">{t("payments_info.calculator.labels.total_upfront")}</div>
                             <div className="text-xl font-extrabold text-white">{Math.round(showroomDerived.upfront).toLocaleString()} MMK</div>
                           </div>
                         </div>
                         <div className="mt-3 flex items-center justify-between">
-                          <div className="text-sm text-slate-200">Est. Monthly</div>
+                          <div className="text-sm text-slate-200">{t("payments_info.calculator.labels.est_monthly")}</div>
                           <div className="text-lg font-bold text-white">{Math.round(showroomDerived.totalMonthly).toLocaleString()} MMK</div>
                         </div>
                       </div>
