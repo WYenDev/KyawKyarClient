@@ -71,34 +71,83 @@ const Hero: React.FC = () => {
         <div className="absolute bottom-[-15%] right-[-15%] w-[70%] h-[60%] rounded-full bg-blue-50/40 blur-[120px]" />
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3 w-full z-10">
+      <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3 w-full z-10">
         <div className="bg-white rounded-none p-3 sm:p-7 xl:p-10 border border-white shadow-2xl shadow-indigo-100/20 relative overflow-hidden group/hero">
           {/* Subtle decorative element inside card */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-none -mr-32 -mt-32 opacity-50 transition-transform duration-1000 group-hover/hero:scale-110" />
 
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-16 items-center relative z-10">
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 xl:gap-16 items-center relative z-10">
 
             {/* LEFT SIDE: Content */}
-            <div className="xl:col-span-6 space-y-8 sm:space-y-10 text-center xl:text-left order-2 xl:order-1 pt-12 xl:pt-0">
+            <div className="xl:col-span-6 space-y-4 sm:space-y-6 text-center xl:text-left order-2 xl:order-1 pt-2 xl:pt-0">
+              <div className="xl:hidden w-full px-2 mb-2">
+                <div className="bg-slate-50 border border-slate-200 p-4 rounded-none shadow-lg shadow-indigo-100/40 flex flex-col gap-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <select
+                      value={brand}
+                      onChange={(e) => setBrand(e.target.value)}
+                      className="w-full bg-white border-slate-200 rounded-none px-3 py-3 text-slate-700 text-[15px] font-black focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="">Brand</option>
+                      {brandsToShow.map((b) => {
+                        const count = serverBrandModels?.[b]?.totalCars;
+                        return (
+                          <option key={b} value={b}>
+                            {b}{count !== undefined ? ` (${count})` : ''}
+                          </option>
+                        );
+                      })}
+                    </select>
+
+                    <select
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                      disabled={!brand}
+                      className={`w-full border-slate-200 rounded-none px-3 py-3 text-[15px] font-black focus:ring-2 focus:ring-indigo-500 ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
+                    >
+                      <option value="">Model</option>
+                      {availableModels.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}{m.carCount !== undefined ? ` (${m.carCount})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={() => navigateWithParams(brand || undefined, model || undefined)}
+                    className="w-full bg-slate-900 text-white py-3.5 rounded-none font-black hover:bg-indigo-600 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 group text-[15px]"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span>Search Cars</span>
+                  </button>
+                </div>
+              </div>
+
+              <p className={`xl:hidden text-base text-slate-500 text-left leading-relaxed ${isMyanmar ? 'font-myanmar leading-relaxed px-4 mb-2' : ''}`}>
+                {t('hero.description')}
+              </p>
               <div className="space-y-4 sm:space-y-6">
-                <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-none shadow-sm">
+                <div className="hidden xl:inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-none shadow-sm">
                   <ShieldCheck className="w-4 h-4 text-indigo-600" />
                   <span className="text-indigo-900 text-[11px] font-black tracking-widest uppercase">
                     Kyaw Kyar Premium Showroom
                   </span>
                 </div>
 
-                <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2 ${isMyanmar ? 'font-myanmar sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.6]' : ''}`}>
-                  <span className={`inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 ${isMyanmar ? 'lg:mt-6 lg:mb-2' : ''}`}>
-                    {t('hero.title_prefix')}
-                  </span>
-                  <span className={`block sm:mb-2 ${isMyanmar ? 'whitespace-nowrap max-sm:text-[0.9em] sm:text-[0.85em] lg:text-[0.72em]' : ''}`}>
-                    {t('hero.title_suffix')}
-                  </span>
-                </h1>
-                <p className={`text-base sm:text-lg text-slate-500 max-w-lg mx-auto xl:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar leading-relaxed sm:leading-loose pt-1 sm:pt-1' : ''}`}>
-                  {t('hero.description')}
-                </p>
+                <div className="xl:block hidden">
+                  <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2 ${isMyanmar ? 'font-myanmar sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.6]' : ''}`}>
+                    <span className={`inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-900 ${isMyanmar ? 'lg:mt-6 lg:mb-2' : ''}`}>
+                      {t('hero.title_prefix')}
+                    </span>
+                    <span className={`block sm:mb-2 ${isMyanmar ? 'whitespace-nowrap max-sm:text-[0.9em] sm:text-[0.85em] lg:text-[0.72em]' : ''}`}>
+                      {t('hero.title_suffix')}
+                    </span>
+                  </h1>
+                  <p className={`text-base sm:text-lg text-slate-500 max-w-lg mx-auto xl:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar leading-relaxed sm:leading-loose pt-1 sm:pt-1' : ''}`}>
+                    {t('hero.description')}
+                  </p>
+                </div>
               </div>
 
               {/* INTEGRATED SEARCH (Desktop) */}
@@ -106,7 +155,7 @@ const Hero: React.FC = () => {
                 <select
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
-                  className="w-full bg-white border-slate-200 rounded-none px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-700 text-sm font-bold"
+                  className="w-full bg-white border-slate-200 rounded-none px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-700 text-[17px] font-bold"
                 >
                   <option value="">All Brands</option>
                   {brandsToShow.map((b) => {
@@ -123,7 +172,7 @@ const Hero: React.FC = () => {
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                   disabled={!brand}
-                  className={`w-full border-slate-200 rounded-none px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-bold ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
+                  className={`w-full border-slate-200 rounded-none px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-[17px] font-bold ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
                 >
                   <option value="">All Models</option>
                   {availableModels.map((m) => (
@@ -135,7 +184,7 @@ const Hero: React.FC = () => {
 
                 <button
                   onClick={() => navigateWithParams(brand || undefined, model || undefined)}
-                  className="w-full xl:w-auto bg-slate-900 text-white px-10 py-3.5 rounded-none font-bold hover:bg-indigo-600 active:scale-95 transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 group text-sm"
+                  className="w-full xl:w-auto bg-slate-900 text-white px-10 py-3.5 rounded-none font-bold hover:bg-indigo-600 active:scale-95 transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 group text-[17px]"
                 >
                   <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
                   <span>Search</span>
@@ -143,7 +192,7 @@ const Hero: React.FC = () => {
               </div>
 
               {/* Trust & Info Row */}
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-8 sm:pt-10 border-t border-slate-100 max-w-md mx-auto xl:mx-0">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-100 max-w-md mx-auto xl:mx-0">
                 <div className="flex flex-col items-center xl:items-start group/stat">
                   <div className="flex items-center text-amber-500 mb-1">
                     <Star className="w-3.5 h-3.5 fill-current" />
@@ -164,7 +213,7 @@ const Hero: React.FC = () => {
 
             {/* RIGHT SIDE: Visual Content */}
             <div className="xl:col-span-6 relative order-1 xl:order-2">
-              <div className="relative h-[240px] sm:h-[320px] md:h-[400px] xl:h-[520px] w-full mt-2 xl:mt-0 px-2 sm:px-0">
+              <div className="relative h-[320px] sm:h-[400px] md:h-[480px] xl:h-[520px] w-full mt-2 xl:mt-0 px-2 sm:px-0">
                 <div className="absolute inset-0 rounded-none overflow-hidden shadow-3xl border-[6px] sm:border-[12px] border-slate-50 group/img">
                   <img
                     src={homeData?.image?.url || CarImage}
@@ -172,50 +221,20 @@ const Hero: React.FC = () => {
                     alt="Kyaw Kyar Luxury SUV"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60" />
-                </div>
-
-                {/* Integrated Search (Mobile Overlay) */}
-                <div className="absolute -bottom-10 left-3 right-3 z-30 xl:hidden">
-                  <div className="bg-white/95 backdrop-blur-xl border border-white p-3 rounded-none shadow-2xl shadow-indigo-200/50 flex flex-col gap-2.5">
-                    <div className="grid grid-cols-2 gap-2">
-                      <select
-                        value={brand}
-                        onChange={(e) => setBrand(e.target.value)}
-                        className="w-full bg-slate-50 border-slate-100 rounded-none px-3 py-2.5 text-slate-700 text-[11px] font-black focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="">Brand</option>
-                        {brandsToShow.map((b) => {
-                          const count = serverBrandModels?.[b]?.totalCars;
-                          return (
-                            <option key={b} value={b}>
-                              {b}{count !== undefined ? ` (${count})` : ''}
-                            </option>
-                          );
-                        })}
-                      </select>
-
-                      <select
-                        value={model}
-                        onChange={(e) => setModel(e.target.value)}
-                        disabled={!brand}
-                        className={`w-full border-slate-100 rounded-none px-3 py-2.5 text-[11px] font-black focus:ring-2 focus:ring-indigo-500 ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
-                      >
-                        <option value="">Model</option>
-                        {availableModels.map((m) => (
-                          <option key={m.id} value={m.id}>
-                            {m.name}{m.carCount !== undefined ? ` (${m.carCount})` : ''}
-                          </option>
-                        ))}
-                      </select>
+                  
+                  {/* MOBILE TITLE OVER IMAGE */}
+                  <div className="absolute bottom-0 left-0 right-0 z-20 xl:hidden h-28 flex flex-col justify-end pb-4 px-2 overflow-hidden">
+                    {/* Integrated Blur & Gradient (No floating box) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/20 to-transparent backdrop-blur-md -z-10" />
+                    
+                    <div className="text-center">
+                      <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-red-800 whitespace-nowrap font-myanmar leading-tight drop-shadow-sm">
+                        {t('hero.title_prefix')}
+                      </h1>
+                      <p className="text-[13px] text-white font-black tracking-widest uppercase mt-1 pb-1 drop-shadow-md">
+                        {t('hero.title_suffix')}
+                      </p>
                     </div>
-
-                    <button
-                      onClick={() => navigateWithParams(brand || undefined, model || undefined)}
-                      className="w-full bg-slate-900 text-white py-2.5 rounded-none font-black hover:bg-indigo-600 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 group text-xs"
-                    >
-                      <Search className="w-3.5 h-3.5" />
-                      <span>Search Cars</span>
-                    </button>
                   </div>
                 </div>
 

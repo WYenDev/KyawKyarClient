@@ -34,7 +34,7 @@ const AboutContact: React.FC = () => {
     <div className="bg-white">
       {/* --- SECTION 1: ABOUT US --- */}
       <section id="about" className="py-16 sm:py-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid xl:grid-cols-2 gap-12 xl:gap-24 items-center">
             {/* Modern Image Layout: Snap Reel (Mobile) | Asymmetric Bento (Desktop) */}
             <div className="relative w-full">
@@ -112,7 +112,7 @@ const AboutContact: React.FC = () => {
 
       {/* --- SECTION 2: CONTACT & BRANCHES --- */}
       <section id="contact" className="py-16 sm:py-24 bg-slate-50 border-y border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="text-indigo-600 font-bold tracking-widest text-xs uppercase mb-3 inline-block">
               {t('contact.title')}

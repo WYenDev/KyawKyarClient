@@ -22,7 +22,7 @@ const AboutTeaser: React.FC = () => {
 
   return (
     <section className="bg-transparent py-2 lg:py-3 relative overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+      <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
         <div className="bg-white rounded-none p-3 sm:p-6 lg:p-10 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
           <div className="grid md:grid-cols-2 items-center gap-8 md:gap-16 relative z-10">
             <div className="grid grid-cols-2 gap-4">

@@ -23,7 +23,7 @@ const BrowseCarByBrands: React.FC = () => {
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-[30%] h-[30%] bg-blue-50/30 blur-[100px] -z-10" />
 
-      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+      <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
         <div className="bg-white rounded-none p-3 sm:p-6 lg:p-8 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
           {/* Section Header */}
           <div className="mb-5 relative z-10">

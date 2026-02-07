@@ -35,7 +35,7 @@ const CarInventory: React.FC = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>(DEFAULT_FILTERS);
   const [page, setPage] = useState<number>(1);
-  const LIMIT = 9;
+  const LIMIT = 12;
 
   // Fetch filter metadata from the API
   const { data: filterData, isLoading: filtersLoading, isError: filtersError } = useGetApiCarsFilters();
@@ -208,7 +208,7 @@ const CarInventory: React.FC = () => {
   }, [page]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">{t('title')}</h1>
         <p className="text-lg sm:text-xl text-slate-600">{t('subtitle')}</p>
@@ -279,7 +279,7 @@ const CarInventory: React.FC = () => {
             <div className="p-6 text-sm text-red-500">Failed to load cars</div>
           ) : searchResponse?.total && searchResponse.total > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                 {searchResponse?.items?.map((car) => (
                   <CarCard key={car.id} car={car} />
                 ))}

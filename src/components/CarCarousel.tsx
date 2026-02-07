@@ -98,7 +98,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
     <section id={id} className={`py-2 lg:py-3 relative overflow-hidden bg-transparent`}>
       <div className={`absolute top-0 right-0 w-[40%] h-[40%] ${theme === 'indigo' ? 'bg-indigo-100/30' : 'bg-amber-100/30'} blur-[120px] -z-10`} />
 
-      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+      <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
         <div className="bg-white rounded-none p-3 sm:p-6 lg:p-8 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-start justify-between mb-4 gap-4 relative z-10">
             <div className="space-y-3">

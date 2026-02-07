@@ -86,7 +86,7 @@ const Header: React.FC = () => {
         className={`${isHome ? 'bg-transparent' : 'bg-white'} ${isHome ? '' : 'shadow-sm'
           } backdrop-blur-sm/0 transition-colors`}
       >
-        <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+        <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
           <div className={`mt-1 mb-0 ${isHome ? 'bg-white/95 border border-white/80 shadow-lg shadow-slate-900/5 rounded-none px-3 sm:px-6 h-20 flex items-center justify-between' : 'flex items-center justify-between h-16'}`}>
             {/* Logo */}
             <Link to="/" className="flex items-center group shrink-0">
