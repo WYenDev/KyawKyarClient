@@ -64,7 +64,7 @@ const Hero: React.FC = () => {
   }, [brand, availableModels]);
 
   return (
-    <section className="relative flex xl:items-center bg-[#f8fafc] overflow-hidden pt-[5.5rem] pb-2 sm:pt-24 sm:pb-3 md:pt-26 md:pb-4 xl:pt-[5.5rem] xl:pb-3">
+    <section className="relative flex xl:items-center bg-[#f8fafc] overflow-hidden pt-[4.5rem] pb-2 sm:pt-20 sm:pb-3 md:pt-22 md:pb-4 xl:pt-[5rem] xl:pb-3">
       {/* Background elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-15%] left-[-15%] w-[80%] h-[70%] rounded-full bg-indigo-50/50 blur-[140px]" />
@@ -80,8 +80,9 @@ const Hero: React.FC = () => {
 
             {/* LEFT SIDE: Content */}
             <div className="xl:col-span-6 space-y-4 sm:space-y-6 text-center xl:text-left order-2 xl:order-1 pt-2 xl:pt-0">
-              <div className="xl:hidden w-full px-2 mb-2">
-                <div className="bg-slate-50 border border-slate-200 p-4 rounded-none shadow-lg shadow-indigo-100/40 flex flex-col gap-3">
+              {/* MOBILE SEARCH BOX: Below image, with space for the half-out title */}
+              <div className="xl:hidden w-full px-2 sm:px-0 mb-2 mt-10">
+                <div className="bg-slate-50/90 backdrop-blur-sm border border-slate-200 p-4 rounded-none shadow-xl shadow-indigo-100/40 flex flex-col gap-3">
                   <div className="grid grid-cols-2 gap-2">
                     <select
                       value={brand}
@@ -213,27 +214,29 @@ const Hero: React.FC = () => {
 
             {/* RIGHT SIDE: Visual Content */}
             <div className="xl:col-span-6 relative order-1 xl:order-2">
-              <div className="relative h-[320px] sm:h-[400px] md:h-[480px] xl:h-[520px] w-full mt-2 xl:mt-0 px-2 sm:px-0">
-                <div className="absolute inset-0 rounded-none overflow-hidden shadow-3xl border-[6px] sm:border-[12px] border-slate-50 group/img">
-                  <img
-                    src={homeData?.image?.url || CarImage}
-                    className="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover/img:scale-110"
-                    alt="Kyaw Kyar Luxury SUV"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60" />
-                  
-                  {/* MOBILE TITLE OVER IMAGE */}
-                  <div className="absolute bottom-0 left-0 right-0 z-20 xl:hidden h-28 flex flex-col justify-end pb-4 px-2 overflow-hidden">
-                    {/* Integrated Blur & Gradient (No floating box) */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/20 to-transparent backdrop-blur-md -z-10" />
-                    
-                    <div className="text-center">
-                      <h1 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-red-800 whitespace-nowrap font-myanmar leading-tight drop-shadow-sm">
-                        {t('hero.title_prefix')}
-                      </h1>
-                      <p className="text-[13px] text-white font-black tracking-widest uppercase mt-1 pb-1 drop-shadow-md">
-                        {t('hero.title_suffix')}
-                      </p>
+              <div className="relative h-[250px] sm:h-[320px] md:h-[400px] xl:h-[500px] w-full mt-2 xl:mt-0 px-2 sm:px-0">
+                <div className="absolute inset-0 rounded-none shadow-3xl border-[6px] sm:border-[10px] border-white/50 group/img">
+                  {/* Image wrapper to keep overflow hidden for zoom effect */}
+                  <div className="w-full h-full overflow-hidden relative">
+                    <img
+                      src={homeData?.image?.url || CarImage}
+                      className="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover/img:scale-110"
+                      alt="Kyaw Kyar Luxury SUV"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60" />
+                  </div>
+
+                  {/* MOBILE TITLE: Perfectly matched to image width inside the border box */}
+                  <div className="absolute bottom-0 left-0 right-0 z-30 xl:hidden translate-y-1/2">
+                    <div className="relative py-3 overflow-hidden shadow-xl border-y border-white/30 backdrop-blur-2xl bg-white/10">
+                      <div className="text-center">
+                        <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-800 whitespace-nowrap font-myanmar leading-tight drop-shadow-sm">
+                          {t('hero.title_prefix')}
+                        </h1>
+                        <p className="text-[12px] text-white font-black tracking-widest uppercase mt-0 pb-1 drop-shadow-md">
+                          {t('hero.title_suffix')}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

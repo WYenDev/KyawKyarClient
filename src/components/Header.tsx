@@ -87,10 +87,10 @@ const Header: React.FC = () => {
           } backdrop-blur-sm/0 transition-colors`}
       >
         <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
-          <div className={`mt-1 mb-0 ${isHome ? 'bg-white/95 border border-white/80 shadow-lg shadow-slate-900/5 rounded-none px-3 sm:px-6 h-20 flex items-center justify-between' : 'flex items-center justify-between h-16'}`}>
+          <div className={`mt-0 mb-0 ${isHome ? 'bg-white/95 border border-white/80 shadow-lg shadow-slate-900/5 rounded-none px-3 sm:px-6 h-16 flex items-center justify-between' : 'flex items-center justify-between h-14'}`}>
             {/* Logo */}
             <Link to="/" className="flex items-center group shrink-0">
-              <img src={logo} alt="ကျော်ကြား car showroom" className="h-16 md:h-24 w-auto object-contain" />
+              <img src={logo} alt="ကျော်ကြား car showroom" className="h-12 md:h-16 w-auto object-contain" />
             </Link>
 
             {/* Desktop Navigation - Centered Pill */}
