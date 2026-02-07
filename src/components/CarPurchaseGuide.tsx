@@ -11,25 +11,25 @@ const CarPurchaseGuide: React.FC = () => {
     );
 
     return (
-        <section className="w-full mt-10">
+        <section className="w-full mt-6 sm:mt-10">
             <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-slate-50 bg-slate-50/50">
+                <div className="px-4 py-4 sm:px-8 sm:py-6 border-b border-slate-50 bg-slate-50/50">
                     <div className="flex items-center gap-3 mb-1">
-                        <FileText className="w-5 h-5 text-indigo-600" />
-                        <h3 className={`text-xl font-bold text-slate-900 ${isMyanmar ? 'font-myanmar' : ''}`}>
+                        <FileText className="w-5 h-5 text-indigo-600 shrink-0" />
+                        <h3 className={`text-lg sm:text-xl font-bold text-slate-900 leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
                             {t("purchase_guide.title")}
                         </h3>
                     </div>
-                    <p className={`text-xs text-slate-500 ml-8 ${isMyanmar ? 'font-myanmar' : ''}`}>
+                    <p className={`text-[10px] sm:text-xs text-slate-500 ml-8 ${isMyanmar ? 'font-myanmar' : ''}`}>
                         {t("purchase_guide.subtitle")}
                     </p>
                 </div>
 
                 {/* Content */}
-                <div className="p-8 space-y-10">
+                <div className="p-4 sm:p-8 space-y-8 sm:space-y-10">
                     {/* Customer Base */}
-                    <div className="grid md:grid-cols-2 gap-10">
+                    <div className="grid md:grid-cols-2 gap-8 sm:gap-10">
                         <InfoSection 
                             icon={<User className="w-4 h-4 text-indigo-500" />}
                             title={t("purchase_guide.customer_base_title")}
@@ -73,7 +73,7 @@ const CarPurchaseGuide: React.FC = () => {
                         </div>
 
                         {/* Conditional Requirements */}
-                        <div className="bg-indigo-50/30 rounded-2xl p-6 border border-indigo-50/50">
+                        <div className="bg-indigo-50/30 rounded-2xl p-4 sm:p-6 border border-indigo-50/50">
                             {incomeType === "business" && (
                                 <InfoSection 
                                     title={t("purchase_guide.if_business_owner")}
@@ -104,8 +104,8 @@ const CarPurchaseGuide: React.FC = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-8 py-4 border-t border-slate-50 text-xs text-slate-500 bg-slate-50/30 flex items-start gap-2">
-                    <Info className="w-3.5 h-3.5 mt-0.5 text-indigo-400" />
+                <div className="px-4 py-3 sm:px-8 sm:py-4 border-t border-slate-50 text-[10px] sm:text-xs text-slate-500 bg-slate-50/30 flex items-start gap-2">
+                    <Info className="w-3.5 h-3.5 mt-0.5 text-indigo-400 shrink-0" />
                     <span className={isMyanmar ? 'font-myanmar leading-relaxed' : ''}>
                         {t("purchase_guide.bank_approval_note")}
                     </span>
@@ -159,7 +159,7 @@ const ToggleButton = ({
 }) => (
     <button
         onClick={onClick}
-        className={`px-6 py-2 rounded-lg text-sm font-bold transition-all
+        className={`px-3 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all
         ${active
                 ? "bg-white text-indigo-600 shadow-sm"
                 : "text-slate-500 hover:text-slate-700"

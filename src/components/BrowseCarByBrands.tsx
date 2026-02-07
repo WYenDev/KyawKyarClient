@@ -22,15 +22,28 @@ const BrowseCarByBrands: React.FC = () => {
     <section className="py-12 lg:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-12">
-          <div className="space-y-4">
+        <div className="mb-14">
+          <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold uppercase tracking-wider">
                <Shield className="w-3 h-3 fill-amber-800" />
                Trusted Manufacturers
             </div>
-            <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
-
-              <span className={`${isMyanmar ? 'font-myanmar text-indigo-600' : ""}`}>{t('browse_by_brand.title')}</span> <span className={`${isMyanmar ? 'font-myanmar' : "text-indigo-600"}`}>{t('browse_by_brand.highlightedText')}</span>
+            <h2 className={`text-3xl lg:text-5xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.6rem] lg:text-[2.4rem] max-sm:text-[1.85rem] leading-[1.6]' : 'leading-[1.4]'}`}>
+              {isMyanmar ? (
+                <>
+                  <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                    {t('browse_by_brand.highlightedText')}
+                  </span>{" "}
+                  {t('browse_by_brand.title')}
+                </>
+              ) : (
+                <>
+                  {t('browse_by_brand.title')}{" "}
+                  <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                    {t('browse_by_brand.highlightedText')}
+                  </span>
+                </>
+              )}
             </h2>
             <p className={`mt-4 text-slate-500 max-w-2xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
               We partner with the world's leading car manufacturers to bring you a diverse selection of quality vehicles.

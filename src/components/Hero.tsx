@@ -84,11 +84,11 @@ const Hero: React.FC = () => {
                 </span>
               </div>
 
-              <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 ${isMyanmar ? 'font-myanmar' : ''}`}>
-                <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 ${isMyanmar ? 'font-myanmar sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.6]' : ''}`}>
+                <span className={`inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 ${isMyanmar ? 'lg:mt-10 lg:mb-4' : ''}`}>
                   {t('hero.title_prefix')}
                 </span>
-                <span className="block mb-2">
+                <span className={`block mb-2 ${isMyanmar ? 'max-sm:text-[0.9em] sm:text-[0.85em] lg:text-[0.72em]' : ''}`}>
                   {t('hero.title_suffix')}
                 </span>
               </h1>

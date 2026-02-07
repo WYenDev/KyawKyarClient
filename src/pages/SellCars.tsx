@@ -10,27 +10,22 @@ const SellCars: React.FC = () => {
   const { t } = useTranslation('cars');
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-8">
+    <div className="min-h-screen bg-[#f8fafc] py-6 px-2 sm:py-12 sm:px-6">
       <SEO 
         title={t('sell_meta.title', 'Sell Your Car')}
         description={t('sell_meta.description', 'Sell your car with confidence')}
         canonical="/sell-cars"
       />
       <ScrollToTop />
-      <div className="pt-8 pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid xl:grid-cols-3 gap-12 items-start">
-            <div className="xl:col-span-2">
-              <div className="mb-8">
-                <SellCarIntro />
-              </div>
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+          <div className="lg:col-span-8 space-y-2 sm:space-y-4">
+            <SellCarIntro />
+            <SellCarForm />
+          </div>
 
-              <SellCarForm />
-            </div>
-
-            <div className="xl:col-span-1">
-              <WhySellWithUs />
-            </div>
+          <div className="lg:col-span-4 sticky top-28 space-y-4 sm:space-y-6">
+            <WhySellWithUs />
           </div>
         </div>
       </div>

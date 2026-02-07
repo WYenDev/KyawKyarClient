@@ -20,7 +20,7 @@ const CarModal: React.FC<CarModalProps> = ({ car, isOpen, onClose }) => {
         <div className="p-6 border-b">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 {car.brand} {car.model}
               </h2>
               <div className="flex items-center text-gray-600">

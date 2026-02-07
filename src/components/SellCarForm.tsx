@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, X } from 'lucide-react';
+import { MessageCircle, X, Sparkles } from 'lucide-react';
 import { postApiSellCarRequestsPresignedUrl } from '../services/api';
 import { client } from '../services/mutator';
 
@@ -41,7 +41,8 @@ const initialValues: SellCarFormValues = {
 const MAX_IMAGES = 5;
 
 const SellCarForm: React.FC = () => {
-  const { t } = useTranslation('cars');
+  const { t, i18n } = useTranslation('cars');
+  const isMyanmar = i18n?.language?.startsWith('mm');
   const [values, setValues] = useState<SellCarFormValues>(initialValues);
   const [errors, setErrors] = useState<SellCarFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -234,28 +235,34 @@ const SellCarForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8">
-      <h2 className="text-2xl font-bold text-slate-900 mb-2">{t('sell.form_title')}</h2>
-      <p className="text-sm text-slate-600 mb-6">{t('sell.form_subtitle')}</p>
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 sm:p-8">
+      <div className="border-b border-slate-100 pb-5 mb-6">
+        <h2 className={`text-xl sm:text-2xl font-black mb-1 tracking-tight ${isMyanmar ? 'font-myanmar leading-relaxed' : ''}`}>
+          <span className="inline-block pt-3 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+            {t('sell.form_title')}
+          </span>
+        </h2>
+        <p className="text-sm text-slate-500">{t('sell.form_subtitle')}</p>
+      </div>
 
       {isSubmitted && (
-        <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
           <p className="font-semibold mb-1">{t('sell.form.success_title')}</p>
           <p>{t('sell.form.success_message')}</p>
         </div>
       )}
 
       {submitError && (
-        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           <p className="font-semibold mb-1">{t('sell.form.error_title', 'Submission failed')}</p>
           <p>{submitError}</p>
         </div>
       )}
 
-      <form className="space-y-5" onSubmit={handleSubmit} noValidate>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+      <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.owner_name')}
             </label>
             <input
@@ -263,27 +270,29 @@ const SellCarForm: React.FC = () => {
               value={values.ownerName}
               onChange={(e) => handleChange('ownerName', e.target.value)}
               placeholder={t('sell.form.owner_name_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
             {errors.ownerName && <p className="mt-1 text-xs text-red-600">{errors.ownerName}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.phone')}
             </label>
-            <input
-              type="tel"
-              value={values.phone}
-              onChange={(e) => handleChange('phone', e.target.value)}
-              placeholder={t('sell.form.phone_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+            <div className="relative">
+              <input
+                type="tel"
+                value={values.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+                placeholder={t('sell.form.phone_placeholder')}
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              />
+            </div>
             {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-slate-700">
             {t('sell.form.email')}
           </label>
           <input
@@ -291,13 +300,13 @@ const SellCarForm: React.FC = () => {
             value={values.email}
             onChange={(e) => handleChange('email', e.target.value)}
             placeholder={t('sell.form.email_placeholder')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
           />
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.car_brand')}
             </label>
             <input
@@ -305,12 +314,12 @@ const SellCarForm: React.FC = () => {
               value={values.carBrand}
               onChange={(e) => handleChange('carBrand', e.target.value)}
               placeholder={t('sell.form.car_brand_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
             {errors.carBrand && <p className="mt-1 text-xs text-red-600">{errors.carBrand}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.car_model')}
             </label>
             <input
@@ -318,29 +327,26 @@ const SellCarForm: React.FC = () => {
               value={values.carModel}
               onChange={(e) => handleChange('carModel', e.target.value)}
               placeholder={t('sell.form.car_model_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
             {errors.carModel && <p className="mt-1 text-xs text-red-600">{errors.carModel}</p>}
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('sell.form.color', 'Color')}</label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">{t('sell.form.color', 'Color')}</label>
             <input
               type="text"
               value={values.color}
               onChange={(e) => handleChange('color', e.target.value)}
               placeholder={t('sell.form.color_placeholder', 'e.g. Silver')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
             {errors.color && <p className="mt-1 text-xs text-red-600">{errors.color}</p>}
           </div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.year')}
             </label>
             <input
@@ -348,12 +354,12 @@ const SellCarForm: React.FC = () => {
               value={values.year}
               onChange={(e) => handleChange('year', e.target.value)}
               placeholder={t('sell.form.year_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
             {errors.year && <p className="mt-1 text-xs text-red-600">{errors.year}</p>}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.mileage')}
             </label>
             <input
@@ -361,11 +367,14 @@ const SellCarForm: React.FC = () => {
               value={values.mileage}
               onChange={(e) => handleChange('mileage', e.target.value)}
               placeholder={t('sell.form.mileage_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.expected_price')}
             </label>
             <input
@@ -373,20 +382,17 @@ const SellCarForm: React.FC = () => {
               value={values.expectedPrice}
               onChange={(e) => handleChange('expectedPrice', e.target.value)}
               placeholder={t('sell.form.expected_price_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
             />
           </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
               {t('sell.form.condition')}
             </label>
             <select
               value={values.condition}
               onChange={(e) => handleChange('condition', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none appearance-none"
             >
               <option value="">{t('sell.form.condition_placeholder')}</option>
               <option value="like_new">{t('sell.form.condition_like_new')}</option>
@@ -395,32 +401,34 @@ const SellCarForm: React.FC = () => {
               <option value="needs_work">{t('sell.form.condition_needs_work')}</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('sell.form.message')}
-            </label>
-            <textarea
-              rows={3}
-              value={values.message}
-              onChange={(e) => handleChange('message', e.target.value)}
-              placeholder={t('sell.form.message_placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-slate-700">
+            {t('sell.form.message')}
+          </label>
+          <textarea
+            rows={4}
+            value={values.message}
+            onChange={(e) => handleChange('message', e.target.value)}
+            placeholder={t('sell.form.message_placeholder')}
+            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none resize-none"
+          />
         </div>
 
         {/* Image upload */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">{t('sell.form.images_label', 'Upload images')}</label>
-          <div className="flex items-center space-x-3">
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-slate-700">{t('sell.form.images_label', 'Upload images')}</label>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center px-3 py-2 rounded-md border border-gray-300 bg-white text-sm text-gray-700 hover:bg-gray-50"
+              className="inline-flex items-center px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
             >
+              <Sparkles className="h-4 w-4 mr-2 text-indigo-500" />
               {t('sell.form.images_button', 'Choose images')}
             </button>
-            <p className="text-sm text-gray-500">{t('sell.form.images_help', `You can upload up to ${MAX_IMAGES} images.`)}</p>
+            <p className="text-xs text-slate-500">{t('sell.form.images_help', `You can upload up to ${MAX_IMAGES} images.`)}</p>
           </div>
           <input
             ref={fileInputRef}
@@ -431,20 +439,20 @@ const SellCarForm: React.FC = () => {
             className="hidden"
           />
 
-          {errors.images && <p className="mt-2 text-xs text-red-600">{errors.images}</p>}
+          {errors.images && <p className="mt-2 text-xs text-red-600 font-medium">{errors.images}</p>}
 
           {previews.length > 0 && (
-            <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 pt-2">
               {previews.map((src, i) => (
-                <div key={i} className="relative rounded-md overflow-hidden border border-gray-200">
-                  <img src={src} alt={`preview-${i}`} className="w-full h-24 object-cover" />
+                <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 group">
+                  <img src={src} alt={`preview-${i}`} className="w-full h-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removeImage(i)}
-                    className="absolute top-1 right-1 inline-flex items-center justify-center w-6 h-6 bg-white rounded-full border text-gray-600"
+                    className="absolute top-1.5 right-1.5 flex items-center justify-center w-7 h-7 bg-white/90 backdrop-blur rounded-full border border-slate-200 text-slate-600 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
                     aria-label={t('sell.form.remove_image', 'Remove image')}
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               ))}
@@ -452,22 +460,24 @@ const SellCarForm: React.FC = () => {
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full inline-flex items-center justify-center px-4 py-3 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          <MessageCircle className="h-4 w-4 mr-2" />
-          {isSubmitting ? t('buttons.sending', 'Sending...') : t('sell.form.submit')}
-        </button>
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 shadow-md shadow-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <MessageCircle className="h-5 w-5 mr-2" />
+            {isSubmitting ? t('buttons.sending', 'Sending...') : t('sell.form.submit')}
+          </button>
+          
+          <p className="mt-4 text-[11px] text-slate-500 text-center leading-relaxed">
+            {t(
+              'sell.disclaimer',
+              'By submitting this form you agree that our team may contact you via phone or email about your car. We never share your details with third parties.',
+            )}
+          </p>
+        </div>
       </form>
-
-      <p className="mt-4 text-[11px] text-gray-500">
-        {t(
-          'sell.disclaimer',
-          'By submitting this form you agree that our team may contact you via phone or email about your car. We never share your details with third parties.',
-        )}
-      </p>
     </div>
   );
 };

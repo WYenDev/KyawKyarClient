@@ -51,7 +51,7 @@ const SwiftProcessing = () => {
                                 Why Kyaw Kyar
                             </p>
 
-                            <h1 className="text-5xl font-semibold leading-[1.1] mb-8">
+                            <h1 className="text-3xl sm:text-5xl font-semibold leading-[1.1] mb-8">
                                 Swift Processing.
                                 <br />
                                 Zero Wasted Time.

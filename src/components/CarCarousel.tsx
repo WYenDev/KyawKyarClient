@@ -99,14 +99,28 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
       <div className={`absolute top-0 right-0 w-[30%] h-[30%] ${theme === 'indigo' ? 'bg-indigo-50/50' : 'bg-amber-50/40'} blur-[100px] -z-10`} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-start justify-between mb-8 gap-8">
-          <div className="space-y-4">
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-12 gap-8">
+          <div className="space-y-6">
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${classes.bg} ${classes.text} text-xs font-bold uppercase tracking-wider`}>
               {React.cloneElement(badgeIcon, { className: `w-3 h-3 ${classes.fill}` })}
               {badgeText}
             </div>
-            <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
-              <span className={classes.highlight}>{title} </span>{highlightedTitle}
+            <h2 className={`text-3xl lg:text-5xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.6rem] lg:text-[2.4rem] max-sm:text-[1.85rem] leading-[1.6]' : 'leading-[1.4]'}`}>
+              {isMyanmar ? (
+                <>
+                  <span className={`inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r ${classes.gradientFrom} ${classes.gradientTo}`}>
+                    {highlightedTitle}
+                  </span>{" "}
+                  {title}
+                </>
+              ) : (
+                <>
+                  {title}{" "}
+                  <span className={`inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r ${classes.gradientFrom} ${classes.gradientTo}`}>
+                    {highlightedTitle}
+                  </span>
+                </>
+              )}
             </h2>
             <p className={`text-slate-500 max-w-xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
               {description}

@@ -3,14 +3,15 @@ import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Contact: React.FC = () => {
-  const { t } = useTranslation('contact');
+  const { t, i18n } = useTranslation('contact');
+  const isMyanmar = i18n?.language?.startsWith('mm');
 
   return (
     <section id="contact" className="py-16 bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">{t('title')}</h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <h2 className={`text-3xl sm:text-4xl font-bold mb-4 ${isMyanmar ? 'font-myanmar max-sm:text-[2rem]' : ''}`}>{t('title')}</h2>
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
             {t('subtitle')}
           </p>
         </div>

@@ -104,11 +104,11 @@ const PremiumPayment: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100">
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:py-12 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      <main className="max-w-7xl mx-auto py-6 px-2 sm:py-12 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
 
           {/* LEFT: INTERACTIVE FORM AREA */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className="lg:col-span-8 space-y-4 sm:space-y-6">
             <div className="animate-in fade-in slide-in-from-right-4 duration-500">
               <header>
                  <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-full shadow-sm mb-4">
@@ -117,8 +117,8 @@ const PremiumPayment: React.FC = () => {
                       Payment Plans
                     </span>
                  </div>
-                <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 tracking-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
-                   <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
+                   <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
                       {t("payments_info.title", "Flexible Payment Options")}
                    </span>
                 </h2>
@@ -135,23 +135,23 @@ const PremiumPayment: React.FC = () => {
             </div>
 
             <div className="bg-white rounded-3xl sm:rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-5 sm:p-10">
+              <div className="p-3 sm:p-10">
                   <div className="animate-in fade-in slide-in-from-right-4 duration-500">
 
                     {/* Mobile: Scroll to Calculator Button */}
                     <button
                       onClick={() => document.getElementById('calculator-section')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="w-full lg:hidden mb-8 bg-slate-900 text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                      className="w-full lg:hidden mb-6 bg-slate-900 text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
                     >
                       <Calculator size={20} className="text-blue-400" />
                       <span>{t('buttons.calculate_payment', 'Calculate with Payment Calculator')}</span>
                       <ChevronDown size={20} className="text-slate-400" />
                     </button>
 
-                    <div className="grid sm:grid-cols-2 gap-4 mb-10">
+                    <div className="grid sm:grid-cols-2 gap-3 mb-8">
                       <button
                          onClick={() => setInstallmentMode('showroom')}
-                        className={`p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'showroom'
+                        className={`p-3 sm:p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'showroom'
                           ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500 shadow-md'
                           : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm'}`}
                       >
@@ -170,7 +170,7 @@ const PremiumPayment: React.FC = () => {
                       
                       <button
                         onClick={() => setInstallmentMode('bank')}
-                         className={`p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'bank'
+                         className={`p-3 sm:p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'bank'
                           ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500 shadow-md'
                           : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm'}`}
                       >
@@ -188,11 +188,11 @@ const PremiumPayment: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-8 space-y-4 animate-in zoom-in-95 duration-300">
+                    <div className="bg-slate-50 p-3 sm:p-6 rounded-3xl border border-slate-100 mb-6 space-y-3 sm:space-y-4 animate-in zoom-in-95 duration-300">
                       
                       {/* Showroom plan selection moved here */}
                         {installmentMode === "showroom" && Array.isArray(showroomInstallments) && showroomInstallments.length > 0 && (
-                          <div className="space-y-6">
+                          <div className="space-y-4 sm:space-y-6">
                             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                               <div className="flex items-center gap-2">
                                 <ReceiptText size={18} className="text-blue-600" />
@@ -217,7 +217,7 @@ const PremiumPayment: React.FC = () => {
                             
                             {/* Dynamic Showroom Explanation Text */}
                             {showroomConfig && (
-                              <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-slate-700 text-sm leading-relaxed">
+                              <div className="bg-blue-50/50 p-3 sm:p-4 rounded-xl border border-blue-100 text-slate-700 text-sm leading-relaxed">
                                 {(() => {
                                    const durationVal = Math.max(1, Math.round(Number(showroomConfig.duration ?? 0) * 12));
                                    const initialVal = showroomConfig.initialPayment ?? 0;
@@ -277,9 +277,9 @@ const PremiumPayment: React.FC = () => {
           </div>
 
           {/* RIGHT: SUMMARY CARD + CONDITIONAL CALCULATOR */}
-          <div id="calculator-section" className="lg:col-span-4 sticky top-28 space-y-6">
+          <div id="calculator-section" className="lg:col-span-4 sticky top-28 space-y-4 sm:space-y-6">
             
-              <div className="bg-slate-900 rounded-3xl sm:rounded-[2rem] shadow-2xl overflow-hidden text-white p-6 sm:p-8">
+              <div className="bg-slate-900 rounded-3xl sm:rounded-[2rem] shadow-2xl overflow-hidden text-white p-4 sm:p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <Calculator className="text-blue-400" size={24} />
                   <h3 className="text-lg font-bold">{t("payments_info.calculator.title")}</h3>
@@ -377,7 +377,7 @@ const PremiumPayment: React.FC = () => {
                   {/* Compact summary at end of calculator */}
                   <div className="mt-4">
                     {installmentMode === 'bank' && bankDerived && (
-                      <div className="rounded-xl p-4 bg-gradient-to-r from-blue-900 to-slate-800 border border-blue-700 shadow-lg ring-1 ring-blue-600/30">
+                      <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-r from-blue-900 to-slate-800 border border-blue-700 shadow-lg ring-1 ring-blue-600/30">
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="text-xs text-blue-200 font-semibold">{t("payments_info.calculator.summary.bank_title")}</div>
@@ -392,7 +392,7 @@ const PremiumPayment: React.FC = () => {
                     )}
 
                     {installmentMode === 'showroom' && showroomDerived && (
-                      <div className="rounded-xl p-4 bg-gradient-to-r from-emerald-900 to-slate-800 border border-emerald-700 shadow-lg ring-1 ring-emerald-600/30">
+                      <div className="rounded-xl p-3 sm:p-4 bg-gradient-to-r from-emerald-900 to-slate-800 border border-emerald-700 shadow-lg ring-1 ring-emerald-600/30">
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="text-xs text-emerald-200 font-semibold">{t("payments_info.calculator.summary.showroom_title")}</div>

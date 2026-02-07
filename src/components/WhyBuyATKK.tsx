@@ -1,10 +1,4 @@
 import React from "react";
-import {
-  ShieldCheck,
-  Banknote,
-  BadgeCheck,
-  Zap,
-} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -12,8 +6,6 @@ import { useNavigate } from "react-router-dom";
 type Benefit = {
   title: string;
   description: string;
-  icon: React.ReactNode;
-  bg: string;
   type: "detail" | "redirect";
   slug?: string;
   redirectTo?: string;
@@ -33,32 +25,24 @@ const WhyBuyAtKyawKyar: React.FC = () => {
       description: t("whybuy.benefits.inspection.description"),
       type: "detail",
       slug: "rigorous-quality-inspection",
-      icon: <ShieldCheck className="w-6 h-6 text-indigo-600" />,
-      bg: "bg-indigo-50",
     },
     {
       title: t("whybuy.benefits.financing.title"),
       description: t("whybuy.benefits.financing.description"),
       type: "redirect",
       redirectTo: "/showroom-installment",
-      icon: <Banknote className="w-6 h-6 text-emerald-600" />,
-      bg: "bg-emerald-50",
     },
     {
       title: t("whybuy.benefits.buy-at-market-price.title"),
       description: t("whybuy.benefits.buy-at-market-price.description"),
       type: "redirect",
       redirectTo: "/sellCars",
-      icon: <BadgeCheck className="w-6 h-6 text-violet-600" />,
-      bg: "bg-violet-50",
     },
     {
       title: t("whybuy.benefits.clean-history.title"),
       description: t("whybuy.benefits.clean-history.description"),
       type: "detail",
       slug: "clean-history",
-      icon: <Zap className="w-6 h-6 text-amber-600" />,
-      bg: "bg-amber-50",
     },
   ];
 
@@ -80,25 +64,27 @@ const WhyBuyAtKyawKyar: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= Header ================= */}
 
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <h2 className="text-sm font-bold text-indigo-600 uppercase tracking-[0.25em] mb-4">
-            The KyawKyar Standard
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <h2 className={`text-sm font-bold text-indigo-600 uppercase tracking-[0.25em] mb-8 ${isMyanmar ? "font-myanmar" : ""}`}>
+            {t("whybuy.subtitle")}
           </h2>
 
           <h3
-            className={`text-4xl lg:text-5xl font-black text-slate-900 mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-tight"
+            className={`text-3xl lg:text-5xl font-black text-slate-900 mb-10 whitespace-nowrap ${isMyanmar ? "font-myanmar leading-[1.6] max-sm:text-[1.8rem] max-sm:whitespace-normal" : "leading-[1.4]"
               }`}
->
-            <span className={isMyanmar ? "text-indigo-600" : ""}>
+          >
+            <span className={isMyanmar ? "text-[0.85em] lg:text-[0.72em]" : ""}>
               {t("whybuy.title_prefix")}
             </span>
-            <br />
-            <span className={!isMyanmar ? "text-indigo-600" : ""}>
+            <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              {" "}{t("whybuy.title_highlight")}
+            </span>
+            <span className={isMyanmar ? "text-[0.85em] lg:text-[0.72em]" : ""}>
               {t("whybuy.title_suffix")}
             </span>
           </h3>
 
-          <p className="text-slate-600 text-lg">
+          <p className={`text-slate-600 text-base sm:text-lg leading-relaxed ${isMyanmar ? "font-myanmar" : ""} text-left sm:text-center`}>
             {t("whybuy.description")}
           </p>
         </div>
@@ -114,26 +100,17 @@ const WhyBuyAtKyawKyar: React.FC = () => {
                          shadow-sm hover:shadow-xl
                          hover:-translate-y-1
                          transition-all duration-300
-                         min-h-[260px] flex flex-col"
+                         flex flex-col"
             >
-              <div
-                className={`${benefit.bg} w-12 h-12 rounded-xl
-                            flex items-center justify-center
-                            mb-5 group-hover:scale-110
-                            transition-transform`}
-              >
-                {benefit.icon}
-              </div>
-
-              <h4 className="text-lg font-bold text-slate-900 mb-2">
+              <h4 className={`text-lg font-bold text-slate-900 mb-5 ${isMyanmar ? "font-myanmar" : ""}`}>
                 {benefit.title}
               </h4>
 
-              <p className="text-slate-500 text-sm leading-relaxed line-clamp-3">
+              <p className={`text-slate-500 text-sm leading-relaxed line-clamp-3 ${isMyanmar ? "font-myanmar" : ""}`}>
                 {benefit.description}
               </p>
 
-              <span className="mt-auto pt-5 inline-flex items-center gap-1
+              <span className="mt-8 inline-flex items-center gap-1
                                text-sm font-semibold text-indigo-600">
                 Details
                 <span className="group-hover:translate-x-1 transition-transform">

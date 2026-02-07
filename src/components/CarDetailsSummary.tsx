@@ -31,11 +31,12 @@ interface Props {
 }
 
 const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
-  const { t } = useTranslation('cars');
+  const { t, i18n } = useTranslation('cars');
+  const isMyanmar = i18n?.language?.startsWith('mm');
 
   return (
     <div>
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+      <h1 className={`text-2xl sm:text-4xl font-bold text-gray-900 mb-3 ${isMyanmar ? 'font-myanmar max-sm:text-[1.6rem]' : ''}`}>
         {car?.model?.brand?.name} {car?.model?.name}
       </h1>
 

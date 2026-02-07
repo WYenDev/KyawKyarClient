@@ -29,14 +29,16 @@ const testimonials = [
 ];
 
 const Testimonials: React.FC = () => {
+  const { t, i18n } = useTranslation('reviews');
+  const isMyanmar = i18n?.language?.startsWith('mm');
+
   return (
     <section id="testimonials" className="py-16 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">What Our Customers Say</h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Don't just take our word for it. Here's what our satisfied customers have to say
-            about their experience with AutoMax Myanmar.
+          <h2 className={`text-3xl sm:text-4xl font-bold text-slate-900 mb-4 ${isMyanmar ? 'font-myanmar text-[1.8rem]' : ''}`}>{t('title', 'What Our Customers Say')}</h2>
+          <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto">
+            {t('description')}
           </p>
         </div>
 

@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Car, Shield, Clock, BadgeDollarSign } from 'lucide-react';
 
 const SellCarHero: React.FC = () => {
-  const { t } = useTranslation('cars');
+  const { t, i18n } = useTranslation('cars');
+  const isMyanmar = i18n?.language?.startsWith('mm');
 
   return (
     <div>
@@ -11,7 +12,7 @@ const SellCarHero: React.FC = () => {
         <Car className="h-4 w-4 mr-2" />
         <span>{t('sell.details_title')}</span>
       </div>
-      <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{t('sell.title')}</h1>
+      <h1 className={`text-3xl sm:text-5xl font-bold text-white mb-4 ${isMyanmar ? 'font-myanmar max-sm:text-[2.2rem]' : ''}`}>{t('sell.title')}</h1>
       <p className="text-lg text-slate-300 mb-4">{t('sell.description')}</p>
       <p className="text-sm text-slate-400 mb-6">{t('sell.form_subtitle')}</p>
 

@@ -67,14 +67,28 @@ const BrowseCarByBuildTypes: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-8">
-          <div className="space-y-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+          <div className="space-y-6">
              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
                <LayoutGrid className="w-3 h-3 fill-indigo-700" />
                Vehicle Categories
              </div>
-            <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight ${isMyanmar ? 'font-myanmar' : ''}`}>
-              <span className={`${isMyanmar ? 'font-myanmar text-indigo-600' : ""}`}>{t('browse_by_body_type.title')}</span> <span className={`${isMyanmar ? 'font-myanmar' : "text-indigo-600"}`}>{t('browse_by_body_type.highlightedText')}</span>
+            <h2 className={`text-3xl lg:text-5xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.6rem] lg:text-[2.4rem] max-sm:text-[1.85rem] leading-[1.6]' : 'leading-[1.4]'}`}>
+              {isMyanmar ? (
+                <>
+                  <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                    {t('browse_by_body_type.highlightedText')}
+                  </span>{" "}
+                  {t('browse_by_body_type.title')}
+                </>
+              ) : (
+                <>
+                  {t('browse_by_body_type.title')}{" "}
+                  <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                    {t('browse_by_body_type.highlightedText')}
+                  </span>
+                </>
+              )}
             </h2>
             <p className={`text-slate-500 max-w-xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
               Find the perfect match for your lifestyle. Select a body style to see what's available.

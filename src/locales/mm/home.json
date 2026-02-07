@@ -21,22 +21,23 @@
     "branches": "ဆိုင်ခွဲများ"
   },
   "featured" : {
-    "title": "အထူးရွေးချယ်ထားသော",
-    "highlightedText": "ကားများ",
+    "title": "ကားများထဲမှ",
+    "highlightedText": "အထူးရွေးချယ်ထားသော",
     "subtitle": "Handpicked Just for You",
     "description": "Explore our exclusive selection of featured vehicles, meticulously chosen to meet the highest standards of quality and performance. Each car in this collection has been thoroughly inspected and is ready to provide you with an exceptional driving experience."
   },
   "new_arrivals": {
-    "title": "အသစ်ရောက်ရှိထားသော",
-    "highlightedText": "ကားများ",
+    "title": "ကားများထဲမှ",
+    "highlightedText": "အသစ်ရောက်ရှိထားသော",
     "subtitle": "Latest Additions to Our Showroom",
     "description": "Discover the newest additions to our showroom, featuring the latest models and innovations in the automotive world. These vehicles have just arrived and are ready for you to explore, test drive, and make your own."
   },
   "whybuy": {
-    "title_prefix": "စစ်မှန်တဲ့ အရည်အသွေးကို ",
-    "title_suffix": "ယုံကြည်စိတ်ချ ခံစားလိုက်ပါ",
+    "title_prefix": "ဘာကြောင့်",
+    "title_highlight": "ကျော်ကြား",
+    "title_suffix": "မှာမှ ကားဝယ်သင့်တာလဲ?",
     "subtitle": "THE KYAW KYAR STANDARD",
-    "description": "ယုံကြည်စိတ်ချရတဲ့ အရည်အသွေး။ စိတ်အေးလက်အေး ရွေးချယ်လိုက်ပါ။ Showroom ထဲက ကားတိုင်းဟာ စွမ်းဆောင်ရည်နဲ့ လုံခြုံမှုအတွက် အထူးရွေးချယ်ထားတဲ့ ကားကောင်းကားသန့် တွေပဲ ဖြစ်ပါတယ်။",
+    "description": "ကျော်ကြား Standard မှာ ကားတစ်စီးချင်းစီကို အချက်အထောက်များအပြည့်အစုံ စစ်ဆေးပေးထားခြင်း၊ လိုအပ်သလို ရွေးချယ်နိုင်တဲ့ ငွေပေးချေမှုစီမံချက်များ၊ သန့်ရှင်းကြောင်း အာမခံထားတဲ့ သမိုင်းကြောင်းများနဲ့ ကာလပေါက်စျေးဖြင့် ပြန်လည်ဝယ်ယူပေးမှုအထိ ပါဝင်ပါတယ်။",
     "benefits": {
       "inspection": {
         "title": "တိကျသေချာသော အရည်အသွေးစစ်ဆေးမှု", 
@@ -65,14 +66,14 @@
     }
   },
   "browse_by_body_type": {
-    "title": "တည်ဆောက်ပုံအမျိုးအစားအလိုက်",
-    "highlightedText": "ကြည့်ရှုရန်",
+    "title": "ကြည့်ရှုရန်",
+    "highlightedText": "တည်ဆောက်ပုံအမျိုးအစားအလိုက်",
     "subtitle": "သင့်နှစ်သက်ရာ ကားကို ရှာဖွေလိုက်ပါ",
     "description": "ကားအမျိုးအစားအလိုက် ကားများကို စုစည်းထားသော ကျွန်ုပ်တို့၏ ကားများစွာထဲမှ သင့်ဘဝနှင့် နှစ်သက်မှုများနှင့် ကိုက်ညီသော စတိုင်လ်ရှိသော ဆီဒန်ကား၊ ကျယ်ပြန့်သော SUV ကား သို့မဟုတ် အမျိုးမျိုး အသုံးပြုနိုင်သော ဟတ်ခ်ဘတ်ကားများကို ရှာဖွေနိုင်ပါသည်။"
   }, 
   "browse_by_brand": {
-    "title": "အမှတ်တံဆိပ်အမျိုးအစားအလိုက်",
-    "highlightedText": "ကြည့်ရှုရန်",
+    "title": "ကြည့်ရှုရန်",
+    "highlightedText": "အမှတ်တံဆိပ်အမျိုးအစားအလိုက်",
     "subtitle": "သင့်နှစ်သက်ရာ ကားကို ရှာဖွေလိုက်ပါ",
     "description": "ကားအမျိုးအစားအလိုက် ကားများကို စုစည်းထားသော ကျွန်ုပ်တို့၏ ကားများစွာထဲမှ သင့်ဘဝနှင့် နှစ်သက်မှုများနှင့် ကိုက်ညီသော စတိုင်လ်ရှိသော ဆီဒန်ကား၊ ကျယ်ပြန့်သော SUV ကား သို့မဟုတ် အမျိုးမျိုး အသုံးပြုနိုင်သော ဟတ်ခ်ဘတ်ကားများကို ရှာဖွေနိုင်ပါသည်။"
   }

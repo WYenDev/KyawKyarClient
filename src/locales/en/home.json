@@ -29,10 +29,11 @@
     "description": "Discover the newest additions to our showroom, featuring the latest models and innovations in the automotive world. These vehicles have just arrived and are ready for you to explore, test drive, and make your own."
   },
   "whybuy": {
-    "title_prefix": "Experience the Confidence of",
-    "title_suffix": "Certified Quality",
+    "title_prefix": "Why Buy From",
+    "title_highlight": "Kyaw Kyar?",
+    "title_suffix": "",
     "subtitle": "THE KYAW KYAR Standard",
-    "description": "We don't just sell cars; we sell peace of mind. Every vehicle in our multi-brand showroom is hand-selected to meet our high standards of safety and performance.",
+    "description": "Our standard means every car is multi-point inspected, every payment plan stays flexible, every history is verified, and every purchase comes with a buy-back promise.",
     "benefits": {
       "inspection": {
         "title": "Rigorous Quality Inspection", 
