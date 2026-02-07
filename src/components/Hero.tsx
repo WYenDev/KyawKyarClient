@@ -64,127 +64,176 @@ const Hero: React.FC = () => {
   }, [brand, availableModels]);
 
   return (
-    <section className="relative xl:min-h-screen flex xl:items-center bg-white overflow-hidden pt-24 pb-12 sm:pt-28 sm:pb-14 md:pt-32 md:pb-16 xl:py-0">
+    <section className="relative flex xl:items-center bg-[#f8fafc] overflow-hidden pt-[5.5rem] pb-2 sm:pt-24 sm:pb-3 md:pt-26 md:pb-4 xl:pt-[5.5rem] xl:pb-3">
       {/* Background elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-15%] left-[-15%] w-[80%] h-[70%] rounded-full bg-indigo-50/50 blur-[140px]" />
         <div className="absolute bottom-[-15%] right-[-15%] w-[70%] h-[60%] rounded-full bg-blue-50/40 blur-[120px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-16 items-center">
+      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3 w-full z-10">
+        <div className="bg-white rounded-none p-3 sm:p-7 xl:p-10 border border-white shadow-2xl shadow-indigo-100/20 relative overflow-hidden group/hero">
+          {/* Subtle decorative element inside card */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-none -mr-32 -mt-32 opacity-50 transition-transform duration-1000 group-hover/hero:scale-110" />
 
-          {/* LEFT SIDE: Content */}
-          <div className="xl:col-span-6 space-y-5 sm:space-y-8 text-center xl:text-left order-2 xl:order-1">
-            <div className="space-y-4">
-              <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-full shadow-sm">
-                <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                <span className="text-indigo-900 text-[11px] font-bold tracking-widest uppercase">
-                  Kyaw Kyar Premium Showroom
-                </span>
-              </div>
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 xl:gap-16 items-center relative z-10">
 
-              <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 ${isMyanmar ? 'font-myanmar sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.6]' : ''}`}>
-                <span className={`inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 ${isMyanmar ? 'lg:mt-10 lg:mb-4' : ''}`}>
-                  {t('hero.title_prefix')}
-                </span>
-                <span className={`block mb-2 ${isMyanmar ? 'max-sm:text-[0.9em] sm:text-[0.85em] lg:text-[0.72em]' : ''}`}>
-                  {t('hero.title_suffix')}
-                </span>
-              </h1>
-              <p className={`text-base sm:text-lg text-slate-600 max-w-lg mx-auto xl:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
-                {t('hero.description')}
-              </p>
-            </div>
-
-            {/* INTEGRATED SEARCH */}
-            <div className="flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-2xl xl:flex-row max-w-2xl shadow-lg mx-auto xl:mx-0">
-              <select
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                className="w-full bg-white border-slate-300 rounded-lg px-4 py-2.5 sm:px-5 sm:py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-700 text-sm sm:text-base"
-              >
-                <option value="">All Brands</option>
-                {brandsToShow.map((b) => {
-                  const count = serverBrandModels?.[b]?.totalCars;
-                  return (
-                    <option key={b} value={b}>
-                      {b}{count !== undefined ? ` (${count})` : ''}
-                    </option>
-                  );
-                })}
-              </select>
-
-              <select
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                disabled={!brand}
-                className={`w-full border-slate-300 rounded-lg px-4 py-2.5 sm:px-5 sm:py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm sm:text-base ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
-              >
-                <option value="">All Models</option>
-                {availableModels.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}{m.carCount !== undefined ? ` (${m.carCount})` : ''}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={() => navigateWithParams(brand || undefined, model || undefined)}
-                className="w-full xl:w-auto bg-slate-900 text-white px-8 py-2.5 sm:py-3.5 rounded-lg font-bold hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 group text-sm sm:text-base"
-              >
-                <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>Search</span>
-              </button>
-            </div>
-
-            {/* Trust & Info Row */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-200/80 max-w-md mx-auto xl:mx-0">
-              <div className="flex flex-col items-center xl:items-start">
-                <div className="flex items-center text-amber-500 mb-1">
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  <span className="text-xs font-bold text-slate-900 ml-1">4.9/5</span>
+            {/* LEFT SIDE: Content */}
+            <div className="xl:col-span-6 space-y-8 sm:space-y-10 text-center xl:text-left order-2 xl:order-1 pt-12 xl:pt-0">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-none shadow-sm">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
+                  <span className="text-indigo-900 text-[11px] font-black tracking-widest uppercase">
+                    Kyaw Kyar Premium Showroom
+                  </span>
                 </div>
-                <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Customer Rating</span>
+
+                <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2 ${isMyanmar ? 'font-myanmar sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.6]' : ''}`}>
+                  <span className={`inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 ${isMyanmar ? 'lg:mt-6 lg:mb-2' : ''}`}>
+                    {t('hero.title_prefix')}
+                  </span>
+                  <span className={`block sm:mb-2 ${isMyanmar ? 'whitespace-nowrap max-sm:text-[0.9em] sm:text-[0.85em] lg:text-[0.72em]' : ''}`}>
+                    {t('hero.title_suffix')}
+                  </span>
+                </h1>
+                <p className={`text-base sm:text-lg text-slate-500 max-w-lg mx-auto xl:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar leading-relaxed sm:leading-loose pt-1 sm:pt-1' : ''}`}>
+                  {t('hero.description')}
+                </p>
               </div>
-              <div className="flex flex-col items-center xl:items-start">
-                <Users className="w-4 h-4 text-indigo-600 mb-1" />
-                <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">15k+ Happy Owners</span>
+
+              {/* INTEGRATED SEARCH (Desktop) */}
+              <div className="hidden xl:flex flex-col gap-3 p-3 bg-slate-50 border border-slate-100 rounded-none xl:flex-row max-w-2xl shadow-sm mx-auto xl:mx-0">
+                <select
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  className="w-full bg-white border-slate-200 rounded-none px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-slate-700 text-sm font-bold"
+                >
+                  <option value="">All Brands</option>
+                  {brandsToShow.map((b) => {
+                    const count = serverBrandModels?.[b]?.totalCars;
+                    return (
+                      <option key={b} value={b}>
+                        {b}{count !== undefined ? ` (${count})` : ''}
+                      </option>
+                    );
+                  })}
+                </select>
+
+                <select
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  disabled={!brand}
+                  className={`w-full border-slate-200 rounded-none px-5 py-3.5 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-bold ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
+                >
+                  <option value="">All Models</option>
+                  {availableModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}{m.carCount !== undefined ? ` (${m.carCount})` : ''}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={() => navigateWithParams(brand || undefined, model || undefined)}
+                  className="w-full xl:w-auto bg-slate-900 text-white px-10 py-3.5 rounded-none font-bold hover:bg-indigo-600 active:scale-95 transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2 group text-sm"
+                >
+                  <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span>Search</span>
+                </button>
               </div>
-              <div className="flex flex-col items-center xl:items-start">
-                <MapPin className="w-4 h-4 text-indigo-600 mb-1" />
-                <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">{filterData?.showrooms?.length} branches</span>
+
+              {/* Trust & Info Row */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-8 sm:pt-10 border-t border-slate-100 max-w-md mx-auto xl:mx-0">
+                <div className="flex flex-col items-center xl:items-start group/stat">
+                  <div className="flex items-center text-amber-500 mb-1">
+                    <Star className="w-3.5 h-3.5 fill-current" />
+                    <span className="text-xs font-black text-slate-900 ml-1">4.9/5</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/stat:text-indigo-600 transition-colors">Customer Rating</span>
+                </div>
+                <div className="flex flex-col items-center xl:items-start group/stat">
+                  <Users className="w-4 h-4 text-indigo-400 mb-1 group-hover/stat:text-indigo-600 transition-colors" />
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/stat:text-indigo-600 transition-colors">15k+ Happy Owners</span>
+                </div>
+                <div className="flex flex-col items-center xl:items-start group/stat">
+                  <MapPin className="w-4 h-4 text-indigo-400 mb-1 group-hover/stat:text-indigo-600 transition-colors" />
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/stat:text-indigo-600 transition-colors">{filterData?.showrooms?.length} branches</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* RIGHT SIDE: Visual Content */}
-          <div className="xl:col-span-6 relative order-1 xl:order-2">
-            <div className="relative h-[200px] sm:h-[280px] md:h-[320px] xl:h-[480px] w-full mt-2 xl:mt-0">
-              <div className="absolute inset-0 rounded-3xl xl:rounded-4xl overflow-hidden shadow-2xl border-8 xl:border-12 border-white group">
-                <img
-                  src={homeData?.image?.url || CarImage}
-                  className="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-105"
-                  alt="Kyaw Kyar Luxury SUV"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent" />
-              </div>
+            {/* RIGHT SIDE: Visual Content */}
+            <div className="xl:col-span-6 relative order-1 xl:order-2">
+              <div className="relative h-[240px] sm:h-[320px] md:h-[400px] xl:h-[520px] w-full mt-2 xl:mt-0 px-2 sm:px-0">
+                <div className="absolute inset-0 rounded-none overflow-hidden shadow-3xl border-[6px] sm:border-[12px] border-slate-50 group/img">
+                  <img
+                    src={homeData?.image?.url || CarImage}
+                    className="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover/img:scale-110"
+                    alt="Kyaw Kyar Luxury SUV"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60" />
+                </div>
 
-              <div className="absolute -bottom-4 -right-2 sm:-bottom-8 sm:-right-4 xl:bottom-8 xl:-left-16 z-20">
-                <div className="bg-white/80 backdrop-blur-xl border border-white p-3 sm:p-5 xl:p-7 rounded-2xl xl:rounded-3xl shadow-xl animate-float">
-                  <div className="text-center">
-                    <p className="text-xs xl:text-sm text-indigo-600 font-bold uppercase tracking-widest mb-1">
+                {/* Integrated Search (Mobile Overlay) */}
+                <div className="absolute -bottom-10 left-3 right-3 z-30 xl:hidden">
+                  <div className="bg-white/95 backdrop-blur-xl border border-white p-3 rounded-none shadow-2xl shadow-indigo-200/50 flex flex-col gap-2.5">
+                    <div className="grid grid-cols-2 gap-2">
+                      <select
+                        value={brand}
+                        onChange={(e) => setBrand(e.target.value)}
+                        className="w-full bg-slate-50 border-slate-100 rounded-none px-3 py-2.5 text-slate-700 text-[11px] font-black focus:ring-2 focus:ring-indigo-500"
+                      >
+                        <option value="">Brand</option>
+                        {brandsToShow.map((b) => {
+                          const count = serverBrandModels?.[b]?.totalCars;
+                          return (
+                            <option key={b} value={b}>
+                              {b}{count !== undefined ? ` (${count})` : ''}
+                            </option>
+                          );
+                        })}
+                      </select>
+
+                      <select
+                        value={model}
+                        onChange={(e) => setModel(e.target.value)}
+                        disabled={!brand}
+                        className={`w-full border-slate-100 rounded-none px-3 py-2.5 text-[11px] font-black focus:ring-2 focus:ring-indigo-500 ${!brand ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
+                      >
+                        <option value="">Model</option>
+                        {availableModels.map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.name}{m.carCount !== undefined ? ` (${m.carCount})` : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <button
+                      onClick={() => navigateWithParams(brand || undefined, model || undefined)}
+                      className="w-full bg-slate-900 text-white py-2.5 rounded-none font-black hover:bg-indigo-600 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 group text-xs"
+                    >
+                      <Search className="w-3.5 h-3.5" />
+                      <span>Search Cars</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Floating Badge on Card - Responsive: Top-right on mobile, Wide bar on desktop */}
+                <div className="absolute z-20 transition-all duration-500 -top-4 -right-2 xl:top-auto xl:bottom-4 xl:left-10 xl:right-10">
+                  <div className="bg-white/90 backdrop-blur-2xl border border-white p-4 sm:p-5 xl:p-6 rounded-none shadow-2xl flex flex-col xl:flex-row items-center justify-center gap-1 xl:gap-12 group/badge">
+                    <p className="text-[10px] xl:text-[11px] text-indigo-600 font-black uppercase tracking-[0.2em] transition-colors group-hover/badge:text-indigo-500">
                       Monthly From
                     </p>
-                    <div className="text-lg sm:text-xl xl:text-3xl font-black text-slate-900 flex items-baseline justify-center gap-1.5">
-                      300K <span className="text-slate-500 font-medium text-xs xl:text-base">to</span> 2M
+                    <div className="text-xl sm:text-2xl xl:text-4xl font-black text-slate-900 flex items-baseline gap-2 transition-transform group-hover/badge:scale-105">
+                      300K <span className="text-slate-400 font-bold text-xs xl:text-lg">to</span> 2M
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </section>

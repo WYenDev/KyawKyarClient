@@ -34,7 +34,7 @@ const Header: React.FC = () => {
 
   const navLinkClass = (path: string) => {
     const active = isActive(path);
-    return `px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${active
+    return `px-6 py-3 rounded-none text-sm font-medium transition-all duration-200 ${active
       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
       : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50'
       }`;
@@ -86,15 +86,15 @@ const Header: React.FC = () => {
         className={`${isHome ? 'bg-transparent' : 'bg-white'} ${isHome ? '' : 'shadow-sm'
           } backdrop-blur-sm/0 transition-colors`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+          <div className={`mt-1 mb-0 ${isHome ? 'bg-white/95 border border-white/80 shadow-lg shadow-slate-900/5 rounded-none px-3 sm:px-6 h-20 flex items-center justify-between' : 'flex items-center justify-between h-16'}`}>
             {/* Logo */}
-            <Link to="/" className="flex items-center group">
-              <img src={logo} alt="ကျော်ကြား car showroom" className="h-16 md:h-20 w-auto object-contain" />
+            <Link to="/" className="flex items-center group shrink-0">
+              <img src={logo} alt="ကျော်ကြား car showroom" className="h-16 md:h-24 w-auto object-contain" />
             </Link>
 
             {/* Desktop Navigation - Centered Pill */}
-            <nav className="hidden xl:flex items-center gap-1 bg-gray-100/50 p-1.5 rounded-full border border-gray-200/50 backdrop-blur-sm">
+            <nav className="hidden xl:flex items-center gap-1 bg-slate-100/60 p-1 rounded-none border border-slate-200/60 backdrop-blur-md">
               {navItems.map((item) => (
                 <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
                   {item.label}

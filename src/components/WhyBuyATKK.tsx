@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 /* ================= Types ================= */
 type Benefit = {
@@ -60,65 +61,66 @@ const WhyBuyAtKyawKyar: React.FC = () => {
 
   /* ================= Render ================= */
   return (
-    <section className="bg-white py-16 lg:py-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ================= Header ================= */}
+    <section className="bg-transparent py-2 lg:py-3 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-indigo-50/50 blur-[120px] -z-10" />
 
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className={`text-sm font-bold text-indigo-600 uppercase tracking-[0.25em] mb-8 ${isMyanmar ? "font-myanmar" : ""}`}>
-            {t("whybuy.subtitle")}
-          </h2>
+      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+        <div className="bg-white rounded-none p-3 sm:p-7 lg:p-12 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
+          
+          {/* ================= Header ================= */}
+          <div className="text-center max-w-4xl mx-auto mb-8 relative z-10">
+            <h2 className={`text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] mb-4 ${isMyanmar ? "font-myanmar" : ""}`}>
+              {t("whybuy.subtitle")}
+            </h2>
 
-          <h3
-            className={`text-3xl lg:text-5xl font-black text-slate-900 mb-10 whitespace-nowrap ${isMyanmar ? "font-myanmar leading-[1.6] max-sm:text-[1.8rem] max-sm:whitespace-normal" : "leading-[1.4]"
-              }`}
-          >
-            <span className={isMyanmar ? "text-[0.85em] lg:text-[0.72em]" : ""}>
-              {t("whybuy.title_prefix")}
-            </span>
-            <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-              {" "}{t("whybuy.title_highlight")}
-            </span>
-            <span className={isMyanmar ? "text-[0.85em] lg:text-[0.72em]" : ""}>
-              {t("whybuy.title_suffix")}
-            </span>
-          </h3>
-
-          <p className={`text-slate-600 text-base sm:text-lg leading-relaxed ${isMyanmar ? "font-myanmar" : ""} text-left sm:text-center`}>
-            {t("whybuy.description")}
-          </p>
-        </div>
-
-        {/* ================= Cards (2 x 2) ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {benefits.map((benefit, index) => (
-            <div
-              key={index}
-              onClick={() => handleClick(benefit)}
-              className="group cursor-pointer bg-white
-                         p-7 rounded-2xl border border-slate-100
-                         shadow-sm hover:shadow-xl
-                         hover:-translate-y-1
-                         transition-all duration-300
-                         flex flex-col"
+            <h3
+              className={`text-3xl lg:text-5xl font-black text-slate-900 mb-6 whitespace-nowrap ${isMyanmar ? "font-myanmar leading-[1.6] max-sm:text-[2rem] max-sm:whitespace-normal" : "leading-[1.4]"
+                }`}
             >
-              <h4 className={`text-lg font-bold text-slate-900 mb-5 ${isMyanmar ? "font-myanmar" : ""}`}>
-                {benefit.title}
-              </h4>
-
-              <p className={`text-slate-500 text-sm leading-relaxed line-clamp-3 ${isMyanmar ? "font-myanmar" : ""}`}>
-                {benefit.description}
-              </p>
-
-              <span className="mt-8 inline-flex items-center gap-1
-                               text-sm font-semibold text-indigo-600">
-                Details
-                <span className="group-hover:translate-x-1 transition-transform">
-                  →
-                </span>
+              <span className={isMyanmar ? "text-[0.85em] lg:text-[0.8em]" : ""}>
+                {t("whybuy.title_prefix")}
               </span>
-            </div>
-          ))}
+              <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 whitespace-nowrap">
+                {" "}{t("whybuy.title_highlight")}
+              </span>
+              <span className={isMyanmar ? "text-[0.85em] lg:text-[0.8em] block sm:inline whitespace-nowrap font-myanmar" : ""}>
+                {t("whybuy.title_suffix")}
+              </span>
+            </h3>
+
+            <p className={`text-slate-500 text-lg leading-relaxed ${isMyanmar ? "font-myanmar leading-loose pt-1 text-base sm:text-lg" : ""} text-left sm:text-center`}>
+              {t("whybuy.description")}
+            </p>
+          </div>
+
+          {/* ================= Cards (2 x 2) ================= */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8 relative z-10">
+            {benefits.map((benefit, index) => (
+              <div
+                key={index}
+                onClick={() => handleClick(benefit)}
+                className="group cursor-pointer bg-slate-50/50
+                           p-6 sm:p-8 rounded-none border border-slate-100
+                           shadow-sm hover:shadow-2xl hover:shadow-indigo-100/50
+                           transition-all duration-500 hover:-translate-y-2
+                           flex flex-col"
+              >
+                <h4 className={`text-xl sm:text-2xl font-black text-slate-900 mb-5 leading-tight ${isMyanmar ? "font-myanmar" : ""}`}>
+                  {benefit.title}
+                </h4>
+
+                <p className={`text-slate-500 leading-relaxed ${isMyanmar ? "font-myanmar text-sm leading-6" : "text-base"}`}>
+                  {benefit.description}
+                </p>
+
+                <div className="mt-6 flex items-center text-indigo-600 font-bold group-hover:gap-4 gap-2 transition-all">
+                  <span className="text-sm uppercase tracking-widest font-black">Learn More</span>
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

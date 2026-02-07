@@ -21,29 +21,31 @@ const AboutTeaser: React.FC = () => {
   };
 
   return (
-    <section className="bg-slate-50 py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 items-center gap-8 md:gap-16">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-4">
-              {img(0, 'rounded-lg shadow-lg w-full h-auto object-cover aspect-square')}
-              {img(1, 'rounded-lg shadow-lg w-full h-auto object-cover aspect-square')}
+    <section className="bg-transparent py-2 lg:py-3 relative overflow-hidden">
+      <div className="max-w-[1600px] mx-auto px-1 sm:px-2 lg:px-3">
+        <div className="bg-white rounded-none p-3 sm:p-6 lg:p-10 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
+          <div className="grid md:grid-cols-2 items-center gap-8 md:gap-16 relative z-10">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                {img(0, 'rounded-none shadow-lg w-full h-auto object-cover aspect-square')}
+                {img(1, 'rounded-none shadow-lg w-full h-auto object-cover aspect-square')}
+              </div>
+              <div className="space-y-4 mt-8">
+                {img(2, 'rounded-none shadow-lg w-full h-auto object-cover aspect-square')}
+                {img(3, 'rounded-none shadow-lg w-full h-auto object-cover aspect-square')}
+              </div>
             </div>
-            <div className="space-y-4 mt-8">
-              {img(2, 'rounded-lg shadow-lg w-full h-auto object-cover aspect-square')}
-              {img(3, 'rounded-lg shadow-lg w-full h-auto object-cover aspect-square')}
+            <div className="py-4">
+              <h3 className="text-sm font-black text-indigo-600 uppercase tracking-[0.2em] mb-3">About KyawKyar</h3>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">Your Trusted Multi-Brand Car Showroom in Myanmar</h2>
+              <p className="text-slate-600 mb-8 text-lg leading-relaxed">
+                We hand-select every vehicle, perform rigorous inspections, and support you through financing and ownership transfer. Discover our commitment to quality and customer satisfaction.
+              </p>
+              <Link to="/about" className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-none font-bold hover:bg-indigo-600 transition-all shadow-xl shadow-slate-900/10 group">
+                Learn More About Us
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-3">About KyawKyar</h3>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 leading-tight">Your Trusted Multi-Brand Car Showroom in Myanmar</h2>
-            <p className="text-slate-600 mb-8 text-lg">
-              We hand-select every vehicle, perform rigorous inspections, and support you through financing and ownership transfer. Discover our commitment to quality and customer satisfaction.
-            </p>
-            <Link to="/about" className="inline-flex items-center gap-3 bg-slate-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-800 transition-all group">
-              Learn More About Us
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-            </Link>
           </div>
         </div>
       </div>
