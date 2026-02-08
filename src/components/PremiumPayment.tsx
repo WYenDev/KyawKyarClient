@@ -104,25 +104,25 @@ const PremiumPayment: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100">
-      <main className="max-w-7xl mx-auto py-6 px-2 sm:py-12 sm:px-6">
+      <main className="max-w-7xl mx-auto py-2 px-2 sm:py-6 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
 
           {/* LEFT: INTERACTIVE FORM AREA */}
           <div className="lg:col-span-8 space-y-4 sm:space-y-6">
             <div className="animate-in fade-in slide-in-from-right-4 duration-500">
               <header>
-                 <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-full shadow-sm mb-4">
+                 <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-none mb-1.5 sm:mb-2">
                     <ShieldCheck className="w-4 h-4 text-indigo-600" />
                     <span className="text-indigo-900 text-[11px] font-bold tracking-widest uppercase">
                       Payment Plans
                     </span>
                  </div>
-                <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
-                   <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
+                   <span className={`inline-block ${isMyanmar ? 'pt-4 pb-4' : 'pt-0 md:pt-1 pb-1'} text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600`}>
                       {t("payments_info.title", "Flexible Payment Options")}
                    </span>
                 </h2>
-                <p className={`text-base sm:text-lg text-slate-600 mt-4 leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
+                <p className={`text-base sm:text-lg text-slate-600 mt-6 sm:mt-8 leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
                   <Trans
                     i18nKey="payments_info.description"
                     ns="common"
@@ -134,19 +134,9 @@ const PremiumPayment: React.FC = () => {
               </header>
             </div>
 
-            <div className="bg-white rounded-3xl sm:rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+            <div className="bg-white rounded-none shadow-none border border-slate-100 overflow-hidden">
               <div className="p-3 sm:p-10">
                   <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-
-                    {/* Mobile: Scroll to Calculator Button */}
-                    <button
-                      onClick={() => document.getElementById('calculator-section')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="w-full lg:hidden mb-6 bg-slate-900 text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
-                    >
-                      <Calculator size={20} className="text-blue-400" />
-                      <span>{t('buttons.calculate_payment', 'Calculate with Payment Calculator')}</span>
-                      <ChevronDown size={20} className="text-slate-400" />
-                    </button>
 
                     <div className="grid sm:grid-cols-2 gap-3 mb-8">
                       <button
@@ -206,7 +196,7 @@ const PremiumPayment: React.FC = () => {
                                     <button
                                       key={idx}
                                       onClick={() => setSelectedShowroomIndex(idx)}
-                                      className={`px-4 py-2.5 sm:px-3 sm:py-2 rounded-xl text-xs font-black transition-all flex-1 sm:flex-none ${active ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200 shadow-sm"}`}
+                                      className={`px-4 py-2.5 sm:px-3 sm:py-2 rounded-none text-xs font-black transition-all flex-1 sm:flex-none ${active ? "bg-blue-600 text-white" : "bg-white text-slate-400 border border-slate-200"}`}
                                     >
                                       {months} MONTHS
                                     </button>
@@ -217,7 +207,7 @@ const PremiumPayment: React.FC = () => {
                             
                             {/* Dynamic Showroom Explanation Text */}
                             {showroomConfig && (
-                              <div className="bg-blue-50/50 p-3 sm:p-4 rounded-xl border border-blue-100 text-slate-700 text-sm leading-relaxed">
+                              <div className="bg-blue-50/50 p-3 sm:p-4 rounded-none border border-blue-100 text-slate-700 text-sm leading-relaxed">
                                 {(() => {
                                    const durationVal = Math.max(1, Math.round(Number(showroomConfig.duration ?? 0) * 12));
                                    const initialVal = showroomConfig.initialPayment ?? 0;
@@ -261,6 +251,16 @@ const PremiumPayment: React.FC = () => {
                               </div>
                             )}
                           </div>
+
+                          {/* Mobile: Scroll to Calculator Button */}
+                          <button
+                            onClick={() => document.getElementById('calculator-section')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="w-full lg:hidden mt-4 bg-slate-900 text-white p-4 rounded-none font-bold flex items-center justify-center gap-2 shadow-none active:scale-95 transition-all"
+                          >
+                            <Calculator size={20} className="text-blue-400" />
+                            <span>{t('buttons.calculate_payment', 'Calculate with Payment Calculator')}</span>
+                            <ChevronDown size={20} className="text-slate-400" />
+                          </button>
                         </div>
 
                         {installmentMode === "bank" && (

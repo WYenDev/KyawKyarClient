@@ -10,7 +10,7 @@ const SellCars: React.FC = () => {
   const { t } = useTranslation('cars');
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-6 px-2 sm:py-12 sm:px-6">
+    <div className="min-h-screen bg-[#f8fafc] py-4 px-2 sm:py-8 sm:px-6">
       <SEO 
         title={t('sell_meta.title', 'Sell Your Car')}
         description={t('sell_meta.description', 'Sell your car with confidence')}
