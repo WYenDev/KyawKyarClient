@@ -44,7 +44,7 @@ const Testimonials: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="bg-white rounded-2xl shadow-lg p-8 relative">
+            <div key={testimonial.id} className="bg-white rounded-none border border-slate-100 p-8 relative">
               <Quote className="h-8 w-8 text-indigo-200 absolute top-6 right-6" />
 
               {/* Rating */}
@@ -75,7 +75,7 @@ const Testimonials: React.FC = () => {
         </div>
 
         {/* Stats Section (3 items) */}
-        <div className="mt-16 bg-white rounded-2xl shadow-lg p-8">
+        <div className="mt-16 bg-white rounded-none border border-slate-100 p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
               <div className="text-3xl font-bold text-indigo-700 mb-2">98%</div>

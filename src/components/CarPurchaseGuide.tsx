@@ -73,7 +73,7 @@ const CarPurchaseGuide: React.FC = () => {
                         </div>
 
                         {/* Conditional Requirements */}
-                        <div className="bg-indigo-50/30 rounded-2xl p-4 sm:p-6 border border-indigo-50/50">
+                        <div className="bg-indigo-50/30 rounded-none p-4 sm:p-6 border border-indigo-50/50">
                             {incomeType === "business" && (
                                 <InfoSection 
                                     title={t("purchase_guide.if_business_owner")}

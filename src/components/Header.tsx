@@ -51,7 +51,6 @@ const Header: React.FC = () => {
     { path: '/buyCars', label: t('nav.buyCars') },
     { path: '/sellCars', label: t('nav.sellCars') },
     { path: '/payments', label: t('nav.payments') },
-    { path: '/about', label: t('nav.about') },
   ];
 
   const accountRef = useRef<HTMLDivElement | null>(null);

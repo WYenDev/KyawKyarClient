@@ -56,7 +56,8 @@
     "build_type": "Build Type",
     "location": "Location",
     "features": "Features",
-    "call_now": "Call Now: +95-9-123-456-789",
+    "call_now": "Call Now",
+    "viber": "Viber",
     "request_info": "Request More Info",
     "schedule_test_drive": "Schedule Test Drive"
   },

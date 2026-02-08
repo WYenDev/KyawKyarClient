@@ -99,7 +99,6 @@ const WhyBuyAtKyawKyar: React.FC = () => {
                 onClick={() => handleClick(benefit)}
                 className="group cursor-pointer bg-slate-50/50
                            p-5 sm:p-6 rounded-none border border-slate-100
-                           shadow-sm hover:shadow-2xl hover:shadow-indigo-100/50
                            transition-all duration-500 hover:-translate-y-2
                            flex flex-col"
               >

@@ -13,24 +13,24 @@ const About: React.FC = () => {
               <img 
                 src="https://images.unsplash.com/photo-1554224155-16954405a255?q=80&w=800&auto=format&fit=crop"
                 alt="Showroom Interior"
-                className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
+                className="rounded-none w-full h-auto object-cover aspect-[4/5]"
               />
               <img 
                 src="https://images.unsplash.com/photo-1617854818583-09e7f077a156?q=80&w=800&auto=format&fit=crop"
                 alt="Our Team"
-                className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
+                className="rounded-none w-full h-auto object-cover aspect-square"
               />
             </div>
             <div className="space-y-4 mt-8">
               <img 
                 src="https://images.unsplash.com/photo-1517999144091-3d9dca6d1649?q=80&w=800&auto=format&fit=crop"
                 alt="Customer Service"
-                className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-square"
+                className="rounded-none w-full h-auto object-cover aspect-square"
               />
               <img 
                 src="https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg?auto=compress&cs=tinysrgb&w=800"
                 alt="Luxury Car"
-                className="rounded-2xl shadow-lg w-full h-auto object-cover aspect-[4/5]"
+                className="rounded-none w-full h-auto object-cover aspect-[4/5]"
               />
             </div>
           </div>

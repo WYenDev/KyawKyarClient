@@ -55,7 +55,7 @@ const ShowroomSection: React.FC = () => {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {showrooms.map((showroom) => (
-            <div key={showroom.id} className="bg-white rounded-none p-6 shadow-2xl shadow-slate-200/40 border border-slate-100 hover:shadow-indigo-100/40 transition-shadow h-full flex flex-col group/card">
+            <div key={showroom.id} className="bg-white rounded-none p-6 border border-slate-100 transition-all h-full flex flex-col group/card">
               <h3 className={`text-xl font-bold text-slate-900 mb-4 ${isMyanmar ? 'font-myanmar' : ''}`}>
                 {showroom.name || showroom.city}
               </h3>
@@ -78,7 +78,7 @@ const ShowroomSection: React.FC = () => {
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleCallClick(showroom)}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-none bg-slate-900 text-white font-black hover:bg-indigo-600 active:scale-95 transition-all shadow-lg text-sm ${isMyanmar ? 'font-myanmar pt-3.5' : ''}`}
+                    className={`flex items-center justify-center gap-2 py-3 rounded-none bg-slate-900 text-white font-black hover:bg-indigo-600 active:scale-95 transition-all text-sm ${isMyanmar ? 'font-myanmar pt-3.5' : ''}`}
                   >
                     <PhoneCall size={16} />
                     {t('showrooms.callNow', 'ဖုန်းခေါ်ဆိုရန်')}
@@ -105,7 +105,7 @@ const ShowroomSection: React.FC = () => {
       {/* Phone Selection Modal */}
       {selectedShowroom && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden shadow-2xl relative border border-slate-200">
+          <div className="bg-white rounded-none w-full max-w-sm overflow-hidden relative border border-slate-200">
             <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
               <h3 className={`font-black text-slate-900 uppercase tracking-wider ${isMyanmar ? 'font-myanmar pt-1' : ''}`}>
                 {t('showrooms.choosePhone', 'ဖုန်းနံပါတ်ရွေးချယ်ပါ')}
@@ -123,10 +123,10 @@ const ShowroomSection: React.FC = () => {
                   key={p.id}
                   href={`tel:${p.phone}`}
                   onClick={() => setSelectedShowroom(null)}
-                  className="flex items-center justify-between p-4 rounded-none bg-white border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50 transition-all group shadow-sm hover:shadow-md"
+                  className="flex items-center justify-between p-4 rounded-none bg-white border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50 transition-all group"
                 >
                   <span className="text-slate-700 font-bold text-lg">{p.phone}</span>
-                  <div className="w-10 h-10 rounded-none bg-slate-900 flex items-center justify-center shadow-lg group-hover:bg-indigo-600 transition-colors">
+                  <div className="w-10 h-10 rounded-none bg-slate-900 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
                     <Phone size={18} className="text-white" />
                   </div>
                 </a>

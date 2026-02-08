@@ -70,7 +70,7 @@ const Contact: React.FC = () => {
 
           {/* Contact Form */}
           <div className="xl:col-span-2">
-            <div className="bg-white rounded-2xl p-8 text-gray-900">
+            <div className="bg-white rounded-none p-8 text-gray-900">
               <h3 className="text-2xl font-bold mb-6">{t('form.title')}</h3>
               
               <form className="space-y-6">

@@ -361,7 +361,7 @@ const AboutContact: React.FC = () => {
                   { icon: <Clock className="text-amber-600" />, title: t('about.features.fast.title'), desc: t('about.features.fast.desc') },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4 group/item">
-                    <div className="w-12 h-12 shrink-0 flex items-center justify-center bg-slate-50 rounded-2xl group-hover/item:bg-indigo-50 transition-colors">
+                    <div className="w-12 h-12 shrink-0 flex items-center justify-center bg-slate-50 rounded-none group-hover/item:bg-indigo-50 transition-colors">
                       {item.icon}
                     </div>
                     <div>
@@ -396,17 +396,17 @@ const AboutContact: React.FC = () => {
             {/* Left Column: Interactive Contact Experience */}
             <div className="xl:col-span-1 space-y-8 xl:sticky xl:top-24 h-fit">
               {/* Direct Actions Card */}
-              <div className="bg-white rounded-[2.5rem] p-8 shadow-2xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150 opacity-50" />
+              <div className="bg-white rounded-none p-8 border border-slate-100 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-none -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150 opacity-50" />
 
                 <h3 className="font-bold text-xl text-slate-900 mb-6 relative">Instant Support</h3>
                 <div className="grid gap-4 relative">
                   <a
                     href={`tel:${phoneNumber.replace(/\s/g, '')}`}
-                    className="flex items-center justify-between gap-3 bg-slate-900 text-white pl-6 pr-4 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all group/btn"
+                    className="flex items-center justify-between gap-3 bg-slate-900 text-white pl-6 pr-4 py-4 rounded-none font-bold hover:bg-slate-800 transition-all group/btn"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 flex items-center justify-center bg-white/10 rounded-xl">
+                      <div className="w-10 h-10 flex items-center justify-center bg-white/10 rounded-none">
                         <Phone size={20} />
                       </div>
                       <span className="text-[15px]">Call Sales Team</span>
@@ -416,10 +416,10 @@ const AboutContact: React.FC = () => {
 
                   <a
                     href={`viber://chat?number=%2B${viberNumber}`}
-                    className="flex items-center justify-between gap-3 bg-white border-2 border-[#7360f2] text-[#7360f2] pl-6 pr-4 py-4 rounded-2xl font-bold hover:bg-[#7360f2] hover:text-white transition-all group/viber"
+                    className="flex items-center justify-between gap-3 bg-white border-2 border-[#7360f2] text-[#7360f2] pl-6 pr-4 py-4 rounded-none font-bold hover:bg-[#7360f2] hover:text-white transition-all group/viber"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 flex items-center justify-center bg-[#7360f2]/10 rounded-xl group-hover/viber:bg-white/20 transition-colors">
+                      <div className="w-10 h-10 flex items-center justify-center bg-[#7360f2]/10 rounded-none group-hover/viber:bg-white/20 transition-colors">
                         <MessageCircle size={20} />
                       </div>
                       <span className="text-[15px]">Chat on Viber</span>
@@ -430,7 +430,7 @@ const AboutContact: React.FC = () => {
               </div>
 
               {/* Premium FAQ Card */}
-              <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-indigo-200/50 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-none p-8 text-white relative overflow-hidden">
                 <HelpCircle className="absolute -right-4 -bottom-4 w-32 h-32 text-white/10 -rotate-12" />
 
                 <h4 className="font-bold text-xl flex items-center gap-2 mb-6">
@@ -460,7 +460,7 @@ const AboutContact: React.FC = () => {
                 >
                   <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
                     <div className="flex gap-5">
-                      <div className="w-14 h-14 shrink-0 flex items-center justify-center bg-indigo-50 rounded-2xl group-hover:bg-indigo-600 transition-colors duration-500">
+                      <div className="w-14 h-14 shrink-0 flex items-center justify-center bg-indigo-50 rounded-none group-hover:bg-indigo-600 transition-colors duration-500">
                         <MapPin className="text-indigo-600 group-hover:text-white w-6 h-6 transition-colors duration-500" />
                       </div>
                       <div>
@@ -478,7 +478,7 @@ const AboutContact: React.FC = () => {
                     {loc.googleMapUrl && (
                       <button
                         onClick={() => window.open(loc.googleMapUrl!, '_blank')}
-                        className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 font-bold text-sm hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm"
+                        className="flex items-center gap-2 px-5 py-3 rounded-none bg-slate-50 border border-slate-200 text-slate-900 font-bold text-sm hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all"
                       >
                         <ArrowUpRight size={18} />
                         View Location
@@ -491,7 +491,7 @@ const AboutContact: React.FC = () => {
                       <a
                         key={phone.phone}
                         href={`tel:${phone.phone.replace(/\s/g, '')}`}
-                        className="flex items-center justify-between gap-3 w-full p-4 bg-slate-50 rounded-2xl text-slate-800 font-bold text-sm hover:bg-indigo-50 hover:text-indigo-600 transition-all group/phone"
+                        className="flex items-center justify-between gap-3 w-full p-4 bg-slate-50 rounded-none text-slate-800 font-bold text-sm hover:bg-indigo-50 hover:text-indigo-600 transition-all group/phone"
                       >
                         <div className="flex items-center gap-3">
                           <Phone size={16} className="text-slate-400 group-hover/phone:text-indigo-600" />

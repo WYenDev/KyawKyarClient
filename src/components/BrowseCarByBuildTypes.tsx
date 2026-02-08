@@ -107,7 +107,7 @@ const BrowseCarByBuildTypes: React.FC = () => {
                     className="flex-shrink-0 w-full max-w-[340px] group flex flex-col items-center text-center gap-4"
                   >
                     {/* Card Wrapper */}
-                    <div className={`w-full h-[300px] bg-slate-50 rounded-none flex flex-col items-center justify-center px-6 pt-6 pb-12 relative overflow-hidden transition-all duration-500 ease-out border border-slate-100 ${index === activeIndex ? 'cursor-pointer shadow-xl ring-2 ring-indigo-500 shadow-indigo-100' : 'cursor-default opacity-50 grayscale'}`}>
+                    <div className={`w-full h-[300px] bg-slate-50 rounded-none flex flex-col items-center justify-center px-6 pt-6 pb-12 relative overflow-hidden transition-all duration-500 ease-out border border-slate-100 ${index === activeIndex ? 'cursor-pointer ring-2 ring-indigo-500' : 'cursor-default opacity-50 grayscale'}`}>
                        
                         <img
                           src={type.imageUrl || fallbackImage}

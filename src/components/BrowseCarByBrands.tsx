@@ -75,7 +75,7 @@ const BrowseCarByBrands: React.FC = () => {
                     type="button"
                     key={`${brand.id}-${idx}`}
                     onClick={() => handleBrandClick(brand.name)}
-                    className="shrink-0 flex items-center justify-center bg-slate-50 hover:bg-white rounded-none px-10 py-8 border border-slate-100 hover:border-indigo-100 shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-2 group/logo"
+                    className="shrink-0 flex items-center justify-center bg-slate-50 hover:bg-white rounded-none px-10 py-8 border border-slate-100 hover:border-indigo-100 transition-all transform hover:-translate-y-2 group/logo"
                     title={brand.name}
                   >
                     <img

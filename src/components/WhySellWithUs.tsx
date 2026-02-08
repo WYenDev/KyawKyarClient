@@ -50,7 +50,7 @@ const WhySellWithUs: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div className="bg-white rounded-none p-6 border border-slate-100">
       <h3 className={`text-lg font-black mb-6 flex items-center gap-2 tracking-tight ${isMyanmar ? 'font-myanmar leading-relaxed' : ''}`}>
         <ShieldCheck className="w-5 h-5 text-indigo-600" />
         <span className="inline-block pt-2 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">

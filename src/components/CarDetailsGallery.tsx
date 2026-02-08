@@ -35,20 +35,20 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
   }, [isLightboxOpen, onPrev, onNext]);
 
   return (
-    <div>
-      <div className="relative bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div className="w-full overflow-hidden">
+      <div className="relative bg-white rounded-none shadow-sm overflow-hidden w-full">
         {images[currentIndex] ? (
           <img
             src={getImageUrl(images[currentIndex], 'main') || ''}
             alt="car"
             onClick={() => setIsLightboxOpen(true)}
-            className="w-full h-auto aspect-[4/3] sm:h-96 sm:aspect-auto object-cover cursor-pointer hover:opacity-95 transition-opacity"
+            className="w-full h-auto aspect-[4/3] object-cover cursor-pointer hover:opacity-95 transition-opacity block"
           />
         ) : (
           <img
             src={'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
             alt="car"
-            className="w-full h-auto aspect-[4/3] sm:h-96 sm:aspect-auto object-cover"
+            className="w-full h-auto aspect-[4/3] object-cover block"
           />
         )}
 
@@ -57,14 +57,14 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onPrev(); }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-none p-2 shadow-md z-10"
             >
               <ChevronLeft className="h-5 w-5 text-gray-700" />
             </button>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onNext(); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-none p-2 shadow-md z-10"
             >
               <ChevronRight className="h-5 w-5 text-gray-700" />
             </button>
@@ -73,13 +73,13 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
       </div>
 
       {images.length > 1 && (
-        <div className="mt-4 flex space-x-3 overflow-x-auto pb-2">
+        <div className="mt-4 flex space-x-3 overflow-x-auto no-scrollbar pb-2 w-full">
           {images.map((image: CarImage, index: number) => (
             <button
               key={index}
               type="button"
               onClick={() => onSelect(index)}
-              className={`relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-colors duration-200 ${index === currentIndex ? 'border-blue-600' : 'border-transparent hover:border-gray-300'}`}
+              className={`relative flex-shrink-0 w-20 h-20 rounded-none overflow-hidden border-2 transition-colors duration-200 ${index === currentIndex ? 'border-indigo-600' : 'border-transparent hover:border-gray-300'}`}
             >
               <img src={getImageUrl(image, 'thumb')} alt="" className="w-full h-full object-cover" />
             </button>
@@ -92,7 +92,7 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95 backdrop-blur-sm p-4" onClick={() => setIsLightboxOpen(false)}>
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 bg-white/10 p-2 rounded-full transition-colors z-50"
+            className="absolute top-4 right-4 text-white hover:text-gray-300 bg-white/10 p-2 rounded-none transition-colors z-50"
           >
             <X className="h-8 w-8" />
           </button>
@@ -101,7 +101,7 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
             {images.length > 1 && (
               <button
                 onClick={(e) => { e.stopPropagation(); onPrev(); }}
-                className="absolute left-2 sm:left-4 text-white hover:text-gray-300 bg-black/20 hover:bg-black/40 p-2 rounded-full transition-colors z-50"
+                className="absolute left-2 sm:left-4 text-white hover:text-gray-300 bg-black/20 hover:bg-black/40 p-2 rounded-none transition-colors z-50"
               >
                 <ChevronLeft className="h-8 w-8 sm:h-12 sm:w-12" />
               </button>
@@ -118,14 +118,14 @@ const CarDetailsGallery: React.FC<Props> = ({ images, currentIndex, onPrev, onNe
             {images.length > 1 && (
               <button
                 onClick={(e) => { e.stopPropagation(); onNext(); }}
-                className="absolute right-2 sm:right-4 text-white hover:text-gray-300 bg-black/20 hover:bg-black/40 p-2 rounded-full transition-colors z-50"
+                className="absolute right-2 sm:right-4 text-white hover:text-gray-300 bg-black/20 hover:bg-black/40 p-2 rounded-none transition-colors z-50"
               >
                  <ChevronRight className="h-8 w-8 sm:h-12 sm:w-12" />
               </button>
             )}
             
             {/* Image counter in lightbox */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-1 rounded-full text-sm font-medium">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-1 rounded-none text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           </div>

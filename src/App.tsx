@@ -10,7 +10,6 @@ import Banner from "./components/Banner";
 import Home from "./pages/Home";
 import BuyCars from "./pages/BuyCars";
 import SellCars from "./pages/SellCars";
-import About from "./pages/About";
 import Reviews from "./pages/Reviews";
 import Contact from "./pages/Contact";
 import CarDetails from "./pages/CarDetails";
@@ -108,7 +107,6 @@ function App() {
                   <Route path="/buyCars" element={<BuyCars />} />
                   <Route path="/cars/:id" element={<CarDetails />} />
                   <Route path="/sellCars" element={<SellCars />} />
-                  <Route path="/about" element={<About />} />
                   <Route path="/payments" element={<Payments />} />
                   <Route path="/reviews" element={<Reviews />} />
                   <Route path="/contact" element={<Contact />} />

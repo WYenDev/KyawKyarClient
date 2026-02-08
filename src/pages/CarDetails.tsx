@@ -117,21 +117,25 @@ const CarDetails: React.FC = () => {
         </div>
 
         <div className="grid xl:grid-cols-2 gap-10">
-          <CarDetailsGallery
-            images={(carData as any)?.images ?? []}
-            currentIndex={currentImageIndex}
-            onPrev={handlePreviousImage}
-            onNext={handleNextImage}
-            onSelect={(i: number) => setCurrentImageIndex(i)}
-          />
+          <div className="min-w-0">
+            <CarDetailsGallery
+              images={(carData as any)?.images ?? []}
+              currentIndex={currentImageIndex}
+              onPrev={handlePreviousImage}
+              onNext={handleNextImage}
+              onSelect={(i: number) => setCurrentImageIndex(i)}
+            />
+          </div>
 
-          <CarDetailsSummary car={carData as any} />
+          <div className="min-w-0">
+            <CarDetailsSummary car={carData as any} />
+          </div>
         </div>
 
         {/* 
         Detailed sections 
         <div className="mt-12 grid lg:grid-cols-1 gap-10">
-          <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm p-6">
+          <div className="lg:col-span-1 bg-white rounded-none border border-slate-100 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               {t('details.overview', 'Car Overview')}
             </h2>
@@ -144,7 +148,7 @@ const CarDetails: React.FC = () => {
         {/* Features */}
         {/*
         {car.features && car.features.length > 0 && (
-          <div className="mt-10 bg-white rounded-2xl shadow-sm p-6">
+          <div className="mt-10 bg-white rounded-none border border-slate-100 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               {t('details.features', 'Features')}
             </h2>
@@ -152,7 +156,7 @@ const CarDetails: React.FC = () => {
               {car.features.map((feature: string) => (
                 <span
                   key={feature}
-                  className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-xs font-medium"
+                  className="inline-flex items-center px-3 py-1 rounded-none bg-gray-100 text-gray-800 text-xs font-medium"
                 >
                   {feature}
                 </span>

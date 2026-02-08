@@ -32,7 +32,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
 
   return (
     <div
-      className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group cursor-pointer card-soft"
+      className="bg-white rounded-none border border-slate-100 transition-all duration-300 overflow-hidden group cursor-pointer"
       onClick={handleClick}
       role="button"
       tabIndex={0}
@@ -103,10 +103,10 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         </div>
 
         {
-          car.formattedPrice && (
+          ((car as any).formattedPrice || car.price > 0) && (
             <div className="flex justify-between items-center">
               <div className="text-2xl font-bold text-indigo-600">
-                {car.formattedPrice} {  t('details.lakhs', 'LAKHs')}
+                {(car as any).formattedPrice || car.price} {t('details.lakhs', 'LAKHs')}
               </div>
             </div>
           )

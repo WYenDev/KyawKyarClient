@@ -151,7 +151,7 @@ const PremiumPayment: React.FC = () => {
                     <div className="grid sm:grid-cols-2 gap-3 mb-8">
                       <button
                          onClick={() => setInstallmentMode('showroom')}
-                        className={`p-3 sm:p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'showroom'
+                        className={`p-3 sm:p-5 rounded-none border flex items-center gap-4 transition-all text-left group ${installmentMode === 'showroom'
                           ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500 shadow-md'
                           : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm'}`}
                       >
@@ -170,7 +170,7 @@ const PremiumPayment: React.FC = () => {
                       
                       <button
                         onClick={() => setInstallmentMode('bank')}
-                         className={`p-3 sm:p-5 rounded-2xl border flex items-center gap-4 transition-all text-left group ${installmentMode === 'bank'
+                         className={`p-3 sm:p-5 rounded-none border flex items-center gap-4 transition-all text-left group ${installmentMode === 'bank'
                           ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500 shadow-md'
                           : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm'}`}
                       >

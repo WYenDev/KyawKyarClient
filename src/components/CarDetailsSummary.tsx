@@ -3,6 +3,7 @@ import { Calendar, Gauge, Fuel, Settings, Palette, Box, Badge, MapPin } from 'lu
 import CarEngine from "../assets/car-engine.webp";
 import LicensePlate from "../assets/licnese-plate.png"
 import { useTranslation } from 'react-i18next';
+import { useGetApiHome } from '../services/api';
 
 // Define a proper interface to avoid using 'as any'
 interface Car {
@@ -27,12 +28,17 @@ interface Car {
 
 interface Props {
   car: Car;
-  callToActionPhone?: string;
 }
 
-const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
+const CarDetailsSummary: React.FC<Props> = ({ car }) => {
   const { t, i18n } = useTranslation('cars');
   const isMyanmar = i18n?.language?.startsWith('mm');
+  const { data: homeData } = useGetApiHome();
+
+  const apiPhone = homeData?.phoneNo ?? undefined;
+  const apiViber = homeData?.viberNo ?? undefined;
+  const phoneNumber = (apiPhone ?? '').toString();
+  const viberNumber = (apiViber ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
   return (
     <div>
@@ -174,12 +180,18 @@ const CarDetailsSummary: React.FC<Props> = ({ car, callToActionPhone }) => {
       </div>
 
       <div className="space-y-3 mb-10">
-        <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
-          {t('details.call_now', callToActionPhone ?? 'Call Now: +95-9-123-456-789')}
-        </button>
-        <button className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center transition-colors">
-          {'Viber'}
-        </button>
+        <a
+          href={`tel:${phoneNumber.replace(/\s/g, '')}`}
+          className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 px-6 rounded-none font-semibold flex items-center justify-center transition-colors"
+        >
+          {t('details.call_now', 'Call Now')}
+        </a>
+        <a
+          href={`viber://chat?number=%2B${viberNumber}`}
+          className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 px-6 rounded-none font-semibold flex items-center justify-center transition-colors"
+        >
+          {t('details.viber', 'Viber')}
+        </a>
       </div>
     </div>
   );
