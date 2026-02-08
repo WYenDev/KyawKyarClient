@@ -15,7 +15,6 @@ const FeaturedCars: React.FC = () => {
       bg='bg-gray-50'
       title={t('featured.title')}
       highlightedTitle={t('featured.highlightedText')}
-      description="Carefully inspected vehicles ranging from city commuters to luxury SUVs. Quality guaranteed for the Myanmar roads."
       useDataHook={useGetApiCarsFeatured}
       theme="indigo"
     />

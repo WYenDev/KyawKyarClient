@@ -72,5 +72,14 @@
     "highlightedText": "Popular Brands",
     "subtitle": "Find Your Perfect Match",
     "description": "Explore our diverse range of vehicles categorized by body type. Whether you're looking for a sleek sedan, a spacious SUV, or a versatile hatchback, we have the perfect car to suit your lifestyle and preferences."
+  },
+  "showrooms": {
+    "label": "Locations",
+    "title": "Our",
+    "highlightedText": "Showrooms",
+    "subtitle": "Visit us at our convenient locations to find your dream car.",
+    "viewMap": "View Map",
+    "callNow": "Call Now",
+    "choosePhone": "Choose a phone number"
   }
 }

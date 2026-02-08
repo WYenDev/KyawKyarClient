@@ -75,7 +75,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
             </h2>
 
             <h3
-              className={`text-3xl lg:text-5xl font-black text-slate-900 mb-6 whitespace-nowrap ${isMyanmar ? "font-myanmar leading-[1.6] max-sm:text-[2rem] max-sm:whitespace-normal" : "leading-[1.4]"
+              className={`text-2xl lg:text-4xl font-black text-slate-900 mb-6 whitespace-nowrap ${isMyanmar ? "font-myanmar leading-[1.6] max-sm:text-[1.8rem] max-sm:whitespace-normal" : "leading-[1.4]"
                 }`}
             >
               <span className={isMyanmar ? "text-[0.85em] lg:text-[0.8em]" : ""}>
@@ -89,24 +89,21 @@ const WhyBuyAtKyawKyar: React.FC = () => {
               </span>
             </h3>
 
-            <p className={`text-slate-500 text-lg leading-relaxed ${isMyanmar ? "font-myanmar leading-loose pt-1 text-base sm:text-lg" : ""} text-left sm:text-center`}>
-              {t("whybuy.description")}
-            </p>
           </div>
 
           {/* ================= Cards (2 x 2) ================= */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 relative z-10">
             {benefits.map((benefit, index) => (
               <div
                 key={index}
                 onClick={() => handleClick(benefit)}
                 className="group cursor-pointer bg-slate-50/50
-                           p-6 sm:p-8 rounded-none border border-slate-100
+                           p-5 sm:p-6 rounded-none border border-slate-100
                            shadow-sm hover:shadow-2xl hover:shadow-indigo-100/50
                            transition-all duration-500 hover:-translate-y-2
                            flex flex-col"
               >
-                <h4 className={`text-xl sm:text-2xl font-black text-slate-900 mb-5 leading-tight ${isMyanmar ? "font-myanmar" : ""}`}>
+                <h4 className={`text-lg sm:text-xl font-black text-slate-900 mb-3 leading-tight ${isMyanmar ? "font-myanmar" : ""}`}>
                   {benefit.title}
                 </h4>
 
@@ -114,7 +111,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
                   {benefit.description}
                 </p>
 
-                <div className="mt-6 flex items-center text-indigo-600 font-bold group-hover:gap-4 gap-2 transition-all">
+                <div className="mt-4 flex items-center text-indigo-600 font-bold group-hover:gap-4 gap-2 transition-all">
                   <span className="text-sm uppercase tracking-widest font-black">Learn More</span>
                   <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </div>

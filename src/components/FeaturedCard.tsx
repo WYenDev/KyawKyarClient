@@ -19,7 +19,7 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car }) => {
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate(`/cars/${car.id}`); }}
       className="group flex-shrink-0 rounded-none overflow-hidden bg-white shadow-md hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
     >
-      <div className="relative h-44 bg-gray-100 overflow-hidden">
+      <div className="relative h-56 sm:h-64 bg-gray-100 overflow-hidden">
         <img
           src={imgSrc || 'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
           alt={title}
@@ -27,7 +27,6 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car }) => {
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-        <div className="absolute left-3 bottom-3 bg-white/90 text-slate-900 px-3 py-0.5 rounded-none text-sm font-semibold shadow">{car.modelYear || ''}</div>
       </div>
 
       <div className="p-3 bg-white">

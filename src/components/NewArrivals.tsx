@@ -15,7 +15,6 @@ const NewArrivals: React.FC = () => {
       title={t('new_arrivals.title')}
       highlightedTitle={t('new_arrivals.highlightedText')}
       bg='bg-white'
-      description="Recently added vehicles inspected and ready for the road."
       useDataHook={useGetApiCarsNewArrivals}
       theme="amber"
     />

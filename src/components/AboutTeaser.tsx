@@ -153,8 +153,8 @@ const AboutTeaser: React.FC = () => {
                               )}
                               {isActive && (
                                 <div className="absolute bottom-4 left-4 right-4">
-                                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg">
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-none shadow-lg">
+                                    <div className="w-2 h-2 bg-emerald-500 rounded-none animate-pulse" />
                                     <span className="text-xs font-bold text-slate-900">Viewing • {index + 1} of {aboutImages.length}</span>
                                   </div>
                                 </div>
@@ -169,7 +169,7 @@ const AboutTeaser: React.FC = () => {
                     {activeIndex > 0 && (
                       <button
                         onClick={() => scrollToImage(activeIndex - 1)}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-none shadow-lg hover:bg-white transition-all"
                         aria-label="Previous image"
                       >
                         <div className="w-5 h-5 flex items-center justify-center text-slate-700">←</div>
@@ -178,7 +178,7 @@ const AboutTeaser: React.FC = () => {
                     {activeIndex < aboutImages.length - 1 && (
                       <button
                         onClick={() => scrollToImage(activeIndex + 1)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-none shadow-lg hover:bg-white transition-all"
                         aria-label="Next image"
                       >
                         <div className="w-5 h-5 flex items-center justify-center text-slate-700">→</div>
@@ -193,7 +193,7 @@ const AboutTeaser: React.FC = () => {
                           <button
                             key={index}
                             onClick={() => scrollToImage(index)}
-                            className={`${index === activeIndex ? 'w-6 h-2 bg-indigo-600' : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'} rounded-full transition-all duration-300`}
+                            className={`${index === activeIndex ? 'w-6 h-2 bg-indigo-600' : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'} rounded-none transition-all duration-300`}
                             aria-label={`Go to image ${index + 1}`}
                           />
                         ))}
@@ -209,9 +209,9 @@ const AboutTeaser: React.FC = () => {
                   </div>
 
                   <div className="mt-2 px-2">
-                    <div className="relative h-1 bg-slate-200 rounded-full overflow-hidden">
+                    <div className="relative h-1 bg-slate-200 rounded-none overflow-hidden">
                       <div
-                        className="absolute inset-y-0 left-0 bg-indigo-600 rounded-full transition-all duration-300"
+                        className="absolute inset-y-0 left-0 bg-indigo-600 rounded-none transition-all duration-300"
                         style={{ width: `${((activeIndex + 1) / Math.max(aboutImages.length, 1)) * 100}%` }}
                       />
                     </div>
@@ -239,7 +239,7 @@ const AboutTeaser: React.FC = () => {
             {/* Text Side */}
             <div className="py-4 order-1 md:order-2">
               <h3 className="text-sm font-black text-indigo-600 uppercase tracking-[0.2em] mb-3">About KyawKyar</h3>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">Your Trusted Multi-Brand Car Showroom in Myanmar</h2>
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 mb-6 leading-tight">Your Trusted Multi-Brand Car Showroom in Myanmar</h2>
               <p className="text-slate-600 mb-8 text-lg leading-relaxed">
                 We hand-select every vehicle, perform rigorous inspections, and support you through financing and ownership transfer. Discover our commitment to quality and customer satisfaction.
               </p>
@@ -248,7 +248,7 @@ const AboutTeaser: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <a
                     href={`tel:${phoneNumber.replace(/\s/g, '')}`}
-                    className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-all shadow-lg shadow-red-200 active:scale-90"
+                    className="w-12 h-12 bg-red-600 rounded-none flex items-center justify-center hover:bg-red-700 transition-all shadow-lg shadow-red-200 active:scale-90"
                     aria-label="Call Us"
                   >
                     <Phone className="h-6 w-6 text-white" />
@@ -256,7 +256,7 @@ const AboutTeaser: React.FC = () => {
 
                   <a
                     href={`viber://chat?number=%2B${viberNumber}`}
-                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-all shadow-lg shadow-slate-200 overflow-hidden active:scale-90"
+                    className="w-12 h-12 bg-white rounded-none flex items-center justify-center hover:bg-gray-100 transition-all shadow-lg shadow-slate-200 overflow-hidden active:scale-90"
                     aria-label="Viber"
                   >
                     <img src={ViberIcon} alt="Viber" className="h-full w-full object-cover" />
@@ -266,7 +266,7 @@ const AboutTeaser: React.FC = () => {
                     href={apiFacebook || '#'}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-90"
+                    className="w-12 h-12 bg-blue-600 rounded-none flex items-center justify-center hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-90"
                     aria-label="Facebook"
                   >
                     <Facebook className="h-6 w-6 text-white" />

@@ -32,7 +32,7 @@ const BrowseCarByBrands: React.FC = () => {
                  <Shield className="w-3 h-3 fill-amber-800" />
                  Trusted Manufacturers
               </div>
-              <h2 className={`text-3xl lg:text-5xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.6rem] lg:text-[2.4rem] max-sm:text-[1.85rem] leading-[1.6]' : 'leading-[1.4]'}`}>
+              <h2 className={`text-2xl lg:text-4xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.45rem] lg:text-[2.1rem] max-sm:text-[1.65rem] leading-[1.6]' : 'leading-[1.4]'}`}>
                 {isMyanmar ? (
                   <>
                     <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
@@ -49,9 +49,6 @@ const BrowseCarByBrands: React.FC = () => {
                   </>
                 )}
               </h2>
-              <p className={`mt-3 text-slate-500 max-w-2xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar pt-1' : ''}`}>
-                We partner with the world's leading car manufacturers to bring you a diverse selection of quality vehicles.
-              </p>
             </div>
           </div>
 
@@ -78,7 +75,7 @@ const BrowseCarByBrands: React.FC = () => {
                     type="button"
                     key={`${brand.id}-${idx}`}
                     onClick={() => handleBrandClick(brand.name)}
-                    className="shrink-0 flex items-center justify-center bg-slate-50 hover:bg-white rounded-3xl px-10 py-8 border border-slate-100 hover:border-indigo-100 shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-2 group/logo"
+                    className="shrink-0 flex items-center justify-center bg-slate-50 hover:bg-white rounded-none px-10 py-8 border border-slate-100 hover:border-indigo-100 shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-2 group/logo"
                     title={brand.name}
                   >
                     <img
@@ -96,7 +93,7 @@ const BrowseCarByBrands: React.FC = () => {
           {isLoading && (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 z-10">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-28 bg-slate-50 rounded-2xl animate-pulse" />
+                <div key={i} className="h-28 bg-slate-50 rounded-none animate-pulse" />
               ))}
             </div>
           )}

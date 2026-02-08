@@ -14,7 +14,6 @@ interface CarCarouselProps {
   badgeIcon: React.ReactElement<LucideProps>;
   title: string;
   highlightedTitle: string;
-  description: string;
   useDataHook: () => { data: any; isLoading: boolean; isError: boolean };
   theme: 'indigo' | 'amber';
 }
@@ -50,7 +49,7 @@ const themeClasses = {
   },
 };
 
-const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, title, highlightedTitle, description, useDataHook, theme }) => {
+const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme }) => {
   const { t, i18n } = useTranslation('home');
   const isMyanmar = i18n?.language?.startsWith('mm');
   const { data, isLoading, isError } = useDataHook();
@@ -102,11 +101,11 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
         <div className="bg-white rounded-none p-3 sm:p-6 lg:p-8 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-start justify-between mb-4 gap-4 relative z-10">
             <div className="space-y-3">
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${classes.bg} ${classes.text} text-[10px] font-black uppercase tracking-[0.2em]`}>
+              <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-none ${classes.bg} ${classes.text} text-[10px] font-black uppercase tracking-[0.2em]`}>
                 {React.cloneElement(badgeIcon, { className: `w-3 h-3 ${classes.fill}` })}
                 {badgeText}
               </div>
-              <h2 className={`text-3xl lg:text-5xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.6rem] lg:text-[2.4rem] max-sm:text-[1.85rem] leading-[1.6]' : 'leading-[1.4]'}`}>
+              <h2 className={`text-2xl lg:text-4xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.45rem] lg:text-[2.1rem] max-sm:text-[1.65rem] leading-[1.6]' : 'leading-[1.4]'}`}>
                 {isMyanmar ? (
                   <>
                     <span className={`inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r ${classes.gradientFrom} ${classes.gradientTo}`}>
@@ -123,9 +122,6 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
                   </>
                 )}
               </h2>
-              <p className={`text-slate-500 max-w-xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar pt-1' : ''}`}>
-                {description}
-              </p>
             </div>
           </div>
 
@@ -189,7 +185,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
               <div className="text-center mt-8 relative z-10">
                 <button
                   onClick={() => navigate('/buyCars')}
-                  className={`group inline-flex items-center gap-4 bg-slate-900 text-white px-10 py-5 rounded-2xl text-base font-bold hover:bg-indigo-600 transition-all shadow-xl hover:shadow-2xl shadow-slate-900/10 transform hover:-translate-y-1`}
+                  className={`group inline-flex items-center gap-4 bg-slate-900 text-white px-10 py-5 rounded-none text-base font-bold hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl shadow-slate-900/10 transform hover:-translate-y-1`}
                 >
                   Explore Full Inventory
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

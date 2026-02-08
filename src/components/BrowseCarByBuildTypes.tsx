@@ -74,7 +74,7 @@ const BrowseCarByBuildTypes: React.FC = () => {
                 <LayoutGrid className="w-3 h-3 fill-indigo-700" />
                 Vehicle Categories
               </div>
-              <h2 className={`text-3xl lg:text-5xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.6rem] lg:text-[2.4rem] max-sm:text-[1.85rem] leading-[1.6]' : 'leading-[1.4]'}`}>
+              <h2 className={`text-2xl lg:text-4xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar text-[1.45rem] lg:text-[2.1rem] max-sm:text-[1.65rem] leading-[1.6]' : 'leading-[1.4]'}`}>
                 {isMyanmar ? (
                   <>
                     <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
@@ -91,9 +91,6 @@ const BrowseCarByBuildTypes: React.FC = () => {
                   </>
                 )}
               </h2>
-              <p className={`text-slate-500 max-w-xl text-lg leading-relaxed ${isMyanmar ? 'font-myanmar pt-1' : ''}`}>
-                Find the perfect match for your lifestyle. Select a body style to see what's available.
-              </p>
             </div>
           </div>
 
