@@ -15,7 +15,7 @@ const SellCarIntro: React.FC = () => {
         </span>
       </div>
       <div>
-        <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[2.2rem]' : ''}`}>
+        <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
            <span className={`inline-block ${isMyanmar ? 'pt-4 pb-4' : 'pt-0 md:pt-1 pb-1'} text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600`}>
              {t('sell.title', 'Sell Your Car With Confidence')}
            </span>
