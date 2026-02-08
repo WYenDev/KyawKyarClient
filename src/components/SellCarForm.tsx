@@ -237,10 +237,8 @@ const SellCarForm: React.FC = () => {
   return (
     <div className="bg-white rounded-none border border-slate-100 p-5 sm:p-8">
       <div className="border-b border-slate-100 pb-5 mb-6">
-        <h2 className={`text-xl sm:text-2xl font-black mb-1 tracking-tight ${isMyanmar ? 'font-myanmar leading-relaxed' : ''}`}>
-          <span className="inline-block pt-3 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-            {t('sell.form_title')}
-          </span>
+        <h2 className={`text-xl sm:text-2xl font-black mb-1 tracking-tight text-slate-900 ${isMyanmar ? 'font-myanmar leading-relaxed' : ''}`}>
+          {t('sell.form_title')}
         </h2>
         <p className="text-sm text-slate-500">{t('sell.form_subtitle')}</p>
       </div>

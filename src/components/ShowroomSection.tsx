@@ -64,7 +64,7 @@ const ShowroomSection: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-indigo-600 shrink-0 mt-1" />
                   <div className="flex-1">
-                    <p className={`text-slate-600 leading-relaxed line-clamp-3 h-[4.8rem] ${isMyanmar ? 'font-myanmar leading-[1.8] h-[5.4rem]' : ''}`}>
+                    <p className={`text-slate-600 leading-relaxed line-clamp-3 md:h-[4.8rem] ${isMyanmar ? 'font-myanmar leading-[1.8] md:h-[5.4rem]' : ''}`}>
                       {isMyanmar ? (showroom.addressMm || showroom.addressEn) : showroom.addressEn}
                     </p>
                     {showroom.city && (
@@ -89,7 +89,7 @@ const ShowroomSection: React.FC = () => {
                       href={showroom.googleMapUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center justify-center gap-2 py-3 rounded-none bg-slate-100 border border-slate-200 text-slate-700 font-black hover:bg-slate-200 active:scale-95 transition-all shadow-sm text-sm ${isMyanmar ? 'font-myanmar pt-3.5' : ''}`}
+                      className={`flex items-center justify-center gap-2 py-3 rounded-none bg-slate-100 border border-slate-200 text-slate-700 font-black hover:bg-slate-200 active:scale-95 transition-all text-sm ${isMyanmar ? 'font-myanmar pt-3.5' : ''}`}
                     >
                       <ExternalLink size={16} />
                       {t('showrooms.viewMap', 'မြေပုံကြည့်ရန်')}

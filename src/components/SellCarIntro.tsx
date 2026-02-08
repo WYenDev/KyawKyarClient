@@ -8,15 +8,15 @@ const SellCarIntro: React.FC = () => {
 
   return (
     <div className="flex flex-col mb-4 sm:mb-8">
-      <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-full shadow-sm mb-4 w-fit">
+      <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-none mb-1.5 sm:mb-4 w-fit">
         <Sparkles className="w-4 h-4 text-indigo-600" />
         <span className="text-indigo-900 text-[11px] font-bold tracking-widest uppercase">
           {t('sell.intro_badge', 'Sell Your Car')}
         </span>
       </div>
       <div>
-        <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug py-1 sm:py-3 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[2.2rem]' : ''}`}>
-           <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+        <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-3 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[2.2rem]' : ''}`}>
+           <span className="inline-block pt-0 md:pt-4 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
              {t('sell.title', 'Sell Your Car With Confidence')}
            </span>
         </h1>
