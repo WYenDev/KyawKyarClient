@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { MessageCircle, X, Sparkles } from 'lucide-react';
 import { postApiSellCarRequestsPresignedUrl } from '../services/api';
 import { client } from '../services/mutator';
+import { isImageSizeValid, IMAGE_SIZE_ERROR_MESSAGE } from '../utils/imageUpload';
 
 interface SellCarFormValues {
   ownerName: string;
@@ -93,6 +94,10 @@ const SellCarForm: React.FC = () => {
     if (values.images.length > MAX_IMAGES) {
       newErrors.images = `You can upload up to ${MAX_IMAGES} images.`;
     }
+    const overSized = values.images.some((f) => !isImageSizeValid(f));
+    if (overSized) {
+      newErrors.images = IMAGE_SIZE_ERROR_MESSAGE;
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -116,15 +121,20 @@ const SellCarForm: React.FC = () => {
 
     const allowedToAdd = Math.max(0, MAX_IMAGES - values.images.length);
     const toAdd = files.slice(0, allowedToAdd).filter((f) => f.type.startsWith('image/'));
+    const valid = toAdd.filter((f) => isImageSizeValid(f));
+    const rejected = toAdd.filter((f) => !isImageSizeValid(f));
 
-    if (toAdd.length === 0) return;
+    if (rejected.length > 0) {
+      setErrors((prev) => ({ ...prev, images: IMAGE_SIZE_ERROR_MESSAGE }));
+    }
+    if (valid.length === 0) {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
 
-    setValues((prev) => ({ ...prev, images: [...prev.images, ...toAdd] }));
+    setValues((prev) => ({ ...prev, images: [...prev.images, ...valid] }));
 
-    // clear the input so the same file can be selected again if needed
     if (fileInputRef.current) fileInputRef.current.value = '';
-
-    // clear image related errors if any
     setErrors((prev) => {
       const updated = { ...prev };
       delete updated.images;
@@ -150,7 +160,7 @@ const SellCarForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      let imageUrls: string[] = [];
+      const imageUrls: string[] = [];
 
       if (values.images.length > 0) {
         // Request presigned URLs
@@ -235,13 +245,18 @@ const SellCarForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-none border border-slate-100 p-5 sm:p-8">
-      <div className="border-b border-slate-100 pb-5 mb-6">
-        <h2 className={`text-xl sm:text-2xl font-black mb-1 tracking-tight text-slate-900 ${isMyanmar ? 'font-myanmar leading-relaxed' : ''}`}>
-          {t('sell.form_title')}
-        </h2>
-        <p className="text-sm text-slate-500">{t('sell.form_subtitle')}</p>
+    <div className="bg-white rounded-none p-3 sm:p-6 lg:p-8 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
+      <div className="mb-4 sm:mb-6">
+        <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight min-h-[36px] sm:min-h-0 ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
+           <span className={`inline-block ${isMyanmar ? 'pt-4 pb-4' : 'pt-0 md:pt-1 pb-1'} text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600`}>
+             {t('sell.title', 'Sell Your Car With Confidence')}
+           </span>
+        </h1>
+        <p className={`text-base sm:text-lg text-slate-600 mt-3 sm:mt-4 leading-relaxed min-h-[72px] sm:min-h-0 ${isMyanmar ? 'font-myanmar' : ''}`}>
+          {t('sell.description', "Fill out the form with your car's details, and our team will get back to you with a competitive offer. Selling your car has never been easier.")}
+        </p>
       </div>
+      <div className="border-t border-slate-100 pt-5 sm:pt-6">
 
       {isSubmitted && (
         <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
@@ -426,7 +441,7 @@ const SellCarForm: React.FC = () => {
               <Sparkles className="h-4 w-4 mr-2 text-indigo-500" />
               {t('sell.form.images_button', 'Choose images')}
             </button>
-            <p className="text-xs text-slate-500">{t('sell.form.images_help', `You can upload up to ${MAX_IMAGES} images.`)}</p>
+            <p className="text-xs text-slate-500">You can upload up to {MAX_IMAGES} images. Each image must be 10 MB or less.</p>
           </div>
           <input
             ref={fileInputRef}
@@ -476,6 +491,7 @@ const SellCarForm: React.FC = () => {
           </p>
         </div>
       </form>
+      </div>
     </div>
   );
 };

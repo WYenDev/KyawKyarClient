@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Clean History - Kyaw Kyar",
+    "description": "Every vehicle at Kyaw Kyar is verified for clean ownership, no illegal modifications, and zero legal risk before listing."
+  },
+  "hero": {
+    "alt": "Clean History Verification",
+    "badge": "VERIFIED STANDARD",
+    "title": "Clean History.",
+    "titleLine2": "Proven Before Listing.",
+    "description": "Every vehicle at Kyaw Kyar is reviewed, verified, and approved before it ever reaches you.",
+    "descriptionLine2": "No assumptions. No unresolved records.",
+    "policy": "Only after a car has been verified through our inspection process is it officially listed for sale at Kyaw Kyar Showroom."
+  },
+  "trust": {
+    "verifiedDoc": {
+      "title": "Verified Documentation",
+      "description": "Ownership and registration records are fully confirmed."
+    },
+    "zeroRisk": {
+      "title": "Zero Legal Risk",
+      "description": "Any uncertainty means immediate rejection."
+    },
+    "buyerProtection": {
+      "title": "Buyer Protection",
+      "description": "Confidence from purchase to resale."
+    }
+  },
+  "rejection": {
+    "sectionTitle": "What Never Reaches Our Showroom",
+    "noOwnerBook": {
+      "title": "No Owner Book Copies",
+      "description": "Copied, missing, or unverifiable ownership records are rejected before listing."
+    },
+    "noIllegalMods": {
+      "title": "No Illegal Modifications",
+      "description": "Undocumented engine swaps, chassis changes, or unapproved alterations are never accepted."
+    },
+    "noLegalExposure": {
+      "title": "No Legal Exposure",
+      "description": "Vehicles linked to disputes, loans, or registration irregularities do not proceed."
+    }
+  },
+  "guarantee": {
+    "sectionTitle": "What This Means for You",
+    "items": {
+      "verifiedOwnership": "Verified ownership records",
+      "noHiddenLegal": "No hidden legal issues",
+      "transparentHistory": "Transparent vehicle history",
+      "resaleConfidence": "Higher resale confidence"
+    }
+  },
+  "cta": {
+    "title": "Trust Starts With What We Reject",
+    "description": "We remove uncertainty long before you ever see the car.",
+    "button": "Browse Clean-History Cars"
+  }
+}

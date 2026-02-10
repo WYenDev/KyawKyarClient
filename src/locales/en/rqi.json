@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "title": "Rigorous Quality Inspection - Kyaw Kyar",
+    "description": "Our certified mechanics perform a comprehensive 360-degree check on every vehicle to ensure quality and safety."
+  },
+  "hero": {
+    "title": "Rigorous Quality Inspection",
+    "description": "At Kyaw Kyar, every car must pass strict multi-stage checks—from documentation to a final test drive—before it is listed in our showroom."
+  },
+  "process": {
+    "sectionTitle": "How We Inspect Every Car",
+    "stepLabel": "STEP"
+  },
+  "steps": {
+    "01": {
+      "title": "Document & History Verification",
+      "description": "We verify registration, ownership history, and mileage data. If anything does not match, the car is not listed in our showroom."
+    },
+    "02": {
+      "title": "Physical & Mechanical Inspection",
+      "description": "Our skilled technicians inspect the engine, transmission, and chassis in detail."
+    },
+    "03": {
+      "title": "Performance & Road Test",
+      "description": "We conduct a test drive on the road and check braking and handling performance."
+    },
+    "04": {
+      "title": "Independent Quality Approval",
+      "description": "Our quality team performs a final review. Only cars that meet our standards are listed in the showroom."
+    }
+  },
+  "cta": {
+    "title": "Quality Comes Before Everything",
+    "description": "We never list cars that do not meet our standards.",
+    "button": "Browse Quality Cars"
+  }
+}

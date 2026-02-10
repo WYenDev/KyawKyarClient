@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Loader2 } from "lucide-react";
 import { useGetApiHome, usePostApiHomeImage, usePatchApiHome } from "../../services/api";
+import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -55,6 +56,10 @@ const HomePage = () => {
     if (!e.target.files || !e.target.files[0]) return;
 
     const file = e.target.files[0];
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      alert("Image must be 10 MB or less.");
+      return;
+    }
     setUploading(true);
 
     uploadImage(

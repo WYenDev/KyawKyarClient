@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, MoreVertical } from "lucide-react";
 
 import {
   FuelType,
@@ -76,6 +76,7 @@ const FuelTypesTab: React.FC = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<FuelType | null>(null);
+  const [openActionId, setOpenActionId] = useState<string | null>(null);
 
   const { data, isLoading, isError, refetch } = useGetApiFuelTypes({ page, limit: PAGE_LIMIT });
   const items = data?.items ?? [];
@@ -186,13 +187,34 @@ const FuelTypesTab: React.FC = () => {
               <tr key={item.id} className="border-t hover:bg-gray-50">
                 <td className="px-8 py-4 font-medium text-gray-900">{item.name}</td>
                 <td className="px-8 py-4">
-                  <div className="flex justify-end gap-4">
-                    <button onClick={() => openEdit(item)} className="text-indigo-600 hover:underline flex items-center gap-1">
-                      <Pencil size={14} /> Edit
-                    </button>
-                    <button onClick={() => setDeleteTarget(item)} className="text-red-500 hover:underline flex items-center gap-1">
-                      <Trash2 size={14} /> Delete
-                    </button>
+                  <div className="flex justify-end">
+                    <div className="relative">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === item.id ? null : item.id); }}
+                        className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                        title="Actions"
+                        aria-expanded={openActionId === item.id}
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+
+                      {openActionId === item.id && (
+                        <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); openEdit(item); setOpenActionId(null); }}
+                            className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                          >
+                            <Pencil size={14} /> Edit
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setDeleteTarget(item); setOpenActionId(null); }}
+                            className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -303,6 +325,7 @@ const TransmissionTypesTab: React.FC = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<TransmissionType | null>(null);
+  const [openActionId, setOpenActionId] = useState<string | null>(null);
 
   const { data, isLoading, isError, refetch } = useGetApiTransmissionTypes({ page, limit: PAGE_LIMIT });
   const items = data?.items ?? [];
@@ -413,13 +436,34 @@ const TransmissionTypesTab: React.FC = () => {
               <tr key={item.id} className="border-t hover:bg-gray-50">
                 <td className="px-8 py-4 font-medium text-gray-900">{item.name}</td>
                 <td className="px-8 py-4">
-                  <div className="flex justify-end gap-4">
-                    <button onClick={() => openEdit(item)} className="text-indigo-600 hover:underline flex items-center gap-1">
-                      <Pencil size={14} /> Edit
-                    </button>
-                    <button onClick={() => setDeleteTarget(item)} className="text-red-500 hover:underline flex items-center gap-1">
-                      <Trash2 size={14} /> Delete
-                    </button>
+                  <div className="flex justify-end">
+                    <div className="relative">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === item.id ? null : item.id); }}
+                        className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                        title="Actions"
+                        aria-expanded={openActionId === item.id}
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+
+                      {openActionId === item.id && (
+                        <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); openEdit(item); setOpenActionId(null); }}
+                            className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                          >
+                            <Pencil size={14} /> Edit
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setDeleteTarget(item); setOpenActionId(null); }}
+                            className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </td>
               </tr>

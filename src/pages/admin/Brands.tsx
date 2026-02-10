@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Trash2, Pencil, ChevronRight, ChevronDown, MoreVertical } from "lucide-react";
 
+import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
     Brand,
     Model,
@@ -531,6 +532,10 @@ const Brands = () => {
     });
     const handleBrandImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
+        if (file && file.size > MAX_IMAGE_SIZE_BYTES) {
+            setError("Image must be 10 MB or less.");
+            return;
+        }
         setImageFile(file);
         if (file && selectedBrand) {
             uploadBrandImage({ id: selectedBrand.id, data: { image: file } });

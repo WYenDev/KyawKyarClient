@@ -82,5 +82,10 @@
     "viewMap": "View Map",
     "callNow": "Call Now",
     "choosePhone": "Choose a phone number"
+  },
+  "about_teaser": {
+    "badge": "About KyawKyar",
+    "title": "Your Trusted Multi-Brand Car Showroom in Myanmar",
+    "description": "Kyaw Kyar has established itself as Myanmar's leading destination for quality vehicles. We hand-select every car, perform comprehensive multi-point inspections, and provide flexible financing options to make your dream car ownership a reality. From daily-use vehicles to premium luxury cars, we offer transparent pricing, verified clean history, and dedicated after-sales support—all backed by our commitment to excellence and customer satisfaction."
   }
 }

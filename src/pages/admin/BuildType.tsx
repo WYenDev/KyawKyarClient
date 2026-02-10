@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Trash2, Pencil, MoreVertical } from "lucide-react";
 
+import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
     BuildType,
     useGetApiBuildTypes,
@@ -168,6 +169,10 @@ const BuildTypes = () => {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
+        if (file && file.size > MAX_IMAGE_SIZE_BYTES) {
+            setError("Image must be 10 MB or less.");
+            return;
+        }
         setImageFile(file);
         if (file && selectedItem) {
             uploadImage({ id: selectedItem.id, data: { image: file } });

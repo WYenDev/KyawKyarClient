@@ -10,6 +10,8 @@ import enContact from './locales/en/contact.json';
 import enFooter from './locales/en/footer.json';
 import enReviews from './locales/en/reviews.json';
 import enAdmin from './locales/en/admin.json';
+import enRqi from './locales/en/rqi.json';
+import enCleanHistory from './locales/en/cleanHistory.json';
 
 // Import all namespaces for Burmese
 import mmCommon from './locales/mm/common.json';
@@ -20,6 +22,8 @@ import mmContact from './locales/mm/contact.json';
 import mmFooter from './locales/mm/footer.json';
 import mmReviews from './locales/mm/reviews.json';
 import mmAdmin from './locales/mm/admin.json';
+import mmRqi from './locales/mm/rqi.json';
+import mmCleanHistory from './locales/mm/cleanHistory.json';
 
 
 i18n
@@ -34,7 +38,9 @@ i18n
         contact: enContact,
         footer: enFooter,
         reviews: enReviews,
-        admin: enAdmin
+        admin: enAdmin,
+        rqi: enRqi,
+        cleanHistory: enCleanHistory
       },
       mm: {
         common: mmCommon,
@@ -44,12 +50,14 @@ i18n
         contact: mmContact,
         footer: mmFooter,
         reviews: mmReviews,
-        admin: mmAdmin
+        admin: mmAdmin,
+        rqi: mmRqi,
+        cleanHistory: mmCleanHistory
       },
     },
     lng: 'mm', // default language
     fallbackLng: 'mm',
-    ns: ['common', 'home', 'about', 'cars', 'contact', 'footer', 'reviews'],
+    ns: ['common', 'home', 'about', 'cars', 'contact', 'footer', 'reviews', 'rqi', 'cleanHistory'],
     defaultNS: 'common',
     interpolation: {
       escapeValue: false,

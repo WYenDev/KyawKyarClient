@@ -103,40 +103,31 @@ const PremiumPayment: React.FC = () => {
   }, [showroomConfig, customPrice]);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100">
-      <main className="max-w-7xl mx-auto py-2 px-2 sm:py-6 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+    <div className="text-slate-900 font-sans selection:bg-blue-100">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
 
           {/* LEFT: INTERACTIVE FORM AREA */}
-          <div className="lg:col-span-8 space-y-4 sm:space-y-6">
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-              <header>
-                 <div className="inline-flex items-center space-x-2 bg-white border border-slate-200/80 px-4 py-2 rounded-none mb-1.5 sm:mb-2">
-                    <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                    <span className="text-indigo-900 text-[11px] font-bold tracking-widest uppercase">
-                      Payment Plans
-                    </span>
-                 </div>
-                <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
-                   <span className={`inline-block ${isMyanmar ? 'pt-4 pb-4' : 'pt-0 md:pt-1 pb-1'} text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600`}>
-                      {t("payments_info.title", "Flexible Payment Options")}
-                   </span>
-                </h2>
-                <p className={`text-base sm:text-lg text-slate-600 mt-6 sm:mt-8 leading-relaxed ${isMyanmar ? 'font-myanmar' : ''}`}>
-                  <Trans
-                    i18nKey="payments_info.description"
-                    ns="common"
-                    components={{
-                      highlight: <span className="text-indigo-600 font-bold" />
-                    }}
-                  />
-                </p>
-              </header>
-            </div>
-
+          <div className="lg:col-span-8">
             <div className="bg-white rounded-none shadow-none border border-slate-100 overflow-hidden">
               <div className="p-3 sm:p-10">
                   <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+                    <div className="mb-4 sm:mb-6">
+                      <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight min-h-[36px] sm:min-h-0 ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
+                         <span className={`inline-block ${isMyanmar ? 'pt-4 pb-4' : 'pt-0 md:pt-1 pb-1'} text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600`}>
+                            {t("payments_info.title", "Flexible Payment Options")}
+                         </span>
+                      </h2>
+                      <p className={`text-base sm:text-lg text-slate-600 mt-3 sm:mt-4 leading-relaxed min-h-[72px] sm:min-h-0 ${isMyanmar ? 'font-myanmar' : ''}`}>
+                        <Trans
+                          i18nKey="payments_info.description"
+                          ns="common"
+                          components={{
+                            highlight: <span className="text-indigo-600 font-bold" />
+                          }}
+                        />
+                      </p>
+                    </div>
+                    <div className="border-t border-slate-100 pt-4 sm:pt-6">
 
                     <div className="grid sm:grid-cols-2 gap-3 mb-8">
                       <button
@@ -270,7 +261,7 @@ const PremiumPayment: React.FC = () => {
                         )}
 
                       </div>
-
+                    </div>
                   </div>
               </div>
             </div>
@@ -417,7 +408,6 @@ const PremiumPayment: React.FC = () => {
           </div>
 
         </div>
-      </main>
 
       <style>{`
         .premium-input {

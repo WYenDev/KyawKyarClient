@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import SEO from '../components/SEO';
 
@@ -22,14 +23,13 @@ const fadeSide = (from: "left" | "right") => ({
 
 const RigorousQualityInspection = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation('rqi');
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
-
-
-            <SEO 
-                title="Rigorous Quality Inspection - Kyaw Kyar"
-                description="Our certified mechanics perform a comprehensive 360-degree check on every vehicle to ensure quality and safety."
+            <SEO
+                title={t('meta.title')}
+                description={t('meta.description')}
             />
             {/* ======================================================
           HERO
@@ -37,7 +37,7 @@ const RigorousQualityInspection = () => {
                <section className="relative h-[520px] md:h-[620px]">
                 <motion.img
                     src={heroImg}
-                    alt="Rigorous Quality Inspection"
+                    alt={t('hero.title')}
                     initial={{ opacity: 0, scale: 1.05 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1 }}
@@ -53,12 +53,10 @@ const RigorousQualityInspection = () => {
                         className="max-w-5xl mx-auto px-6 text-white"
                     >
                         <h1 className="text-3xl md:text-5xl font-bold mb-6">
-                            Rigorous Quality Inspection
+                            {t('hero.title')}
                         </h1>
                         <p className="text-gray-200 max-w-2xl leading-relaxed">
-                            Kyaw Kyar တွင် ကားတစ်စီးကို showroom မှာတင်မီ
-                            လက်တင်စီးအဆင့်အထိ စစ်ဆေးမှုအဆင့်ဆင့်ကို
-                            တင်းကြပ်စွာ ကျော်ဖြတ်ရပါသည်။
+                            {t('hero.description')}
                         </p>
                     </motion.div>
                 </div>
@@ -74,37 +72,41 @@ const RigorousQualityInspection = () => {
                         viewport={{ once: true }}
                         className="text-2xl md:text-3xl font-semibold text-center mb-20"
                     >
-                        How We Inspect Every Car
+                        {t('process.sectionTitle')}
                     </motion.h2>
 
                     <Step
                         step="01"
-                        title="Document & History Verification"
-                        desc="Registration၊ ownership history နှင့် mileage data များကို စစ်ဆေးပြီး မကိုက်ညီပါက showroom မတင်ပါ။"
+                        stepLabel={t('process.stepLabel')}
+                        title={t('steps.01.title')}
+                        desc={t('steps.01.description')}
                         image={step1Img}
                         imageSide="left"
                     />
 
                     <Step
                         step="02"
-                        title="Physical & Mechanical Inspection"
-                        desc="Engine၊ transmission နှင့် chassis များကို ကျွမ်းကျင်သော technician များမှ စစ်ဆေးပါသည်။"
+                        stepLabel={t('process.stepLabel')}
+                        title={t('steps.02.title')}
+                        desc={t('steps.02.description')}
                         image={step2Img}
                         imageSide="right"
                     />
 
                     <Step
                         step="03"
-                        title="Performance & Road Test"
-                        desc="လမ်းမပေါ်တွင် လက်တင်စီးစမ်းသပ်ပြီး braking နှင့် handling ကို စစ်ဆေးပါသည်။"
+                        stepLabel={t('process.stepLabel')}
+                        title={t('steps.03.title')}
+                        desc={t('steps.03.description')}
                         image={step3Img}
                         imageSide="left"
                     />
 
                     <Step
                         step="04"
-                        title="Independent Quality Approval"
-                        desc="Quality team မှ ပြန်လည်စစ်ဆေးပြီး စံနှုန်းပြည့်မီမှသာ showroom တင်ပါသည်။"
+                        stepLabel={t('process.stepLabel')}
+                        title={t('steps.04.title')}
+                        desc={t('steps.04.description')}
                         image={step4Img}
                         imageSide="right"
                     />
@@ -120,18 +122,17 @@ const RigorousQualityInspection = () => {
                     className="max-w-4xl mx-auto px-6 text-center"
                 >
                     <h2 className="text-2xl md:text-3xl font-semibold mb-6">
-                        Quality Comes Before Everything
+                        {t('cta.title')}
                     </h2>
                     <p className="text-gray-600 mb-10">
-                        စံနှုန်းမပြည့်မီသော ကားများကို
-                        မည်သည့်အခါမျှ မတင်ပါ။
+                        {t('cta.description')}
                     </p>
 
                     <button
                         onClick={() => navigate("/buyCars")}
                         className="px-10 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition"
                     >
-                        Browse Quality Cars
+                        {t('cta.button')}
                     </button>
                 </motion.div>
             </section>
@@ -142,12 +143,14 @@ const RigorousQualityInspection = () => {
 /* ================= STEP ================= */
 const Step = ({
     step,
+    stepLabel,
     title,
     desc,
     image,
     imageSide,
 }: {
     step: string;
+    stepLabel: string;
     title: string;
     desc: string;
     image: string;
@@ -165,7 +168,7 @@ const Step = ({
             {/* TEXT – always first on mobile */}
             <div className={imageSide === "left" ? "md:order-2" : "md:order-1"}>
                 <span className="text-sm font-semibold text-gray-400">
-                    STEP {step}
+                    {stepLabel} {step}
                 </span>
                 <h3 className="text-xl md:text-2xl font-semibold mt-3 mb-4">
                     {title}

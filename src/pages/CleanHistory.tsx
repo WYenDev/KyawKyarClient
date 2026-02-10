@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
     ShieldCheck,
@@ -28,6 +29,7 @@ const fadeRight = {
 
 const CleanHistory = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation("cleanHistory");
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
@@ -46,7 +48,7 @@ const CleanHistory = () => {
                     <div className="h-[420px] rounded-3xl overflow-hidden bg-gray-100">
                         <img
                             src={steeringImg}
-                            alt="Clean History Verification"
+                            alt={t("hero.alt")}
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -56,29 +58,24 @@ const CleanHistory = () => {
                         <div className="flex items-center gap-3 mb-6">
                             <ShieldCheck className="text-emerald-600" />
                             <span className="text-xs tracking-[0.35em] text-gray-500">
-                                VERIFIED STANDARD
+                                {t("hero.badge")}
                             </span>
                         </div>
 
                         <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-8">
-                            Clean History.
+                            {t("hero.title")}
                             <br />
-                            Proven Before Listing.
+                            {t("hero.titleLine2")}
                         </h1>
 
                         <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
-                            Every vehicle at Kyaw Kyar is reviewed, verified,
-                            and approved before it ever reaches you.
+                            {t("hero.description")}
                             <br />
-                            No assumptions. No unresolved records.
+                            {t("hero.descriptionLine2")}
                         </p>
 
-                        {/* Burmese policy line */}
                         <p className="mt-6 text-sm text-gray-500 leading-relaxed max-w-lg">
-                            ကားတစ်စီးသည် လက်တင်စီးအဆင့်အထိ
-                            စစ်ဆေးအတည်ပြုပြီးမှသာ
-                            Kyaw Kyar Showroom တွင်
-                            တရားဝင်တင်ရောင်းချခွင့်ရပါသည်။
+                            {t("hero.policy")}
                         </p>
                     </div>
                 </motion.div>
@@ -98,18 +95,18 @@ const CleanHistory = () => {
                 >
                     <TrustItem
                         icon={<FileCheck2 />}
-                        title="Verified Documentation"
-                        desc="Ownership and registration records are fully confirmed."
+                        title={t("trust.verifiedDoc.title")}
+                        desc={t("trust.verifiedDoc.description")}
                     />
                     <TrustItem
                         icon={<Ban />}
-                        title="Zero Legal Risk"
-                        desc="Any uncertainty means immediate rejection."
+                        title={t("trust.zeroRisk.title")}
+                        desc={t("trust.zeroRisk.description")}
                     />
                     <TrustItem
                         icon={<ShieldCheck />}
-                        title="Buyer Protection"
-                        desc="Confidence from purchase to resale."
+                        title={t("trust.buyerProtection.title")}
+                        desc={t("trust.buyerProtection.description")}
                     />
                 </motion.div>
             </section>
@@ -127,28 +124,25 @@ const CleanHistory = () => {
                         transition={{ duration: 0.6 }}
                         className="text-3xl font-semibold mb-20 text-center"
                     >
-                        What Never Reaches Our Showroom
+                        {t("rejection.sectionTitle")}
                     </motion.h2>
 
                     <div className="border-l border-gray-200 pl-10 space-y-24">
                         <RejectLine
-                            title="No Owner Book Copies"
-                            desc="Copied, missing, or unverifiable ownership records
-              are rejected before listing."
+                            title={t("rejection.noOwnerBook.title")}
+                            desc={t("rejection.noOwnerBook.description")}
                             animation={fadeLeft}
                         />
 
                         <RejectLine
-                            title="No Illegal Modifications"
-                            desc="Undocumented engine swaps, chassis changes,
-              or unapproved alterations are never accepted."
+                            title={t("rejection.noIllegalMods.title")}
+                            desc={t("rejection.noIllegalMods.description")}
                             animation={fadeRight}
                         />
 
                         <RejectLine
-                            title="No Legal Exposure"
-                            desc="Vehicles linked to disputes, loans,
-              or registration irregularities do not proceed."
+                            title={t("rejection.noLegalExposure.title")}
+                            desc={t("rejection.noLegalExposure.description")}
                             animation={fadeLeft}
                         />
                     </div>
@@ -169,14 +163,14 @@ const CleanHistory = () => {
                 >
                     <div className="bg-white rounded-3xl border border-gray-200 p-16">
                         <h2 className="text-3xl font-semibold mb-12 text-center">
-                            What This Means for You
+                            {t("guarantee.sectionTitle")}
                         </h2>
 
                         <div className="grid md:grid-cols-2 gap-8">
-                            <Guarantee text="Verified ownership records" />
-                            <Guarantee text="No hidden legal issues" />
-                            <Guarantee text="Transparent vehicle history" />
-                            <Guarantee text="Higher resale confidence" />
+                            <Guarantee text={t("guarantee.items.verifiedOwnership")} />
+                            <Guarantee text={t("guarantee.items.noHiddenLegal")} />
+                            <Guarantee text={t("guarantee.items.transparentHistory")} />
+                            <Guarantee text={t("guarantee.items.resaleConfidence")} />
                         </div>
                     </div>
                 </motion.div>
@@ -195,19 +189,18 @@ const CleanHistory = () => {
                     className="max-w-4xl mx-auto px-6 text-center"
                 >
                     <h2 className="text-3xl font-semibold mb-6">
-                        Trust Starts With What We Reject
+                        {t("cta.title")}
                     </h2>
 
                     <p className="text-gray-600 text-lg leading-relaxed mb-14">
-                        We remove uncertainty long before
-                        you ever see the car.
+                        {t("cta.description")}
                     </p>
 
                     <button
                         onClick={() => navigate("/buyCars")}
                         className="px-16 py-4 bg-black text-white rounded-full text-sm tracking-wide hover:bg-gray-800 transition"
                     >
-                        Browse Clean-History Cars
+                        {t("cta.button")}
                     </button>
                 </motion.div>
             </section>

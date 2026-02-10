@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "title": "",
+    "description": ""
+  },
+  "hero": {
+    "title": "Rigorous Quality Inspection",
+    "description": "Kyaw Kyar တွင် ကားတစ်စီးကို showroom မှာတင်မီ လက်တင်စီးအဆင့်အထိ စစ်ဆေးမှုအဆင့်ဆင့်ကို တင်းကြပ်စွာ ကျော်ဖြတ်ရပါသည်။"
+  },
+  "process": {
+    "sectionTitle": "",
+    "stepLabel": ""
+  },
+  "steps": {
+    "01": {
+      "title": "အထောက်အထားအစစ်အမှန်",
+      "description": "ပိုင်ဆိုင်မှုစာချုပ်များနှင့် ကားမှတ်ပုံတင်မှတ်တမ်းများကိုအပြည့်အ၀ အတည်ပြုထားပါသည်။"
+    },
+    "02": {
+      "title": "Independent Quality Approval",
+      "description": "Engine၊ transmission နှင့် chassis များကို ကျွမ်းကျင်သော technician များမှ စစ်ဆေးပါသည်။"
+    },
+    "03": {
+      "title": "Perormance & Road Test",
+      "description": "လမ်းမပေါ်တွင် လက်တင်စီးစမ်းသပ်ပြီး braking နှင့် handling ကို စစ်ဆေးပါသည်။"
+    },
+    "04": {
+      "title": "Independent Quality Approval",
+      "description": "Quality team မှ ပြန်လည်စစ်ဆေးပြီး စံနှုန်းပြည့်မီမှသာ showroom တင်ပါသည်။"
+    }
+  },
+  "cta": {
+    "title": "Quality Comes Before Everything ",
+    "description": "စံနှုန်းမပြည့်မီသော ကားများကို မည်သည့်အခါမျှ မတင်ပါ။",
+    "button": "Browse Quality Cars"
+  }
+}

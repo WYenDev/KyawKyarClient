@@ -16,6 +16,7 @@ Quill.register(Font, true);
 const Align = Quill.import('attributors/style/align');
 Quill.register(Align, true);
 
+import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
     useGetApiBanners,
     usePostApiBanners,
@@ -50,7 +51,7 @@ const Banners = () => {
     const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiBannersId();
     const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiBannersId();
 
-    const { register, handleSubmit, reset, setValue, watch, control, formState: { errors } } = useForm<BannerFormInputs>({
+    const { register, handleSubmit, reset, setValue, control, formState: { errors } } = useForm<BannerFormInputs>({
         defaultValues: {
             text: "",
             backgroundColor: "#FFFFFF",
@@ -58,8 +59,6 @@ const Banners = () => {
             isActive: true,
         }
     });
-
-    const watchedBgColor = watch("backgroundColor");
 
     if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
     if (isError) return <div className="p-8 text-red-500">Error loading banners: {(error as Error).message}</div>;
@@ -113,6 +112,11 @@ const Banners = () => {
         if (!isEditing || !e.target.files?.[0]) return;
         
         const file = e.target.files[0];
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+            alert("Image must be 10 MB or less.");
+            e.target.value = '';
+            return;
+        }
         try {
             await uploadImage({
                 id: isEditing,
@@ -229,21 +233,32 @@ const Banners = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Background Color</label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="color"
-                                        {...register("backgroundColor")}
-                                        value={watchedBgColor || "#FFFFFF"}
-                                        className="h-10 w-20 p-1 border rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        {...register("backgroundColor", { pattern: /^#[0-9A-Fa-f]{6}$/ })}
-                                        value={watchedBgColor || "#FFFFFF"}
-                                        placeholder="#FFFFFF"
-                                        className="flex-1 p-2 border rounded"
-                                    />
-                                </div>
+                                <Controller
+                                    name="backgroundColor"
+                                    control={control}
+                                    defaultValue="#FFFFFF"
+                                    rules={{ pattern: { value: /^#[0-9A-Fa-f]{6}$/, message: "Invalid hex color" } }}
+                                    render={({ field }) => (
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="color"
+                                                {...field}
+                                                className="h-10 w-20 p-1 border rounded cursor-pointer"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={field.value || "#FFFFFF"}
+                                                onChange={(e) => field.onChange(e.target.value)}
+                                                onBlur={field.onBlur}
+                                                placeholder="#FFFFFF"
+                                                className="flex-1 p-2 border rounded"
+                                            />
+                                        </div>
+                                    )}
+                                />
+                                {errors.backgroundColor && (
+                                    <span className="text-red-500 text-sm">{errors.backgroundColor.message}</span>
+                                )}
                             </div>
                             
                             <div>

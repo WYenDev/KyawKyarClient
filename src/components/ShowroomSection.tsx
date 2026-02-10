@@ -68,14 +68,14 @@ const ShowroomSection: React.FC = () => {
                       {isMyanmar ? (showroom.addressMm || showroom.addressEn) : showroom.addressEn}
                     </p>
                     {showroom.city && (
-                      <span className="inline-block mt-2 px-2.5 py-0.5 bg-slate-200 text-slate-700 text-xs font-semibold rounded-none uppercase tracking-wider">
+                      <span className="inline-block mt-2 mb-4 px-2.5 py-0.5 bg-slate-200 text-slate-700 text-xs font-semibold rounded-none uppercase tracking-wider">
                         {showroom.city}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="mt-6 grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleCallClick(showroom)}
                     className={`flex items-center justify-center gap-2 py-3 rounded-none bg-slate-900 text-white font-black hover:bg-indigo-600 active:scale-95 transition-all text-sm ${isMyanmar ? 'font-myanmar pt-3.5' : ''}`}

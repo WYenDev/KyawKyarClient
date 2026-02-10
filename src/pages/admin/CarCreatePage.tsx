@@ -265,7 +265,7 @@ const CarCreatePage = () => {
                     {/* ===== BASIC INFO ===== */}
                     <Section title="Basic Information">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
-                            <Field label="Brand">
+                            <Field label="Brand" required>
                                 <Select
                                     value={brandId}
                                     options={brandOptions}
@@ -274,25 +274,39 @@ const CarCreatePage = () => {
                                 />
                             </Field>
 
-                            <Field label="Model">
-                                <Select
-                                    value={form.modelId}
-                                    options={modelOptions}
-                                    placeholder={
-                                        brandId
-                                            ? "Select model"
-                                            : "Select brand first"
-                                    }
-                                    onChange={onChangeModel}
-                                    className={
-                                        !brandId
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : ""
-                                    }
-                                />
-                            </Field>
+                            <Field label="Model" required>
+  <Select
+    value={form.modelId}
+    options={modelOptions}
+    placeholder={
+      !brandId
+        ? "Select brand first"
+        : modelOptions.length === 0
+        ? "No models available"
+        : "Select model"
+    }
+    onChange={onChangeModel}
+    className={
+      !brandId || modelOptions.length === 0
+        ? "opacity-50 bg-gray-100"
+        : ""
+    }
+    disabled={!brandId || modelOptions.length === 0}
+  />
+  {brandId && modelOptions.length === 0 && (
+    <div className="mt-2 text-sm text-red-500">
+      No models for this brand. Please{' '}
+      <a
+        className="underline text-blue-600"
+        href="/admin/models/create" // adjust this path if needed
+      >
+        create a model first
+      </a>.
+    </div>
+  )}
+</Field>
 
-                            <Field label="Color">
+                            <Field label="Color" required>
                                 <Select
                                     value={form.colorId}
                                     options={colorOptions}
@@ -332,20 +346,29 @@ const CarCreatePage = () => {
                             </Field>
 
                             <Field label="Grade">
-                                <Select
-                                    value={form.gradeId ?? ""}
-                                    options={gradeOptions}
-                                    placeholder={
-                                        form.modelId ? "Select grade" : "Select model first"
-                                    }
-                                    onChange={(v) =>
-                                        setForm({
-                                            ...form,
-                                            gradeId: v || undefined,
-                                        })
-                                    }
-                                    className={!form.modelId ? "opacity-50 cursor-not-allowed" : ""}
-                                />
+<Select
+    value={form.gradeId ?? ""}
+    options={gradeOptions}
+    placeholder={
+      form.modelId
+        ? gradeOptions.length === 0
+          ? "No grade to select"
+          : "Select grade"
+        : "Select model first"
+    }
+    onChange={(v) =>
+      setForm({
+        ...form,
+        gradeId: v || undefined,
+      })
+    }
+    className={
+      !form.modelId || gradeOptions.length === 0
+        ? "opacity-50 bg-gray-100"
+        : ""
+    }
+    disabled={!form.modelId || gradeOptions.length === 0}
+  />
                             </Field>
                         </div>
                     </Section>
@@ -353,15 +376,15 @@ const CarCreatePage = () => {
                     {/* ===== SPECIFICATIONS ===== */}
                     <Section title="Specifications">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            <Input
-                                label="Model Year"
+<Input
+   label="Model Year" required
                                 value={form.modelYear}
                                 onChange={(v) =>
                                     setForm({ ...form, modelYear: Number(v) })
                                 }
                             />
                             <div>
-                                <label className="block text-sm mb-1">Price</label>
+                                <label className="block text-sm mb-1">Price <span className='text-red-500'>*</span></label>
                                 <input
                                     type="text"
                                     inputMode="numeric"
@@ -378,7 +401,7 @@ const CarCreatePage = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm mb-1">Mileage</label>
+                                <label className="block text-sm mb-1">Mileage <span className='text-red-500'>*</span></label>
                                 <input
                                     type="text"
                                     inputMode="numeric"
@@ -598,30 +621,29 @@ const CarCreatePage = () => {
                         </div>
                         
                         <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
-                             <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
-                                <label className="text-sm font-medium text-gray-700 min-w-max">New Arrival</label>
-                                <input
-                                    type="checkbox"
-                                    checked={form.isNewArrival ?? false}
-                                    onChange={(e) =>
-                                        setForm({ ...form, isNewArrival: e.target.checked })
-                                    }
-                                    className="w-5 h-5 ml-auto"
-                                />
-                             </div>
+   <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
+      <input
+        type="checkbox"
+        checked={!!form.isNewArrival}
+        onChange={e => setForm(prev => ({ ...prev, isNewArrival: e.target.checked }))}
+        className="w-5 h-5 ml-auto"
+      />
+      <span className="text-sm font-medium text-gray-700">New Arrival</span>
+   </label>
 
-                             <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
-                                <label className="text-sm font-medium text-gray-700 min-w-max">Featured</label>
-                                <input
-                                    type="checkbox"
-                                    checked={form.featured ?? false}
-                                    onChange={(e) =>
-                                        setForm({ ...form, featured: e.target.checked })
-                                    }
-                                    className="w-5 h-5 ml-auto"
-                                />
-                             </div>
-                        </div>
+   <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
+      <input
+        type="checkbox"
+        checked={!!form.featured}
+        onChange={e => setForm(prev => ({ ...prev, featured: e.target.checked }))}
+        className="w-5 h-5 ml-auto"
+      />
+      <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
+        <Star size={14} className={form.featured ? "fill-indigo-600 text-indigo-600" : ""} />
+        Featured Car
+      </span>
+   </label>
+</div>
                     </Section>
 
                     {/* ===== ACTIONS ===== */}
@@ -634,8 +656,15 @@ const CarCreatePage = () => {
                         </button>
                         <button
                             onClick={handleSave}
-                            disabled={isPending}
-                            className="px-8 py-2 rounded-xl bg-black text-white"
+                            disabled={isPending ||
+                              !brandId ||
+                              !form.modelId ||
+                              !form.modelYear ||
+                              !form.price ||
+                              !form.mileage ||
+                              !form.colorId
+                            }
+                            className={`px-8 py-2 rounded-xl text-white ${(!brandId || !form.modelId || !form.modelYear || !form.price || !form.mileage || !form.colorId) ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
                         >
                             Save
                         </button>
@@ -665,13 +694,17 @@ const Section = ({
 
 const Field = ({
     label,
+    required = false,
     children,
 }: {
     label: string;
+    required?: boolean;
     children: React.ReactNode;
 }) => (
     <div>
-        <label className="block text-sm mb-1">{label}</label>
+        <label className="block text-sm mb-1">
+            {label} {required && <span className="text-red-500">*</span>}
+        </label>
         {children}
     </div>
 );

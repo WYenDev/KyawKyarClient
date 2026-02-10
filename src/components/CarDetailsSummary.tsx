@@ -4,6 +4,7 @@ import CarEngine from "../assets/car-engine.webp";
 import LicensePlate from "../assets/licnese-plate.png"
 import { useTranslation } from 'react-i18next';
 import { useGetApiHome } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 
 // Define a proper interface to avoid using 'as any'
 interface Car {
@@ -12,6 +13,7 @@ interface Car {
     name: string;
   };
   formattedPrice: string;
+  price?: number;
   modelYear: number;
   formattedLicense?: string;
   mileage: number;
@@ -34,11 +36,13 @@ const CarDetailsSummary: React.FC<Props> = ({ car }) => {
   const { t, i18n } = useTranslation('cars');
   const isMyanmar = i18n?.language?.startsWith('mm');
   const { data: homeData } = useGetApiHome();
+  const { user } = useAuth();
 
   const apiPhone = homeData?.phoneNo ?? undefined;
   const apiViber = homeData?.viberNo ?? undefined;
   const phoneNumber = (apiPhone ?? '').toString();
   const viberNumber = (apiViber ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
+  console.log(car.formattedPrice)
 
   return (
     <div>
@@ -47,14 +51,19 @@ const CarDetailsSummary: React.FC<Props> = ({ car }) => {
       </h1>
 
       <div className="flex items-center justify-between my-6">
-        {car.formattedPrice &&
+        {user && car.price ? (
+          <div>
+            <div className="text-3xl font-extrabold text-blue-700">{car.price.toLocaleString()} {t('details.lakhs', 'LAKHs')}</div>
+          </div>
+        ) : (
+          car.formattedPrice &&
           (
             <div>
 
               <div className="text-3xl font-extrabold text-blue-700">{car.formattedPrice} {t('details.lakhs', 'LAKHs')}</div>
             </div>
           )
-        }
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-8 text-gray-700">

@@ -43,6 +43,7 @@ function Select<T extends string>({
     }, [id]);
 
     const toggle = () => {
+        if (options.length === 0) return; // Prevent opening if no options
         if (!open) {
             window.dispatchEvent(
                 new CustomEvent("select-open", { detail: id })
@@ -50,6 +51,7 @@ function Select<T extends string>({
         }
         setOpen((prev) => !prev);
     };
+
 
     return (
         <div className="relative">

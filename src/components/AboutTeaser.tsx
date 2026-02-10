@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Facebook, Phone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useGetApiAbout, useGetApiHome } from '../services/api';
 import ViberIcon from '../assets/viber-icon.avif';
 
@@ -11,6 +12,8 @@ const FALLBACK_IMAGES = [
 ];
 
 const AboutTeaser: React.FC = () => {
+  const { t, i18n } = useTranslation('home');
+  const isMyanmar = i18n?.language?.startsWith('mm');
   const { data: aboutData } = useGetApiAbout();
   const aboutImages = (aboutData?.images ?? [])
     .slice()
@@ -238,10 +241,14 @@ const AboutTeaser: React.FC = () => {
 
             {/* Text Side */}
             <div className="py-4 order-1 md:order-2">
-              <h3 className="text-sm font-black text-indigo-600 uppercase tracking-[0.2em] mb-3">About KyawKyar</h3>
-              <h2 className="text-2xl md:text-4xl font-black text-slate-900 mb-6 leading-tight">Your Trusted Multi-Brand Car Showroom in Myanmar</h2>
-              <p className="text-slate-600 mb-8 text-lg leading-relaxed">
-                We hand-select every vehicle, perform rigorous inspections, and support you through financing and ownership transfer. Discover our commitment to quality and customer satisfaction.
+              <h3 className={`text-sm font-black text-indigo-600 uppercase tracking-[0.2em] mb-3 ${isMyanmar ? 'font-myanmar' : ''}`}>
+                {t('about_teaser.badge', 'About KyawKyar')}
+              </h3>
+              <h2 className={`text-2xl md:text-4xl font-black text-slate-900 mb-6 leading-tight ${isMyanmar ? 'font-myanmar leading-[1.4]' : ''}`}>
+                {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
+              </h2>
+              <p className={`text-slate-600 mb-8 text-lg leading-relaxed ${isMyanmar ? 'font-myanmar leading-[1.8]' : ''}`}>
+                {t('about_teaser.description', "With over 15 years of experience, Kyaw Kyar has established itself as Myanmar's leading destination for quality vehicles. We hand-select every car, perform comprehensive multi-point inspections, and provide flexible financing options to make your dream car ownership a reality. From daily-use vehicles to premium luxury cars, we offer transparent pricing, verified clean history, and dedicated after-sales support—all backed by our commitment to excellence and customer satisfaction.")}
               </p>
               <div className="space-y-4">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em]">Contact Us</h4>

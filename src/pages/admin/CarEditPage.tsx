@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Select, { Option } from "../../components/Select";
 
 
+import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
     Status,
     CarUpdate,
@@ -839,9 +840,14 @@ const CarImagesManager = ({ carId }: { carId: string }) => {
         if (e.target.files) {
             setIsProcessing(true);
             const rawFiles = Array.from(e.target.files);
+            const validFiles = rawFiles.filter((f) => f.size <= MAX_IMAGE_SIZE_BYTES);
+            const skipped = rawFiles.length - validFiles.length;
+            if (skipped > 0) {
+                alert(`${skipped} image(s) were skipped because they exceed 10 MB.`);
+            }
             const processedFiles: File[] = [];
 
-            for (const file of rawFiles) {
+            for (const file of validFiles) {
                 const isHeic = file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic");
                 const isHeif = file.type === "image/heif" || file.name.toLowerCase().endsWith(".heif");
                 

@@ -1,6 +1,6 @@
 import { useState, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Pencil, ChevronRight, ChevronDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ChevronRight, ChevronDown, MoreVertical } from "lucide-react";
 
 import {
     Showroom,
@@ -35,6 +35,7 @@ const Showrooms = () => {
 
     // track expanded row in the list view
     const [expandedId, setExpandedId] = useState<string | null>(null);
+    const [openActionId, setOpenActionId] = useState<string | null>(null);
 
     /* ================= PHONE (create form local only) ================= */
     const [newPhone, setNewPhone] = useState("");
@@ -218,21 +219,34 @@ const Showrooms = () => {
                                                     </button>
                                                 </td>
                                                 <td className="px-8 py-4 align-top">
-                                                    <div className="flex justify-end gap-4">
-                                                        <button
-                                                            onClick={() => openEdit(item)}
-                                                            className="text-indigo-600 hover:text-indigo-700 text-sm flex items-center gap-1"
-                                                            aria-label="Edit showroom"
-                                                        >
-                                                            <Pencil size={14} /> Edit
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setDeleteTarget(item)}
-                                                            className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
-                                                            aria-label="Delete showroom"
-                                                        >
-                                                            <Trash2 size={14} /> Delete
-                                                        </button>
+                                                    <div className="flex justify-end">
+                                                        <div className="relative">
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === item.id ? null : item.id); }}
+                                                                className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                                                                title="Actions"
+                                                                aria-expanded={openActionId === item.id}
+                                                            >
+                                                                <MoreVertical size={18} />
+                                                            </button>
+
+                                                            {openActionId === item.id && (
+                                                                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
+                                                                    <button
+                                                                        onClick={(e) => { e.stopPropagation(); openEdit(item); setOpenActionId(null); }}
+                                                                        className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                                                                    >
+                                                                        <Pencil size={14} /> Edit
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(item); setOpenActionId(null); }}
+                                                                        className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
+                                                                    >
+                                                                        <Trash2 size={14} /> Delete
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -286,21 +300,34 @@ const Showrooms = () => {
                                                                 </div>
                                                             </div>
 
-                                                            <div className="pt-2 flex justify-end gap-4">
-                                                                <button
-                                                                    onClick={() => openEdit(item)}
-                                                                    className="text-indigo-600 hover:text-indigo-700 text-sm flex items-center gap-1"
-                                                                    aria-label="Edit showroom"
-                                                                >
-                                                                    <Pencil size={14} /> Edit
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => setDeleteTarget(item)}
-                                                                    className="text-red-600 hover:text-red-700 text-sm flex items-center gap-1"
-                                                                    aria-label="Delete showroom"
-                                                                >
-                                                                    <Trash2 size={14} /> Delete
-                                                                </button>
+                                                            <div className="pt-2 flex justify-end">
+                                                                <div className="relative">
+                                                                    <button
+                                                                        onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === item.id ? null : item.id); }}
+                                                                        className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                                                                        title="Actions"
+                                                                        aria-expanded={openActionId === item.id}
+                                                                    >
+                                                                        <MoreVertical size={18} />
+                                                                    </button>
+
+                                                                    {openActionId === item.id && (
+                                                                        <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
+                                                                            <button
+                                                                                onClick={(e) => { e.stopPropagation(); openEdit(item); setOpenActionId(null); }}
+                                                                                className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                                                                            >
+                                                                                <Pencil size={14} /> Edit
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={(e) => { e.stopPropagation(); setDeleteTarget(item); setOpenActionId(null); }}
+                                                                                className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
+                                                                            >
+                                                                                <Trash2 size={14} /> Delete
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
