@@ -78,7 +78,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`w-full ${isHome ? 'absolute inset-x-0 top-0 z-40' : 'relative z-10'} transition`}
+      className={`w-full ${isHome ? 'absolute inset-x-0 top-0 z-40' : 'relative z-40'} transition`}
       aria-hidden={false}
     >
       <div
