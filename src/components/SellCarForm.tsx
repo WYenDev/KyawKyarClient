@@ -41,6 +41,15 @@ const initialValues: SellCarFormValues = {
 
 const MAX_IMAGES = 5;
 
+/** Allow only digits, plus, minus, spaces for phone */
+const sanitizePhone = (raw: string) => raw.replace(/[^\d+\-\s]/g, '');
+
+/** Allow only digits for year, mileage, etc. */
+const sanitizeNumeric = (raw: string) => raw.replace(/\D/g, '');
+
+/** Basic email format validation */
+const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
 const SellCarForm: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
   const isMyanmar = i18n?.language?.startsWith('mm');
@@ -50,6 +59,7 @@ const SellCarForm: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [previews, setPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const submitErrorRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // Create previews for current images
@@ -73,6 +83,9 @@ const SellCarForm: React.FC = () => {
     if (!values.phone.trim()) {
       newErrors.phone = `${t('sell.form.phone')} is required`;
     }
+    if (values.email.trim() && !isValidEmail(values.email)) {
+      newErrors.email = t('sell.form.email_invalid', 'Please enter a valid email address');
+    }
     if (!values.carBrand.trim()) {
       newErrors.carBrand = `${t('sell.form.car_brand')} is required`;
     }
@@ -84,10 +97,31 @@ const SellCarForm: React.FC = () => {
       newErrors.color = `${t('sell.form.color', 'Color')} is required`;
     }
 
-    if (values.year.trim()) {
+    if (!values.year.trim()) {
+      newErrors.year = `${t('sell.form.year')} is required`;
+    } else {
       const yearNumber = Number(values.year);
-      if (Number.isNaN(yearNumber) || yearNumber < 1980 || yearNumber > new Date().getFullYear() + 1) {
-        newErrors.year = `${t('sell.form.year')} is invalid`;
+      const currentYear = new Date().getFullYear();
+      if (Number.isNaN(yearNumber) || yearNumber < 1980 || yearNumber > currentYear + 1) {
+        newErrors.year = t('sell.form.year_invalid', 'Please enter a valid year (1980–' + (currentYear + 1) + ')');
+      }
+    }
+
+    if (!values.condition.trim()) {
+      newErrors.condition = `${t('sell.form.condition')} is required`;
+    }
+
+    if (values.mileage.trim()) {
+      const mileageNumber = Number(values.mileage);
+      if (Number.isNaN(mileageNumber) || mileageNumber < 0) {
+        newErrors.mileage = t('sell.form.mileage_invalid', 'Please enter a valid mileage (0 or greater)');
+      }
+    }
+
+    if (values.expectedPrice.trim()) {
+      const priceNumber = Number(values.expectedPrice);
+      if (Number.isNaN(priceNumber) || priceNumber < 0) {
+        newErrors.expectedPrice = t('sell.form.expected_price_invalid', 'Please enter a valid price (0 or greater)');
       }
     }
 
@@ -104,7 +138,10 @@ const SellCarForm: React.FC = () => {
   };
 
   const handleChange = (field: keyof SellCarFormValues, value: string) => {
-    setValues((prev) => ({ ...prev, [field]: value }));
+    let next = value;
+    if (field === 'phone') next = sanitizePhone(value);
+    else if (field === 'year' || field === 'mileage' || field === 'expectedPrice') next = sanitizeNumeric(value);
+    setValues((prev) => ({ ...prev, [field]: next }));
 
     if (field in errors) {
       setErrors((prev) => {
@@ -238,11 +275,22 @@ const SellCarForm: React.FC = () => {
       setPreviews([]);
     } catch (err) {
       console.error(err);
-      setSubmitError((err as Error)?.message ?? 'Failed to submit request');
+      const e = err as Error & { payload?: { error?: string; message?: string } };
+      const message =
+        (typeof e?.payload?.error === 'string' && e.payload.error) ||
+        (typeof e?.payload?.message === 'string' && e.payload.message) ||
+        (e?.message && String(e.message)) ||
+        t('sell.form.submit_error_fallback', 'Unable to submit your request. Please try again later.');
+      setSubmitError(message);
+      submitErrorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const inputBase = 'w-full px-4 py-2.5 rounded-xl text-sm transition-all outline-none';
+  const inputError = 'border-red-500 focus:ring-2 focus:ring-red-500/20 focus:border-red-500';
+  const inputOk = 'border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500';
 
   return (
     <div className="bg-white rounded-none p-3 sm:p-6 lg:p-8 shadow-2xl shadow-slate-200/40 border border-white relative overflow-hidden">
@@ -266,7 +314,11 @@ const SellCarForm: React.FC = () => {
       )}
 
       {submitError && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div
+          ref={submitErrorRef}
+          role="alert"
+          className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+        >
           <p className="font-semibold mb-1">{t('sell.form.error_title', 'Submission failed')}</p>
           <p>{submitError}</p>
         </div>
@@ -276,31 +328,31 @@ const SellCarForm: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              {t('sell.form.owner_name')}
+              {t('sell.form.owner_name')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={values.ownerName}
               onChange={(e) => handleChange('ownerName', e.target.value)}
               placeholder={t('sell.form.owner_name_placeholder')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.ownerName ? inputError : inputOk}`}
             />
-            {errors.ownerName && <p className="mt-1 text-xs text-red-600">{errors.ownerName}</p>}
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              {t('sell.form.phone')}
+              {t('sell.form.phone')} <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
                 type="tel"
+                inputMode="numeric"
+                autoComplete="tel"
                 value={values.phone}
                 onChange={(e) => handleChange('phone', e.target.value)}
                 placeholder={t('sell.form.phone_placeholder')}
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                className={`${inputBase} border ${errors.phone ? inputError : inputOk}`}
               />
             </div>
-            {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
           </div>
         </div>
 
@@ -313,63 +365,61 @@ const SellCarForm: React.FC = () => {
             value={values.email}
             onChange={(e) => handleChange('email', e.target.value)}
             placeholder={t('sell.form.email_placeholder')}
-            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+            className={`${inputBase} border ${errors.email ? inputError : inputOk}`}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              {t('sell.form.car_brand')}
+              {t('sell.form.car_brand')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={values.carBrand}
               onChange={(e) => handleChange('carBrand', e.target.value)}
               placeholder={t('sell.form.car_brand_placeholder')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.carBrand ? inputError : inputOk}`}
             />
-            {errors.carBrand && <p className="mt-1 text-xs text-red-600">{errors.carBrand}</p>}
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              {t('sell.form.car_model')}
+              {t('sell.form.car_model')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={values.carModel}
               onChange={(e) => handleChange('carModel', e.target.value)}
               placeholder={t('sell.form.car_model_placeholder')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.carModel ? inputError : inputOk}`}
             />
-            {errors.carModel && <p className="mt-1 text-xs text-red-600">{errors.carModel}</p>}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-slate-700">{t('sell.form.color', 'Color')}</label>
+            <label className="block text-sm font-semibold text-slate-700">{t('sell.form.color', 'Color')} <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={values.color}
               onChange={(e) => handleChange('color', e.target.value)}
               placeholder={t('sell.form.color_placeholder', 'e.g. Silver')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.color ? inputError : inputOk}`}
             />
-            {errors.color && <p className="mt-1 text-xs text-red-600">{errors.color}</p>}
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              {t('sell.form.year')}
+              {t('sell.form.year')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
+              inputMode="numeric"
+              maxLength={4}
               value={values.year}
               onChange={(e) => handleChange('year', e.target.value)}
               placeholder={t('sell.form.year_placeholder')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.year ? inputError : inputOk}`}
             />
-            {errors.year && <p className="mt-1 text-xs text-red-600">{errors.year}</p>}
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
@@ -377,10 +427,11 @@ const SellCarForm: React.FC = () => {
             </label>
             <input
               type="text"
+              inputMode="numeric"
               value={values.mileage}
               onChange={(e) => handleChange('mileage', e.target.value)}
               placeholder={t('sell.form.mileage_placeholder')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.mileage ? inputError : inputOk}`}
             />
           </div>
         </div>
@@ -392,20 +443,21 @@ const SellCarForm: React.FC = () => {
             </label>
             <input
               type="text"
+              inputMode="numeric"
               value={values.expectedPrice}
               onChange={(e) => handleChange('expectedPrice', e.target.value)}
               placeholder={t('sell.form.expected_price_placeholder')}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+              className={`${inputBase} border ${errors.expectedPrice ? inputError : inputOk}`}
             />
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              {t('sell.form.condition')}
+              {t('sell.form.condition')} <span className="text-red-500">*</span>
             </label>
             <select
               value={values.condition}
               onChange={(e) => handleChange('condition', e.target.value)}
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white transition-all focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none appearance-none"
+              className={`w-full px-4 py-2.5 rounded-xl text-sm bg-white appearance-none transition-all outline-none border ${errors.condition ? inputError : inputOk}`}
             >
               <option value="">{t('sell.form.condition_placeholder')}</option>
               <option value="like_new">{t('sell.form.condition_like_new')}</option>
@@ -430,13 +482,13 @@ const SellCarForm: React.FC = () => {
         </div>
 
         {/* Image upload */}
-        <div className="space-y-3">
+        <div className={`space-y-3 ${errors.images ? 'rounded-xl border-2 border-red-500 p-3' : ''}`}>
           <label className="block text-sm font-semibold text-slate-700">{t('sell.form.images_label', 'Upload images')}</label>
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              className={`inline-flex items-center px-4 py-2.5 rounded-xl bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors ${errors.images ? 'border-2 border-red-500' : 'border border-slate-200'}`}
             >
               <Sparkles className="h-4 w-4 mr-2 text-indigo-500" />
               {t('sell.form.images_button', 'Choose images')}
@@ -451,8 +503,6 @@ const SellCarForm: React.FC = () => {
             onChange={handleImageChange}
             className="hidden"
           />
-
-          {errors.images && <p className="mt-2 text-xs text-red-600 font-medium">{errors.images}</p>}
 
           {previews.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 pt-2">
