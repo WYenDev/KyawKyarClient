@@ -4,7 +4,7 @@ import ScrollToTop from "./components/ScrollToTop";
 // Public layout components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Banner from "./components/Banner";
+import FooterBanner from "./components/FooterBanner";
 
 // Public pages
 import Home from "./pages/Home";
@@ -121,7 +121,7 @@ function App() {
               </main>
 
               <Footer />
-              <Banner />
+              <FooterBanner />
             </div>
           }
         />

@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { useGetApiBannersActive } from "../services/api";
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles for proper rendering
 
-const Banner = () => {
+const FooterBanner = () => {
     const { data: banners, isLoading } = useGetApiBannersActive();
     const [isVisible, setIsVisible] = useState(true);
 
@@ -66,4 +66,4 @@ function isDarkColor(hex?: string | null) {
     return hsp < 127.5;
 }
 
-export default Banner;
+export default FooterBanner;
