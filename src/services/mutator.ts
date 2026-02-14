@@ -11,6 +11,15 @@ export const client = axios.create({
   withCredentials: true,
 });
 
+// When sending FormData, do not set Content-Type so the browser sets multipart/form-data with boundary
+client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (config.data instanceof FormData && config.headers) {
+    const headers = config.headers as Record<string, unknown>;
+    delete headers['Content-Type'];
+  }
+  return config;
+}, (error) => Promise.reject(error));
+
 // Attach auth token if present
 client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   try {

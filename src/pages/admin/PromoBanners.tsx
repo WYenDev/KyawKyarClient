@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
+// Quill: font size (like footer banner)
+const Size = Quill.import("attributors/style/size");
+const fontSizeArr = ["10px", "12px", "14px", "16px", "18px", "20px", "24px", "30px", "36px", "48px", "60px", "72px"];
+Size.whitelist = fontSizeArr;
+Quill.register(Size, true);
+const Font = Quill.import("attributors/style/font");
+Quill.register(Font, true);
+const Align = Quill.import("attributors/style/align");
+Quill.register(Align, true);
+
 import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
     useGetApiPromoBanners,
@@ -370,12 +381,28 @@ const PromoBanners = () => {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Landing title</label>
-                                <input
-                                    type="text"
-                                    {...register("landingTitle")}
-                                    placeholder="Title shown on the landing page"
-                                    className="w-full p-2 border rounded"
+                                <Controller
+                                    name="landingTitle"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            className="h-24 mb-12 landing-title-editor"
+                                            modules={{
+                                                toolbar: [
+                                                    [{ font: [] }],
+                                                    [{ size: fontSizeArr }],
+                                                    ["bold", "italic", "underline"],
+                                                    [{ align: [] }],
+                                                    ["clean"],
+                                                ],
+                                            }}
+                                        />
+                                    )}
                                 />
+                                <p className="text-xs text-gray-500 mt-1">Supports Burmese font and font size (same as footer banner).</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Landing body</label>
@@ -388,10 +415,22 @@ const PromoBanners = () => {
                                             value={field.value}
                                             onChange={field.onChange}
                                             className="h-40 mb-12"
-                                            modules={{ toolbar: [["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }], ["link"], ["clean"]] }}
+                                            modules={{
+                                                toolbar: [
+                                                    [{ font: [] }],
+                                                    [{ size: fontSizeArr }],
+                                                    ["bold", "italic", "underline", "strike"],
+                                                    [{ color: [] }, { background: [] }],
+                                                    [{ align: [] }],
+                                                    [{ list: "ordered" }, { list: "bullet" }],
+                                                    ["link"],
+                                                    ["clean"],
+                                                ],
+                                            }}
                                         />
                                     )}
                                 />
+                                <p className="text-xs text-gray-500 mt-1">Supports Burmese font and font size (same as footer banner).</p>
                             </div>
                             {isEditing && (
                                 <div>
