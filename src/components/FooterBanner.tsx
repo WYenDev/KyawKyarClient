@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
-import { useGetApiBannersActive } from "../services/api";
+import { useGetApiFooterBannersActive } from "../services/api";
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles for proper rendering
 
 const FooterBanner = () => {
-    const { data: banners, isLoading } = useGetApiBannersActive();
+    const { data: banners, isLoading } = useGetApiFooterBannersActive();
     const [isVisible, setIsVisible] = useState(true);
 
     const safeBanners = Array.isArray(banners) ? banners : [];

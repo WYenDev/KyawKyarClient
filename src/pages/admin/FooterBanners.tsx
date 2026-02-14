@@ -18,13 +18,13 @@ Quill.register(Align, true);
 
 import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
-    useGetApiBanners,
-    usePostApiBanners,
-    usePatchApiBannersId,
-    useDeleteApiBannersId,
-    usePostApiBannersIdImage,
-    useDeleteApiBannersIdImage,
-    GetApiBanners200Item
+    useGetApiFooterBanners,
+    usePostApiFooterBanners,
+    usePatchApiFooterBannersId,
+    useDeleteApiFooterBannersId,
+    usePostApiFooterBannersIdImage,
+    useDeleteApiFooterBannersIdImage,
+    GetApiFooterBanners200Item
 } from "../../services/api";
 import { Edit2, Trash2, Plus, Image as ImageIcon, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -39,17 +39,17 @@ type BannerFormInputs = {
 
 const Banners = () => {
     const queryClient = useQueryClient();
-    const { data: banners, isLoading, error, isError } = useGetApiBanners();
+    const { data: banners, isLoading, error, isError } = useGetApiFooterBanners();
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     
     // We use the hooks' pending state instead of local state
-    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiBannersIdImage();
-    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiBannersIdImage();
+    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiFooterBannersIdImage();
+    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiFooterBannersIdImage();
 
-    const { mutate: createBanner, isPending: isCreatingBanner } = usePostApiBanners();
-    const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiBannersId();
-    const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiBannersId();
+    const { mutate: createBanner, isPending: isCreatingBanner } = usePostApiFooterBanners();
+    const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiFooterBannersId();
+    const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiFooterBannersId();
 
     const { register, handleSubmit, reset, setValue, control, formState: { errors } } = useForm<BannerFormInputs>({
         defaultValues: {
@@ -83,7 +83,7 @@ const Banners = () => {
                 data: formData as any
             }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+                    queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
                     resetForm();
                 }
             });
@@ -92,14 +92,14 @@ const Banners = () => {
                 data: formData as any
             }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+                    queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
                     resetForm();
                 }
             });
         }
     };
 
-    const handleEdit = (banner: GetApiBanners200Item) => {
+    const handleEdit = (banner: GetApiFooterBanners200Item) => {
         setIsEditing(banner.id || null);
         setIsCreating(false);
         setValue("text", banner.text || "");
@@ -122,7 +122,7 @@ const Banners = () => {
                 id: isEditing,
                 data: { image: file } 
             });
-            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
         } catch (error) {
             console.error("Failed to upload image", error);
             alert("Failed to upload image");
@@ -137,7 +137,7 @@ const Banners = () => {
         
         try {
             await deleteImage({ id: isEditing });
-            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
         } catch (error) {
             console.error("Failed to delete image", error);
             alert("Failed to delete image");
@@ -148,7 +148,7 @@ const Banners = () => {
         if (window.confirm("Are you sure you want to delete this banner?")) {
             deleteBanner({ id }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+                    queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
                 }
             });
         }

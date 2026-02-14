@@ -46,7 +46,8 @@ import ResetPassword from "./pages/admin/ResetPassword";
 import HomePage from "./pages/admin/HomePage";
 import AdminPayments from "./pages/admin/Payments";
 import VehicleSpecs from "./pages/admin/VehicleSpecs";
-import Banners from "./pages/admin/Banners";
+import Banners from "./pages/admin/FooterBanners";
+import PromoBanners from "./pages/admin/PromoBanners";
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
           <Route path="about" element={<AboutPage />} />
           <Route path="payments" element={<AdminPayments />} />
           <Route path="banners" element={<Banners />} />
+          <Route path="promo-banners" element={<PromoBanners />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
 
           <Route
