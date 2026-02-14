@@ -1207,6 +1207,10 @@ export type PostApiPromoBannersIdImage200 = {
   imageUrl?: string | null;
 };
 
+export type PostApiPromoBannersIdLandingImageBody = {
+  image?: Blob;
+};
+
 export type GetApiPromoBanners200ItemType = typeof GetApiPromoBanners200ItemType[keyof typeof GetApiPromoBanners200ItemType];
 
 
@@ -1264,10 +1268,28 @@ export type PostApiPromoBannersBody = {
    */
   brandId?: string | null;
   /**
-   * Destination URL (for PROMOTION type)
+   * Destination URL (for PROMOTION type). Where the CTA button goes (or where users go if no landing page).
    * @nullable
    */
   linkUrl?: string | null;
+  /**
+   * URL path for the landing page (e.g. new-year-sale → /promo/new-year-sale). Lowercase, numbers, hyphens only. Optional.
+   * @maxLength 100
+   * @nullable
+   */
+  slug?: string | null;
+  /**
+   * Title shown on the landing page. Optional.
+   * @maxLength 300
+   * @nullable
+   */
+  landingTitle?: string | null;
+  /**
+   * HTML/rich text body for the landing page. Optional.
+   * @maxLength 50000
+   * @nullable
+   */
+  landingBody?: string | null;
   /**
    * Display order (lower = first)
    * @minimum 0
@@ -1380,6 +1402,21 @@ export type PatchApiPromoBannersIdBody = {
   brandId?: string | null;
   /** @nullable */
   linkUrl?: string | null;
+  /**
+   * @maxLength 100
+   * @nullable
+   */
+  slug?: string | null;
+  /**
+   * @maxLength 300
+   * @nullable
+   */
+  landingTitle?: string | null;
+  /**
+   * @maxLength 50000
+   * @nullable
+   */
+  landingBody?: string | null;
   /** @minimum 0 */
   order?: number;
   isActive?: boolean;
@@ -8016,6 +8053,138 @@ export const useDeleteApiPromoBannersIdImage = <TError = unknown,
     }
     
 /**
+ * @summary Upload landing page image
+ */
+export const postApiPromoBannersIdLandingImage = (
+    id: string,
+    postApiPromoBannersIdLandingImageBody: PostApiPromoBannersIdLandingImageBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(postApiPromoBannersIdLandingImageBody.image !== undefined) {
+ formData.append(`image`, postApiPromoBannersIdLandingImageBody.image)
+ }
+
+      return mutator<void>(
+      {url: `/api/promo-banners/${id}/landing-image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiPromoBannersIdLandingImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPromoBannersIdLandingImage>>, TError,{id: string;data: PostApiPromoBannersIdLandingImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiPromoBannersIdLandingImage>>, TError,{id: string;data: PostApiPromoBannersIdLandingImageBody}, TContext> => {
+
+const mutationKey = ['postApiPromoBannersIdLandingImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiPromoBannersIdLandingImage>>, {id: string;data: PostApiPromoBannersIdLandingImageBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postApiPromoBannersIdLandingImage(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiPromoBannersIdLandingImageMutationResult = NonNullable<Awaited<ReturnType<typeof postApiPromoBannersIdLandingImage>>>
+    export type PostApiPromoBannersIdLandingImageMutationBody = PostApiPromoBannersIdLandingImageBody
+    export type PostApiPromoBannersIdLandingImageMutationError = unknown
+
+    /**
+ * @summary Upload landing page image
+ */
+export const usePostApiPromoBannersIdLandingImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPromoBannersIdLandingImage>>, TError,{id: string;data: PostApiPromoBannersIdLandingImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiPromoBannersIdLandingImage>>,
+        TError,
+        {id: string;data: PostApiPromoBannersIdLandingImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiPromoBannersIdLandingImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete landing page image
+ */
+export const deleteApiPromoBannersIdLandingImage = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/promo-banners/${id}/landing-image`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiPromoBannersIdLandingImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiPromoBannersIdLandingImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiPromoBannersIdLandingImage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiPromoBannersIdLandingImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiPromoBannersIdLandingImage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiPromoBannersIdLandingImage(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiPromoBannersIdLandingImageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiPromoBannersIdLandingImage>>>
+    
+    export type DeleteApiPromoBannersIdLandingImageMutationError = unknown
+
+    /**
+ * @summary Delete landing page image
+ */
+export const useDeleteApiPromoBannersIdLandingImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiPromoBannersIdLandingImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiPromoBannersIdLandingImage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiPromoBannersIdLandingImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * Retrieve all promo banners (admin-only endpoint)
  * @summary Get all promo banners
  */
@@ -8134,6 +8303,15 @@ if(postApiPromoBannersBody.brandId !== undefined && postApiPromoBannersBody.bran
  }
 if(postApiPromoBannersBody.linkUrl !== undefined && postApiPromoBannersBody.linkUrl !== null) {
  formData.append(`linkUrl`, postApiPromoBannersBody.linkUrl)
+ }
+if(postApiPromoBannersBody.slug !== undefined && postApiPromoBannersBody.slug !== null) {
+ formData.append(`slug`, postApiPromoBannersBody.slug)
+ }
+if(postApiPromoBannersBody.landingTitle !== undefined && postApiPromoBannersBody.landingTitle !== null) {
+ formData.append(`landingTitle`, postApiPromoBannersBody.landingTitle)
+ }
+if(postApiPromoBannersBody.landingBody !== undefined && postApiPromoBannersBody.landingBody !== null) {
+ formData.append(`landingBody`, postApiPromoBannersBody.landingBody)
  }
 if(postApiPromoBannersBody.order !== undefined) {
  formData.append(`order`, postApiPromoBannersBody.order.toString())
@@ -8293,6 +8471,100 @@ export function useGetApiPromoBannersActive<TData = Awaited<ReturnType<typeof ge
 
 
 /**
+ * Returns banner data for the landing page. Only active banners with a slug are reachable.
+ * @summary Get promo banner landing page by slug (public)
+ */
+export const getApiPromoBannersLandingSlug = (
+    slug: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/promo-banners/landing/${slug}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiPromoBannersLandingSlugQueryKey = (slug?: string,) => {
+    return [
+    `/api/promo-banners/landing/${slug}`
+    ] as const;
+    }
+
+    
+export const getGetApiPromoBannersLandingSlugQueryOptions = <TData = Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError = void>(slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiPromoBannersLandingSlugQueryKey(slug);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>> = ({ signal }) => getApiPromoBannersLandingSlug(slug, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiPromoBannersLandingSlugQueryResult = NonNullable<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>>
+export type GetApiPromoBannersLandingSlugQueryError = void
+
+
+export function useGetApiPromoBannersLandingSlug<TData = Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError = void>(
+ slug: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>,
+          TError,
+          Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiPromoBannersLandingSlug<TData = Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError = void>(
+ slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>,
+          TError,
+          Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiPromoBannersLandingSlug<TData = Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError = void>(
+ slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get promo banner landing page by slug (public)
+ */
+
+export function useGetApiPromoBannersLandingSlug<TData = Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError = void>(
+ slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiPromoBannersLandingSlug>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiPromoBannersLandingSlugQueryOptions(slug,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
  * @summary Get a promo banner by ID
  */
 export const getApiPromoBannersId = (
@@ -8408,6 +8680,15 @@ if(patchApiPromoBannersIdBody.brandId !== undefined && patchApiPromoBannersIdBod
  }
 if(patchApiPromoBannersIdBody.linkUrl !== undefined && patchApiPromoBannersIdBody.linkUrl !== null) {
  formData.append(`linkUrl`, patchApiPromoBannersIdBody.linkUrl)
+ }
+if(patchApiPromoBannersIdBody.slug !== undefined && patchApiPromoBannersIdBody.slug !== null) {
+ formData.append(`slug`, patchApiPromoBannersIdBody.slug)
+ }
+if(patchApiPromoBannersIdBody.landingTitle !== undefined && patchApiPromoBannersIdBody.landingTitle !== null) {
+ formData.append(`landingTitle`, patchApiPromoBannersIdBody.landingTitle)
+ }
+if(patchApiPromoBannersIdBody.landingBody !== undefined && patchApiPromoBannersIdBody.landingBody !== null) {
+ formData.append(`landingBody`, patchApiPromoBannersIdBody.landingBody)
  }
 if(patchApiPromoBannersIdBody.order !== undefined) {
  formData.append(`order`, patchApiPromoBannersIdBody.order.toString())

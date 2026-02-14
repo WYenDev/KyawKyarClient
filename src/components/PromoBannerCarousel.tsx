@@ -46,10 +46,14 @@ const PromoBannerCarousel: React.FC = () => {
   const next = () => goTo((current + 1) % total);
 
   const handleClick = (banner: (typeof safeBanners)[0]) => {
+    // If banner has a landing page (slug), go there first; otherwise go straight to destination
+    if (banner.slug) {
+      navigate(`/promo/${banner.slug}`);
+      return;
+    }
     if (banner.type === 'NEW_ARRIVAL' && banner.brandName) {
       navigate(`/buyCars?brand=${encodeURIComponent(banner.brandName)}`);
     } else if (banner.type === 'PROMOTION' && banner.linkUrl) {
-      // If it's an external URL, open in new tab; otherwise navigate
       if (banner.linkUrl.startsWith('http')) {
         window.open(banner.linkUrl, '_blank', 'noopener,noreferrer');
       } else {

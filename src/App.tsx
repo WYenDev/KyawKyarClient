@@ -18,6 +18,7 @@ import RigorousQualityInspection from "./pages/RigorousQualityInspection";
 import SwiftProcessing from "./pages/SwiftProcessing";
 import CleanHistory from "./pages/CleanHistory";
 import ShowroomInstallmentDetail from "./pages/ShowroomInstallmentDetail";
+import PromoLandingPage from "./pages/PromoLandingPage";
 
 // Admin pages
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -119,6 +120,7 @@ function App() {
                   <Route path="/why-kyawkyar/swift-processing" element={<SwiftProcessing />}  />
                   <Route path="/why-kyawkyar/clean-history" element={<CleanHistory />} />
                   <Route path="/showroom-installment" element={<ShowroomInstallmentDetail />} />
+                  <Route path="/promo/:slug" element={<PromoLandingPage />} />
                 </Routes>
               </main>
 

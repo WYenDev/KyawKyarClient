@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
     useGetApiPromoBanners,
@@ -11,6 +13,7 @@ import {
     useGetApiBrands,
     GetApiPromoBanners200Item,
 } from "../../services/api";
+import { client } from "../../services/mutator";
 import { Edit2, Trash2, Plus, Image as ImageIcon, Loader2, Sparkles, Megaphone } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -19,6 +22,9 @@ type PromoBannerFormInputs = {
     title: string;
     brandId: string;
     linkUrl: string;
+    slug: string;
+    landingTitle: string;
+    landingBody: string;
     order: number;
     isActive: boolean;
 };
@@ -37,18 +43,23 @@ const PromoBanners = () => {
     const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiPromoBannersId();
     const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiPromoBannersId();
 
-    const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<PromoBannerFormInputs>({
+    const { register, handleSubmit, reset, setValue, watch, control, formState: { errors } } = useForm<PromoBannerFormInputs>({
         defaultValues: {
             type: "PROMOTION",
             title: "",
             brandId: "",
             linkUrl: "",
+            slug: "",
+            landingTitle: "",
+            landingBody: "",
             order: 0,
             isActive: true,
         }
     });
 
     const watchType = watch("type");
+    const [uploadingLandingImage, setUploadingLandingImage] = useState(false);
+    const [deletingLandingImage, setDeletingLandingImage] = useState(false);
 
     if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
     if (isError) return <div className="p-8 text-red-500">Error loading promo banners: {(error as unknown as Error)?.message}</div>;
@@ -70,18 +81,24 @@ const PromoBanners = () => {
             isActive: boolean;
             brandId?: string;
             linkUrl?: string;
+            slug?: string;
+            landingTitle?: string;
+            landingBody?: string;
         } = {
             type: data.type,
             title: data.title || undefined,
             order: Number(data.order),
             isActive: data.isActive,
+            slug: data.slug?.trim() || undefined,
+            landingTitle: data.landingTitle?.trim() || undefined,
+            landingBody: data.landingBody || undefined,
         };
 
         if (data.type === "NEW_ARRIVAL") {
             formData.brandId = data.brandId || undefined;
             formData.linkUrl = undefined;
         } else {
-            formData.linkUrl = data.linkUrl || undefined;
+            formData.linkUrl = data.linkUrl?.trim() || undefined;
             formData.brandId = undefined;
         }
 
@@ -103,8 +120,48 @@ const PromoBanners = () => {
         setValue("title", banner.title || "");
         setValue("brandId", banner.brandId || "");
         setValue("linkUrl", banner.linkUrl || "");
+        setValue("slug", (banner as { slug?: string }).slug || "");
+        setValue("landingTitle", (banner as { landingTitle?: string }).landingTitle || "");
+        setValue("landingBody", (banner as { landingBody?: string }).landingBody || "");
         setValue("order", banner.order || 0);
         setValue("isActive", banner.isActive ?? true);
+    };
+
+    const handleLandingImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!isEditing || !e.target.files?.[0]) return;
+        const file = e.target.files[0];
+        if (file.size > MAX_IMAGE_SIZE_BYTES) {
+            alert("Image must be 10 MB or less.");
+            e.target.value = "";
+            return;
+        }
+        setUploadingLandingImage(true);
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+            await client.post(`/api/promo-banners/${isEditing}/landing-image`, formData);
+            invalidateQueries();
+        } catch (err) {
+            console.error("Landing image upload failed", err);
+            alert("Failed to upload landing image");
+        } finally {
+            setUploadingLandingImage(false);
+            e.target.value = "";
+        }
+    };
+
+    const handleLandingImageRemove = async () => {
+        if (!isEditing || !window.confirm("Remove landing image?")) return;
+        setDeletingLandingImage(true);
+        try {
+            await client.delete(`/api/promo-banners/${isEditing}/landing-image`);
+            invalidateQueries();
+        } catch (err) {
+            console.error("Failed to remove landing image", err);
+            alert("Failed to remove landing image");
+        } finally {
+            setDeletingLandingImage(false);
+        }
     };
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,6 +209,9 @@ const PromoBanners = () => {
             title: "",
             brandId: "",
             linkUrl: "",
+            slug: "",
+            landingTitle: "",
+            landingBody: "",
             order: 0,
             isActive: true,
         });
@@ -165,6 +225,9 @@ const PromoBanners = () => {
             title: "",
             brandId: "",
             linkUrl: "",
+            slug: "",
+            landingTitle: "",
+            landingBody: "",
             order: 0,
             isActive: true,
         });
@@ -274,27 +337,90 @@ const PromoBanners = () => {
                             </div>
                         )}
 
-                        {/* Link URL (for PROMOTION) */}
+                        {/* Link URL (for PROMOTION) — where CTA goes */}
                         {watchType === "PROMOTION" && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">Link URL *</label>
+                                <label className="block text-sm font-medium mb-1">Link URL (destination)</label>
                                 <input
                                     type="text"
-                                    {...register("linkUrl", {
-                                        validate: (val) =>
-                                            watchType !== "PROMOTION" || !!val || "Please enter a URL",
-                                    })}
+                                    {...register("linkUrl")}
                                     placeholder="e.g. /buyCars or https://example.com/sale"
                                     className="w-full p-2 border rounded"
                                 />
-                                {errors.linkUrl && (
-                                    <span className="text-red-500 text-sm">{errors.linkUrl.message}</span>
-                                )}
                                 <p className="text-xs text-gray-500 mt-1">
-                                    Use relative paths (e.g. /buyCars) for internal pages or full URLs for external links.
+                                    Where the CTA goes: if you use a landing page below, this is where the button on that page links; otherwise it&apos;s where the banner click goes. e.g. /buyCars or full URL.
                                 </p>
                             </div>
                         )}
+
+                        {/* Landing page (optional): slug = path, content = what’s shown; CTA uses Link URL or brand page */}
+                        <div className="border-t pt-4 mt-4 space-y-4">
+                            <h3 className="text-sm font-semibold text-slate-700">Landing page (optional)</h3>
+                            <p className="text-xs text-gray-500">
+                                <strong>Slug</strong> = URL path for a dedicated page (e.g. <code className="bg-gray-100 px-1 rounded">new-year-sale</code> → <code className="bg-gray-100 px-1 rounded">/promo/new-year-sale</code>). The CTA on that page uses the Link URL above (or brand page for New Arrival).
+                            </p>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Slug (landing page path)</label>
+                                <input
+                                    type="text"
+                                    {...register("slug")}
+                                    placeholder="e.g. new-year-sale (lowercase, numbers, hyphens only)"
+                                    className="w-full p-2 border rounded"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Landing title</label>
+                                <input
+                                    type="text"
+                                    {...register("landingTitle")}
+                                    placeholder="Title shown on the landing page"
+                                    className="w-full p-2 border rounded"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Landing body</label>
+                                <Controller
+                                    name="landingBody"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            className="h-40 mb-12"
+                                            modules={{ toolbar: [["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }], ["link"], ["clean"]] }}
+                                        />
+                                    )}
+                                />
+                            </div>
+                            {isEditing && (
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Landing image</label>
+                                    {(safeBanners.find((b) => b.id === isEditing) as { landingImageUrl?: string } | undefined)?.landingImageUrl ? (
+                                        <div className="mb-2 p-2 border rounded flex items-center justify-between bg-gray-50">
+                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                <ImageIcon size={16} />
+                                                <span>Landing image set</span>
+                                                <a href={(safeBanners.find((b) => b.id === isEditing) as { landingImageUrl?: string })?.landingImageUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">(View)</a>
+                                            </div>
+                                            <button type="button" onClick={handleLandingImageRemove} disabled={deletingLandingImage} className="text-red-500 text-xs hover:text-red-700 font-medium disabled:opacity-50">
+                                                {deletingLandingImage ? "Removing..." : "Remove"}
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="text-xs text-gray-500 mb-2">No landing image.</p>
+                                    )}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleLandingImageUpload}
+                                        disabled={uploadingLandingImage}
+                                        className="w-full p-2 border rounded text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700"
+                                    />
+                                    {uploadingLandingImage && <Loader2 className="animate-spin text-blue-600 inline ml-2" size={18} />}
+                                </div>
+                            )}
+                        </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
