@@ -277,21 +277,23 @@ const Cars = () => {
                     {activeTab === 'active' ? (
                         <>
                             <button
+                                type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(`/admin/cars/${car.id}/edit`);
                                 }}
-                                className="text-indigo-600 text-sm flex items-center gap-1"
+                                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors"
                             >
                                 <Pencil size={14} /> Edit
                             </button>
 
                             <button
+                                type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setDeleteTarget(car);
                                 }}
-                                className="text-red-600 text-sm flex items-center gap-1"
+                                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
                             >
                                 <Trash2 size={14} /> Delete
                             </button>

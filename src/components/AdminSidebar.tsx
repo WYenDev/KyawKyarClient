@@ -166,13 +166,6 @@ const AdminSidebar = ({
 
                 {/* ================= FOOTER ================= */}
                 <div className="px-3 py-3 border-t space-y-1">
-                <MenuItem
-                    to="/admin/settings"
-                    icon={Settings}
-                    label="Settings"
-                    collapsed={collapsed}
-                />
-
                 <button
                     onClick={handleLogout}
                     className={`
@@ -230,8 +223,6 @@ const AdminSidebar = ({
                         </nav>
 
                         <div className="px-3 py-3 border-t space-y-1">
-                            <MenuItem to="/admin/settings" icon={Settings} label="Settings" collapsed={false} />
-
                             <button
                                 onClick={handleLogout}
                                 className={`

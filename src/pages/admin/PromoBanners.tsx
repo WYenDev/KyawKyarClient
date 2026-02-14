@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -26,7 +27,7 @@ import {
     GetApiPromoBanners200Item,
 } from "../../services/api";
 import { client } from "../../services/mutator";
-import { Edit2, Trash2, Plus, Image as ImageIcon, Loader2, Sparkles, Megaphone } from "lucide-react";
+import { Trash2, Plus, Image as ImageIcon, Loader2, Sparkles, Megaphone, MoreVertical, Pencil, CheckCircle, XCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 type PromoBannerFormInputs = {
@@ -48,6 +49,8 @@ const PromoBanners = () => {
     const { data: brands } = useGetApiBrands();
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [openActionId, setOpenActionId] = useState<string | null>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
 
     const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiPromoBannersIdImage();
     const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiPromoBannersIdImage();
@@ -624,8 +627,8 @@ const PromoBanners = () => {
                         <tr>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Title</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Details</th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
@@ -653,18 +656,19 @@ const PromoBanners = () => {
                                                 ? "bg-emerald-100 text-emerald-700"
                                                 : "bg-indigo-100 text-indigo-700"
                                         }`}
+                                        title={banner.type === "NEW_ARRIVAL" ? "New Arrival" : "Promotion"}
                                     >
                                         {banner.type === "NEW_ARRIVAL" ? (
-                                            <><Sparkles size={12} /> New Arrival</>
+                                            <><Sparkles size={14} className="shrink-0" /><span className="hidden sm:inline">New Arrival</span></>
                                         ) : (
-                                            <><Megaphone size={12} /> Promotion</>
+                                            <><Megaphone size={14} className="shrink-0" /><span className="hidden sm:inline">Promotion</span></>
                                         )}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-900 max-w-[200px] truncate">
+                                <td className="px-4 py-3 text-sm text-gray-900 max-w-[200px] truncate hidden sm:table-cell">
                                     {banner.title || <span className="text-gray-400 italic">No title</span>}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-500">
+                                <td className="px-4 py-3 text-sm text-gray-500 hidden sm:table-cell">
                                     {banner.type === "NEW_ARRIVAL" ? (
                                         <span>{(banner as { modelName?: string }).modelName ? "Model: " : "Brand: "}<strong>{(banner as { modelName?: string }).modelName || banner.brandName || "—"}</strong></span>
                                     ) : (
@@ -676,28 +680,39 @@ const PromoBanners = () => {
                                 </td>
                                 <td className="px-4 py-3">
                                     <span
-                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                        className={`px-2 inline-flex items-center gap-1.5 text-xs leading-5 font-semibold rounded-full ${
                                             banner.isActive
                                                 ? "bg-green-100 text-green-800"
                                                 : "bg-gray-100 text-gray-800"
                                         }`}
+                                        title={banner.isActive ? "Active" : "Inactive"}
                                     >
-                                        {banner.isActive ? "Active" : "Inactive"}
+                                        {banner.isActive ? <CheckCircle size={14} className="shrink-0" /> : <XCircle size={14} className="shrink-0" />}
+                                        <span className="hidden sm:inline">{banner.isActive ? "Active" : "Inactive"}</span>
                                     </span>
                                 </td>
                                 <td className="px-4 py-3 text-right text-sm font-medium">
-                                    <button
-                                        onClick={() => handleEdit(banner)}
-                                        className="text-blue-600 hover:text-blue-900 mr-3"
-                                    >
-                                        <Edit2 size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(banner.id!)}
-                                        className="text-red-600 hover:text-red-900"
-                                    >
-                                        {isDeletingBanner ? <Loader2 className="animate-spin" size={18} /> : <Trash2 size={18} />}
-                                    </button>
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (openActionId === banner.id) {
+                                                    setOpenActionId(null);
+                                                    setDropdownPosition(null);
+                                                } else {
+                                                    const rect = e.currentTarget.getBoundingClientRect();
+                                                    setDropdownPosition({ top: rect.bottom + 4, left: rect.right - 160 });
+                                                    setOpenActionId(banner.id ?? null);
+                                                }
+                                            }}
+                                            className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                                            title="Actions"
+                                            aria-expanded={openActionId === banner.id}
+                                        >
+                                            <MoreVertical size={18} />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -711,6 +726,44 @@ const PromoBanners = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Floating dropdown portal – does not affect table row height */}
+            {openActionId && dropdownPosition && (() => {
+                const openBanner = safeBanners.find((b) => b.id === openActionId);
+                if (!openBanner) return null;
+                const close = () => { setOpenActionId(null); setDropdownPosition(null); };
+                return createPortal(
+                    <>
+                        <div
+                            className="fixed inset-0 z-[99]"
+                            aria-hidden
+                            onClick={close}
+                        />
+                        <div
+                            className="fixed w-40 bg-white border rounded-md shadow-lg z-[100] py-1"
+                            style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
+                        >
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); handleEdit(openBanner); close(); }}
+                                className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                            >
+                                <Pencil size={14} /> Edit
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); handleDelete(openBanner.id!); close(); }}
+                                disabled={isDeletingBanner}
+                                className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {isDeletingBanner ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                                {isDeletingBanner ? "Deleting…" : "Delete"}
+                            </button>
+                        </div>
+                    </>,
+                    document.body
+                );
+            })()}
         </div>
     );
 };
