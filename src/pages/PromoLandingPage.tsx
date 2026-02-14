@@ -11,6 +11,7 @@ export type PromoLandingData = {
   type: string;
   title: string | null;
   brandName: string | null;
+  modelName: string | null;
   linkUrl: string | null;
   landingTitle: string | null;
   landingBody: string | null;
@@ -33,8 +34,12 @@ const PromoLandingPage: React.FC = () => {
 
   const handleCta = () => {
     if (!data) return;
-    if (data.type === 'NEW_ARRIVAL' && data.brandName) {
-      navigate(`/buyCars?brand=${encodeURIComponent(data.brandName)}`);
+    if (data.type === 'NEW_ARRIVAL') {
+      if (data.modelName) {
+        navigate(`/buyCars?model=${encodeURIComponent(data.modelName)}`);
+      } else if (data.brandName) {
+        navigate(`/buyCars?brand=${encodeURIComponent(data.brandName)}`);
+      }
     } else if (data.linkUrl) {
       if (data.linkUrl.startsWith('http')) {
         window.open(data.linkUrl, '_blank', 'noopener,noreferrer');
@@ -45,8 +50,8 @@ const PromoLandingPage: React.FC = () => {
   };
 
   const ctaLabel =
-    data?.type === 'NEW_ARRIVAL' && data?.brandName
-      ? `View ${data.brandName} cars`
+    data?.type === 'NEW_ARRIVAL' && (data?.modelName || data?.brandName)
+      ? `View ${data.modelName || data.brandName} cars`
       : data?.linkUrl
         ? 'Continue'
         : null;

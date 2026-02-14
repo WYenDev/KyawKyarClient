@@ -45,14 +45,21 @@ const PromoBannerCarousel: React.FC = () => {
   const prev = () => goTo((current - 1 + total) % total);
   const next = () => goTo((current + 1) % total);
 
-  const handleClick = (banner: (typeof safeBanners)[0]) => {
+  type BannerItem = (typeof safeBanners)[0] & { slug?: string; modelName?: string };
+  const handleClick = (banner: BannerItem) => {
     // If banner has a landing page (slug), go there first; otherwise go straight to destination
     if (banner.slug) {
       navigate(`/promo/${banner.slug}`);
       return;
     }
-    if (banner.type === 'NEW_ARRIVAL' && banner.brandName) {
-      navigate(`/buyCars?brand=${encodeURIComponent(banner.brandName)}`);
+    if (banner.type === 'NEW_ARRIVAL') {
+      const modelName = banner.modelName;
+      const brandName = banner.brandName;
+      if (modelName) {
+        navigate(`/buyCars?model=${encodeURIComponent(modelName)}`);
+      } else if (brandName) {
+        navigate(`/buyCars?brand=${encodeURIComponent(brandName)}`);
+      }
     } else if (banner.type === 'PROMOTION' && banner.linkUrl) {
       if (banner.linkUrl.startsWith('http')) {
         window.open(banner.linkUrl, '_blank', 'noopener,noreferrer');
@@ -77,7 +84,7 @@ const PromoBannerCarousel: React.FC = () => {
             className="flex transition-transform duration-700 ease-in-out"
             style={{ transform: `translateX(-${current * 100}%)` }}
           >
-            {safeBanners.map((banner) => (
+            {safeBanners.map((banner: BannerItem) => (
               <div
                 key={banner.id}
                 className="w-full flex-shrink-0 relative cursor-pointer"
@@ -114,9 +121,9 @@ const PromoBannerCarousel: React.FC = () => {
                       <h3 className="text-white text-sm sm:text-lg md:text-xl font-black drop-shadow-lg line-clamp-2">
                         {banner.title}
                       </h3>
-                      {banner.type === 'NEW_ARRIVAL' && banner.brandName && (
+                      {banner.type === 'NEW_ARRIVAL' && (banner.modelName || banner.brandName) && (
                         <p className="text-white/80 text-xs sm:text-sm font-semibold mt-0.5 drop-shadow-md">
-                          Browse {banner.brandName} new arrivals →
+                          Browse {banner.modelName || banner.brandName} new arrivals →
                         </p>
                       )}
                     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -22,6 +22,7 @@ import {
     usePostApiPromoBannersIdImage,
     useDeleteApiPromoBannersIdImage,
     useGetApiBrands,
+    useGetApiModelsBrandBrandId,
     GetApiPromoBanners200Item,
 } from "../../services/api";
 import { client } from "../../services/mutator";
@@ -32,6 +33,7 @@ type PromoBannerFormInputs = {
     type: "NEW_ARRIVAL" | "PROMOTION";
     title: string;
     brandId: string;
+    modelId: string;
     linkUrl: string;
     slug: string;
     landingTitle: string;
@@ -59,6 +61,7 @@ const PromoBanners = () => {
             type: "PROMOTION",
             title: "",
             brandId: "",
+            modelId: "",
             linkUrl: "",
             slug: "",
             landingTitle: "",
@@ -67,18 +70,35 @@ const PromoBanners = () => {
             isActive: true,
         }
     });
+    const watchBrandId = watch("brandId");
+    const { data: modelsByBrand } = useGetApiModelsBrandBrandId(watchBrandId || "", { query: { enabled: !!watchBrandId } });
 
     const watchType = watch("type");
     const [uploadingLandingImage, setUploadingLandingImage] = useState(false);
     const [deletingLandingImage, setDeletingLandingImage] = useState(false);
 
-    if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
-    if (isError) return <div className="p-8 text-red-500">Error loading promo banners: {(error as unknown as Error)?.message}</div>;
-
     const safeBanners = Array.isArray(banners) ? banners : [];
-    // brands API returns paginated { items, total, ... }
     const brandsData = brands as { items?: { id?: string; name?: string }[] } | undefined;
     const safeBrands = brandsData?.items ?? [];
+    const safeModels = useMemo(() => Array.isArray(modelsByBrand) ? modelsByBrand : [], [modelsByBrand]);
+
+    const editingBanner = isEditing ? safeBanners.find((b) => b.id === isEditing) : null;
+    const editingModelId = (editingBanner as { modelId?: string } | undefined)?.modelId;
+    const editingModelBrandId = (editingBanner as { modelBrandId?: string } | undefined)?.modelBrandId;
+
+    // When editing a banner with a model, re-apply modelId once models for that brand have loaded
+    // so the Model dropdown shows the selected value (options load async after brandId is set).
+    useEffect(() => {
+        if (!editingModelId || !editingModelBrandId || watchBrandId !== editingModelBrandId) return;
+        if (safeModels.length === 0) return;
+        const hasOption = safeModels.some((m: { id?: string }) => m.id === editingModelId);
+        if (hasOption) {
+            setValue("modelId", editingModelId);
+        }
+    }, [editingModelId, editingModelBrandId, watchBrandId, safeModels, setValue]);
+
+    if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
+    if (isError) return <div className="p-8 text-red-500">Error loading promo banners: {(error as unknown as Error)?.message}</div>;
 
     const invalidateQueries = () => {
         queryClient.invalidateQueries({ queryKey: ['/api/promo-banners'] });
@@ -91,6 +111,7 @@ const PromoBanners = () => {
             order: number;
             isActive: boolean;
             brandId?: string;
+            modelId?: string;
             linkUrl?: string;
             slug?: string;
             landingTitle?: string;
@@ -106,20 +127,38 @@ const PromoBanners = () => {
         };
 
         if (data.type === "NEW_ARRIVAL") {
-            formData.brandId = data.brandId || undefined;
+            formData.modelId = data.modelId || undefined;
             formData.linkUrl = undefined;
+            formData.brandId = undefined;
         } else {
             formData.linkUrl = data.linkUrl?.trim() || undefined;
             formData.brandId = undefined;
+            formData.modelId = undefined;
         }
+
+        const isSlugError = (err: unknown) => {
+            const payload = (err as { payload?: { error?: string } })?.payload;
+            const msg = typeof payload?.error === "string" ? payload.error.toLowerCase() : "";
+            return msg.includes("slug") || msg === "slug already in use";
+        };
 
         if (isEditing) {
             updateBanner({ id: isEditing, data: formData as never }, {
-                onSuccess: () => { invalidateQueries(); resetForm(); }
+                onSuccess: () => { invalidateQueries(); resetForm(); },
+                onError: (err) => {
+                    const title = "Failed to update promo";
+                    const description = isSlugError(err) ? "Slug already exists." : "Failed to update.";
+                    alert(`${title}\n\n${description}`);
+                },
             });
         } else {
             createBanner({ data: formData as never }, {
-                onSuccess: () => { invalidateQueries(); resetForm(); }
+                onSuccess: () => { invalidateQueries(); resetForm(); },
+                onError: (err) => {
+                    const title = "Failed to create promo";
+                    const description = isSlugError(err) ? "Slug already exists." : "Failed to create.";
+                    alert(`${title}\n\n${description}`);
+                },
             });
         }
     };
@@ -129,7 +168,9 @@ const PromoBanners = () => {
         setIsCreating(false);
         setValue("type", (banner.type as "NEW_ARRIVAL" | "PROMOTION") || "PROMOTION");
         setValue("title", banner.title || "");
-        setValue("brandId", banner.brandId || "");
+        const bannerWithModel = banner as GetApiPromoBanners200Item & { modelId?: string; modelBrandId?: string };
+        setValue("brandId", bannerWithModel.modelBrandId || banner.brandId || "");
+        setValue("modelId", bannerWithModel.modelId || "");
         setValue("linkUrl", banner.linkUrl || "");
         setValue("slug", (banner as { slug?: string }).slug || "");
         setValue("landingTitle", (banner as { landingTitle?: string }).landingTitle || "");
@@ -219,6 +260,7 @@ const PromoBanners = () => {
             type: "PROMOTION",
             title: "",
             brandId: "",
+            modelId: "",
             linkUrl: "",
             slug: "",
             landingTitle: "",
@@ -235,6 +277,7 @@ const PromoBanners = () => {
             type: "PROMOTION",
             title: "",
             brandId: "",
+            modelId: "",
             linkUrl: "",
             slug: "",
             landingTitle: "",
@@ -324,28 +367,48 @@ const PromoBanners = () => {
                             />
                         </div>
 
-                        {/* Brand selector (for NEW_ARRIVAL) */}
+                        {/* Brand + Model selector (for NEW_ARRIVAL — links to buyCars by model) */}
                         {watchType === "NEW_ARRIVAL" && (
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Brand *</label>
-                                <select
-                                    {...register("brandId", {
-                                        validate: (val) =>
-                                            watchType !== "NEW_ARRIVAL" || !!val || "Please select a brand",
-                                    })}
-                                    className="w-full p-2 border rounded"
-                                >
-                                    <option value="">Select a brand...</option>
-                                    {safeBrands.map((brand) => (
-                                        <option key={brand.id} value={brand.id}>
-                                            {brand.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.brandId && (
-                                    <span className="text-red-500 text-sm">{errors.brandId.message}</span>
-                                )}
-                            </div>
+                            <>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Brand</label>
+                                    <select
+                                        {...register("brandId", {
+                                            onChange: () => setValue("modelId", ""),
+                                        })}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        <option value="">Select a brand...</option>
+                                        {safeBrands.map((brand) => (
+                                            <option key={brand.id} value={brand.id}>
+                                                {brand.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1">Select brand first, then model below.</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Model *</label>
+                                    <select
+                                        {...register("modelId", {
+                                            validate: (val) =>
+                                                watchType !== "NEW_ARRIVAL" || !!val || "Please select a model",
+                                        })}
+                                        className="w-full p-2 border rounded"
+                                        disabled={!watchBrandId}
+                                    >
+                                        <option value="">Select a model...</option>
+                                        {safeModels.map((model: { id?: string; name?: string }) => (
+                                            <option key={model.id} value={model.id}>
+                                                {model.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.modelId && (
+                                        <span className="text-red-500 text-sm">{errors.modelId.message}</span>
+                                    )}
+                                </div>
+                            </>
                         )}
 
                         {/* Link URL (for PROMOTION) — where CTA goes */}
@@ -603,7 +666,7 @@ const PromoBanners = () => {
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-500">
                                     {banner.type === "NEW_ARRIVAL" ? (
-                                        <span>Brand: <strong>{banner.brandName || "—"}</strong></span>
+                                        <span>{(banner as { modelName?: string }).modelName ? "Model: " : "Brand: "}<strong>{(banner as { modelName?: string }).modelName || banner.brandName || "—"}</strong></span>
                                     ) : (
                                         <span className="truncate block max-w-[180px]" title={banner.linkUrl ?? undefined}>
                                             {banner.linkUrl || "—"}

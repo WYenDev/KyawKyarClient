@@ -1263,10 +1263,15 @@ export type PostApiPromoBannersBody = {
    */
   title?: string | null;
   /**
-   * Brand ID (for NEW_ARRIVAL type)
+   * Brand ID (legacy; for NEW_ARRIVAL prefer modelId)
    * @nullable
    */
   brandId?: string | null;
+  /**
+   * Model ID (for NEW_ARRIVAL type – links to buyCars filtered by model)
+   * @nullable
+   */
+  modelId?: string | null;
   /**
    * Destination URL (for PROMOTION type). Where the CTA button goes (or where users go if no landing page).
    * @nullable
@@ -1400,6 +1405,8 @@ export type PatchApiPromoBannersIdBody = {
   title?: string | null;
   /** @nullable */
   brandId?: string | null;
+  /** @nullable */
+  modelId?: string | null;
   /** @nullable */
   linkUrl?: string | null;
   /**
@@ -8301,6 +8308,9 @@ if(postApiPromoBannersBody.title !== undefined && postApiPromoBannersBody.title 
 if(postApiPromoBannersBody.brandId !== undefined && postApiPromoBannersBody.brandId !== null) {
  formData.append(`brandId`, postApiPromoBannersBody.brandId)
  }
+if(postApiPromoBannersBody.modelId !== undefined && postApiPromoBannersBody.modelId !== null) {
+ formData.append(`modelId`, postApiPromoBannersBody.modelId)
+ }
 if(postApiPromoBannersBody.linkUrl !== undefined && postApiPromoBannersBody.linkUrl !== null) {
  formData.append(`linkUrl`, postApiPromoBannersBody.linkUrl)
  }
@@ -8677,6 +8687,9 @@ if(patchApiPromoBannersIdBody.title !== undefined && patchApiPromoBannersIdBody.
  }
 if(patchApiPromoBannersIdBody.brandId !== undefined && patchApiPromoBannersIdBody.brandId !== null) {
  formData.append(`brandId`, patchApiPromoBannersIdBody.brandId)
+ }
+if(patchApiPromoBannersIdBody.modelId !== undefined && patchApiPromoBannersIdBody.modelId !== null) {
+ formData.append(`modelId`, patchApiPromoBannersIdBody.modelId)
  }
 if(patchApiPromoBannersIdBody.linkUrl !== undefined && patchApiPromoBannersIdBody.linkUrl !== null) {
  formData.append(`linkUrl`, patchApiPromoBannersIdBody.linkUrl)
