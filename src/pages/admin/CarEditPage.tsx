@@ -660,15 +660,7 @@ const CarEditPage = () => {
                                 }
                                 className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
-                            <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
-                                <Star
-                                    size={14}
-                                    className={
-                                        form.featured
-                                            ? "fill-indigo-600 text-indigo-600"
-                                            : ""
-                                    }
-                                />
+                            <span className="text-sm font-medium text-gray-700">
                                 Featured Car
                             </span>
                         </label>

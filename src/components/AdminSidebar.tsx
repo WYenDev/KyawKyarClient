@@ -12,7 +12,8 @@ import {
     Building,
     Home,
     Info, 
-    Megaphone 
+    Megaphone,
+    Sparkles
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -112,9 +113,16 @@ const AdminSidebar = ({
                 />                 <MenuItem
                     to="/admin/banners"
                     icon={Megaphone}
-                    label="Banners"
+                    label="FooterBanners"
                     collapsed={collapsed}
-                />                <MenuItem
+                />
+                <MenuItem
+                    to="/admin/promo-banners"
+                    icon={Sparkles}
+                    label="Promo Banners"
+                    collapsed={collapsed}
+                />
+                <MenuItem
                     to="/admin/build-types"
                     icon={Home}
                     label="Build Types"
@@ -158,13 +166,6 @@ const AdminSidebar = ({
 
                 {/* ================= FOOTER ================= */}
                 <div className="px-3 py-3 border-t space-y-1">
-                <MenuItem
-                    to="/admin/settings"
-                    icon={Settings}
-                    label="Settings"
-                    collapsed={collapsed}
-                />
-
                 <button
                     onClick={handleLogout}
                     className={`
@@ -209,6 +210,7 @@ const AdminSidebar = ({
                             <MenuItem to="/admin/brands" icon={Tag} label="Brands & Models" collapsed={false} />
                             <MenuItem to="/admin/showrooms" icon={Building} label="Showrooms" collapsed={false} />
                             <MenuItem to="/admin/banners" icon={Megaphone} label="Banners" collapsed={false} />
+                            <MenuItem to="/admin/promo-banners" icon={Sparkles} label="Promo Banners" collapsed={false} />
                             <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={false} />
                             <MenuItem to="/admin/vehicle-specs" icon={Settings} label="Vehicle Specs" collapsed={false} />
                             <MenuItem to="/admin/home" icon={LayoutDashboard} label="Home page" collapsed={false} end />
@@ -221,8 +223,6 @@ const AdminSidebar = ({
                         </nav>
 
                         <div className="px-3 py-3 border-t space-y-1">
-                            <MenuItem to="/admin/settings" icon={Settings} label="Settings" collapsed={false} />
-
                             <button
                                 onClick={handleLogout}
                                 className={`

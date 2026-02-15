@@ -9,6 +9,7 @@ import ShowroomSection from '../components/ShowroomSection';
 import NewArrivals from '../components/NewArrivals';
 import BrowseCarByBuildTypes from '../components/BrowseCarByBuildTypes';
 import BrowseCarByBrands from '../components/BrowseCarByBrands';
+import PromoBannerCarousel from '../components/PromoBannerCarousel';
 import SEO, { SITE_URL } from '../components/SEO';
 
 const Home: React.FC = () => {
@@ -54,6 +55,7 @@ const Home: React.FC = () => {
         structuredData={[organizationSchema, webSiteSchema]}
       />
       <Hero />
+      <PromoBannerCarousel />
       <FeaturedCars />
       <NewArrivals />
       <BrowseCarByBuildTypes />

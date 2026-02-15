@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -18,15 +19,15 @@ Quill.register(Align, true);
 
 import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 import {
-    useGetApiBanners,
-    usePostApiBanners,
-    usePatchApiBannersId,
-    useDeleteApiBannersId,
-    usePostApiBannersIdImage,
-    useDeleteApiBannersIdImage,
-    GetApiBanners200Item
+    useGetApiFooterBanners,
+    usePostApiFooterBanners,
+    usePatchApiFooterBannersId,
+    useDeleteApiFooterBannersId,
+    usePostApiFooterBannersIdImage,
+    useDeleteApiFooterBannersIdImage,
+    GetApiFooterBanners200Item
 } from "../../services/api";
-import { Edit2, Trash2, Plus, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Trash2, Plus, Image as ImageIcon, Loader2, MoreVertical, Pencil, CheckCircle, XCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 type BannerFormInputs = {
@@ -39,17 +40,19 @@ type BannerFormInputs = {
 
 const Banners = () => {
     const queryClient = useQueryClient();
-    const { data: banners, isLoading, error, isError } = useGetApiBanners();
+    const { data: banners, isLoading, error, isError } = useGetApiFooterBanners();
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
-    
-    // We use the hooks' pending state instead of local state
-    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiBannersIdImage();
-    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiBannersIdImage();
+    const [openActionId, setOpenActionId] = useState<string | null>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
 
-    const { mutate: createBanner, isPending: isCreatingBanner } = usePostApiBanners();
-    const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiBannersId();
-    const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiBannersId();
+    // We use the hooks' pending state instead of local state
+    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiFooterBannersIdImage();
+    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiFooterBannersIdImage();
+
+    const { mutate: createBanner, isPending: isCreatingBanner } = usePostApiFooterBanners();
+    const { mutate: updateBanner, isPending: isUpdatingBanner } = usePatchApiFooterBannersId();
+    const { mutate: deleteBanner, isPending: isDeletingBanner } = useDeleteApiFooterBannersId();
 
     const { register, handleSubmit, reset, setValue, control, formState: { errors } } = useForm<BannerFormInputs>({
         defaultValues: {
@@ -65,9 +68,6 @@ const Banners = () => {
 
     // Ensure banners is an array to prevent crashes
     const safeBanners = Array.isArray(banners) ? banners : [];
-    
-    // Debug info
-    console.log('Banners data:', banners);
 
     const onSubmit: SubmitHandler<BannerFormInputs> = (data) => {
         const formData = {
@@ -83,7 +83,7 @@ const Banners = () => {
                 data: formData as any
             }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+                    queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
                     resetForm();
                 }
             });
@@ -92,14 +92,14 @@ const Banners = () => {
                 data: formData as any
             }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+                    queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
                     resetForm();
                 }
             });
         }
     };
 
-    const handleEdit = (banner: GetApiBanners200Item) => {
+    const handleEdit = (banner: GetApiFooterBanners200Item) => {
         setIsEditing(banner.id || null);
         setIsCreating(false);
         setValue("text", banner.text || "");
@@ -122,7 +122,7 @@ const Banners = () => {
                 id: isEditing,
                 data: { image: file } 
             });
-            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
         } catch (error) {
             console.error("Failed to upload image", error);
             alert("Failed to upload image");
@@ -137,7 +137,7 @@ const Banners = () => {
         
         try {
             await deleteImage({ id: isEditing });
-            queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
         } catch (error) {
             console.error("Failed to delete image", error);
             alert("Failed to delete image");
@@ -148,7 +148,7 @@ const Banners = () => {
         if (window.confirm("Are you sure you want to delete this banner?")) {
             deleteBanner({ id }, {
                 onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: ['/api/banners'] });
+                    queryClient.invalidateQueries({ queryKey: ['/api/footer-banners'] });
                 }
             });
         }
@@ -176,14 +176,12 @@ const Banners = () => {
         });
     }
 
-    if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
-
     const isSubmitting = isCreatingBanner || isUpdatingBanner;
 
     return (
-        <div className="px-4 py-6 md:p-6">
-            <div className="flex items-center justify-between gap-3 flex-nowrap mb-6">
-                <h1 className="text-2xl font-bold flex-1 min-w-0 break-words leading-tight">Banner Management</h1>
+        <div className="px-4 py-4 sm:py-6 md:p-6 min-w-0">
+            <div className="flex items-center justify-between gap-3 flex-nowrap mb-4 sm:mb-6">
+                <h1 className="text-xl sm:text-2xl font-bold flex-1 min-w-0 break-words leading-tight">Banner Management</h1>
                 {!isCreating && !isEditing && (
                     <button
                         onClick={handleCreate}
@@ -197,8 +195,8 @@ const Banners = () => {
             </div>
 
             {(isCreating || isEditing) && (
-                <div className="bg-white p-6 rounded-lg shadow mb-8">
-                    <h2 className="text-xl font-semibold mb-4">{isEditing ? "Edit Banner" : "Create Banner"}</h2>
+                <div className="bg-white p-4 sm:p-6 rounded-lg shadow mb-6 sm:mb-8">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-4">{isEditing ? "Edit Banner" : "Create Banner"}</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium mb-1">Text Content</label>
@@ -347,23 +345,22 @@ const Banners = () => {
                 </div>
             )}
 
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Text</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
+                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                            <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {safeBanners.map((banner) => (
                             <tr key={banner.id}>
-                                <td className="px-6 py-4 whitespace-nowrap">
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                     <div 
-                                        className="h-10 w-20 rounded border flex items-center justify-center text-xs overflow-hidden"
+                                        className="h-10 w-16 sm:w-20 rounded border flex items-center justify-center text-xs overflow-hidden shrink-0"
                                         style={{
                                             backgroundColor: banner.backgroundColor || '#fff',
                                             backgroundImage: banner.backgroundImageUrl ? `url(${banner.backgroundImageUrl})` : 'none',
@@ -374,45 +371,51 @@ const Banners = () => {
                                         {!banner.backgroundImageUrl && "Color"}
                                     </div>
                                 </td>
-                                <td className="px-6 py-4">
-                                    <div 
-                                        className="max-w-xs text-sm text-gray-900 ql-editor !p-0 !min-h-0 !overflow-hidden !max-h-16" 
-                                        dangerouslySetInnerHTML={{ __html: banner.text || '' }}
-                                        title="Banner Preview"
-                                    />
-                                </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-sm text-gray-500 whitespace-nowrap">
                                     <div>Order: {banner.order}</div>
                                     <div className="text-xs text-gray-400">{banner.backgroundImageUrl ? "Image BG" : "Color BG"}</div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                        banner.isActive 
-                                            ? "bg-green-100 text-green-800" 
-                                            : "bg-gray-100 text-gray-800"
-                                    }`}>
-                                        {banner.isActive ? "Active" : "Inactive"}
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                    <span
+                                        className={`px-2 inline-flex items-center gap-1.5 text-xs leading-5 font-semibold rounded-full ${
+                                            banner.isActive
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-gray-100 text-gray-800"
+                                        }`}
+                                        title={banner.isActive ? "Active" : "Inactive"}
+                                    >
+                                        {banner.isActive ? <CheckCircle size={14} className="shrink-0" /> : <XCircle size={14} className="shrink-0" />}
+                                        <span className="hidden sm:inline">{banner.isActive ? "Active" : "Inactive"}</span>
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <button
-                                        onClick={() => handleEdit(banner)}
-                                        className="text-blue-600 hover:text-blue-900 mr-4"
-                                    >
-                                        <Edit2 size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(banner.id!)}
-                                        className="text-red-600 hover:text-red-900"
-                                    >
-                                        {isDeletingBanner ? <Loader2 className="animate-spin" size={18} /> : <Trash2 size={18} />}
-                                    </button>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (openActionId === banner.id) {
+                                                    setOpenActionId(null);
+                                                    setDropdownPosition(null);
+                                                } else {
+                                                    const rect = e.currentTarget.getBoundingClientRect();
+                                                    setDropdownPosition({ top: rect.bottom + 4, left: rect.right - 160 });
+                                                    setOpenActionId(banner.id ?? null);
+                                                }
+                                            }}
+                                            className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                                            title="Actions"
+                                            aria-expanded={openActionId === banner.id}
+                                        >
+                                            <MoreVertical size={18} />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
                         {safeBanners.length === 0 && (
                             <tr>
-                                <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                                <td colSpan={4} className="px-4 sm:px-6 py-8 text-center text-sm text-gray-500">
                                     No banners found. Create one to get started.
                                 </td>
                             </tr>
@@ -420,6 +423,44 @@ const Banners = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Floating dropdown portal – does not affect table row height */}
+            {openActionId && dropdownPosition && (() => {
+                const openBanner = safeBanners.find((b) => b.id === openActionId);
+                if (!openBanner) return null;
+                const close = () => { setOpenActionId(null); setDropdownPosition(null); };
+                return createPortal(
+                    <>
+                        <div
+                            className="fixed inset-0 z-[99]"
+                            aria-hidden
+                            onClick={close}
+                        />
+                        <div
+                            className="fixed w-40 bg-white border rounded-md shadow-lg z-[100] py-1"
+                            style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
+                        >
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); handleEdit(openBanner); close(); }}
+                                className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                            >
+                                <Pencil size={14} /> Edit
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); handleDelete(openBanner.id!); close(); }}
+                                disabled={isDeletingBanner}
+                                className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {isDeletingBanner ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                                {isDeletingBanner ? "Deleting…" : "Delete"}
+                            </button>
+                        </div>
+                    </>,
+                    document.body
+                );
+            })()}
         </div>
     );
 };

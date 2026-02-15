@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CarListItem } from '../services/api';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 
 interface FeaturedCardProps {
   car: CarListItem;
@@ -10,8 +11,10 @@ interface FeaturedCardProps {
 const FeaturedCard: React.FC<FeaturedCardProps> = ({ car }) => {
   const { t } = useTranslation('home');
   const navigate = useNavigate();
+  const { user } = useAuth();
   const title = `${car?.model?.brand?.name || ''} ${car?.model?.name || ''}`.trim();
   const imgSrc = car.primaryImage?.url;
+  const showPrice = user && typeof (car as any).price === 'number' ? (car as any).price.toLocaleString() : (car as any).formattedPrice;
 
   return (
     <article
@@ -35,11 +38,11 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car }) => {
         <h3 className="text-base text-left font-semibold text-slate-900 truncate mb-1">{title}</h3>
         <div className="flex items-center gap-2">
           <span className="text-sm text-slate-500 font-medium">{car.modelYear}</span>
-          {((car as any).formattedPrice || car.price > 0) && (
+          {showPrice && (
             <>
               <span className="text-slate-300">|</span>
               <span className="text-sm text-indigo-600 font-bold">
-                {(car as any).formattedPrice || car.price} {t('lakhs', 'LAKHs')}
+                {showPrice} {t('lakhs', 'LAKHs')}
               </span>
             </>
           )}

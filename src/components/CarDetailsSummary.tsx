@@ -6,6 +6,22 @@ import { useTranslation } from 'react-i18next';
 import { useGetApiHome } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
+// Format license as: region.code prefixNumberprefixLetter-registrationNumber (e.g. "BGO 9C-1345")
+function formatLicensePlate(license: {
+  region?: { code?: string } | null;
+  prefixLetter?: string | null;
+  prefixNumber?: number | null;
+  registrationNumber?: number | null;
+}): string {
+  const code = license.region?.code ?? '';
+  const letter = license.prefixLetter ?? '';
+  const pNum = license.prefixNumber != null ? String(license.prefixNumber) : '';
+  const regNum = license.registrationNumber != null ? String(license.registrationNumber) : '';
+  const prefix = pNum + letter; // prefixNumber then prefixLetter
+  const rest = regNum ? (prefix ? `${prefix}-${regNum}` : regNum) : prefix;
+  return [code, rest].filter(Boolean).join(' ').trim() || '—';
+}
+
 // Define a proper interface to avoid using 'as any'
 interface Car {
   model?: {
@@ -25,7 +41,12 @@ interface Car {
   engineSize?: number;
   grade?: { name: string };
   showroom?: { city: string };
-  license?: { region?: { name: string } };
+  license?: {
+    region?: { name: string; code?: string } | null;
+    prefixLetter?: string | null;
+    prefixNumber?: number | null;
+    registrationNumber?: number | null;
+  } | null;
 }
 
 interface Props {
@@ -42,7 +63,6 @@ const CarDetailsSummary: React.FC<Props> = ({ car }) => {
   const apiViber = homeData?.viberNo ?? undefined;
   const phoneNumber = (apiPhone ?? '').toString();
   const viberNumber = (apiViber ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
-  console.log(car.formattedPrice)
 
   return (
     <div>
@@ -76,13 +96,15 @@ const CarDetailsSummary: React.FC<Props> = ({ car }) => {
           </div>
         </div>
 
-        {/* License */}
-        {car.formattedLicense && (
+        {/* License: show when license object exists, format as region.code prefixLetter/prefixNumber-registrationNumber */}
+        {(car.license != null || car.formattedLicense) && (
           <div className="flex items-center">
             <img src={LicensePlate} alt="License" className="w-6 h-6 mr-3" />
             <div>
               <div className="text-sm text-gray-600">{t('details.licnese', 'License')}</div>
-              <div className="text-lg font-semibold text-gray-900">{car.formattedLicense}</div>
+              <div className="text-lg font-semibold text-gray-900">
+                {car.license != null ? formatLicensePlate(car.license) : (car.formattedLicense ?? '—')}
+              </div>
             </div>
           </div>
         )}
@@ -176,16 +198,6 @@ const CarDetailsSummary: React.FC<Props> = ({ car }) => {
           </div>
         )}
 
-        {/* License Region */}
-        {!!car.license?.region && (
-          <div className="flex items-center">
-            <MapPin className="h-5 w-5 mr-3 text-gray-400" />
-            <div>
-              <div className="text-sm text-gray-600">{t('details.licence', 'License Region')}</div>
-              <div className="text-lg font-semibold text-gray-900">{car.license.region.name}</div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="space-y-3 mb-10">

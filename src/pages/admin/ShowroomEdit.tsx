@@ -42,7 +42,13 @@ const ShowroomEdit = () => {
         }
     }, [showroom]);
 
-    const { mutate: updateShowroom } = usePutApiShowroomsId({});
+    const { mutate: updateShowroom } = usePutApiShowroomsId({
+        mutation: {
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: getGetApiShowroomsQueryKey(), exact: false });
+            },
+        },
+    });
     const { mutate: addPhone } = usePostApiShowroomsShowroomIdPhones({});
     const { mutate: updatePhone } = usePutApiShowroomsShowroomIdPhonesPhoneId({});
     const { mutate: deletePhone } = useDeleteApiShowroomsShowroomIdPhonesPhoneId({});
@@ -71,7 +77,7 @@ const ShowroomEdit = () => {
                 addressEn: form.addressEn,
                 addressMm: form.addressMm,
                 city: form.city,
-                googleMapUrl: form.googleMapUrl,
+                googleMapUrl: form.googleMapUrl?.trim() ? form.googleMapUrl.trim() : null,
             };
 
             // Update showroom only when basic fields changed
