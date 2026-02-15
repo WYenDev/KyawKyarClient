@@ -2,8 +2,6 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Select, { Option } from "../../components/Select";
-import { Star } from "lucide-react";
-
 import { Steering } from "../../types";
 
 import {
@@ -466,53 +464,6 @@ const CarCreatePage = () => {
                             />
 
                         </div>
-                        
-                        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
-                                <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
-                                    <input
-                                        type="checkbox"
-                                        checked={!!form.isNewArrival}
-                                        onChange={(e) => {
-                                            const checked = e.target.checked;
-                                            setForm((prev) => ({
-                                                ...prev,
-                                                isNewArrival: checked,
-                                            }));
-                                        }}
-                                        className="w-5 h-5 ml-auto"
-                                    />
-                                    <span className="text-sm font-medium text-gray-700">
-                                        New Arrival
-                                    </span>
-                                </label>
-
-                                <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
-                                    <input
-                                        type="checkbox"
-                                        checked={!!form.featured}
-                                        onChange={(e) =>{
-                                            const checked = e.target.checked;
-                                            console.log('checkted', checked)
-                                            setForm((prev) => ({
-                                                ...prev,
-                                                featured: checked, 
-                                            }))
-                                        }}
-                                        className="w-5 h-5 ml-auto"
-                                    />
-                                    <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
-                                        <Star
-                                            size={14}
-                                            className={
-                                                form.featured
-                                                    ? "fill-indigo-600 text-indigo-600"
-                                                    : ""
-                                            }
-                                        />
-                                        Featured Car
-                                    </span>
-                                </label>
-                            </div>
                     </Section>
 
                     {/* ===== LICENSE ===== */}
@@ -638,10 +589,7 @@ const CarCreatePage = () => {
         onChange={e => setForm(prev => ({ ...prev, featured: e.target.checked }))}
         className="w-5 h-5 ml-auto"
       />
-      <span className="flex items-center gap-1 text-sm font-medium text-gray-700">
-        <Star size={14} className={form.featured ? "fill-indigo-600 text-indigo-600" : ""} />
-        Featured Car
-      </span>
+      <span className="text-sm font-medium text-gray-700">Featured Car</span>
    </label>
 </div>
                     </Section>

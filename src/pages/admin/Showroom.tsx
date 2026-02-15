@@ -1,4 +1,5 @@
 import { useState, Fragment } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { Plus, Trash2, Pencil, ChevronRight, ChevronDown, MoreVertical } from "lucide-react";
 
@@ -36,6 +37,7 @@ const Showrooms = () => {
     // track expanded row in the list view
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [openActionId, setOpenActionId] = useState<string | null>(null);
+    const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
 
     /* ================= PHONE (create form local only) ================= */
     const [newPhone, setNewPhone] = useState("");
@@ -128,11 +130,12 @@ const Showrooms = () => {
             addressEn: form.addressEn,
             addressMm: form.addressMm,
             city: form.city,
-            googleMapUrl: form.googleMapUrl,
             phones: form.phones.map((p) => ({ phone: p.phone })),
         };
         const trimmedName = form.name?.trim();
         if (trimmedName) payload.name = trimmedName;
+        const trimmedMapUrl = form.googleMapUrl?.trim();
+        if (trimmedMapUrl) payload.googleMapUrl = trimmedMapUrl;
 
         createShowroom({ data: payload });
     };
@@ -220,33 +223,25 @@ const Showrooms = () => {
                                                 </td>
                                                 <td className="px-8 py-4 align-top">
                                                     <div className="flex justify-end">
-                                                        <div className="relative">
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === item.id ? null : item.id); }}
-                                                                className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
-                                                                title="Actions"
-                                                                aria-expanded={openActionId === item.id}
-                                                            >
-                                                                <MoreVertical size={18} />
-                                                            </button>
-
-                                                            {openActionId === item.id && (
-                                                                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
-                                                                    <button
-                                                                        onClick={(e) => { e.stopPropagation(); openEdit(item); setOpenActionId(null); }}
-                                                                        className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
-                                                                    >
-                                                                        <Pencil size={14} /> Edit
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(item); setOpenActionId(null); }}
-                                                                        className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
-                                                                    >
-                                                                        <Trash2 size={14} /> Delete
-                                                                    </button>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                if (openActionId === item.id) {
+                                                                    setOpenActionId(null);
+                                                                    setDropdownPosition(null);
+                                                                } else {
+                                                                    const rect = e.currentTarget.getBoundingClientRect();
+                                                                    setDropdownPosition({ top: rect.bottom + 4, left: rect.right - 160 });
+                                                                    setOpenActionId(item.id);
+                                                                }
+                                                            }}
+                                                            className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                                                            title="Actions"
+                                                            aria-expanded={openActionId === item.id}
+                                                        >
+                                                            <MoreVertical size={18} />
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -301,33 +296,25 @@ const Showrooms = () => {
                                                             </div>
 
                                                             <div className="pt-2 flex justify-end">
-                                                                <div className="relative">
-                                                                    <button
-                                                                        onClick={(e) => { e.stopPropagation(); setOpenActionId(openActionId === item.id ? null : item.id); }}
-                                                                        className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
-                                                                        title="Actions"
-                                                                        aria-expanded={openActionId === item.id}
-                                                                    >
-                                                                        <MoreVertical size={18} />
-                                                                    </button>
-
-                                                                    {openActionId === item.id && (
-                                                                        <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-50">
-                                                                            <button
-                                                                                onClick={(e) => { e.stopPropagation(); openEdit(item); setOpenActionId(null); }}
-                                                                                className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
-                                                                            >
-                                                                                <Pencil size={14} /> Edit
-                                                                            </button>
-                                                                            <button
-                                                                                onClick={(e) => { e.stopPropagation(); setDeleteTarget(item); setOpenActionId(null); }}
-                                                                                className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2"
-                                                                            >
-                                                                                <Trash2 size={14} /> Delete
-                                                                            </button>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        if (openActionId === item.id) {
+                                                                            setOpenActionId(null);
+                                                                            setDropdownPosition(null);
+                                                                        } else {
+                                                                            const rect = e.currentTarget.getBoundingClientRect();
+                                                                            setDropdownPosition({ top: rect.bottom + 4, left: rect.right - 160 });
+                                                                            setOpenActionId(item.id);
+                                                                        }
+                                                                    }}
+                                                                    className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                                                                    title="Actions"
+                                                                    aria-expanded={openActionId === item.id}
+                                                                >
+                                                                    <MoreVertical size={18} />
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -367,6 +354,43 @@ const Showrooms = () => {
                     </div>
                 )}
             </div>
+
+            {/* Floating dropdown portal – does not affect table row height */}
+            {openActionId && dropdownPosition && (() => {
+                const openItem = showrooms.find((s) => s.id === openActionId);
+                if (!openItem) return null;
+                const close = () => { setOpenActionId(null); setDropdownPosition(null); };
+                return createPortal(
+                    <>
+                        <div
+                            className="fixed inset-0 z-[99]"
+                            aria-hidden
+                            onClick={close}
+                        />
+                        <div
+                            className="fixed w-40 bg-white border rounded-md shadow-lg z-[100] py-1"
+                            style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
+                        >
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); openEdit(openItem); close(); }}
+                                className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2"
+                            >
+                                <Pencil size={14} /> Edit
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setDeleteTarget(openItem); close(); }}
+                                disabled={deleting}
+                                className="w-full text-left px-3 py-2 hover:bg-gray-50 text-red-600 flex items-center gap-2 disabled:opacity-50"
+                            >
+                                <Trash2 size={14} /> Delete
+                            </button>
+                        </div>
+                    </>,
+                    document.body
+                );
+            })()}
 
             {/* CREATE MODAL */}
             {openModal && (
