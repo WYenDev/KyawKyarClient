@@ -12,7 +12,7 @@ import {
     MapPin,
     RotateCcw,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { keepPreviousData } from '@tanstack/react-query';
 
 import {
@@ -33,9 +33,19 @@ const PAGE_LIMIT = 8;        // ⭐ 1 page = 8 cars (4 x 2 grid)
 
 const Cars = () => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabFromUrl = searchParams.get('tab');
+    const initialTab = (tabFromUrl === 'sold' || tabFromUrl === 'deleted') ? tabFromUrl : 'active';
 
     /* ================= STATE ================= */
-    const [activeTab, setActiveTab] = useState<'active' | 'sold' | 'deleted'>('active');
+    const [activeTab, setActiveTab] = useState<'active' | 'sold' | 'deleted'>(initialTab);
+
+    /* ================= SYNC TAB FROM URL (e.g. dashboard link or browser back) ================= */
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab === 'sold' || tab === 'deleted') setActiveTab(tab);
+        else if (tab === 'active' || !tab) setActiveTab('active');
+    }, [searchParams]);
     const [deleteTarget, setDeleteTarget] = useState<CarListItem | null>(null);
     const [searchText, setSearchText] = useState("");
     const [page, setPage] = useState(1);
@@ -153,7 +163,7 @@ const Cars = () => {
             {/* TABS */}
             <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 border-b border-gray-200">
                     <button
-                        onClick={() => setActiveTab('active')}
+                        onClick={() => { setActiveTab('active'); setSearchParams({ tab: 'active' }); }}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
                             activeTab === 'active' 
                                 ? 'text-black border-b-2 border-black' 
@@ -163,7 +173,7 @@ const Cars = () => {
                         Active Cars
                     </button>
                     <button
-                        onClick={() => setActiveTab('sold')}
+                        onClick={() => { setActiveTab('sold'); setSearchParams({ tab: 'sold' }); }}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
                             activeTab === 'sold' 
                                 ? 'text-black border-b-2 border-black' 
@@ -173,7 +183,7 @@ const Cars = () => {
                         Sold Cars
                     </button>
                     <button
-                        onClick={() => setActiveTab('deleted')}
+                        onClick={() => { setActiveTab('deleted'); setSearchParams({ tab: 'deleted' }); }}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
                             activeTab === 'deleted' 
                                 ? 'text-black border-b-2 border-black' 

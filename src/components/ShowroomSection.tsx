@@ -28,7 +28,7 @@ const ShowroomSection: React.FC = () => {
   if (showrooms.length === 0) return null;
 
   return (
-    <section className="py-16 bg-white relative overflow-hidden">
+    <section id="showrooms" className="py-16 bg-white relative overflow-hidden">
       {/* Background elements matched to other sections */}
       <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-indigo-50/50 blur-[120px] -z-10" />
 
@@ -55,7 +55,17 @@ const ShowroomSection: React.FC = () => {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {showrooms.map((showroom) => (
-            <div key={showroom.id} className="bg-white rounded-none p-6 border border-slate-100 transition-all h-full flex flex-col group/card">
+            <div key={showroom.id} className="bg-white rounded-none overflow-hidden border border-slate-100 transition-all h-full flex flex-col group/card">
+              {showroom.imageUrl ? (
+                <div className="relative w-full aspect-[21/12] sm:aspect-[3/2] bg-slate-100 overflow-hidden">
+                  <img
+                    src={showroom.imageUrl}
+                    alt={showroom.name || showroom.city || 'Showroom'}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : null}
+              <div className="p-6 flex flex-col flex-grow">
               <h3 className={`text-xl font-bold text-slate-900 mb-4 ${isMyanmar ? 'font-myanmar' : ''}`}>
                 {showroom.name || showroom.city}
               </h3>
@@ -96,6 +106,7 @@ const ShowroomSection: React.FC = () => {
                     </a>
                   ) : <div />}
                 </div>
+              </div>
               </div>
             </div>
           ))}

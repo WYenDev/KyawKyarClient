@@ -90,7 +90,7 @@ const PromoBannerCarousel: React.FC = () => {
                 className="w-full flex-shrink-0 relative cursor-pointer"
                 onClick={() => handleClick(banner)}
               >
-                <div className="relative w-full aspect-[21/7] sm:aspect-[21/6] overflow-hidden">
+                <div className="relative w-full aspect-[21/9] sm:aspect-[21/8] overflow-hidden">
                   <img
                     src={banner.imageUrl!}
                     alt={banner.title || 'Promotional banner'}

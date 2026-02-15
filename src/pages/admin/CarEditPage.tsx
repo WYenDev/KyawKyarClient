@@ -445,7 +445,8 @@ const CarEditPage = () => {
                                     onChange={(e) => {
                                         const raw = e.target.value || "";
                                         const digits = raw.replace(/\D+/g, "");
-                                        const cleaned = digits.replace(/^0+/, "");
+                                        // Only strip leading zeros when followed by another digit (allow standalone "0")
+                                        const cleaned = digits.replace(/^0+(?=\d)/, "");
                                         setForm({ ...form, price: cleaned });
                                     }}
                                     className="w-full rounded-xl border px-4 py-3"
@@ -461,7 +462,8 @@ const CarEditPage = () => {
                                     onChange={(e) => {
                                         const raw = e.target.value || "";
                                         const digits = raw.replace(/\D+/g, "");
-                                        const cleaned = digits.replace(/^0+/, "");
+                                        // Only strip leading zeros when followed by another digit (allow standalone "0")
+                                        const cleaned = digits.replace(/^0+(?=\d)/, "");
                                         setForm({ ...form, mileage: cleaned });
                                     }}
                                     className="w-full rounded-xl border px-4 py-3"
@@ -483,25 +485,29 @@ const CarEditPage = () => {
                     {/* ===== STATUS ===== */}
                     <Section title="Status">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
-                            <Select
-                                value={form.fuelTypeId}
-                                options={fuelOptions}
-                                placeholder="Fuel"
-                                onChange={(v) =>
-                                    setForm({ ...form, fuelTypeId: v ?? "" })
-                                }
-                            />
-                            <Select
-                                value={form.transmissionTypeId}
-                                options={transmissionOptions}
-                                placeholder="Transmission"
-                                onChange={(v) =>
-                                    setForm({
-                                        ...form,
-                                        transmissionTypeId: v ?? "",
-                                    })
-                                }
-                            />
+                            <Field label="Fuel" required>
+                                <Select
+                                    value={form.fuelTypeId}
+                                    options={fuelOptions}
+                                    placeholder="Fuel"
+                                    onChange={(v) =>
+                                        setForm({ ...form, fuelTypeId: v ?? "" })
+                                    }
+                                />
+                            </Field>
+                            <Field label="Transmission" required>
+                                <Select
+                                    value={form.transmissionTypeId}
+                                    options={transmissionOptions}
+                                    placeholder="Transmission"
+                                    onChange={(v) =>
+                                        setForm({
+                                            ...form,
+                                            transmissionTypeId: v ?? "",
+                                        })
+                                    }
+                                />
+                            </Field>
                             <Select
                                 value={form.steering ?? SteeringPosition.Left}
                                 options={steeringOptions}
@@ -675,8 +681,8 @@ const CarEditPage = () => {
                         </button>
                         <button
                             onClick={handleSave}
-                            disabled={isPending}
-                            className="px-8 py-2 rounded-xl bg-black text-white"
+                            disabled={isPending || !form.fuelTypeId || !form.transmissionTypeId}
+                            className={`px-8 py-2 rounded-xl text-white ${!form.fuelTypeId || !form.transmissionTypeId ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
                         >
                             Save
                         </button>
@@ -706,13 +712,17 @@ const Section = ({
 
 const Field = ({
     label,
+    required = false,
     children,
 }: {
     label: string;
+    required?: boolean;
     children: React.ReactNode;
 }) => (
     <div>
-        <label className="block text-sm mb-1">{label}</label>
+        <label className="block text-sm mb-1">
+            {label} {required && <span className="text-red-500">*</span>}
+        </label>
         {children}
     </div>
 );

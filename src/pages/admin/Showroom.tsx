@@ -218,6 +218,11 @@ const Showrooms = () => {
                                                         ) : (
                                                             <ChevronRight size={16} className="text-slate-600" />
                                                         )}
+                                                        {item.imageUrl ? (
+                                                            <img src={item.imageUrl} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0 border border-slate-200" />
+                                                        ) : (
+                                                            <div className="w-12 h-12 rounded-lg bg-slate-100 shrink-0 border border-slate-200 flex items-center justify-center text-slate-400 text-xs">—</div>
+                                                        )}
                                                         <span className="font-medium text-slate-800 truncate">{nameOrCity}</span>
                                                     </button>
                                                 </td>
@@ -291,6 +296,16 @@ const Showrooms = () => {
                                                                         </a>
                                                                     ) : (
                                                                         <span className="text-gray-400">—</span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-start gap-4">
+                                                                <div className="w-32 text-slate-500">Image</div>
+                                                                <div className="flex-1">
+                                                                    {item.imageUrl ? (
+                                                                        <img src={item.imageUrl} alt="" className="w-36 h-28 rounded-lg object-cover border border-slate-200" />
+                                                                    ) : (
+                                                                        <span className="text-gray-400">No image. Add one in Edit.</span>
                                                                     )}
                                                                 </div>
                                                             </div>

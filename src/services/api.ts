@@ -99,6 +99,18 @@ export interface Region {
   code: string;
 }
 
+export interface RegionCreate {
+  /** Region display name */
+  name: string;
+  /** Short code (e.g. YGN, BGO) */
+  code: string;
+}
+
+export interface RegionUpdate {
+  name?: string;
+  code?: string;
+}
+
 export interface Color {
   id: string;
   name: string;
@@ -199,6 +211,16 @@ export interface Showroom {
   city: string;
   /** @nullable */
   googleMapUrl?: string | null;
+  /**
+   * S3 storage key for showroom image
+   * @nullable
+   */
+  imageKey?: string | null;
+  /**
+   * Full URL of showroom image (derived from imageKey)
+   * @nullable
+   */
+  imageUrl?: string | null;
   phones?: ShowroomPhone[];
   createdAt: string;
   updatedAt: string;
@@ -1462,6 +1484,10 @@ export type DeleteApiPromoBannersId200 = {
   id?: string;
 };
 
+export type DeleteApiRegionsId200 = {
+  deleted?: boolean;
+};
+
 export type GetApiSellCarRequestsParams = {
 /**
  * Page number (default 1)
@@ -1527,6 +1553,10 @@ export type GetApiShowrooms200 = {
 
 export type DeleteApiShowroomsId200 = {
   deleted?: boolean;
+};
+
+export type PostApiShowroomsIdImageBody = {
+  image?: Blob;
 };
 
 export type DeleteApiShowroomsShowroomIdPhonesPhoneId200 = {
@@ -8829,6 +8859,295 @@ export const useDeleteApiPromoBannersId = <TError = void,
     }
     
 /**
+ * Returns a list of all regions (e.g. for license plate region codes), ordered by name.
+ * @summary Get all regions
+ */
+export const getApiRegions = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<Region[]>(
+      {url: `/api/regions`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiRegionsQueryKey = () => {
+    return [
+    `/api/regions`
+    ] as const;
+    }
+
+    
+export const getGetApiRegionsQueryOptions = <TData = Awaited<ReturnType<typeof getApiRegions>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiRegions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiRegionsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiRegions>>> = ({ signal }) => getApiRegions(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiRegions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiRegionsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiRegions>>>
+export type GetApiRegionsQueryError = unknown
+
+
+export function useGetApiRegions<TData = Awaited<ReturnType<typeof getApiRegions>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiRegions>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiRegions>>,
+          TError,
+          Awaited<ReturnType<typeof getApiRegions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiRegions<TData = Awaited<ReturnType<typeof getApiRegions>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiRegions>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiRegions>>,
+          TError,
+          Awaited<ReturnType<typeof getApiRegions>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiRegions<TData = Awaited<ReturnType<typeof getApiRegions>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiRegions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get all regions
+ */
+
+export function useGetApiRegions<TData = Awaited<ReturnType<typeof getApiRegions>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiRegions>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiRegionsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Creates a new region. Name and code must be unique.
+ * @summary Create a region
+ */
+export const postApiRegions = (
+    regionCreate: RegionCreate,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<Region>(
+      {url: `/api/regions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: regionCreate, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiRegionsMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRegions>>, TError,{data: RegionCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiRegions>>, TError,{data: RegionCreate}, TContext> => {
+
+const mutationKey = ['postApiRegions'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiRegions>>, {data: RegionCreate}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiRegions(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiRegionsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiRegions>>>
+    export type PostApiRegionsMutationBody = RegionCreate
+    export type PostApiRegionsMutationError = void
+
+    /**
+ * @summary Create a region
+ */
+export const usePostApiRegions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRegions>>, TError,{data: RegionCreate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiRegions>>,
+        TError,
+        {data: RegionCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiRegionsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Updates an existing region by id. Only provided fields (name, code) are updated.
+ * @summary Update a region
+ */
+export const patchApiRegionsId = (
+    id: string,
+    regionUpdate: RegionUpdate,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<Region>(
+      {url: `/api/regions/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: regionUpdate
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiRegionsIdMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiRegionsId>>, TError,{id: string;data: RegionUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiRegionsId>>, TError,{id: string;data: RegionUpdate}, TContext> => {
+
+const mutationKey = ['patchApiRegionsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiRegionsId>>, {id: string;data: RegionUpdate}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchApiRegionsId(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiRegionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiRegionsId>>>
+    export type PatchApiRegionsIdMutationBody = RegionUpdate
+    export type PatchApiRegionsIdMutationError = void
+
+    /**
+ * @summary Update a region
+ */
+export const usePatchApiRegionsId = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiRegionsId>>, TError,{id: string;data: RegionUpdate}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiRegionsId>>,
+        TError,
+        {id: string;data: RegionUpdate},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiRegionsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Deletes a region. Fails if any car license references this region.
+ * @summary Delete a region
+ */
+export const deleteApiRegionsId = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiRegionsId200>(
+      {url: `/api/regions/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiRegionsIdMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiRegionsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiRegionsId>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiRegionsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiRegionsId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiRegionsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiRegionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiRegionsId>>>
+    
+    export type DeleteApiRegionsIdMutationError = void
+
+    /**
+ * @summary Delete a region
+ */
+export const useDeleteApiRegionsId = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiRegionsId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiRegionsId>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiRegionsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary List sell car requests
  */
 export const getApiSellCarRequests = (
@@ -9902,6 +10221,140 @@ export const useDeleteApiShowroomsId = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteApiShowroomsIdMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Upload or replace the single image for a showroom. Accepts multipart/form-data with field "image".
+ * @summary Upload showroom image
+ */
+export const postApiShowroomsIdImage = (
+    id: string,
+    postApiShowroomsIdImageBody: PostApiShowroomsIdImageBody,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(postApiShowroomsIdImageBody.image !== undefined) {
+ formData.append(`image`, postApiShowroomsIdImageBody.image)
+ }
+
+      return mutator<Showroom>(
+      {url: `/api/showrooms/${id}/image`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiShowroomsIdImageMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomsIdImage>>, TError,{id: string;data: PostApiShowroomsIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomsIdImage>>, TError,{id: string;data: PostApiShowroomsIdImageBody}, TContext> => {
+
+const mutationKey = ['postApiShowroomsIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiShowroomsIdImage>>, {id: string;data: PostApiShowroomsIdImageBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postApiShowroomsIdImage(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiShowroomsIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof postApiShowroomsIdImage>>>
+    export type PostApiShowroomsIdImageMutationBody = PostApiShowroomsIdImageBody
+    export type PostApiShowroomsIdImageMutationError = void
+
+    /**
+ * @summary Upload showroom image
+ */
+export const usePostApiShowroomsIdImage = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiShowroomsIdImage>>, TError,{id: string;data: PostApiShowroomsIdImageBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiShowroomsIdImage>>,
+        TError,
+        {id: string;data: PostApiShowroomsIdImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiShowroomsIdImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Removes the image from the showroom. Showroom record is updated; image is removed from storage.
+ * @summary Delete showroom image
+ */
+export const deleteApiShowroomsIdImage = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<Showroom>(
+      {url: `/api/showrooms/${id}/image`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiShowroomsIdImageMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsIdImage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiShowroomsIdImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiShowroomsIdImage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiShowroomsIdImage(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiShowroomsIdImageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiShowroomsIdImage>>>
+    
+    export type DeleteApiShowroomsIdImageMutationError = void
+
+    /**
+ * @summary Delete showroom image
+ */
+export const useDeleteApiShowroomsIdImage = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShowroomsIdImage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiShowroomsIdImage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiShowroomsIdImageMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

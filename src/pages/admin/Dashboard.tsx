@@ -25,8 +25,8 @@ const Dashboard = () => {
 
     const cards: { title: string; value: number | string; path?: string }[] = [
         { title: "Total Cars", value: data?.totalCars ?? 0, path: "/admin/cars" },
-        { title: "Sold Cars", value: data?.soldCars ?? 0, path: "/admin/cars" },
-        { title: "Deleted Cars", value: data?.deletedCars ?? 0, path: "/admin/cars" },
+        { title: "Sold Cars", value: data?.soldCars ?? 0, path: "/admin/cars?tab=sold" },
+        { title: "Deleted Cars", value: data?.deletedCars ?? 0, path: "/admin/cars?tab=deleted" },
         { title: "Total Brands", value: data?.totalBrands ?? 0, path: "/admin/brands" },
         { title: "Total Models", value: data?.totalModels ?? 0, path: "/admin/brands" },
         { title: "Build Types", value: data?.totalBuildTypes ?? 0, path: "/admin/build-types" },

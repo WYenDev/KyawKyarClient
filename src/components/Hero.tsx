@@ -207,10 +207,14 @@ const Hero: React.FC = () => {
                   <Users className="w-4 h-4 text-indigo-400 mb-1 group-hover/stat:text-indigo-600 transition-colors" />
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/stat:text-indigo-600 transition-colors">15k+ Happy Owners</span>
                 </div>
-                <div className="flex flex-col items-center xl:items-start group/stat">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('showrooms')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex flex-col items-center xl:items-start group/stat cursor-pointer border-0 bg-transparent p-0 text-left"
+                >
                   <MapPin className="w-4 h-4 text-indigo-400 mb-1 group-hover/stat:text-indigo-600 transition-colors" />
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover/stat:text-indigo-600 transition-colors">{filterData?.showrooms?.length} branches</span>
-                </div>
+                </button>
               </div>
             </div>
 

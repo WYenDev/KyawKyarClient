@@ -105,10 +105,6 @@ const Footer: React.FC = () => {
             </ul>
           </div>
         </div>
-
-        <div className="mt-10 pt-6 border-t border-slate-700 text-center text-slate-400 text-sm">
-          <p>{t('copyright')}</p>
-        </div>
       </div>
     </footer>
   );

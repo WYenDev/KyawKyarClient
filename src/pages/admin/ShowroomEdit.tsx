@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Trash2 } from "lucide-react";
+import { Trash2, Upload, ImageIcon } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -12,6 +12,8 @@ import {
     usePostApiShowroomsShowroomIdPhones,
     usePutApiShowroomsShowroomIdPhonesPhoneId,
     useDeleteApiShowroomsShowroomIdPhonesPhoneId,
+    usePostApiShowroomsIdImage,
+    useDeleteApiShowroomsIdImage,
     getGetApiShowroomsQueryKey,
 } from "../../services/api";
 
@@ -24,7 +26,7 @@ const ShowroomEdit = () => {
     const { data: showroomsData, isLoading } = useGetApiShowrooms({ page: 1, limit: 1000 });
     const showrooms = showroomsData?.items ?? [];
 
-    const showroom = showrooms.find((s) => s.id === id) as Showroom | undefined;
+    const showroom = showrooms.find((s) => s.id === id) as (Showroom & { imageUrl?: string | null }) | undefined;
 
     const [form, setForm] = useState({ name: "", addressEn: "", addressMm: "", city: "", googleMapUrl: "", phones: [] as { id?: string; showroomId?: string; phone: string }[] });
     const [error, setError] = useState<string | null>(null);
@@ -52,6 +54,41 @@ const ShowroomEdit = () => {
     const { mutate: addPhone } = usePostApiShowroomsShowroomIdPhones({});
     const { mutate: updatePhone } = usePutApiShowroomsShowroomIdPhonesPhoneId({});
     const { mutate: deletePhone } = useDeleteApiShowroomsShowroomIdPhonesPhoneId({});
+
+    const invalidateShowrooms = () => {
+        queryClient.invalidateQueries({ queryKey: getGetApiShowroomsQueryKey(), exact: false });
+    };
+
+    const { mutateAsync: uploadImage, isPending: isUploadingImage } = usePostApiShowroomsIdImage({
+        mutation: { onSuccess: () => { setError(null); invalidateShowrooms(); } },
+    });
+    const { mutateAsync: deleteImage, isPending: isDeletingImage } = useDeleteApiShowroomsIdImage({
+        mutation: { onSuccess: () => { setError(null); invalidateShowrooms(); } },
+    });
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !showroom?.id) return;
+        try {
+            await uploadImage({ id: showroom.id, data: { image: file } });
+            invalidateShowrooms();
+        } catch (err) {
+            setError((err as Error)?.message ?? "Failed to upload image");
+        }
+        e.target.value = "";
+    };
+
+    const handleDeleteImage = async () => {
+        if (!showroom?.id) return;
+        try {
+            await deleteImage({ id: showroom.id });
+            invalidateShowrooms();
+        } catch (err) {
+            setError((err as Error)?.message ?? "Failed to delete image");
+        }
+    };
 
     if (isLoading) return <div className="p-8">Loading...</div>;
     if (!showroom) return <div className="p-8">Showroom not found</div>;
@@ -121,6 +158,67 @@ const ShowroomEdit = () => {
                     {error && (
                         <div className="mb-4 text-red-600 text-sm">{error}</div>
                     )}
+
+                    {/* ===== SHOWROOM IMAGE ===== */}
+                    <div className="mb-8">
+                        <h2 className="text-lg font-medium mb-2">Showroom Image</h2>
+                        <p className="text-xs text-slate-500 mb-3">One image per showroom. Shown on the home page showroom section.</p>
+                        <div className="flex flex-wrap items-start gap-4">
+                            {showroom?.imageUrl ? (
+                                <>
+                                    <div className="relative">
+                                        <img
+                                            src={showroom.imageUrl}
+                                            alt="Showroom"
+                                            className="w-52 h-36 rounded-xl object-cover border border-slate-200"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => fileInputRef.current?.click()}
+                                            disabled={isUploadingImage}
+                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-medium disabled:opacity-50"
+                                        >
+                                            <Upload size={16} />
+                                            {isUploadingImage ? "Uploading..." : "Replace image"}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleDeleteImage}
+                                            disabled={isDeletingImage}
+                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 text-sm font-medium disabled:opacity-50"
+                                        >
+                                            <Trash2 size={16} />
+                                            {isDeletingImage ? "Removing..." : "Remove image"}
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="flex flex-col gap-2">
+                                    <div className="w-52 h-36 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center bg-slate-50 text-slate-400">
+                                        <ImageIcon size={32} />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        disabled={isUploadingImage}
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-medium disabled:opacity-50"
+                                    >
+                                        <Upload size={16} />
+                                        {isUploadingImage ? "Uploading..." : "Upload image"}
+                                    </button>
+                                </div>
+                            )}
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageSelect}
+                            />
+                        </div>
+                    </div>
 
                     {/* ===== BASIC INFO ===== */}
                     <div className="grid grid-cols-1 gap-4 md:gap-6">

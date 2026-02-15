@@ -388,10 +388,10 @@ const CarCreatePage = () => {
                                     inputMode="numeric"
                                     value={String(form.price ?? "")}
                                     onChange={(e) => {
-                                        // keep digits only and remove leading zeros
                                         const raw = e.target.value || "";
                                         const digits = raw.replace(/\D+/g, "");
-                                        const cleaned = digits.replace(/^0+/, "");
+                                        // Only strip leading zeros when followed by another digit (allow standalone "0")
+                                        const cleaned = digits.replace(/^0+(?=\d)/, "");
                                         setForm({ ...form, price: cleaned });
                                     }}
                                     className="w-full rounded-xl border px-4 py-3"
@@ -407,7 +407,8 @@ const CarCreatePage = () => {
                                     onChange={(e) => {
                                         const raw = e.target.value || "";
                                         const digits = raw.replace(/\D+/g, "");
-                                        const cleaned = digits.replace(/^0+/, "");
+                                        // Only strip leading zeros when followed by another digit (allow standalone "0")
+                                        const cleaned = digits.replace(/^0+(?=\d)/, "");
                                         setForm({ ...form, mileage: cleaned });
                                     }}
                                     className="w-full rounded-xl border px-4 py-3"
@@ -429,21 +430,25 @@ const CarCreatePage = () => {
                     {/* ===== STATUS ===== */}
                     <Section title="Status">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-end">
-                            <Select
-                                value={form.fuelTypeId}
-                                options={fuelOptions}
-                                placeholder="Fuel"
-                                onChange={(v) => setForm({ ...form, fuelTypeId: v ?? "" })}
-                            />
+                            <Field label="Fuel" required>
+                                <Select
+                                    value={form.fuelTypeId}
+                                    options={fuelOptions}
+                                    placeholder="Fuel"
+                                    onChange={(v) => setForm({ ...form, fuelTypeId: v ?? "" })}
+                                />
+                            </Field>
 
-                            <Select
-                                value={form.transmissionTypeId}
-                                options={transmissionOptions}
-                                placeholder="Transmission"
-                                onChange={(v) =>
-                                    setForm({ ...form, transmissionTypeId: v ?? "" })
-                                }
-                            />
+                            <Field label="Transmission" required>
+                                <Select
+                                    value={form.transmissionTypeId}
+                                    options={transmissionOptions}
+                                    placeholder="Transmission"
+                                    onChange={(v) =>
+                                        setForm({ ...form, transmissionTypeId: v ?? "" })
+                                    }
+                                />
+                            </Field>
 
                             <Select
                                 value={form.steering ?? Steering.Left}
@@ -610,9 +615,11 @@ const CarCreatePage = () => {
                               !form.modelYear ||
                               !form.price ||
                               !form.mileage ||
-                              !form.colorId
+                              !form.colorId ||
+                              !form.fuelTypeId ||
+                              !form.transmissionTypeId
                             }
-                            className={`px-8 py-2 rounded-xl text-white ${(!brandId || !form.modelId || !form.modelYear || !form.price || !form.mileage || !form.colorId) ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
+                            className={`px-8 py-2 rounded-xl text-white ${(!brandId || !form.modelId || !form.modelYear || !form.price || !form.mileage || !form.colorId || !form.fuelTypeId || !form.transmissionTypeId) ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
                         >
                             Save
                         </button>

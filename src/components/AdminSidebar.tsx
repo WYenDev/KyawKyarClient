@@ -11,9 +11,10 @@ import {
     ChevronRight,
     Building,
     Home,
-    Info, 
+    Info,
     Megaphone,
-    Sparkles
+    Sparkles,
+    MapPin,
 } from "lucide-react";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -135,6 +136,12 @@ const AdminSidebar = ({
                     collapsed={collapsed}
                 />
                 <MenuItem
+                    to="/admin/regions"
+                    icon={MapPin}
+                    label="Regions"
+                    collapsed={collapsed}
+                />
+                <MenuItem
                     to="/admin/home"
                     icon={LayoutDashboard}
                     label="Home page"
@@ -213,6 +220,7 @@ const AdminSidebar = ({
                             <MenuItem to="/admin/promo-banners" icon={Sparkles} label="Promo Banners" collapsed={false} />
                             <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={false} />
                             <MenuItem to="/admin/vehicle-specs" icon={Settings} label="Vehicle Specs" collapsed={false} />
+                            <MenuItem to="/admin/regions" icon={MapPin} label="Regions" collapsed={false} />
                             <MenuItem to="/admin/home" icon={LayoutDashboard} label="Home page" collapsed={false} end />
                             <MenuItem to="/admin/about" icon={Info} label="About Page" collapsed={false} />
                             <MenuItem to="/admin/payments" icon={LayoutDashboard} label="Payments" collapsed={false} />
