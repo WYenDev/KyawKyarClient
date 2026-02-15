@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Phone, Menu, X, Globe, User, ChevronDown, Facebook } from 'lucide-react';
+import { Phone, Menu, X, Globe, User, Facebook } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-with-text.png';
 import ViberIcon from '../assets/viber-icon.avif';
@@ -172,21 +172,19 @@ const Header: React.FC = () => {
                     className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                   >
                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white">
-                      <User className="h-4 w-4" />
+                      <User className="h-4 w-4" fill="currentColor" strokeWidth={0} />
                     </span>
-                    <span className="hidden sm:inline">{user.username}</span>
                   </button>
                 ) : (
                   <>
                     <button
                       onClick={() => setIsAccountOpen((s) => !s)}
                       aria-expanded={isAccountOpen}
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      className="inline-flex items-center justify-center p-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                     >
                       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
-                        <User className="h-4 w-4" />
+                        <User className="h-4 w-4" strokeWidth={1.5} />
                       </span>
-                      <ChevronDown className="h-4 w-4 text-slate-500" />
                     </button>
 
                     {isAccountOpen && (
@@ -196,7 +194,7 @@ const Header: React.FC = () => {
                           className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
                           onClick={() => setIsAccountOpen(false)}
                         >
-                          <User className="h-4 w-4 text-slate-500" />
+                          <User className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
                           <span>{t('buttons.admin_login', 'Admin Login')}</span>
                         </Link>
                         {/* Register removed: admin-only login; no public signup */}
@@ -250,8 +248,8 @@ const Header: React.FC = () => {
                   onClick={() => { navigate('/admin'); setIsMenuOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-white font-semibold transition-all active:scale-[0.98]"
                 >
-                  <User className="h-5 w-5" />
-                  <span>{user.username}</span>
+                  <User className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+                  <span>Admin</span>
                 </button>
               ) : (
                 <Link
@@ -259,7 +257,7 @@ const Header: React.FC = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold transition-all active:scale-[0.98]"
                 >
-                  <User className="h-5 w-5" />
+                  <User className="h-5 w-5" strokeWidth={1.5} />
                   <span>{t('buttons.admin_login', 'Admin Login')}</span>
                 </Link>
               )}

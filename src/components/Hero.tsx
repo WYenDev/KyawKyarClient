@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useGetApiCarsFilters, useGetApiHome } from '../services/api';
 import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
-import CarImage from '../assets/cars.jpg';
+
+const HERO_PLACEHOLDER_IMAGE =
+  'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg';
 
 const Hero: React.FC = () => {
   const { t, i18n } = useTranslation('home');
@@ -219,7 +221,7 @@ const Hero: React.FC = () => {
                   {/* Image wrapper to keep overflow hidden for zoom effect */}
                   <div className="w-full h-full overflow-hidden relative">
                     <img
-                      src={homeData?.image?.url || CarImage}
+                      src={homeData?.image?.url || HERO_PLACEHOLDER_IMAGE}
                       className="w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover/img:scale-110"
                       alt="Kyaw Kyar Luxury SUV"
                     />
