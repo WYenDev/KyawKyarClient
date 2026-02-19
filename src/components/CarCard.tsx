@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CarListItemSearch } from '../services/api'
-import { Calendar, Gauge, Fuel, Settings, MapPin } from 'lucide-react';
+import { CarListItemSearch, useGetApiHome } from '../services/api';
+import { Calendar, Gauge, Fuel, Settings, MapPin, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import ViberIcon from '../assets/viber-icon.avif';
 
 interface CarCardProps {
   car: CarListItemSearch;
@@ -11,6 +12,12 @@ interface CarCardProps {
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const { t } = useTranslation('cars');
   const navigate = useNavigate();
+  const { data: homeData } = useGetApiHome();
+  const phoneNumber = (homeData?.phoneNo ?? '').toString().replace(/\s/g, '');
+  const viberNumber = (homeData?.viberNo ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
+  const hasPhone = phoneNumber.length > 0;
+  const hasViber = viberNumber.length > 0;
+  const hasContact = hasPhone || hasViber;
 
   {/*
   const getStatusBadge = (status: Status) => {
@@ -72,45 +79,73 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         */}
       </div>
 
-      <div className="p-6">
-        <div className="mb-3">
-          <h3 className="text-xl font-bold text-slate-900 mb-1">
-            {car.model?.brand?.name || ""} {car.model?.name || ""}
-          </h3>
-          <div className="flex items-center text-slate-600 text-sm">
-            <MapPin className="h-4 w-4 mr-1" />
-            {car.showroom?.city || 'Unknown Location'}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-4 text-sm text-slate-600">
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-            {car.modelYear}
-          </div>
-          <div className="flex items-center">
-            <Gauge className="h-4 w-4 mr-2 text-gray-400" />
-            {(car.mileage).toLocaleString()} km
-          </div>
-          <div className="flex items-center">
-            <Fuel className="h-4 w-4 mr-2 text-gray-400" />
-            {car.fuelType?.name}
-          </div>
-          <div className="flex items-center">
-            <Settings className="h-4 w-4 mr-2 text-gray-400" />
-            {car.transmissionType?.name}
-          </div>
-        </div>
-
-        {
-          ((car as any).formattedPrice || car.price > 0) && (
-            <div className="flex justify-between items-center">
-              <div className="text-2xl font-bold text-indigo-600">
-                {(car as any).formattedPrice || car.price} {t('details.lakhs', 'LAKHs')}
-              </div>
+      <div className="p-6 flex flex-col min-h-[280px]">
+        <div className="flex-1">
+          <div className="mb-3">
+            <h3 className="text-xl font-bold text-slate-900 mb-1">
+              {car.model?.brand?.name || ""} {car.model?.name || ""}
+            </h3>
+            <div className="flex items-center text-slate-600 text-sm">
+              <MapPin className="h-4 w-4 mr-1 shrink-0" />
+              {car.showroom?.city || 'Unknown Location'}
             </div>
-          )
-        }
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-4 text-sm text-slate-600">
+            <div className="flex items-center">
+              <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+              {car.modelYear}
+            </div>
+            <div className="flex items-center">
+              <Gauge className="h-4 w-4 mr-2 text-gray-400" />
+              {(car.mileage).toLocaleString()} km
+            </div>
+            <div className="flex items-center">
+              <Fuel className="h-4 w-4 mr-2 text-gray-400" />
+              {car.fuelType?.name}
+            </div>
+            <div className="flex items-center">
+              <Settings className="h-4 w-4 mr-2 text-gray-400" />
+              {car.transmissionType?.name}
+            </div>
+          </div>
+
+          {
+            ((car as any).formattedPrice || car.price > 0) && (
+              <div className="flex justify-between items-center">
+                <div className="text-2xl font-bold text-indigo-600">
+                  {(car as any).formattedPrice || car.price} {t('details.lakhs', 'LAKHs')}
+                </div>
+              </div>
+            )
+          }
+        </div>
+        {hasContact && (
+          <div className="grid grid-cols-2 gap-3 mt-auto pt-4" onClick={(e) => e.stopPropagation()}>
+            {hasPhone ? (
+              <a
+                href={`tel:${phoneNumber}`}
+                className="flex items-center justify-center py-4 px-3 rounded-xl bg-slate-50 text-slate-600 hover:bg-red-500 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md border border-slate-100 hover:border-red-400/30"
+                aria-label="Call"
+              >
+                <Phone className="h-6 w-6" />
+              </a>
+            ) : (
+              <div />
+            )}
+            {hasViber ? (
+              <a
+                href={`viber://chat?number=%2B${viberNumber}`}
+                className="group/viber flex items-center justify-center py-4 px-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#7360f2]/40 hover:bg-[#7360f2] transition-all duration-200 shadow-sm hover:shadow-md overflow-hidden"
+                aria-label="Viber"
+              >
+                <img src={ViberIcon} alt="" className="h-6 w-6 object-contain group-hover/viber:brightness-0 group-hover/viber:invert" />
+              </a>
+            ) : (
+              <div />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
