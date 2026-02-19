@@ -80,28 +80,32 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/reviews" className="text-slate-300 hover:text-white transition-colors">
-                  {t('quick_links_testimonials', 'Customer Reviews')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-slate-300 hover:text-white transition-colors">
-                  {t('quick_links_contact', 'Contact')}
+                <Link to="/#showrooms" className="text-slate-300 hover:text-white transition-colors">
+                  {t('quick_links_showroom', 'Showrooms')}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Services - links where we have a page */}
           <div>
             <h4 className="text-lg font-semibold mb-4">{t('services.title')}</h4>
             <ul className="space-y-2 text-slate-300">
-              <li>{t('services.buy')}</li>
-              <li>{t('services.sell')}</li>
-              <li>{t('services.financing')}</li>
-              <li>{t('services.trade_in')}</li>
-              <li>{t('services.insurance')}</li>
-              <li>{t('services.after_sale')}</li>
+              <li>
+                <Link to="/buyCars" className="hover:text-white transition-colors">
+                  {t('services.buy')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/sellCars" className="hover:text-white transition-colors">
+                  {t('services.sell')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/payments" className="hover:text-white transition-colors">
+                  {t('services.financing')}
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

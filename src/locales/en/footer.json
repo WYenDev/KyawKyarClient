@@ -3,6 +3,11 @@
   "tagline": "Myanmar's #1 Car Dealer",
   "description": "For over 15 years, we've been helping families across Myanmar find their perfect vehicles. With the largest inventory and most trusted service, we're your reliable car buying partner.",
   "quick_links": "Quick Links",
+  "quick_links_home": "Home",
+  "quick_links_inventory": "Car Inventory",
+  "quick_links_testimonials": "Customer Reviews",
+  "quick_links_contact": "Contact",
+  "quick_links_showroom": "Showrooms",
   "services": {
     "title": "Our Services",
     "buy": "Buy Cars",
