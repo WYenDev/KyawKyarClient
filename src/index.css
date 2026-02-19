@@ -113,7 +113,14 @@ img {
   
   /* Removing letter spacing as Burmese characters should stay connected */
   letter-spacing: 0;
-}/* Myanmar/Burmese font utility - falls back safely to system fonts */
+}
+
+/* Promo/footer banner rich text: let Quill inline font-size reflect for Burmese (same as footer banner) */
+.font-myanmar .banner-rich-text,
+.font-myanmar .landing-title-content {
+  font-weight: 400;
+}
+/* Myanmar/Burmese font utility - falls back safely to system fonts */
 
 
 /* Quill Editor Font Size Label Overrides */
@@ -172,19 +179,30 @@ img {
 }
 
 
-/* Mobile responsiveness for Banner Rich Text content */
+/* Mobile responsiveness for Banner Rich Text content (promo + footer) */
 /* We override the fixed pixel sizes with smaller values on mobile to prevent overflow */
 @media (max-width: 768px) {
-  .banner-rich-text [style*="font-size: 72px"], .banner-rich-text [style*="font-size:72px"] { font-size: 32px !important; }
-  .banner-rich-text [style*="font-size: 60px"], .banner-rich-text [style*="font-size:60px"] { font-size: 28px !important; }
-  .banner-rich-text [style*="font-size: 48px"], .banner-rich-text [style*="font-size:48px"] { font-size: 24px !important; }
-  .banner-rich-text [style*="font-size: 36px"], .banner-rich-text [style*="font-size:36px"] { font-size: 20px !important; }
-  .banner-rich-text [style*="font-size: 30px"], .banner-rich-text [style*="font-size:30px"] { font-size: 18px !important; }
-  .banner-rich-text [style*="font-size: 24px"], .banner-rich-text [style*="font-size:24px"] { font-size: 16px !important; }
-  .banner-rich-text [style*="font-size: 20px"], .banner-rich-text [style*="font-size:20px"] { font-size: 15px !important; }
-  .banner-rich-text [style*="font-size: 18px"], .banner-rich-text [style*="font-size:18px"] { font-size: 14px !important; }
-  .banner-rich-text [style*="font-size: 16px"], .banner-rich-text [style*="font-size:16px"] { font-size: 13px !important; }
-  .banner-rich-text [style*="font-size: 14px"], .banner-rich-text [style*="font-size:14px"] { font-size: 12px !important; }
-  .banner-rich-text [style*="font-size: 12px"], .banner-rich-text [style*="font-size:12px"] { font-size: 11px !important; }
+  .banner-rich-text [style*="font-size: 72px"], .banner-rich-text [style*="font-size:72px"],
+  .landing-title-content [style*="font-size: 72px"], .landing-title-content [style*="font-size:72px"] { font-size: 32px !important; }
+  .banner-rich-text [style*="font-size: 60px"], .banner-rich-text [style*="font-size:60px"],
+  .landing-title-content [style*="font-size: 60px"], .landing-title-content [style*="font-size:60px"] { font-size: 28px !important; }
+  .banner-rich-text [style*="font-size: 48px"], .banner-rich-text [style*="font-size:48px"],
+  .landing-title-content [style*="font-size: 48px"], .landing-title-content [style*="font-size:48px"] { font-size: 24px !important; }
+  .banner-rich-text [style*="font-size: 36px"], .banner-rich-text [style*="font-size:36px"],
+  .landing-title-content [style*="font-size: 36px"], .landing-title-content [style*="font-size:36px"] { font-size: 20px !important; }
+  .banner-rich-text [style*="font-size: 30px"], .banner-rich-text [style*="font-size:30px"],
+  .landing-title-content [style*="font-size: 30px"], .landing-title-content [style*="font-size:30px"] { font-size: 18px !important; }
+  .banner-rich-text [style*="font-size: 24px"], .banner-rich-text [style*="font-size:24px"],
+  .landing-title-content [style*="font-size: 24px"], .landing-title-content [style*="font-size:24px"] { font-size: 16px !important; }
+  .banner-rich-text [style*="font-size: 20px"], .banner-rich-text [style*="font-size:20px"],
+  .landing-title-content [style*="font-size: 20px"], .landing-title-content [style*="font-size:20px"] { font-size: 15px !important; }
+  .banner-rich-text [style*="font-size: 18px"], .banner-rich-text [style*="font-size:18px"],
+  .landing-title-content [style*="font-size: 18px"], .landing-title-content [style*="font-size:18px"] { font-size: 14px !important; }
+  .banner-rich-text [style*="font-size: 16px"], .banner-rich-text [style*="font-size:16px"],
+  .landing-title-content [style*="font-size: 16px"], .landing-title-content [style*="font-size:16px"] { font-size: 13px !important; }
+  .banner-rich-text [style*="font-size: 14px"], .banner-rich-text [style*="font-size:14px"],
+  .landing-title-content [style*="font-size: 14px"], .landing-title-content [style*="font-size:14px"] { font-size: 12px !important; }
+  .banner-rich-text [style*="font-size: 12px"], .banner-rich-text [style*="font-size:12px"],
+  .landing-title-content [style*="font-size: 12px"], .landing-title-content [style*="font-size:12px"] { font-size: 11px !important; }
   /* 10px is already small enough, no change needed usually, or keeps as is */
 }

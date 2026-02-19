@@ -107,11 +107,11 @@ const PromoLandingPage: React.FC = () => {
         </div>
       )}
 
-      {/* Content: simple block below image */}
+      {/* Content: same pattern as FooterBanner so Quill inline font-size works for Burmese */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 font-myanmar">
         {titleIsHtml ? (
           <div
-            className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 tracking-tight mb-4 leading-tight landing-title-content [&_p]:mb-0 [&_p]:leading-tight"
+            className="ql-editor banner-rich-text landing-title-content !p-0 mb-4 text-slate-900 tracking-tight [&_p]:mb-0 [&_p]:leading-tight [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2"
             dangerouslySetInnerHTML={{ __html: data.landingTitle!.trim() }}
           />
         ) : (
@@ -122,7 +122,7 @@ const PromoLandingPage: React.FC = () => {
 
         {data.landingBody && (
           <div
-            className="prose prose-slate prose-lg max-w-none ql-editor !p-0 text-slate-600 [&>p]:mb-4 [&>p:last-child]:mb-0 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 banner-rich-text"
+            className="ql-editor banner-rich-text !p-0 !min-h-0 text-slate-600 [&>p]:mb-4 [&>p:last-child]:mb-0 [&_a]:text-indigo-600 [&_a]:underline [&_a]:underline-offset-2 !leading-[1.8]"
             dangerouslySetInnerHTML={{ __html: data.landingBody }}
           />
         )}

@@ -34,7 +34,7 @@ const Header: React.FC = () => {
 
   const navLinkClass = (path: string) => {
     const active = isActive(path);
-    return `px-6 py-3 rounded-none text-sm font-medium transition-all duration-200 ${active
+    return `inline-flex items-center justify-center py-3 rounded-none text-sm font-medium transition-all duration-200 box-border shrink-0 ${active
       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
       : 'text-slate-600 hover:text-indigo-600 hover:bg-indigo-50'
       }`;
@@ -45,12 +45,12 @@ const Header: React.FC = () => {
     i18n.changeLanguage(newLang);
   };
 
-  // Use keys from common.json for navigation
-  const navItems = [
-    { path: '/', label: t('nav.home') },
-    { path: '/buyCars', label: t('nav.buyCars') },
-    { path: '/sellCars', label: t('nav.sellCars') },
-    { path: '/payments', label: t('nav.payments') },
+  // Fixed width per nav entry (inline style so it always applies) — no layout shift when switching EN/MM
+  const navItems: { path: string; label: string; widthRem: number }[] = [
+    { path: '/', label: t('nav.home'), widthRem: 6 },           // Home / ပင်မ
+    { path: '/buyCars', label: t('nav.buyCars'), widthRem: 7.5 },   // Buy Cars / ကားဝယ်မည်
+    { path: '/sellCars', label: t('nav.sellCars'), widthRem: 8.5 },  // Sell Cars / ကားရောင်းမည်
+    { path: '/payments', label: t('nav.payments'), widthRem: 9.5 },  // Payments / ငွေပေးချေမှုများ
   ];
 
   const accountRef = useRef<HTMLDivElement | null>(null);
@@ -95,7 +95,12 @@ const Header: React.FC = () => {
             {/* Desktop Navigation - Centered Pill */}
             <nav className="hidden xl:flex items-center gap-1 bg-slate-100/60 p-1 rounded-none border border-slate-200/60 backdrop-blur-md">
               {navItems.map((item) => (
-                <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={navLinkClass(item.path)}
+                  style={{ width: `${item.widthRem}rem`, minWidth: `${item.widthRem}rem` }}
+                >
                   {item.label}
                 </Link>
               ))}
@@ -105,10 +110,11 @@ const Header: React.FC = () => {
             <div className="hidden xl:flex items-center gap-3">
               <button
                 onClick={handleLanguageChange}
-                className="flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-200 group"
+                className="flex items-center justify-center gap-2 px-3 py-2 rounded-full border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-200 group min-w-[7rem] shrink-0"
                 aria-label="Toggle Language"
+                style={{ width: '7rem' }}
               >
-                <Globe className="h-4 w-4 text-gray-500 group-hover:text-indigo-600" />
+                <Globe className="h-4 w-4 text-gray-500 group-hover:text-indigo-600 shrink-0" />
                 <span className="text-sm font-medium text-gray-700 group-hover:text-indigo-700">
                   {t(`nav.language`)}
                 </span>
