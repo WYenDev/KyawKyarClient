@@ -124,8 +124,8 @@ const AboutTeaser: React.FC = () => {
                   >
                     <div
                       ref={scrollContainerRef}
-                      className="absolute inset-0 flex flex-nowrap overflow-x-auto no-scrollbar"
-                      style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+                      className="absolute inset-0 flex flex-nowrap overflow-x-hidden no-scrollbar"
+                      style={{ scrollBehavior: 'smooth' }}
                     >
                       {aboutImages.map((img, index) => {
                         const visibility = getImageVisibility(index);
@@ -153,14 +153,6 @@ const AboutTeaser: React.FC = () => {
                                   className="absolute inset-0 bg-black/30 transition-opacity duration-300"
                                   style={{ opacity: 1 - visibility }}
                                 />
-                              )}
-                              {isActive && (
-                                <div className="absolute bottom-4 left-4 right-4">
-                                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-none shadow-lg">
-                                    <div className="w-2 h-2 bg-emerald-500 rounded-none animate-pulse" />
-                                    <span className="text-xs font-bold text-slate-900">Viewing • {index + 1} of {aboutImages.length}</span>
-                                  </div>
-                                </div>
                               )}
                             </div>
                             <button onClick={() => scrollToImage(index)} className="absolute inset-0 z-10" aria-label={`View image ${index + 1}`} />
@@ -202,11 +194,7 @@ const AboutTeaser: React.FC = () => {
                         ))}
                       </div>
                       <div className="text-right">
-                        <div className="text-xs font-bold text-slate-900">
-                          <span className="text-indigo-600">{activeIndex + 1}</span>
-                          <span className="text-slate-400"> / {aboutImages.length}</span>
-                        </div>
-                        <div className="text-[10px] text-slate-500 mt-1">Scroll or click arrows to navigate</div>
+                        <div className="text-[10px] text-slate-500">Use arrows or dots to navigate</div>
                       </div>
                     </div>
                   </div>

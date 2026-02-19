@@ -120,6 +120,14 @@ img {
 .font-myanmar .landing-title-content {
   font-weight: 400;
 }
+
+/* Promo landing: no height limit or scrollbar on title/description (Quill .ql-editor often has overflow/min-height) */
+.banner-rich-text.ql-editor,
+.landing-title-content.ql-editor {
+  overflow: visible !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
 /* Myanmar/Burmese font utility - falls back safely to system fonts */
 
 

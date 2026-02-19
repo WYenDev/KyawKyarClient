@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Search, ShieldCheck, Star, Users, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGetApiCarsFilters, useGetApiHome } from '../services/api';
 import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
 import logoWithText from '../assets/text-logo-no-bg.png';
@@ -268,16 +268,19 @@ const Hero: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Floating Badge on Card - Responsive: Top-right on mobile, Wide bar on desktop */}
+                {/* Floating Badge on Card - Responsive: Top-right on mobile, Wide bar on desktop; links to payments */}
                 <div className="absolute z-20 transition-all duration-500 -top-4 -right-2 xl:top-auto xl:bottom-4 xl:left-10 xl:right-10">
-                  <div className="bg-white/90 backdrop-blur-2xl border border-white p-4 sm:p-5 xl:p-6 rounded-none shadow-2xl flex flex-col xl:flex-row items-center justify-center gap-1 xl:gap-12 group/badge">
+                  <Link
+                    to="/payments"
+                    className="bg-white/90 backdrop-blur-2xl border border-white p-4 sm:p-5 xl:p-6 rounded-none shadow-2xl flex flex-col xl:flex-row items-center justify-center gap-1 xl:gap-12 group/badge cursor-pointer hover:bg-white/95 transition-colors"
+                  >
                     <p className="text-[10px] xl:text-[11px] text-indigo-600 font-black uppercase tracking-[0.2em] transition-colors group-hover/badge:text-indigo-500">
                       Monthly From
                     </p>
                     <div className="text-xl sm:text-2xl xl:text-4xl font-black text-slate-900 flex items-baseline gap-2 transition-transform group-hover/badge:scale-105">
                       300K <span className="text-slate-400 font-bold text-xs xl:text-lg">to</span> 2M
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>

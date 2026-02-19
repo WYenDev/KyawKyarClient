@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Hero from '../components/Hero';
 import FeaturedCars from '../components/FeaturedCars';
@@ -9,12 +9,25 @@ import ShowroomSection from '../components/ShowroomSection';
 import NewArrivals from '../components/NewArrivals';
 import BrowseCarByBuildTypes from '../components/BrowseCarByBuildTypes';
 import BrowseCarByBrands from '../components/BrowseCarByBrands';
-import PromoBannerCarousel from '../components/PromoBannerCarousel';
+import { PromoBannerGrid, type PromoBannerItem } from '../components/PromoBannerCarousel';
+import { useGetApiPromoBannersActive } from '../services/api';
 import SEO, { SITE_URL } from '../components/SEO';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation('home');
   const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
+  const { data: promoBanners } = useGetApiPromoBannersActive();
+  const { firstSectionBanners, secondSectionBanners } = useMemo(() => {
+    const withImage = (Array.isArray(promoBanners) ? promoBanners : []).filter(
+      (b): b is PromoBannerItem => Boolean(b?.imageUrl)
+    ) as PromoBannerItem[];
+    const promotions = withImage.filter((b) => b.type === 'PROMOTION');
+    const newArrivals = withImage.filter((b) => b.type === 'NEW_ARRIVAL');
+    const hasBoth = promotions.length > 0 && newArrivals.length > 0;
+    const first = promotions.length > 0 ? promotions : newArrivals.length > 0 ? newArrivals : [];
+    const second = hasBoth ? newArrivals : [];
+    return { firstSectionBanners: first, secondSectionBanners: second };
+  }, [promoBanners]);
 
   const organizationSchema = {
     '@context': 'https://schema.org',
@@ -55,9 +68,10 @@ const Home: React.FC = () => {
         structuredData={[organizationSchema, webSiteSchema]}
       />
       <Hero />
-      <PromoBannerCarousel />
+      {firstSectionBanners.length > 0 && <PromoBannerGrid banners={firstSectionBanners} />}
       <FeaturedCars />
       <NewArrivals />
+      {secondSectionBanners.length > 0 && <PromoBannerGrid banners={secondSectionBanners} />}
       <BrowseCarByBuildTypes />
       <BrowseCarByBrands />
       <WhyBuyATKK />

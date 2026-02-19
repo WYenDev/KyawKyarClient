@@ -23,8 +23,8 @@ const Header: React.FC = () => {
   const isActive = (path: string) => {
     const current = location.pathname;
 
-    // Home must match exactly
-    if (path === '/') return current === '/';
+    // Home: exact match or promo landing pages (reached from home carousel)
+    if (path === '/') return current === '/' || current.startsWith('/promo/');
 
     // Treat car detail pages as part of the Buy Cars section
     if (path === '/buyCars') return current === '/buyCars' || current.startsWith('/cars');
