@@ -44,8 +44,9 @@ const PremiumPayment: React.FC = () => {
   const isMyanmar = i18n?.language?.startsWith('mm');
   const [installmentMode, setInstallmentMode] = useState<InstallmentMode | null>("showroom");
 
-  /* ===== NEW: Calculator State ===== */
-  const [customPrice, setCustomPrice] = useState(car.price);
+  /* ===== NEW: Calculator State (string so trailing zeros are preserved in input) ===== */
+  const [customPriceInput, setCustomPriceInput] = useState(String(car.price));
+  const customPrice = Number(customPriceInput.replace(/\D/g, "")) || 0;
 
   // Fetch installment configs
   const { data: bankInstallments } = useGetApiBankInstallments();
@@ -280,9 +281,15 @@ const PremiumPayment: React.FC = () => {
                   <div>
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t("payments_info.calculator.vehicle_price")}</label>
                     <input
-                      type="number"
-                      value={customPrice}
-                      onChange={(e) => setCustomPrice(Number(e.target.value))}
+                      type="text"
+                      inputMode="numeric"
+                      value={customPriceInput}
+                      onChange={(e) => {
+                        const raw = e.target.value || "";
+                        const digits = raw.replace(/\D/g, "");
+                        const cleaned = digits.replace(/^0+/, "") || "";
+                        setCustomPriceInput(cleaned);
+                      }}
                       className="w-full bg-slate-800 border border-slate-700 p-4 rounded-xl font-bold text-xl text-blue-400 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     />
                   </div>
