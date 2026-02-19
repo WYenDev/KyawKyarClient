@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useGetApiCarsFilters, useGetApiHome } from '../services/api';
 import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
+import logoWithText from '../assets/text-logo-no-bg.png';
 
 const HERO_PLACEHOLDER_IMAGE =
   'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg';
@@ -139,14 +140,24 @@ const Hero: React.FC = () => {
                 </div>
 
                 <div className="xl:block hidden">
-                  <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2 ${isMyanmar ? 'font-myanmar sm:leading-[1.4] md:leading-[1.5] lg:leading-[1.6]' : ''}`}>
-                    <span className={`inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-900 ${isMyanmar ? 'lg:mt-6 lg:mb-2' : ''}`}>
-                      {t('hero.title_prefix')}
-                    </span>
-                    <span className={`block sm:mb-2 ${isMyanmar ? 'whitespace-nowrap max-sm:text-[0.9em] sm:text-[0.85em] lg:text-[0.72em]' : ''}`}>
-                      {t('hero.title_suffix')}
-                    </span>
-                  </h1>
+                  {isMyanmar ? (
+                    <div className="mb-2">
+                      <img
+                        src={logoWithText}
+                        alt="ကျော်ကြား Kyaw Kyar"
+                        className="h-20 sm:h-24 lg:h-28 w-auto object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2">
+                      <span className="inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-900">
+                        {t('hero.title_prefix')}
+                      </span>
+                      <span className="block sm:mb-2">
+                        {t('hero.title_suffix')}
+                      </span>
+                    </h1>
+                  )}
                   <p className={`text-base sm:text-lg text-slate-500 max-w-lg mx-auto xl:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar leading-relaxed sm:leading-loose pt-1 sm:pt-1' : ''}`}>
                     {t('hero.description')}
                   </p>
@@ -235,13 +246,23 @@ const Hero: React.FC = () => {
                   {/* MOBILE TITLE: Perfectly matched to image width inside the border box */}
                   <div className="absolute bottom-0 left-0 right-0 z-30 xl:hidden translate-y-1/2">
                     <div className="relative py-3 overflow-hidden shadow-xl border-y border-white/30 backdrop-blur-2xl bg-white/10">
-                      <div className="text-center">
-                        <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-800 whitespace-nowrap font-myanmar leading-tight drop-shadow-sm">
-                          {t('hero.title_prefix')}
-                        </h1>
-                        <p className="text-[12px] text-white font-black tracking-widest uppercase mt-0 pb-1 drop-shadow-md">
-                          {t('hero.title_suffix')}
-                        </p>
+                      <div className="text-center flex flex-col items-center">
+                        {isMyanmar ? (
+                          <img
+                            src={logoWithText}
+                            alt="ကျော်ကြား Kyaw Kyar"
+                            className="h-14 sm:h-16 w-auto object-contain"
+                          />
+                        ) : (
+                          <>
+                            <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-800 whitespace-nowrap leading-tight drop-shadow-sm">
+                              {t('hero.title_prefix')}
+                            </h1>
+                            <p className="text-[12px] text-white font-black tracking-widest uppercase mt-0 pb-1 drop-shadow-md">
+                              {t('hero.title_suffix')}
+                            </p>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
