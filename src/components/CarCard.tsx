@@ -125,7 +125,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
             {hasPhone ? (
               <a
                 href={`tel:${phoneNumber}`}
-                className="flex items-center justify-center py-4 px-3 rounded-xl bg-slate-50 text-slate-600 hover:bg-red-500 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md border border-slate-100 hover:border-red-400/30"
+                className="flex items-center justify-center py-4 px-3 rounded-xl bg-slate-50 text-slate-600 hover:bg-red-500/10 hover:text-red-600 transition-all duration-200 shadow-sm hover:shadow-md border border-slate-100 hover:border-red-400/30"
                 aria-label="Call"
               >
                 <Phone className="h-6 w-6" />
@@ -136,10 +136,10 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
             {hasViber ? (
               <a
                 href={`viber://chat?number=%2B${viberNumber}`}
-                className="group/viber flex items-center justify-center py-4 px-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#7360f2]/40 hover:bg-[#7360f2] transition-all duration-200 shadow-sm hover:shadow-md overflow-hidden"
+                className="flex items-center justify-center py-4 px-3 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#7360f2]/40 hover:bg-[#7360f2]/10 transition-all duration-200 shadow-sm hover:shadow-md overflow-hidden"
                 aria-label="Viber"
               >
-                <img src={ViberIcon} alt="" className="h-6 w-6 object-contain group-hover/viber:brightness-0 group-hover/viber:invert" />
+                <img src={ViberIcon} alt="" className="h-6 w-6 object-contain" />
               </a>
             ) : (
               <div />
