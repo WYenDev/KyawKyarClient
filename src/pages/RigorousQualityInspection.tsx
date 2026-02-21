@@ -28,6 +28,7 @@ const RigorousQualityInspection = () => {
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
             <SEO
+                canonical="/why-kyawkyar/rigorous-quality-inspection"
                 title={t('meta.title')}
                 description={t('meta.description')}
             />

@@ -7,6 +7,7 @@ import {
     ShieldCheck,
     Landmark,
 } from "lucide-react";
+import SEO from '../components/SEO';
 
 type Mode = "showroom" | "bank";
 
@@ -18,6 +19,11 @@ const InstallmentDetail = () => {
 
     return (
         <section className="bg-white overflow-hidden">
+            <SEO
+                canonical="/showroom-installment"
+                title="Showroom Installment - Kyaw Kyar"
+                description="Pay with showroom installment or bank financing. Flexible payment options for your car purchase at Kyaw Kyar."
+            />
             {/* ================= HERO ================= */}
             <motion.div
                 initial={{ opacity: 0, y: 60 }}

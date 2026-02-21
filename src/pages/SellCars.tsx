@@ -13,7 +13,7 @@ const SellCars: React.FC = () => {
       <SEO 
         title={t('sell_meta.title', 'Sell Your Car')}
         description={t('sell_meta.description', 'Sell your car with confidence')}
-        canonical="/sell-cars"
+        canonical="/sellCars"
       />
       <ScrollToTop />
       <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">

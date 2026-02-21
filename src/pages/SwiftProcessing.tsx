@@ -16,7 +16,8 @@ const SwiftProcessing = () => {
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
-            <SEO 
+            <SEO
+                canonical="/why-kyawkyar/swift-processing"
                 title="Swift Processing - Kyaw Kyar"
                 description="Fast and hassle-free paperwork processing for your car purchase. We handle the bureaucracy so you don't have to."
             />
