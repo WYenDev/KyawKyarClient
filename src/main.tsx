@@ -25,3 +25,5 @@ if (rootElement.hasChildNodes()) {
 } else {
   createRoot(rootElement).render(app);
 }
+
+document.dispatchEvent(new Event('vite-prerender-ready'));
