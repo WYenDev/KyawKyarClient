@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Select, { Option } from "../../components/Select";
 import { Steering } from "../../types";
@@ -294,12 +294,12 @@ const CarCreatePage = () => {
   {brandId && modelOptions.length === 0 && (
     <div className="mt-2 text-sm text-red-500">
       No models for this brand. Please{' '}
-      <Link
-        to="/admin/brands"
+      <a
         className="underline text-blue-600"
+        href="/admin/models/create" // adjust this path if needed
       >
         create a model first
-      </Link>.
+      </a>.
     </div>
   )}
 </Field>

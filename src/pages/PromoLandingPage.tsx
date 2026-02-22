@@ -81,7 +81,6 @@ const PromoLandingPage: React.FC = () => {
   }
 
   const title = data.landingTitle || data.title || 'Promotion';
-  const seoTitle = data.title || 'Promotion';
   const titleIsHtml = typeof data.landingTitle === 'string' && data.landingTitle.trim().startsWith('<');
   const hasContent = data.landingTitle || data.landingBody || data.landingImageUrl;
 
@@ -89,9 +88,8 @@ const PromoLandingPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50">
       <SEO
         canonical={`/promo/${slug}`}
-        title={seoTitle}
+        title={title}
         description={data.landingBody?.replace(/<[^>]*>/g, '').slice(0, 160) || undefined}
-        image={data.landingImageUrl || undefined}
       />
 
       {/* Hero image: full-bleed with bottom gradient for overlap */}

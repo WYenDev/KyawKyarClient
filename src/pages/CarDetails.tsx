@@ -31,11 +31,6 @@ const CarDetails: React.FC = () => {
   if (isError || !carData) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <SEO
-          title={t('details.not_found_title', 'Car not found') + ' - Kyaw Kyar'}
-          description={t('details.not_found_description', 'The car you are looking for does not exist or may have been removed.')}
-          noindex
-        />
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -75,8 +70,7 @@ const CarDetails: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <SEO
-        canonical={id ? `/cars/${id}` : undefined}
+      <SEO 
         title={carTitle}
         description={(carData as any)?.description?.substring(0, 160)}
         image={mainImageUrl}

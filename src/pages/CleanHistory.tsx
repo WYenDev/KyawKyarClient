@@ -7,7 +7,6 @@ import {
     Ban,
     CheckCircle2,
 } from "lucide-react";
-import SEO from '../components/SEO';
 
 /* ===== Image ===== */
 import steeringImg from "../assets/clearhistory.png";
@@ -34,11 +33,6 @@ const CleanHistory = () => {
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
-            <SEO
-                canonical="/why-kyawkyar/clean-history"
-                title={t('meta.title')}
-                description={t('meta.description')}
-            />
             {/* ======================================================
           HERO – IMAGE + BRAND PROMISE
       ====================================================== */}

@@ -34,10 +34,6 @@ export interface SEOProps {
 const DEFAULT_TITLE = 'Kyaw Kyar Car Showroom';
 const DEFAULT_DESCRIPTION = 'Discover inspected vehicles and premium buying services at Kyaw Kyar Car Showroom.';
 const DEFAULT_IMAGE = '/apple-touch-icon.png';
-const DEFAULT_SITE_NAME = 'Kyaw Kyar Car Showroom';
-
-/** Maps lang (e.g. en, my) to Open Graph locale (e.g. en_US, my_MM). Used by Facebook and Viber link previews. */
-const langToOgLocale = (lang: string): string => (lang === 'my' ? 'my_MM' : 'en_US');
 
 const SEO = ({
   title = DEFAULT_TITLE,
@@ -50,24 +46,18 @@ const SEO = ({
   alternates,
   structuredData,
 }: SEOProps) => {
-  const canonicalUrl =
-    canonical != null && typeof canonical === 'string' ? buildUrl(canonical) : null;
+  const canonicalUrl = buildUrl(canonical);
   const imageUrl = buildUrl(image);
-  const ogLocale = langToOgLocale(lang);
 
   return (
     <Helmet htmlAttributes={{ lang }}>
       <title>{title}</title>
       <meta name="description" content={description} />
-      {/* Open Graph: used by Facebook, Viber, and other apps for link previews */}
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:type" content={type} />
-      {canonicalUrl != null && <meta property="og:url" content={canonicalUrl} />}
-      <meta property="og:image" content={imageUrl} />
-      <meta property="og:site_name" content={DEFAULT_SITE_NAME} />
-      <meta property="og:locale" content={ogLocale} />
-      {/* Twitter Card */}
+      <meta name="og:title" content={title} />
+      <meta name="og:description" content={description} />
+      <meta name="og:type" content={type} />
+      <meta name="og:url" content={canonicalUrl} />
+      <meta name="og:image" content={imageUrl} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />

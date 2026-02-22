@@ -15,7 +15,7 @@ const FooterBanner = () => {
     }
     
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-40 flex flex-col w-full">
+        <div className="flex flex-col w-full">
             {safeBanners.map((banner) => (
                 <div 
                     key={banner.id}
