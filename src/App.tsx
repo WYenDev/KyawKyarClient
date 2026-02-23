@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 
 // Public layout components
@@ -54,7 +54,7 @@ import PromoBanners from "./pages/admin/PromoBanners";
 
 function App() {
   return (
-    <Router>
+    <>
       <ScrollToTop />
       <Routes>
         {/* ================= ADMIN ROUTES ================= */}
@@ -134,7 +134,7 @@ function App() {
           }
         />
       </Routes>
-    </Router>
+    </>
   );
 }
 

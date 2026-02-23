@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import ReactQueryProvider from './contexts/ReactQueryProvider';
 import { AuthProvider } from './contexts/AuthContext';
@@ -10,13 +11,15 @@ import './i18n';
 const rootElement = document.getElementById('root')!;
 const app = (
   <StrictMode>
-    <HelmetProvider>
-      <ReactQueryProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </ReactQueryProvider>
-    </HelmetProvider>
+    <BrowserRouter>
+      <HelmetProvider>
+        <ReactQueryProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </ReactQueryProvider>
+      </HelmetProvider>
+    </BrowserRouter>
   </StrictMode>
 );
 
@@ -26,4 +29,6 @@ if (rootElement.hasChildNodes()) {
   createRoot(rootElement).render(app);
 }
 
-document.dispatchEvent(new Event('vite-prerender-ready'));
+if (typeof document !== 'undefined' && typeof document.dispatchEvent === 'function') {
+  document.dispatchEvent(new Event('vite-prerender-ready'));
+}
