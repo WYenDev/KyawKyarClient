@@ -227,16 +227,18 @@ const AboutTeaser: React.FC = () => {
               </div>
             </div>
 
-            {/* Text Side */}
-            <div className="py-4 order-1 md:order-2">
-              <h3 className={`text-sm font-black text-indigo-600 uppercase tracking-[0.2em] mb-3 ${isMyanmar ? 'font-myanmar' : ''}`}>
-                {t('about_teaser.badge', 'About KyawKyar')}
-              </h3>
-              <h2 className={`text-2xl md:text-4xl font-black text-slate-900 mb-6 leading-tight ${isMyanmar ? 'font-myanmar leading-[1.4]' : ''}`}>
-                {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
-              </h2>
-              <p className={`text-slate-600 mb-8 text-lg leading-relaxed ${isMyanmar ? 'font-myanmar leading-[1.8]' : ''}`}>
-                {t('about_teaser.description', "With over 15 years of experience, Kyaw Kyar has established itself as Myanmar's leading destination for quality vehicles. We hand-select every car, perform comprehensive multi-point inspections, and provide flexible financing options to make your dream car ownership a reality. From daily-use vehicles to premium luxury cars, we offer transparent pricing, verified clean history, and dedicated after-sales support—all backed by our commitment to excellence and customer satisfaction.")}
+            {/* Text Side - same structure and badge styling as About page */}
+            <div className="py-4 order-1 md:order-2 space-y-10">
+              <div>
+                <span className="text-indigo-600 font-bold tracking-[0.2em] text-xs uppercase mb-4 inline-block">
+                  {t('about_teaser.badge', 'About KyawKyar')}
+                </span>
+                <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 leading-tight ${isMyanmar ? 'font-myanmar sm:leading-[1.4] max-sm:text-[2.2rem] pt-2' : ''}`}>
+                  {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
+                </h2>
+              </div>
+              <p className={`text-lg text-slate-500 leading-relaxed whitespace-pre-line ${isMyanmar ? 'font-myanmar leading-[1.8] text-[1.05rem]' : ''}`}>
+                {t('about:about.description')}
               </p>
               <div className="space-y-4">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em]">Contact Us</h4>

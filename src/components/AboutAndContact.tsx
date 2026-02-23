@@ -349,7 +349,7 @@ const AboutContact: React.FC = () => {
                 </h2>
               </div>
 
-              <p className={`text-lg text-slate-500 leading-relaxed ${isMyanmar ? 'font-myanmar leading-[1.8] text-[1.05rem]' : ''}`}>
+              <p className={`text-lg text-slate-500 leading-relaxed whitespace-pre-line ${isMyanmar ? 'font-myanmar leading-[1.8] text-[1.05rem]' : ''}`}>
                 {t('about.description')}
               </p>
 

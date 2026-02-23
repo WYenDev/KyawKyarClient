@@ -34,22 +34,13 @@ const ShowroomSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className={`text-2xl lg:text-4xl font-black text-slate-900 tracking-tight ${isMyanmar ? 'font-myanmar leading-[1.6]' : 'leading-[1.4]'}`}>
-            {isMyanmar ? (
-              <>
-                <span className="inline-block pt-4 pb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                  {t('showrooms.highlightedText')}
-                </span>{" "}
-                {t('showrooms.title')}
-              </>
-            ) : (
-              <>
-                {t('showrooms.title')}{" "}
-                <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                  {t('showrooms.highlightedText')}
-                </span>
-              </>
-            )}
+          <h2 className="text-2xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.4]">
+            <>
+              {t('showrooms.title')}{" "}
+              <span className="inline-block py-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                {t('showrooms.highlightedText')}
+              </span>
+            </>
           </h2>
         </div>
 
