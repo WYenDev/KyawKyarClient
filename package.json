@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender-headless.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "generate:api": "orval -c orval.config.ts"
