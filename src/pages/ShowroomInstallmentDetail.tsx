@@ -23,12 +23,13 @@ const InstallmentDetail = () => {
                 initial={{ opacity: 0, y: 60 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="max-w-6xl mx-auto pt-24 px-6 text-center"
+                className="max-w-6xl mx-auto pt-24 px-6 text-left md:text-center"
             >
                 <h1 className="text-4xl lg:text-5xl font-black mb-6">
-                    Installment Options at Kyaw Kyar
+                    Installment Options at{" "}
+                    <span className="whitespace-nowrap">Kyaw Kyar</span>
                 </h1>
-                <p className="text-slate-600 text-lg max-w-3xl mx-auto">
+                <p className="text-slate-600 text-lg leading-8 max-w-3xl md:mx-auto">
                     Kyaw Kyar တွင် showroom payment ဖြင့်လည်းငွေပေးချေနိုင်ပြီး၊ <br />
                     customer အသုံးပြုနေသော ဘဏ်အားလုံးဖြင့်လည်း
                     payment ဆောင်ရွက်နိုင်ပါသည်။
