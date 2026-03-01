@@ -149,12 +149,7 @@ const CarInventory: React.FC = () => {
   }, [page]);
 
   return (
-    <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">{t('title')}</h1>
-        <p className="text-lg sm:text-xl text-slate-600">{t('subtitle')}</p>
-      </div>
-
+    <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8 xl:pt-8">
       <div className="flex flex-col xl:flex-row gap-8">
         <div className="xl:w-80 flex-shrink-0">
           {!filtersLoading && !filtersError && (
@@ -173,13 +168,18 @@ const CarInventory: React.FC = () => {
               serverSteeringPositions={serverSteeringPositions}
               serverFuelTypes={serverFuelTypes}
               serverTransmissionTypes={serverTransmissionTypes}
+              mobileBarExtra={
+                <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full text-sm">Total Results: {totalCount}</div>
+              }
             />
           )}
         </div>
 
         <div className="flex-1">
-          <div className="mb-6 flex flex-wrap gap-4 text-sm">
-            <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Total Results: {totalCount}</div>
+          <div className="mb-6 hidden xl:block">
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Total Results: {totalCount}</div>
+            </div>
           </div>
 
           {carsLoading ? (

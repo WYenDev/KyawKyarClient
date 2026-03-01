@@ -8,7 +8,7 @@ const BuyCars: React.FC = () => {
   const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-8">
+    <div className="min-h-screen bg-gray-50 pt-4 xl:pt-8">
       <SEO
         lang={lang}
         canonical="/buyCars"

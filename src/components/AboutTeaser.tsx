@@ -229,14 +229,14 @@ const AboutTeaser: React.FC = () => {
 
             {/* Text Side - same structure and badge styling as About page */}
             <div className="py-4 order-1 md:order-2 space-y-10">
-              <div>
-                <span className="text-indigo-600 font-bold tracking-[0.2em] text-xs uppercase mb-4 inline-block">
-                  {t('about_teaser.badge', 'About KyawKyar')}
-                </span>
-                <h2 className={`text-4xl lg:text-5xl font-black text-slate-900 leading-tight ${isMyanmar ? 'font-myanmar sm:leading-[1.4] max-sm:text-[2.2rem] pt-2' : ''}`}>
-                  {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
-                </h2>
-              </div>
+               <div>
+                 <span className="text-slate-900 font-bold tracking-[0.2em] text-xs uppercase mb-4 inline-block">
+                   {t('about_teaser.badge', 'About KyawKyar')}
+                 </span>
+                  <h2 className={`font-black text-indigo-600 leading-tight ${isMyanmar ? 'font-myanmar font-extrabold text-2xl sm:text-3xl lg:text-4xl sm:leading-[1.4] pt-2' : 'text-4xl lg:text-5xl'}`}>
+                   {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
+                 </h2>
+               </div>
               <p className={`text-lg text-slate-500 leading-relaxed whitespace-pre-line ${isMyanmar ? 'font-myanmar leading-[1.8] text-[1.05rem]' : ''}`}>
                 {t('about:about.description')}
               </p>

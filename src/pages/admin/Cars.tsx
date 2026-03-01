@@ -17,9 +17,11 @@ import { keepPreviousData } from '@tanstack/react-query';
 
 import {
     CarListItem,
+    Status,
     useGetApiCarsActive,
     useGetApiCarsDeleted,
     useGetApiCarsSold,
+    usePatchApiCarsId,
     usePatchApiCarsIdSoftDelete,
     usePostApiCarsIdRestore,
 } from "../../services/api";
@@ -68,7 +70,8 @@ const Cars = () => {
 
     const { 
         data: soldData, 
-        isLoading: soldLoading
+        isLoading: soldLoading,
+        refetch: refetchSold,
     } = useGetApiCarsSold({
         page,
         limit: LIMIT,
@@ -100,6 +103,15 @@ const Cars = () => {
             onSuccess: () => {
                 refetchActive();
                 refetchDeleted();
+            },
+        },
+    });
+
+    const { mutate: markAvailable, isPending: markingAvailable } = usePatchApiCarsId({
+        mutation: {
+            onSuccess: () => {
+                refetchActive();
+                refetchSold();
             },
         },
     });
@@ -309,7 +321,17 @@ const Cars = () => {
                             </button>
                         </>
                     ) : activeTab === 'sold' ? (
-                        <div className="text-sm text-slate-500 ml-auto">Sold</div>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                markAvailable({ id: car.id, data: { status: Status.Available } });
+                            }}
+                            disabled={markingAvailable}
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-green-600 bg-green-50 hover:bg-green-100 transition-colors disabled:opacity-50 ml-auto"
+                        >
+                            <RotateCcw size={14} /> Back to inventory
+                        </button>
                     ) : (
                         <button
                             onClick={(e) => {

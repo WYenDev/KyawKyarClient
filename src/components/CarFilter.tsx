@@ -22,9 +22,11 @@ interface CarFilterProps {
   serverFuelTypes?: Array<string | { id?: string; name?: string }>;
   // serverTransmissionTypes may be array of strings or objects {id, name}
   serverTransmissionTypes?: Array<string | { id?: string; name?: string }>;
+  /** Rendered beside the mobile Filters button (e.g. Total Results pill) */
+  mobileBarExtra?: React.ReactNode;
 }
 
-const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes }) => {
+const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes, mobileBarExtra }) => {
 
   const updateFilters = (key: keyof FilterOptions, value: FilterOptions[keyof FilterOptions]) => {
     onFiltersChange({ ...filters, [key]: value } as FilterOptions);
@@ -137,8 +139,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
 
   return (
     <>
-      {/* Mobile Filter Button */}
-      <div className="xl:hidden mb-6">
+      {/* Mobile Filter Button + optional content (e.g. Total Results) */}
+      <div className="xl:hidden mb-6 flex items-center gap-3 flex-wrap">
         <button
           onClick={onToggle}
           className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:shadow-md transition-shadow"
@@ -146,6 +148,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
           <Filter className="h-4 w-4" />
           <span className="font-medium">Filters</span>
         </button>
+        {mobileBarExtra}
       </div>
 
       {/* Overlay for mobile */}

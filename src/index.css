@@ -108,8 +108,8 @@ img {
   /* Critical for the 'Heavy' look in the image */
   font-weight: 700; 
   
-  /* Burmese scripts need slightly more line height than Latin to prevent clipping */
-  line-height: 1.6;
+  /* Burmese stacked/tall glyphs need extra vertical space; !important overrides Tailwind leading-* so they don't squash lines */
+  line-height: 1.75 !important;
   
   /* Removing letter spacing as Burmese characters should stay connected */
   letter-spacing: 0;
