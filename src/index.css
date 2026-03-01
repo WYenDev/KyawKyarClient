@@ -137,6 +137,24 @@ img {
   content: 'Normal';
 }
 
+.admin-promo-landing-title-editor .ql-container {
+  height: 80px;            /* smaller height for title */
+}
+
+.admin-promo-landing-title-editor .ql-editor {
+  height: 100%;
+  overflow-y: auto;        /* scroll if text exceeds height */
+}
+
+.admin-promo-landing-body-editor .ql-container {
+  height: 300px;          /* fixed height */
+}
+
+.admin-promo-landing-body-editor .ql-editor {
+  height: 100%;
+  overflow-y: auto;       /* enable vertical scroll */
+}
+
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before,
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before {
   content: '10px';
