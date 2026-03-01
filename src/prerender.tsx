@@ -126,17 +126,9 @@ export async function prerender(data: PrerenderData): Promise<{
   html: string;
   head?: { title?: string; lang?: string; elements?: Set<{ type: string; props: Record<string, string> }> };
 }> {
-  const path = pathFromUrl(data.url);
-  const seo = ROUTE_SEO[path] ?? {
-    title: DEFAULT_TITLE,
-    description: DEFAULT_DESCRIPTION,
-    canonical: path,
-    lang: 'en',
-    image: DEFAULT_IMAGE,
-  };
-  const head = buildHeadElements(seo);
+  // Head (meta, og, canonical) is injected only by React Helmet when the app runs (e.g. in headless prerender).
+  // We do not inject head here to avoid duplicate meta tags.
   return {
     html: '', // Plugin injects into #root; client will hydrate into existing root.
-    head,
   };
 }

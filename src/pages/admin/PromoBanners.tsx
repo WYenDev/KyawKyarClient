@@ -455,7 +455,7 @@ const PromoBanners = () => {
                                             theme="snow"
                                             value={field.value}
                                             onChange={field.onChange}
-                                            className="h-24 mb-12 landing-title-editor"
+                                            className="admin-promo-landing-title-editor min-h-[8rem] mb-6"
                                             modules={{
                                                 toolbar: [
                                                     [{ font: [] }],
@@ -468,7 +468,6 @@ const PromoBanners = () => {
                                         />
                                     )}
                                 />
-                                <p className="text-xs text-gray-500 mt-1">Supports Burmese font and font size (same as footer banner).</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Landing body</label>
@@ -480,7 +479,7 @@ const PromoBanners = () => {
                                             theme="snow"
                                             value={field.value}
                                             onChange={field.onChange}
-                                            className="h-40 mb-12"
+                                            className="admin-promo-landing-body-editor h-64 mb-6"
                                             modules={{
                                                 toolbar: [
                                                     [{ font: [] }],
@@ -496,33 +495,35 @@ const PromoBanners = () => {
                                         />
                                     )}
                                 />
-                                <p className="text-xs text-gray-500 mt-1">Supports Burmese font and font size (same as footer banner).</p>
                             </div>
                             {isEditing && (
-                                <div>
+                                <div className="space-y-2">
                                     <label className="block text-sm font-medium mb-1">Landing image</label>
                                     {(safeBanners.find((b) => b.id === isEditing) as { landingImageUrl?: string } | undefined)?.landingImageUrl ? (
-                                        <div className="mb-2 p-2 border rounded flex items-center justify-between bg-gray-50">
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <ImageIcon size={16} />
-                                                <span>Landing image set</span>
-                                                <a href={(safeBanners.find((b) => b.id === isEditing) as { landingImageUrl?: string })?.landingImageUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">(View)</a>
+                                        <div className="p-3 border border-slate-200 rounded-lg flex flex-wrap items-center justify-between gap-2 bg-slate-50/80">
+                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <ImageIcon size={18} className="text-slate-500 shrink-0" />
+                                                <span>Current image</span>
+                                                <a href={(safeBanners.find((b) => b.id === isEditing) as { landingImageUrl?: string })?.landingImageUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline font-medium">View</a>
                                             </div>
-                                            <button type="button" onClick={handleLandingImageRemove} disabled={deletingLandingImage} className="text-red-500 text-xs hover:text-red-700 font-medium disabled:opacity-50">
-                                                {deletingLandingImage ? "Removing..." : "Remove"}
+                                            <button type="button" onClick={handleLandingImageRemove} disabled={deletingLandingImage} className="text-red-600 text-sm hover:text-red-700 font-medium disabled:opacity-50 shrink-0">
+                                                {deletingLandingImage ? "Removing…" : "Remove"}
                                             </button>
                                         </div>
                                     ) : (
-                                        <p className="text-xs text-gray-500 mb-2">No landing image.</p>
+                                        <p className="text-xs text-slate-500">No image set. Use the file input below to add one.</p>
                                     )}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleLandingImageUpload}
-                                        disabled={uploadingLandingImage}
-                                        className="w-full p-2 border rounded text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700"
-                                    />
-                                    {uploadingLandingImage && <Loader2 className="animate-spin text-blue-600 inline ml-2" size={18} />}
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleLandingImageUpload}
+                                            disabled={uploadingLandingImage}
+                                            className="flex-1 min-w-0 p-2 border border-slate-200 rounded-lg text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200"
+                                        />
+                                        {uploadingLandingImage && <Loader2 className="animate-spin text-blue-600 shrink-0" size={18} />}
+                                    </div>
+                                    <p className="text-xs text-slate-500">Choose a file to upload or replace the current image. Max 10 MB.</p>
                                 </div>
                             )}
                         </div>
