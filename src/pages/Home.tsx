@@ -10,13 +10,14 @@ import NewArrivals from '../components/NewArrivals';
 import BrowseCarByBuildTypes from '../components/BrowseCarByBuildTypes';
 import BrowseCarByBrands from '../components/BrowseCarByBrands';
 import { PromoBannerGrid, type PromoBannerItem } from '../components/PromoBannerCarousel';
-import { useGetApiPromoBannersActive } from '../services/api';
+import { useGetApiPromoBannersActive, useGetApiHome } from '../services/api';
 import SEO, { SITE_URL } from '../components/SEO';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation('home');
   const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
   const { data: promoBanners } = useGetApiPromoBannersActive();
+  const { data: homeData } = useGetApiHome();
   const { firstSectionBanners, secondSectionBanners } = useMemo(() => {
     const withImage = (Array.isArray(promoBanners) ? promoBanners : []).filter(
       (b): b is PromoBannerItem => Boolean(b?.imageUrl)
@@ -55,6 +56,21 @@ const Home: React.FC = () => {
     }
   };
 
+  const autoDealerSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'AutoDealer',
+    name: 'Kyaw Kyar Car Showroom',
+    url: SITE_URL,
+    logo: `${SITE_URL}/apple-touch-icon.png`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Mandalay',
+      addressCountry: 'MM'
+    },
+    telephone: homeData?.phoneNo ?? '+959260069699',
+    areaServed: 'MM'
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <SEO
@@ -65,7 +81,7 @@ const Home: React.FC = () => {
           'meta.description',
           'Myanmar’s trusted destination for inspected cars, financing support, and premium after-sales service.'
         )}
-        structuredData={[organizationSchema, webSiteSchema]}
+        structuredData={[organizationSchema, webSiteSchema, autoDealerSchema]}
       />
       <Hero />
       {firstSectionBanners.length > 0 && <PromoBannerGrid banners={firstSectionBanners} />}
