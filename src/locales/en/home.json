@@ -62,6 +62,10 @@
       }
     }
   }, 
+  "car_carousel": {
+    "ExploreFullInventory": "Explore Full Inventory",
+    "DiscoverMore": "Discover More"
+  },
   "browse_by_body_type": {
     "title": "Browse by",
     "highlightedText": "Body Type",

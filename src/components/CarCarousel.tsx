@@ -49,7 +49,7 @@ const themeClasses = {
   },
 };
 
-const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme }) => {
+const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme }) => {
   const { t, i18n } = useTranslation('home');
   const isMyanmar = i18n?.language?.startsWith('mm');
   const { data, isLoading, isError } = useDataHook();
@@ -177,7 +177,9 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
                     <div className={`w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover/more:scale-110 transition-all`}>
                       <Plus className={`w-7 h-7 text-slate-400 ${classes.hoverText} transition-colors`} />
                     </div>
-                    <span className="font-bold text-slate-900">Discover More</span>
+                    <span className="font-bold text-slate-900">
+                      {t('car_carousel.DiscoverMore')}
+                    </span>
                     <span className="text-[10px] text-slate-400 mt-2 uppercase tracking-[0.2em] font-black">150+ Vehicles</span>
                   </div>
                 </div>
@@ -187,7 +189,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
                   onClick={() => navigate('/buyCars')}
                   className={`group inline-flex items-center gap-4 bg-slate-900 text-white px-10 py-5 rounded-none text-base font-bold hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl shadow-slate-900/10 transform hover:-translate-y-1`}
                 >
-                  Explore Full Inventory
+                  {t('car_carousel.ExploreFullInventory')}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

@@ -63,7 +63,7 @@ const RigorousQualityInspection = () => {
             </section>
 
             {/* ================= PROCESS ================= */}
-            <section className="py-24 bg-gray-50">
+            <section className="py-8 bg-gray-50">
                 <div className="max-w-6xl mx-auto px-6">
                     <motion.h2
                         initial="hidden"
@@ -163,7 +163,7 @@ const Step = ({
             viewport={{ once: true }}
             variants={fadeSide(imageSide)}
             transition={{ duration: 0.6 }}
-            className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-24"
+            className="grid md:grid-cols-2 gap-10 md:gap-16 items-center mb-12 md:mb-24 last:mb-0"
         >
             {/* TEXT – always first on mobile */}
             <div className={imageSide === "left" ? "md:order-2" : "md:order-1"}>
@@ -189,3 +189,5 @@ const Step = ({
 };
 
 export default RigorousQualityInspection;
+
+

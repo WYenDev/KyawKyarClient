@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -27,6 +28,24 @@ const fadeRight = {
     visible: { opacity: 1, x: 0 },
 };
 
+type SlideVariant = typeof fadeLeft | typeof fadeRight;
+
+interface TrustItemProps {
+    icon: ReactNode;
+    title: string;
+    desc: string;
+}
+
+interface RejectLineProps {
+    title: string;
+    desc: string;
+    animation: SlideVariant;
+}
+
+interface GuaranteeProps {
+    text: string;
+}
+
 const CleanHistory = () => {
     const navigate = useNavigate();
     const { t } = useTranslation("cleanHistory");
@@ -36,16 +55,16 @@ const CleanHistory = () => {
             {/* ======================================================
           HERO – IMAGE + BRAND PROMISE
       ====================================================== */}
-            <section className="pt-32 pb-36">
+            <section className="pt-14 pb-12 md:pt-20 md:pb-16">
                 <motion.div
                     initial="hidden"
                     animate="visible"
                     variants={fadeUp}
                     transition={{ duration: 0.8 }}
-                    className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center"
+                    className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 md:gap-12 items-center"
                 >
                     {/* IMAGE */}
-                    <div className="h-[420px] rounded-3xl overflow-hidden bg-gray-100">
+                    <div className="h-[280px] md:h-[420px] rounded-3xl overflow-hidden bg-gray-100">
                         <img
                             src={steeringImg}
                             alt={t("hero.alt")}
@@ -62,19 +81,19 @@ const CleanHistory = () => {
                             </span>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-8">
+                        <h1 className="text-4xl md:text-5xl font-semibold leading-[1.55] md:leading-[1.35] mb-6 md:mb-8">
                             {t("hero.title")}
                             <br />
                             {t("hero.titleLine2")}
                         </h1>
 
-                        <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
+                        <p className="text-lg text-gray-600 leading-8 max-w-lg">
                             {t("hero.description")}
                             <br />
                             {t("hero.descriptionLine2")}
                         </p>
 
-                        <p className="mt-6 text-sm text-gray-500 leading-relaxed max-w-lg">
+                        <p className="mt-5 md:mt-6 text-sm text-gray-500 leading-7 max-w-lg">
                             {t("hero.policy")}
                         </p>
                     </div>
@@ -84,14 +103,14 @@ const CleanHistory = () => {
             {/* ======================================================
           TRUST STRIP – COMPACT & CALM
       ====================================================== */}
-            <section className="py-24 bg-gray-50">
+            <section className="py-12 md:py-16 bg-gray-50">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
                     variants={fadeUp}
                     transition={{ duration: 0.6 }}
-                    className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-14 text-center"
+                    className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 md:gap-10 text-center"
                 >
                     <TrustItem
                         icon={<FileCheck2 />}
@@ -114,7 +133,7 @@ const CleanHistory = () => {
             {/* ======================================================
           REJECTION POLICY – EDITORIAL STYLE
       ====================================================== */}
-            <section className="py-36">
+            <section className="py-12 md:py-16">
                 <div className="max-w-5xl mx-auto px-6">
                     <motion.h2
                         initial="hidden"
@@ -122,12 +141,12 @@ const CleanHistory = () => {
                         variants={fadeUp}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="text-3xl font-semibold mb-20 text-center"
+                        className="text-3xl font-semibold leading-[1.45] mb-10 md:mb-14 text-center"
                     >
                         {t("rejection.sectionTitle")}
                     </motion.h2>
 
-                    <div className="border-l border-gray-200 pl-10 space-y-24">
+                    <div className="border-l border-gray-200 pl-6 md:pl-8 space-y-12 md:space-y-14">
                         <RejectLine
                             title={t("rejection.noOwnerBook.title")}
                             desc={t("rejection.noOwnerBook.description")}
@@ -152,7 +171,7 @@ const CleanHistory = () => {
             {/* ======================================================
           GUARANTEE – SOFT PANEL
       ====================================================== */}
-            <section className="py-32 bg-gray-50">
+            <section className="py-12 md:py-16 bg-gray-50">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
@@ -161,12 +180,12 @@ const CleanHistory = () => {
                     transition={{ duration: 0.6 }}
                     className="max-w-5xl mx-auto px-6"
                 >
-                    <div className="bg-white rounded-3xl border border-gray-200 p-16">
-                        <h2 className="text-3xl font-semibold mb-12 text-center">
+                    <div className="bg-white rounded-3xl border border-gray-200 p-8 md:p-12">
+                        <h2 className="text-3xl font-semibold leading-[1.45] mb-8 md:mb-10 text-center">
                             {t("guarantee.sectionTitle")}
                         </h2>
 
-                        <div className="grid md:grid-cols-2 gap-8">
+                        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                             <Guarantee text={t("guarantee.items.verifiedOwnership")} />
                             <Guarantee text={t("guarantee.items.noHiddenLegal")} />
                             <Guarantee text={t("guarantee.items.transparentHistory")} />
@@ -179,7 +198,7 @@ const CleanHistory = () => {
             {/* ======================================================
           CTA
       ====================================================== */}
-            <section className="py-32">
+            <section className="py-12 md:py-16">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
@@ -188,11 +207,11 @@ const CleanHistory = () => {
                     transition={{ duration: 0.6 }}
                     className="max-w-4xl mx-auto px-6 text-center"
                 >
-                    <h2 className="text-3xl font-semibold mb-6">
+                    <h2 className="text-3xl font-semibold leading-[1.45] mb-6">
                         {t("cta.title")}
                     </h2>
 
-                    <p className="text-gray-600 text-lg leading-relaxed mb-14">
+                    <p className="text-gray-600 text-lg leading-8 mb-8 md:mb-10">
                         {t("cta.description")}
                     </p>
 
@@ -214,17 +233,13 @@ const TrustItem = ({
     icon,
     title,
     desc,
-}: {
-    icon: React.ReactNode;
-    title: string;
-    desc: string;
-}) => (
+}: TrustItemProps) => (
     <motion.div variants={fadeUp}>
-        <div className="w-14 h-14 rounded-full bg-white shadow-sm mx-auto flex items-center justify-center mb-6 text-gray-700">
+        <div className="w-14 h-14 rounded-full bg-white shadow-sm mx-auto flex items-center justify-center mb-4 text-gray-700">
             {icon}
         </div>
-        <h3 className="text-xl font-semibold mb-3">{title}</h3>
-        <p className="text-gray-600">{desc}</p>
+        <h3 className="text-xl font-semibold leading-[1.45] mb-2">{title}</h3>
+        <p className="text-gray-600 leading-7">{desc}</p>
     </motion.div>
 );
 
@@ -232,11 +247,7 @@ const RejectLine = ({
     title,
     desc,
     animation,
-}: {
-    title: string;
-    desc: string;
-    animation: any;
-}) => (
+}: RejectLineProps) => (
     <motion.div
         initial="hidden"
         whileInView="visible"
@@ -244,13 +255,13 @@ const RejectLine = ({
         variants={animation}
         transition={{ duration: 0.6, ease: "easeOut" }}
     >
-        <div className="flex items-start gap-6">
-            <div className="mt-2">
+        <div className="flex items-start gap-4 md:gap-6">
+            <div className="mt-1.5">
                 <Ban className="text-red-500" />
             </div>
             <div>
-                <h3 className="text-2xl font-semibold mb-3">{title}</h3>
-                <p className="text-gray-600 text-lg leading-relaxed max-w-xl">
+                <h3 className="text-2xl font-semibold leading-[1.45] mb-2">{title}</h3>
+                <p className="text-gray-600 text-lg leading-8 max-w-xl">
                     {desc}
                 </p>
             </div>
@@ -258,10 +269,10 @@ const RejectLine = ({
     </motion.div>
 );
 
-const Guarantee = ({ text }: { text: string }) => (
+const Guarantee = ({ text }: GuaranteeProps) => (
     <div className="flex items-start gap-4">
         <CheckCircle2 className="text-emerald-600 mt-1" />
-        <p className="text-gray-700 text-lg">{text}</p>
+        <p className="text-gray-700 text-lg leading-8">{text}</p>
     </div>
 );
 
