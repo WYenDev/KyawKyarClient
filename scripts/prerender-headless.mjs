@@ -5,6 +5,10 @@
  *
  * Build runs this automatically: npm run build
  *
+ * For prerendered pages to show real data (not "Failed to load"), the API must
+ * be running during the build. /api requests are proxied to PRERENDER_API_TARGET
+ * (default http://localhost:3000). Start the backend before running build.
+ *
  * Chrome is required for full prerender. If missing, the script skips gracefully
  * and the build still has meta-only HTML from vite-prerender-plugin.
  * To install Chrome for Puppeteer: npx puppeteer browsers install chrome
@@ -13,6 +17,7 @@
 
 import fs from 'fs';
 import http from 'http';
+import https from 'https';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { launch } from 'puppeteer';
@@ -20,6 +25,7 @@ import { launch } from 'puppeteer';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
 const PORT = 4321;
+const API_TARGET = process.env.PRERENDER_API_TARGET || 'http://localhost:3000';
 
 const ROUTES = [
   '/',
@@ -50,10 +56,40 @@ function resolveRequest(pathname) {
   return resolved;
 }
 
+function proxyToApi(req, res) {
+  const url = new URL(req.url || '/', `http://localhost`);
+  const targetUrl = `${API_TARGET}${url.pathname}${url.search}`;
+  const parsed = new URL(targetUrl);
+  const isHttps = parsed.protocol === 'https:';
+  const opts = {
+    hostname: parsed.hostname,
+    port: parsed.port || (isHttps ? 443 : 80),
+    path: parsed.pathname + parsed.search,
+    method: req.method,
+    headers: { ...req.headers, host: parsed.host },
+  };
+  const requestModule = isHttps ? https : http;
+  const proxyReq = requestModule.request(opts, (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res, { end: true });
+  });
+  proxyReq.on('error', (err) => {
+    console.warn(`Prerender API proxy error (is backend running on ${API_TARGET}?):`, err.message);
+    res.writeHead(502, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Bad Gateway', message: 'API unreachable during prerender' }));
+  });
+  req.pipe(proxyReq, { end: true });
+}
+
 const server = http.createServer(async (req, res) => {
   const pathname = new URL(req.url || '/', `http://localhost`).pathname;
-  let filePath = resolveRequest(pathname);
 
+  if (pathname.startsWith('/api')) {
+    proxyToApi(req, res);
+    return;
+  }
+
+  let filePath = resolveRequest(pathname);
   const stat = await fs.promises.stat(filePath).catch(() => null);
   if (stat && stat.isDirectory()) {
     filePath = path.join(filePath, 'index.html');
