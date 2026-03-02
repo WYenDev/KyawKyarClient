@@ -180,7 +180,6 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
                     <span className="font-bold text-slate-900">
                       {t('car_carousel.DiscoverMore')}
                     </span>
-                    <span className="text-[10px] text-slate-400 mt-2 uppercase tracking-[0.2em] font-black">150+ Vehicles</span>
                   </div>
                 </div>
               </div>

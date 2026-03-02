@@ -9,9 +9,9 @@ const WhySellWithUs: React.FC = () => {
   const benefits = [
     {
       icon: DollarSign,
-      title: t('sell.benefits.fair_offer_title', 'Get a Fair Offer'),
+      title: t('sell.highlights.best_price_title', 'Get a Fair Offer'),
       description: t(
-        'sell.benefits.fair_offer_desc',
+        'sell.highlights.best_price_desc',
         'We provide a competitive and transparent valuation for your vehicle based on market data.',
       ),
       color: 'text-emerald-600',
@@ -19,9 +19,9 @@ const WhySellWithUs: React.FC = () => {
     },
     {
       icon: FastForward,
-      title: t('sell.benefits.fast_easy_title', 'Fast and Easy Process'),
+      title: t('sell.highlights.fast_process_title', 'Fast and Easy Process'),
       description: t(
-        'sell.benefits.fast_easy_desc',
+        'sell.highlights.fast_process_desc',
         'Our streamlined process gets you from submission to sale in no time, with no hidden steps.',
       ),
       color: 'text-indigo-600',
@@ -29,9 +29,9 @@ const WhySellWithUs: React.FC = () => {
     },
     {
       icon: ShieldCheck,
-      title: t('sell.benefits.secure_payment_title', 'Secure & Transparent'),
+      title: t('sell.highlights.secure_payment_title', 'Secure & Transparent'),
       description: t(
-        'sell.benefits.secure_payment_desc',
+        'sell.highlights.secure_payment_desc',
         'Receive your payment through safe channels. We handle all the paperwork for you.',
       ),
       color: 'text-blue-600',
@@ -39,9 +39,9 @@ const WhySellWithUs: React.FC = () => {
     },
     {
       icon: Award,
-      title: t('sell.benefits.trusted_partner_title', 'Trusted Partner'),
+      title: t('sell.highlights.trusted_title', 'Trusted Partner'),
       description: t(
-        'sell.benefits.trusted_partner_desc',
+        'sell.highlights.trusted_desc',
         'With years of experience, we are a trusted name in the car industry.',
       ),
       color: 'text-amber-600',
@@ -54,7 +54,7 @@ const WhySellWithUs: React.FC = () => {
       <h3 className={`text-lg font-black mb-6 flex items-center gap-2 tracking-tight ${isMyanmar ? 'font-myanmar leading-relaxed' : ''}`}>
         <ShieldCheck className="w-5 h-5 text-indigo-600" />
         <span className="inline-block pt-2 pb-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-          {t('sell.why_sell_title', 'Why Sell With TKK?')}
+          {t('sell.highlights_title')}
         </span>
       </h3>
       
@@ -74,17 +74,6 @@ const WhySellWithUs: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-8 p-4 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center gap-3">
-        <div className="flex -space-x-2">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-6 w-6 rounded-full border-2 border-white bg-slate-200" />
-          ))}
-        </div>
-        <p className="text-[11px] text-indigo-700 font-medium leading-tight">
-          {t('sell.footer_note', 'Join 1,000+ happy sellers this month')}
-        </p>
       </div>
     </div>
   );

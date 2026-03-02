@@ -18,16 +18,10 @@ const Home: React.FC = () => {
   const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
   const { data: promoBanners } = useGetApiPromoBannersActive();
   const { data: homeData } = useGetApiHome();
-  const { firstSectionBanners, secondSectionBanners } = useMemo(() => {
-    const withImage = (Array.isArray(promoBanners) ? promoBanners : []).filter(
+  const allBanners = useMemo(() => {
+    return (Array.isArray(promoBanners) ? promoBanners : []).filter(
       (b): b is PromoBannerItem => Boolean(b?.imageUrl)
-    ) as PromoBannerItem[];
-    const promotions = withImage.filter((b) => b.type === 'PROMOTION');
-    const newArrivals = withImage.filter((b) => b.type === 'NEW_ARRIVAL');
-    const hasBoth = promotions.length > 0 && newArrivals.length > 0;
-    const first = promotions.length > 0 ? promotions : newArrivals.length > 0 ? newArrivals : [];
-    const second = hasBoth ? newArrivals : [];
-    return { firstSectionBanners: first, secondSectionBanners: second };
+    );
   }, [promoBanners]);
 
   const organizationSchema = {
@@ -84,10 +78,9 @@ const Home: React.FC = () => {
         structuredData={[organizationSchema, webSiteSchema, autoDealerSchema]}
       />
       <Hero />
-      {firstSectionBanners.length > 0 && <PromoBannerGrid banners={firstSectionBanners} />}
+      {allBanners.length > 0 && <PromoBannerGrid banners={allBanners} />}
       <FeaturedCars />
       <NewArrivals />
-      {secondSectionBanners.length > 0 && <PromoBannerGrid banners={secondSectionBanners} />}
       <BrowseCarByBuildTypes />
       <BrowseCarByBrands />
       <WhyBuyATKK />

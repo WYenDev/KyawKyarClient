@@ -193,20 +193,9 @@ const AboutTeaser: React.FC = () => {
                           />
                         ))}
                       </div>
-                      <div className="text-right">
-                        <div className="text-[10px] text-slate-500">Use arrows or dots to navigate</div>
-                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-2 px-2">
-                    <div className="relative h-1 bg-slate-200 rounded-none overflow-hidden">
-                      <div
-                        className="absolute inset-y-0 left-0 bg-indigo-600 rounded-none transition-all duration-300"
-                        style={{ width: `${((activeIndex + 1) / Math.max(aboutImages.length, 1)) * 100}%` }}
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
 
