@@ -25,6 +25,10 @@
     "opening_hours": "ဖွင့်ချိန်"
   },
   "payments_info": {
+    "meta": {
+      "title": "ငွေပေးချေမှုများနှင့် အရစ်ကျစနစ် | ကျော်ကြား ကားရောင်းပြခန်း",
+      "description": "ကားဝယ်ယူရာတွင် ငွေပေးချေမှု ရွေးချယ်စရာများ။ လက်ငင်း၊ Showroom အရစ်ကျ သို့မဟုတ် ဘဏ်အရစ်ကျ (AYA၊ CB၊ KBZ) ကျော်ကြားတွင် ရရှိနိုင်ပါသည်။"
+    },
     "title": "ငွေပေးချေမှု ရွေးချယ်စရာများ",
     "description": "Kyaw Kyar တွင် <highlight>လက်ငင်းငွေချေစနစ်</highlight>ဖြင့် ဝယ်ယူနိုင်သလို၊ လွယ်ကူလျင်မြန်သော <highlight>Showroom Installment</highlight> (သို့မဟုတ်) ဘဏ်အတိုးနှုန်းသက်သာသော <highlight>Bank Installment</highlight> အစီအစဉ်များဖြင့်လည်း စိတ်ကြိုက်ရွေးချယ် ဝယ်ယူနိုင်ပါသည်။",
     "installment_title": "အရစ်ကျ အမျိုးအစားများ",
@@ -41,7 +45,7 @@
       "showroom_upfront_desc": "ကနဦးပေးသွင်းငွေ- ကနဦး {{initial}}% + စာရွက်စာတမ်းကြေး {{paperwork}} ကျပ်",
       "labels": {
         "initial_payment": "ကနဦး ပေးချေမှု",
-        "deposit": "အပ်ငွေ",
+        "deposit": "စပေါ်ငွေ",
         "tax_registration": "အခွန်နှင့် မှတ်ပုံတင်ကြေး",
         "total_upfront": "စုစုပေါင်း ကနဦးပေးသွင်းငွေ",
         "remaining_bank": "ကျန်ရှိငွေ (ဘဏ်မှ ဆောင်ရွက်ပေးမည်)",

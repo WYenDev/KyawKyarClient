@@ -25,6 +25,10 @@
     "opening_hours": "Opening Hours"
   },
   "payments_info": {
+    "meta": {
+      "title": "Payments & Installment Plans | Kyaw Kyar Car Showroom",
+      "description": "Payment options and installment plans for your car purchase. Cash, showroom installment, or bank financing (AYA, CB, KBZ) available at Kyaw Kyar."
+    },
     "title": "Flexible Payment Options",
     "description": "At Kyaw Kyar, you can purchase with <highlight>Cash Payment</highlight>, or choose easy <highlight>Showroom Installment</highlight> or low-interest <highlight>Bank Installment</highlight> plans.",
     "installment_title": "Installment Types",

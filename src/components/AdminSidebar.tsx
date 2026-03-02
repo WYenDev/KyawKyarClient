@@ -212,27 +212,30 @@ const AdminSidebar = ({
                         </div>
 
                         <nav className="flex-1 px-3 py-4 space-y-1">
-                            <MenuItem to="/admin" icon={LayoutDashboard} label="Dashboard" collapsed={false} end />
-                            <MenuItem to="/admin/cars" icon={Car} label="Cars" collapsed={false} />
-                            <MenuItem to="/admin/brands" icon={Tag} label="Brands & Models" collapsed={false} />
-                            <MenuItem to="/admin/showrooms" icon={Building} label="Showrooms" collapsed={false} />
-                            <MenuItem to="/admin/banners" icon={Megaphone} label="Banners" collapsed={false} />
-                            <MenuItem to="/admin/promo-banners" icon={Sparkles} label="Promo Banners" collapsed={false} />
-                            <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={false} />
-                            <MenuItem to="/admin/vehicle-specs" icon={Settings} label="Vehicle Specs" collapsed={false} />
-                            <MenuItem to="/admin/regions" icon={MapPin} label="Regions" collapsed={false} />
-                            <MenuItem to="/admin/home" icon={LayoutDashboard} label="Home page" collapsed={false} end />
-                            <MenuItem to="/admin/about" icon={Info} label="About Page" collapsed={false} />
-                            <MenuItem to="/admin/payments" icon={LayoutDashboard} label="Payments" collapsed={false} />
-                            <MenuItem to="/admin/sell-requests" icon={Tag} label="Sell Requests" collapsed={false} />
+                            <MenuItem to="/admin" icon={LayoutDashboard} label="Dashboard" collapsed={false} end onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/cars" icon={Car} label="Cars" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/brands" icon={Tag} label="Brands & Models" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/showrooms" icon={Building} label="Showrooms" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/banners" icon={Megaphone} label="Banners" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/promo-banners" icon={Sparkles} label="Promo Banners" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/vehicle-specs" icon={Settings} label="Vehicle Specs" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/regions" icon={MapPin} label="Regions" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/home" icon={LayoutDashboard} label="Home page" collapsed={false} end onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/about" icon={Info} label="About Page" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/payments" icon={LayoutDashboard} label="Payments" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/sell-requests" icon={Tag} label="Sell Requests" collapsed={false} onNavigate={onMobileClose} />
                             {user?.role === "SUPER_ADMIN" && (
-                                <MenuItem to="/admin/user-management" icon={Layers} label="User Management" collapsed={false} />
+                                <MenuItem to="/admin/user-management" icon={Layers} label="User Management" collapsed={false} onNavigate={onMobileClose} />
                             )}
                         </nav>
 
                         <div className="px-3 py-3 border-t space-y-1">
                             <button
-                                onClick={handleLogout}
+                                onClick={() => {
+                                    onMobileClose?.();
+                                    handleLogout();
+                                }}
                                 className={`
                                     w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
                                     text-sm text-slate-600 hover:bg-red-50 hover:text-red-600
@@ -257,16 +260,20 @@ const MenuItem = ({
     label,
     collapsed,
     end = false,
+    onNavigate,
 }: {
     to: string;
     icon: any;
     label: string;
     collapsed: boolean;
     end?: boolean;
+    /** Called when link is clicked (e.g. close mobile sidebar) */
+    onNavigate?: () => void;
 }) => (
     <NavLink
         to={to}
         end={end}
+        onClick={onNavigate}
         className={({ isActive }) =>
             `
                 group flex items-center gap-3 px-3 py-2.5 rounded-lg
