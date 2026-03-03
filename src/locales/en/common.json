@@ -60,6 +60,79 @@
       }
     }
   },
+  "installment_detail": {
+    "toggle": {
+      "showroom": "Showroom Payment",
+      "bank": "Bank Payment"
+    },
+    "banks": {
+      "title": "Accepted Banks",
+      "description": "We accept KBZ / AYA / CB and most local banks.",
+      "other_local": "Other Local Banks"
+    },
+    "cta": {
+      "title": "Calculate Your Payment",
+      "description_line1": "Get a quick estimate for the payment plan that fits you.",
+      "description_line2": "We’ll also automatically pass your selected mode to the calculator.",
+      "pills": {
+        "instant": "Instant estimate",
+        "steps": "Clear steps",
+        "secure": "Secure flow"
+      },
+      "button": "Calculate Now"
+    },
+    "hero": {
+      "kicker": "Installment & Payment Options",
+      "title_prefix": "Installment Options at",
+      "brand": "Kyaw Kyar",
+      "title": "Installment Options at <brand>Kyaw Kyar</brand>",
+      "description": "At Kyaw Kyar, you can pay directly at the showroom or make payments through the major banks used by customers.",
+      "chips": {
+        "fast": "Fast Process",
+        "secure": "Secure Flow",
+        "premium": "Quality Service"
+      },
+      "stats": {
+        "fast_title": "Fast Process",
+        "fast_desc": "Quick processing",
+        "secure_title": "Secure",
+        "secure_desc": "Safe and reliable",
+        "flex_title": "Flexible",
+        "flex_desc": "Flexible options"
+      },
+      "button": "Calculate Now",
+      "selected_mode": "Selected Mode",
+      "image_alt": "Car installment",
+      "image_card": {
+        "subtitle": "Showroom / Bank Payment Options",
+        "title": "Clear • Fast • Secure",
+        "description": "We keep the payment steps clear, fast, and secure for customers."
+      },
+      "badge_title": "Installment"
+    },
+    "showroom": {
+      "title": "Showroom Payment",
+      "description": "Pay directly at Kyaw Kyar showroom, and our team will assist with paperwork.",
+      "benefits": {
+        "fast_simple_title": "Fast & Simple",
+        "fast_simple_desc": "Simple steps and time-saving.",
+        "paperwork_title": "Paperwork Assisted",
+        "paperwork_desc": "Our showroom team helps handle the paperwork.",
+        "clear_payment_title": "Clear Payment",
+        "clear_payment_desc": "A clear payment process with quick support."
+      }
+    },
+    "bank": {
+      "title": "Bank Payment",
+      "description": "Make payments through KBZ, AYA, CB, and most customer-used banks.",
+      "benefits": {
+        "accepted_title": "All Major Banks Accepted",
+        "accepted_desc": "We accept the major banks our customers use.",
+        "secure_title": "Secure Transactions",
+        "secure_desc": "A secure and reliable payment process."
+      }
+    }
+  },
   "purchase_guide": {
     "title": "Required Documents for Bank Installment",
     "subtitle": "Please bring the following documents for processing.",

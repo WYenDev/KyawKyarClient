@@ -37,6 +37,13 @@ const ROUTE_SEO: Record<string, { title: string; description: string; canonical?
     lang: 'en',
     image: DEFAULT_IMAGE,
   },
+  '/resell-market-price': {
+    title: 'Resell at Market Price | Kyaw Kyar Car Showroom',
+    description: 'Get a market-based valuation and resell your car with a smooth process.',
+    canonical: '/resell-market-price',
+    lang: 'en',
+    image: DEFAULT_IMAGE,
+  },
   '/reviews': {
     title: 'Reviews | Kyaw Kyar Car Showroom',
     description: 'Read what our customers say about buying and selling cars at Kyaw Kyar.',

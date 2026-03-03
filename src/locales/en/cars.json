@@ -65,6 +65,85 @@
     "title": "Sell Your Car - Fast & Easy Service",
     "description": "Sell your car quickly with Kyaw Kyar. Get a competitive offer and handle paperwork hassle-free."
   },
+  "resell_market_meta": {
+    "title": "Resell at Market Price",
+    "description": "Get a market-based valuation and a clear, guided resell process."
+  },
+  "resell_market": {
+    "kicker": "Resell Service",
+    "title": "Resell at Market Price",
+    "subtitle": "Share your car details and photos, and we'll suggest a fair market price with clear next steps.",
+    "chips": {
+      "market_based": "Market-based pricing",
+      "fast_response": "Fast response",
+      "premium_support": "Premium support"
+    },
+    "micro": {
+      "market": "Based on listings, demand and car condition.",
+      "speed": "Clear next steps after review.",
+      "security_title": "Secure guidance",
+      "security_desc": "Trusted and transparent."
+    },
+    "cta": {
+      "primary": "Continue to Sell Car",
+      "secondary": "Go to Sell Car"
+    },
+    "note": {
+      "title": "Market price guidance",
+      "desc": "We'll guide you step by step."
+    },
+    "hero_card": {
+      "kicker": "Resell Market Price",
+      "title": "Clear • Fair • Fast",
+      "desc": "Get a market-based price suggestion, then continue to Sell Car to submit your details."
+    },
+    "how_steps": {
+      "step1": "Submit your car details and photos",
+      "step2": "We check the market and car condition",
+      "step3": "We contact you with a suggested market price"
+    },
+    "process": {
+      "sectionTitle": "How it works",
+      "stepLabel": "STEP",
+      "steps": {
+        "01": {
+          "title": "Submit details",
+          "description": "Share your car details and photos so we can understand your car clearly."
+        },
+        "02": {
+          "title": "Market review",
+          "description": "We review current market listings, demand, and your car condition to estimate a fair price."
+        },
+        "03": {
+          "title": "Discuss at our showroom",
+          "description": "To help you list your car in our showroom at the market price, our Kyaw Kyar Showroom team is available to discuss the details with customers at any time."
+        }
+      }
+    },
+    "section": {
+      "kicker": "Why this is different",
+      "title": "Premium resell experience",
+      "desc": "We focus on clarity and fairness so you can resell with confidence."
+    },
+    "features": {
+      "market_based": {
+        "title": "Market-based valuation",
+        "desc": "We review current market listings and demand to suggest a fair resell price."
+      },
+      "fast_response": {
+        "title": "Fast response",
+        "desc": "Receive a suggested price and next steps soon after you submit your details."
+      },
+      "trusted_process": {
+        "title": "Trusted process",
+        "desc": "Transparent steps with paperwork guidance and secure communication."
+      }
+    },
+    "cta_card": {
+      "title": "Ready to submit your car details?",
+      "desc": "Continue to the Sell Car page to upload photos and send your information."
+    }
+  },
   "sell": {
     "title": "Sell Your Car",
     "details_title": "Car Details",
