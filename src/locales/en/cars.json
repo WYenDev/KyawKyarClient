@@ -73,6 +73,93 @@
     "kicker": "Resell Service",
     "title": "Resell at Market Price",
     "subtitle": "Share your car details and photos, and we'll suggest a fair market price with clear next steps.",
+    "hero": {
+      "pill": "Myanmar's Most Trusted Car Showroom",
+      "trust_line": "Join over 1,000 happy sellers this month"
+    },
+    "stats": {
+      "items": {
+        "01": { "value": "10,000+", "title": "Market checks", "desc": "Based on real listings and demand signals." },
+        "02": { "value": "24hrs", "title": "Average response", "desc": "Get a suggested price and next steps fast." },
+        "03": { "value": "100%", "title": "Transparent guidance", "desc": "Clear steps, no pressure." },
+        "04": { "value": "5★", "title": "Customer rating", "desc": "Trusted service and support." }
+      }
+    },
+    "simple_process": {
+      "kicker": "SIMPLE PROCESS",
+      "title": "Get your market price in 4 steps",
+      "subtitle": "From details to suggested price — clear, fair, and fast.",
+      "steps": {
+        "01": {
+          "title": "Submit your car details",
+          "desc": "Tell us your model, year, mileage and any key condition notes."
+        },
+        "02": {
+          "title": "Share photos & condition",
+          "desc": "Send clear photos so we can understand your car accurately."
+        },
+        "03": {
+          "title": "We compare the market",
+          "desc": "We benchmark against current listings and demand to estimate a fair range."
+        },
+        "04": {
+          "title": "Receive your suggested price",
+          "desc": "We contact you with a market-based suggested price and next steps to list."
+        }
+      }
+    },
+    "promise": {
+      "one": {
+        "kicker": "OUR PROMISE",
+        "title": "Market data, fair guidance",
+        "subtitle": "A suggested price based on real comparisons — explained clearly.",
+        "image_alt": "Car market valuation support",
+        "bullets": {
+          "01": "Market listing comparison",
+          "02": "Condition-based adjustment",
+          "03": "Transparent guidance",
+          "04": "No obligation to sell"
+        }
+      },
+      "two": {
+        "kicker": "SUPPORT",
+        "title": "Listing help & secure paperwork",
+        "subtitle": "If you proceed, we help you list with confidence and clarity.",
+        "image_alt": "Secure listing and paperwork support",
+        "bullets": {
+          "01": "Showroom & online listing support",
+          "02": "Buyer communication guidance",
+          "03": "Ownership transfer & paperwork help"
+        }
+      }
+    },
+    "faq": {
+      "kicker": "FAQ",
+      "title": "Frequently asked questions",
+      "items": {
+        "01": {
+          "q": "What information do I need to submit?",
+          "a": "Your brand/model, year, mileage, license, and clear photos of exterior/interior help us estimate accurately."
+        },
+        "02": {
+          "q": "Is the suggested price guaranteed?",
+          "a": "It’s a market-based guidance range. Final selling price can vary depending on condition, documents, and buyer demand."
+        },
+        "03": {
+          "q": "How long does the process take?",
+          "a": "Most price guidance responses are shared within 24 hours after receiving complete details and photos."
+        },
+        "04": {
+          "q": "Do I have to sell with Kyaw Kyar?",
+          "a": "No. You can use the suggested market price as guidance. If you want, we can help you list and sell smoothly."
+        }
+      }
+    },
+    "final_cta": {
+      "title": "Ready to get your resell market price?",
+      "subtitle": "Submit your details and photos. We’ll reply with a market-based suggested price and clear next steps.",
+      "micro": "Market-based • Transparent • Fast response"
+    },
     "chips": {
       "market_based": "Market-based pricing",
       "fast_response": "Fast response",
@@ -86,7 +173,7 @@
     },
     "cta": {
       "primary": "Continue to Sell Car",
-      "secondary": "Go to Sell Car"
+      "secondary": "Get market price"
     },
     "note": {
       "title": "Market price guidance",
