@@ -72,7 +72,7 @@
   "resell_market": {
     "kicker": "Resell Service",
     "title": "Kyaw Kyar Buy-Back Guarantee",
-    "subtitle": "We stand by the vehicles we sell. As a Kyaw Kyar customer, enjoy the peace of mind that comes with a guaranteed market-value buy-back option, ensuring your investment is always protected throughout your ownership journey.",
+    "description": "We stand by the vehicles we sell. As a Kyaw Kyar customer, enjoy the peace of mind that comes with a guaranteed market-value buy-back option, ensuring your investment is always protected throughout your ownership journey.",
     "chips": {
       "market_based": "Market-based pricing",
       "fast_response": "Fast response",
@@ -142,6 +142,51 @@
     "cta_card": {
       "title": "Ready to submit your car details?",
       "desc": "Continue to the Sell Car page to upload photos and send your information."
+    },
+    "kyaw_kyar_standard": {
+      "sectionTitle": "Our valuation criteria",
+      "marketData": {
+        "title": "Current Market Valuation",
+        "desc": "We provide a valuation based on today's accurate market prices, ensuring you receive a transparent and fair offer."
+      },
+      "physicalAppraisal": {
+        "title": "Physical Appraisal",
+        "desc": "Our experienced team performs a comprehensive review of your vehicle, leveraging our deep knowledge of car specifications to determine a fair, accurate valuation."
+      },
+      "serviceHistory": {
+        "title": "Service History Premium",
+        "desc": "Our experienced team performs a comprehensive review of your vehicle, leveraging our deep knowledge of car specifications to determine a fair, accurate valuation."
+      }
+    },
+    "eligibility": {
+      "sectionTitle": "Eligibility & Requirements",
+      "originalPurchase": {
+        "title": "Original Purchase",
+        "desc": "This benefit is exclusive to vehicles originally purchased from Kyaw Kyar Showrooms."
+      },
+      "maintenanceRecords": {
+        "title": "Maintenance Records",
+        "desc": "The vehicle should have a verifiable maintenance history."
+      },
+      "legalClearance": {
+        "title": "Legal Clearance",
+        "desc": "All registration and ownership documents must be clear and up-to-date."
+      }
+    },
+    "faq": {
+      "sectionTitle": "Frequently Asked Questions",
+      "q1": {
+        "question": "How long does the appraisal take?",
+        "answer": "Usually within 24–48 hours. We work quickly to give you a price suggestion as soon as possible."
+      },
+      "q2": {
+        "question": "Do I have to buy another car from you?",
+        "answer": "No, this is a standalone buy-back guarantee for your convenience. You can sell without purchasing."
+      },
+      "q3": {
+        "question": "What if my car has minor damage?",
+        "answer": "We still offer buy-backs! We simply adjust the market value based on necessary repairs."
+      }
     }
   },
   "sell": {

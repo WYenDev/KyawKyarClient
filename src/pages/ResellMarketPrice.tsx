@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, TrendingUp, ClipboardCheck, FileCheck, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -34,6 +34,7 @@ const ResellMarketPrice: React.FC = () => {
   const navigate = useNavigate();
   const lang = i18n.resolvedLanguage ?? i18n.language;
   const isMyanmar = lang.startsWith("mm") || lang.startsWith("my");
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const primaryButtonClass =
     "w-full sm:w-auto px-10 py-4 bg-blue-600 text-white rounded-full text-sm tracking-wide hover:bg-blue-700 transition inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200";
@@ -99,16 +100,14 @@ const ResellMarketPrice: React.FC = () => {
             {t("resell_market.overline", "Why Kyaw Kyar")}
           </p>
           <h1
-            className={`text-3xl sm:text-4xl font-semibold mb-4 ${
-              isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
-            } text-center md:text-left`}
+            className={`text-3xl sm:text-4xl font-semibold mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
+              } text-center md:text-left`}
           >
             {t("resell_market.title", "Resell at Market Price")}
           </h1>
-          <p className={`text-gray-800 text-lg sm:text-xl leading-relaxed font-medium ${isMyanmar ? "leading-[1.9]" : ""} max-w-3xl text-center md:text-left`}>
+          <p className={`text-gray-600 text-base md:text-lg leading-relaxed ${isMyanmar ? "leading-[1.9]" : ""} max-w-4xl text-center md:text-left`}>
             {t(
-              "resell_market.subtitle",
-              "Share your car details and photos, and we'll suggest a fair market price with clear next steps.",
+              "resell_market.description"
             )}
           </p>
 
@@ -120,6 +119,53 @@ const ResellMarketPrice: React.FC = () => {
         </motion.div>
       </section>
 
+      {/* ================= Kyaw Kyar Standard (Valuation Criteria) ================= */}
+      <section className="py-12 md:py-16 bg-gray-50">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+          className="max-w-6xl mx-auto px-6"
+        >
+          <h2 className={`text-2xl sm:text-3xl font-semibold text-center mb-10 md:mb-12 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
+            {t("resell_market.kyaw_kyar_standard.sectionTitle", "The Kyaw Kyar Standard")}
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            <div className="bg-white rounded-2xl p-6 md:p-8 ring-1 ring-black/5">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+                <TrendingUp className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-3">{t("resell_market.kyaw_kyar_standard.marketData.title", "Market Data Analysis")}</h3>
+              <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                {t("resell_market.kyaw_kyar_standard.marketData.desc", "We use real-time data from across the country to ensure your price reflects current demand.")}
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 md:p-8 ring-1 ring-black/5">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+                <ClipboardCheck className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-3">{t("resell_market.kyaw_kyar_standard.physicalAppraisal.title", "Physical Appraisal")}</h3>
+              <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                {t("resell_market.kyaw_kyar_standard.physicalAppraisal.desc", "Our expert technicians conduct a thorough point-by-point inspection to value your car's true condition.")}
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 md:p-8 ring-1 ring-black/5">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+                <FileCheck className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-3">{t("resell_market.kyaw_kyar_standard.serviceHistory.title", "Service History Premium")}</h3>
+              <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                {t("resell_market.kyaw_kyar_standard.serviceHistory.desc", "Cars with a consistent Kyaw Kyar service history receive the best possible market valuation.")}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
       <section className="py-12 md:py-16 border-t border-gray-100">
         <div className="max-w-6xl mx-auto px-6">
           <motion.h2
@@ -127,9 +173,8 @@ const ResellMarketPrice: React.FC = () => {
             animate="visible"
             variants={fadeUp}
             transition={{ duration: 0.6 }}
-            className={`text-2xl sm:text-3xl font-semibold text-center mb-12 md:mb-20 ${
-              isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
-            }`}
+            className={`text-2xl sm:text-3xl font-semibold text-center mb-12 md:mb-20 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
+              }`}
           >
             {t("resell_market.process.sectionTitle", "How it works")}
           </motion.h2>
@@ -146,6 +191,91 @@ const ResellMarketPrice: React.FC = () => {
             />
           ))}
         </div>
+      </section>
+
+      {/* ================= Eligibility & Requirements ================= */}
+      <section className="py-12 md:py-16">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto px-6"
+        >
+          <h2 className={`text-2xl sm:text-3xl font-semibold text-center mb-10 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
+            {t("resell_market.eligibility.sectionTitle", "Eligibility & Requirements")}
+          </h2>
+
+          <div className="bg-white rounded-2xl p-8 md:p-10 ring-1 ring-black/5">
+            <div className="grid md:grid-cols-3 gap-8 md:gap-10">
+              <div>
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                </div>
+                <h3 className="font-semibold mb-2">{t("resell_market.eligibility.originalPurchase.title", "Original Purchase")}</h3>
+                <p className="text-gray-800 leading-relaxed font-medium text-sm">
+                  {t("resell_market.eligibility.originalPurchase.desc", "This benefit is exclusive to vehicles originally purchased from Kyaw Kyar Showrooms.")}
+                </p>
+              </div>
+
+              <div>
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                </div>
+                <h3 className="font-semibold mb-2">{t("resell_market.eligibility.maintenanceRecords.title", "Maintenance Records")}</h3>
+                <p className="text-gray-800 leading-relaxed font-medium text-sm">
+                  {t("resell_market.eligibility.maintenanceRecords.desc", "The vehicle should have a verifiable maintenance history.")}
+                </p>
+              </div>
+
+              <div>
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                </div>
+                <h3 className="font-semibold mb-2">{t("resell_market.eligibility.legalClearance.title", "Legal Clearance")}</h3>
+                <p className="text-gray-800 leading-relaxed font-medium text-sm">
+                  {t("resell_market.eligibility.legalClearance.desc", "All registration and ownership documents must be clear and up-to-date.")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ================= FAQ ================= */}
+      <section className="py-12 md:py-16 bg-gray-50">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl mx-auto px-6"
+        >
+          <h2 className={`text-2xl sm:text-3xl font-semibold text-center mb-10 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
+            {t("resell_market.faq.sectionTitle", "Frequently Asked Questions")}
+          </h2>
+
+          <div className="space-y-4">
+            <FAQItem
+              isOpen={openFaq === 0}
+              onToggle={() => setOpenFaq(openFaq === 0 ? null : 0)}
+              question={t("resell_market.faq.q1.question", "How long does the appraisal take?")}
+              answer={t("resell_market.faq.q1.answer", "Usually within 24–48 hours. We work quickly to give you a price suggestion as soon as possible.")}
+            />
+            <FAQItem
+              isOpen={openFaq === 1}
+              onToggle={() => setOpenFaq(openFaq === 1 ? null : 1)}
+              question={t("resell_market.faq.q2.question", "Do I have to buy another car from you?")}
+              answer={t("resell_market.faq.q2.answer", "No, this is a standalone buy-back guarantee for your convenience. You can sell without purchasing.")}
+            />
+            <FAQItem
+              isOpen={openFaq === 2}
+              onToggle={() => setOpenFaq(openFaq === 2 ? null : 2)}
+              question={t("resell_market.faq.q3.question", "What if my car has minor damage?")}
+              answer={t("resell_market.faq.q3.answer", "We still offer buy-backs! We simply adjust the market value based on necessary repairs.")}
+            />
+          </div>
+        </motion.div>
       </section>
 
       <section className="py-12 md:py-16">
@@ -217,6 +347,32 @@ const StepBlock: React.FC<{
       </div>
     </div>
   </motion.div>
+);
+
+const FAQItem: React.FC<{
+  isOpen: boolean;
+  onToggle: () => void;
+  question: string;
+  answer: string;
+}> = ({ isOpen, onToggle, question, answer }) => (
+  <div className="bg-white rounded-xl ring-1 ring-black/5 overflow-hidden">
+    <button
+      onClick={onToggle}
+      className="w-full px-6 py-5 flex items-center justify-between text-left"
+    >
+      <span className="font-semibold text-gray-900 pr-4">{question}</span>
+      {isOpen ? (
+        <ChevronUp className="w-5 h-5 text-gray-500 flex-shrink-0" />
+      ) : (
+        <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
+      )}
+    </button>
+    {isOpen && (
+      <div className="px-6 pb-5">
+        <p className="text-gray-800 leading-relaxed font-medium">{answer}</p>
+      </div>
+    )}
+  </div>
 );
 
 export default ResellMarketPrice;
