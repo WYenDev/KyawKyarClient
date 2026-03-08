@@ -232,3 +232,32 @@ img {
   .landing-title-content [style*="font-size: 12px"], .landing-title-content [style*="font-size:12px"] { font-size: 11px !important; }
   /* 10px is already small enough, no change needed usually, or keeps as is */
 }
+/* ===========================
+   ROOT LAYOUT FIX (IMPORTANT)
+   prevents narrow centered app
+   =========================== */
+
+html,
+body,
+#root {
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  display: block !important;
+  /* override any flex centering */
+  place-items: unset !important;
+}
+
+#root {
+  width: 100%;
+  max-width: none !important;
+  /* override Vite max-width:1280px */
+  margin: 0 !important;
+  /* override margin: 0 auto */
+  padding: 0 !important;
+  /* override template padding */
+  text-align: initial !important;
+  /* override text-align:center */
+}

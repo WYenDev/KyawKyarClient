@@ -18,6 +18,7 @@ export default defineConfig({
         '/about',
         '/buyCars',
         '/sellCars',
+        '/resell-market-price',
         '/reviews',
         '/contact',
         '/payments',
