@@ -8,6 +8,13 @@
   "quick_links_testimonials": "Customer Reviews",
   "quick_links_contact": "Contact",
   "quick_links_showroom": "Showrooms",
+  "why_buy": {
+    "title": "Why Buy From Us",
+    "inspection": "Rigorous Quality Inspection",
+    "financing": "Flexible Financing Options",
+    "market_price": "Fair Market Price",
+    "clean_history": "Verified Clean History"
+  },
   "services": {
     "title": "Our Services",
     "buy": "Buy Cars",

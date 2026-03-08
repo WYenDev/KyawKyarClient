@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-slate-900 text-slate-50">
       <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
@@ -87,7 +87,34 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Services - links where we have a page */}
+          {/* Why Buy From Us */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">{t('why_buy.title')}</h4>
+            <ul className="space-y-2 text-slate-300">
+              <li>
+                <Link to="/why-kyawkyar/rigorous-quality-inspection" className="hover:text-white transition-colors">
+                  {t('why_buy.inspection')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/payments" className="hover:text-white transition-colors">
+                  {t('why_buy.financing')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/resell-market-price" className="hover:text-white transition-colors">
+                  {t('why_buy.market_price')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/why-kyawkyar/clean-history" className="hover:text-white transition-colors">
+                  {t('why_buy.clean_history')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Services */}
           <div>
             <h4 className="text-lg font-semibold mb-4">{t('services.title')}</h4>
             <ul className="space-y-2 text-slate-300">

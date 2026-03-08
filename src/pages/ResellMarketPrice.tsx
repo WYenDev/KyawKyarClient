@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, TrendingUp, ClipboardCheck, FileCheck, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, CheckCircle2, TrendingUp, ClipboardCheck, FileCheck, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +30,7 @@ const fadeSide = (from: "left" | "right") => ({
 });
 
 const ResellMarketPrice: React.FC = () => {
-  const { t, i18n } = useTranslation("cars");
+  const { t, i18n } = useTranslation("resellMarketPrice");
   const navigate = useNavigate();
   const lang = i18n.resolvedLanguage ?? i18n.language;
   const isMyanmar = lang.startsWith("mm") || lang.startsWith("my");
@@ -43,9 +43,9 @@ const ResellMarketPrice: React.FC = () => {
     () => [
       {
         step: "01",
-        title: t("resell_market.process.steps.01.title", "Submit details"),
+        title: t("process.steps.01.title", "Submit details"),
         desc: t(
-          "resell_market.process.steps.01.description",
+          "process.steps.01.description",
           "Share your car details and photos so we can understand your car clearly.",
         ),
         image: step1Img,
@@ -53,9 +53,9 @@ const ResellMarketPrice: React.FC = () => {
       },
       {
         step: "02",
-        title: t("resell_market.process.steps.02.title", "Market review"),
+        title: t("process.steps.02.title", "Market review"),
         desc: t(
-          "resell_market.process.steps.02.description",
+          "process.steps.02.description",
           "We review current market listings, demand, and your car condition to estimate a fair price.",
         ),
         image: step2Img,
@@ -63,9 +63,9 @@ const ResellMarketPrice: React.FC = () => {
       },
       {
         step: "03",
-        title: t("resell_market.process.steps.03.title", "Get a suggested price"),
+        title: t("process.steps.03.title", "Get a suggested price"),
         desc: t(
-          "resell_market.process.steps.03.description",
+          "process.steps.03.description",
           "We contact you with a market-based price suggestion and the next steps to list your car.",
         ),
         image: step3Img,
@@ -78,9 +78,9 @@ const ResellMarketPrice: React.FC = () => {
   return (
     <main className={`bg-white text-gray-900 ${isMyanmar ? "font-myanmar" : ""}`}>
       <SEO
-        title={t("resell_market_meta.title", "Resell at Market Price")}
+        title={t("meta.title", "Resell at Market Price")}
         description={t(
-          "resell_market_meta.description",
+          "meta.description",
           "Get a market-based valuation and resell your car with a smooth process.",
         )}
         canonical="/resell-market-price"
@@ -97,24 +97,24 @@ const ResellMarketPrice: React.FC = () => {
           className="max-w-5xl mx-auto px-6"
         >
           <p className="uppercase tracking-[0.35em] text-xs text-gray-500 mb-4 text-center md:text-left">
-            {t("resell_market.overline", "Why Kyaw Kyar")}
+            {t("overline", "Why Kyaw Kyar")}
           </p>
           <h1
             className={`text-3xl sm:text-4xl font-semibold mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
               } text-center md:text-left`}
           >
-            {t("resell_market.title", "Resell at Market Price")}
+            {t("title", "Resell at Market Price")}
           </h1>
           <p className={`text-gray-600 text-base md:text-lg leading-relaxed ${isMyanmar ? "leading-[1.9]" : ""} max-w-4xl text-center md:text-left`}>
             {t(
-              "resell_market.description"
+              "description"
             )}
           </p>
 
           <div className="flex flex-wrap gap-6 mt-6 mb-2">
-            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("resell_market.badge.valuation", "Verified Market Valuation")}</div>
-            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("resell_market.badge.process", "Seamless Direct Process")}</div>
-            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("resell_market.badge.security", "Ownership Security")}</div>
+            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("badge.valuation", "Verified Market Valuation")}</div>
+            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("badge.process", "Seamless Direct Process")}</div>
+            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("badge.security", "Ownership Security")}</div>
           </div>
         </motion.div>
       </section>
@@ -129,7 +129,7 @@ const ResellMarketPrice: React.FC = () => {
           className="max-w-6xl mx-auto px-6"
         >
           <h2 className={`text-2xl sm:text-3xl font-semibold text-center mb-10 md:mb-12 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
-            {t("resell_market.kyaw_kyar_standard.sectionTitle", "The Kyaw Kyar Standard")}
+            {t("kyaw_kyar_standard.sectionTitle", "The Kyaw Kyar Standard")}
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
@@ -137,9 +137,9 @@ const ResellMarketPrice: React.FC = () => {
               <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
                 <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-lg font-semibold mb-3">{t("resell_market.kyaw_kyar_standard.marketData.title", "Market Data Analysis")}</h3>
+              <h3 className="text-lg font-semibold mb-3">{t("kyaw_kyar_standard.marketData.title", "Market Data Analysis")}</h3>
               <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-                {t("resell_market.kyaw_kyar_standard.marketData.desc", "We use real-time data from across the country to ensure your price reflects current demand.")}
+                {t("kyaw_kyar_standard.marketData.desc", "We use real-time data from across the country to ensure your price reflects current demand.")}
               </p>
             </div>
 
@@ -147,9 +147,9 @@ const ResellMarketPrice: React.FC = () => {
               <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
                 <ClipboardCheck className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-lg font-semibold mb-3">{t("resell_market.kyaw_kyar_standard.physicalAppraisal.title", "Physical Appraisal")}</h3>
+              <h3 className="text-lg font-semibold mb-3">{t("kyaw_kyar_standard.physicalAppraisal.title", "Physical Appraisal")}</h3>
               <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-                {t("resell_market.kyaw_kyar_standard.physicalAppraisal.desc", "Our expert technicians conduct a thorough point-by-point inspection to value your car's true condition.")}
+                {t("kyaw_kyar_standard.physicalAppraisal.desc", "Our expert technicians conduct a thorough point-by-point inspection to value your car's true condition.")}
               </p>
             </div>
 
@@ -157,9 +157,9 @@ const ResellMarketPrice: React.FC = () => {
               <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
                 <FileCheck className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-lg font-semibold mb-3">{t("resell_market.kyaw_kyar_standard.serviceHistory.title", "Service History Premium")}</h3>
+              <h3 className="text-lg font-semibold mb-3">{t("kyaw_kyar_standard.serviceHistory.title", "Service History Premium")}</h3>
               <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-                {t("resell_market.kyaw_kyar_standard.serviceHistory.desc", "Cars with a consistent Kyaw Kyar service history receive the best possible market valuation.")}
+                {t("kyaw_kyar_standard.serviceHistory.desc", "Cars with a consistent Kyaw Kyar service history receive the best possible market valuation.")}
               </p>
             </div>
           </div>
@@ -176,14 +176,14 @@ const ResellMarketPrice: React.FC = () => {
             className={`text-2xl sm:text-3xl font-semibold text-center mb-12 md:mb-20 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
               }`}
           >
-            {t("resell_market.process.sectionTitle", "How it works")}
+            {t("process.sectionTitle", "How it works")}
           </motion.h2>
 
           {processSteps.map((step) => (
             <StepBlock
               key={step.step}
               step={step.step}
-              stepLabel={t("resell_market.process.stepLabel", "STEP")}
+              stepLabel={t("process.stepLabel", "STEP")}
               title={step.title}
               desc={step.desc}
               image={step.image}
@@ -203,7 +203,7 @@ const ResellMarketPrice: React.FC = () => {
           className="max-w-4xl mx-auto px-6"
         >
           <h2 className={`text-2xl sm:text-3xl font-semibold text-center mb-10 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
-            {t("resell_market.eligibility.sectionTitle", "Eligibility & Requirements")}
+            {t("eligibility.sectionTitle", "Eligibility & Requirements")}
           </h2>
 
           <div className="bg-white rounded-2xl p-8 md:p-10 ring-1 ring-black/5">
@@ -212,9 +212,9 @@ const ResellMarketPrice: React.FC = () => {
                 <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-4">
                   <CheckCircle2 className="w-5 h-5 text-green-600" />
                 </div>
-                <h3 className="font-semibold mb-2">{t("resell_market.eligibility.originalPurchase.title", "Original Purchase")}</h3>
+                <h3 className="font-semibold mb-2">{t("eligibility.originalPurchase.title", "Original Purchase")}</h3>
                 <p className="text-gray-800 leading-relaxed font-medium text-sm">
-                  {t("resell_market.eligibility.originalPurchase.desc", "This benefit is exclusive to vehicles originally purchased from Kyaw Kyar Showrooms.")}
+                  {t("eligibility.originalPurchase.desc", "This benefit is exclusive to vehicles originally purchased from Kyaw Kyar Showrooms.")}
                 </p>
               </div>
 
@@ -222,9 +222,9 @@ const ResellMarketPrice: React.FC = () => {
                 <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-4">
                   <CheckCircle2 className="w-5 h-5 text-green-600" />
                 </div>
-                <h3 className="font-semibold mb-2">{t("resell_market.eligibility.maintenanceRecords.title", "Maintenance Records")}</h3>
+                <h3 className="font-semibold mb-2">{t("eligibility.maintenanceRecords.title", "Maintenance Records")}</h3>
                 <p className="text-gray-800 leading-relaxed font-medium text-sm">
-                  {t("resell_market.eligibility.maintenanceRecords.desc", "The vehicle should have a verifiable maintenance history.")}
+                  {t("eligibility.maintenanceRecords.desc", "The vehicle should have a verifiable maintenance history.")}
                 </p>
               </div>
 
@@ -232,9 +232,9 @@ const ResellMarketPrice: React.FC = () => {
                 <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-4">
                   <CheckCircle2 className="w-5 h-5 text-green-600" />
                 </div>
-                <h3 className="font-semibold mb-2">{t("resell_market.eligibility.legalClearance.title", "Legal Clearance")}</h3>
+                <h3 className="font-semibold mb-2">{t("eligibility.legalClearance.title", "Legal Clearance")}</h3>
                 <p className="text-gray-800 leading-relaxed font-medium text-sm">
-                  {t("resell_market.eligibility.legalClearance.desc", "All registration and ownership documents must be clear and up-to-date.")}
+                  {t("eligibility.legalClearance.desc", "All registration and ownership documents must be clear and up-to-date.")}
                 </p>
               </div>
             </div>
@@ -252,27 +252,30 @@ const ResellMarketPrice: React.FC = () => {
           className="max-w-3xl mx-auto px-6"
         >
           <h2 className={`text-2xl sm:text-3xl font-semibold text-center mb-10 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
-            {t("resell_market.faq.sectionTitle", "Frequently Asked Questions")}
+            {t("faq.sectionTitle", "Frequently Asked Questions")}
           </h2>
 
           <div className="space-y-4">
             <FAQItem
+              isMyanmar={isMyanmar}
               isOpen={openFaq === 0}
               onToggle={() => setOpenFaq(openFaq === 0 ? null : 0)}
-              question={t("resell_market.faq.q1.question", "How long does the appraisal take?")}
-              answer={t("resell_market.faq.q1.answer", "Usually within 24–48 hours. We work quickly to give you a price suggestion as soon as possible.")}
+              question={t("faq.q1.question", "How long does the appraisal take?")}
+              answer={t("faq.q1.answer", "Usually within 24–48 hours. We work quickly to give you a price suggestion as soon as possible.")}
             />
             <FAQItem
+              isMyanmar={isMyanmar}
               isOpen={openFaq === 1}
               onToggle={() => setOpenFaq(openFaq === 1 ? null : 1)}
-              question={t("resell_market.faq.q2.question", "Do I have to buy another car from you?")}
-              answer={t("resell_market.faq.q2.answer", "No, this is a standalone buy-back guarantee for your convenience. You can sell without purchasing.")}
+              question={t("faq.q2.question", "Do I have to buy another car from you?")}
+              answer={t("faq.q2.answer", "No, this is a standalone buy-back guarantee for your convenience. You can sell without purchasing.")}
             />
             <FAQItem
+              isMyanmar={isMyanmar}
               isOpen={openFaq === 2}
               onToggle={() => setOpenFaq(openFaq === 2 ? null : 2)}
-              question={t("resell_market.faq.q3.question", "What if my car has minor damage?")}
-              answer={t("resell_market.faq.q3.answer", "We still offer buy-backs! We simply adjust the market value based on necessary repairs.")}
+              question={t("faq.q3.question", "What if my car has minor damage?")}
+              answer={t("faq.q3.answer", "We still offer buy-backs! We simply adjust the market value based on necessary repairs.")}
             />
           </div>
         </motion.div>
@@ -288,12 +291,12 @@ const ResellMarketPrice: React.FC = () => {
         >
           <div className="bg-gray-50 rounded-2xl p-8 md:p-12 ring-1 ring-black/5">
             <h2 className={`text-2xl sm:text-3xl font-semibold mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
-              {t("resell_market.cta_card.title", "Ready to submit your car details?")}
+              {t("cta_card.title", "Ready to submit your car details?")}
             </h2>
 
             <p className="text-gray-700 text-lg sm:text-xl leading-relaxed font-medium mb-8 md:mb-10">
               {t(
-                "resell_market.cta_card.desc",
+                "cta_card.desc",
                 "Continue to the Sell Car page to upload photos and send your information.",
               )}
             </p>
@@ -302,7 +305,7 @@ const ResellMarketPrice: React.FC = () => {
               onClick={() => navigate("/sellCars")}
               className={`${primaryButtonClass} px-16`}
             >
-              {t("resell_market.cta.secondary", "Go to Sell Car")}
+              {t("cta.secondary", "Go to Sell Car")}
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
@@ -354,24 +357,21 @@ const FAQItem: React.FC<{
   onToggle: () => void;
   question: string;
   answer: string;
-}> = ({ isOpen, onToggle, question, answer }) => (
-  <div className="bg-white rounded-xl ring-1 ring-black/5 overflow-hidden">
+  isMyanmar?: boolean;
+}> = ({ isOpen, onToggle, question, answer, isMyanmar }) => (
+  <div className={`bg-white rounded-xl ring-1 ring-black/5 overflow-hidden transition-all duration-200 ${isOpen ? 'ring-2 ring-blue-100' : ''}`}>
     <button
       onClick={onToggle}
-      className="w-full px-6 py-5 flex items-center justify-between text-left"
+      className={`w-full px-6 py-5 flex items-center justify-between text-left transition-colors ${isOpen ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
     >
-      <span className="font-semibold text-gray-900 pr-4">{question}</span>
-      {isOpen ? (
-        <ChevronUp className="w-5 h-5 text-gray-500 flex-shrink-0" />
-      ) : (
-        <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
-      )}
+      <span className={`font-semibold pr-4 transition-colors ${isOpen ? 'text-blue-700' : 'text-gray-900'}`}>{question}</span>
+      <ChevronDown className={`w-5 h-5 text-gray-500 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
     </button>
-    {isOpen && (
-      <div className="px-6 pb-5">
-        <p className="text-gray-800 leading-relaxed font-medium">{answer}</p>
+    <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+      <div className={`px-6 pb-5 ${isMyanmar ? 'py-4' : ''}`}>
+        <p className={`text-gray-800 font-medium ${isMyanmar ? 'leading-[1.9] text-base' : 'leading-relaxed'}`}>{answer}</p>
       </div>
-    )}
+    </div>
   </div>
 );
 

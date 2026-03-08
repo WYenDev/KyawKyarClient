@@ -8,6 +8,13 @@
   "quick_links_testimonials": "ဖောက်သည်များ သုံးသပ်ချက်",
   "quick_links_contact": "ဆက်သွယ်ရန်",
   "quick_links_showroom": "ဆိုင်ခွဲများ",
+  "why_buy": {
+    "title": "ဘာလို့ ကျော်ကြားမှာ ဝယ်သလဲ။",
+    "inspection": "စနစ်တကျ စစ်ဆေးသည့် အရည်အသွေး",
+    "financing": "အရစ်ကျ ငွေချေးစနစ်",
+    "market_price": "ဈေးနှုန်းတတ်နိုင်သလောက်",
+    "clean_history": "သမိုင်းကြောင်း စင်ကြယ်ပါသည်။"
+  },
   "services": {
     "title": "ဝန်ဆောင်မှုများ",
     "buy": "ကားဝယ်ရန်",
