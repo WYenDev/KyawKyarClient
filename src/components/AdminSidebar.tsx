@@ -114,7 +114,7 @@ const AdminSidebar = ({
                 />                 <MenuItem
                     to="/admin/banners"
                     icon={Megaphone}
-                    label="FooterBanners"
+                    label="Footer Banners"
                     collapsed={collapsed}
                 />
                 <MenuItem
@@ -216,7 +216,7 @@ const AdminSidebar = ({
                             <MenuItem to="/admin/cars" icon={Car} label="Cars" collapsed={false} onNavigate={onMobileClose} />
                             <MenuItem to="/admin/brands" icon={Tag} label="Brands & Models" collapsed={false} onNavigate={onMobileClose} />
                             <MenuItem to="/admin/showrooms" icon={Building} label="Showrooms" collapsed={false} onNavigate={onMobileClose} />
-                            <MenuItem to="/admin/banners" icon={Megaphone} label="Banners" collapsed={false} onNavigate={onMobileClose} />
+                            <MenuItem to="/admin/banners" icon={Megaphone} label="Footer Banners" collapsed={false} onNavigate={onMobileClose} />
                             <MenuItem to="/admin/promo-banners" icon={Sparkles} label="Promo Banners" collapsed={false} onNavigate={onMobileClose} />
                             <MenuItem to="/admin/build-types" icon={Home} label="Build Types" collapsed={false} onNavigate={onMobileClose} />
                             <MenuItem to="/admin/vehicle-specs" icon={Settings} label="Vehicle Specs" collapsed={false} onNavigate={onMobileClose} />

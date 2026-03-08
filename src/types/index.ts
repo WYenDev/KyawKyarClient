@@ -30,6 +30,8 @@ export interface FilterOptions {
   showrooms?: string[];
   steeringPositions?: string[];
   status: Array<'available' | 'sold' | 'reserved'>;
+  isFeatured?: boolean;
+  isNewArrival?: boolean;
 }
 
 

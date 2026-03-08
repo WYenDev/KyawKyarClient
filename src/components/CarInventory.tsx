@@ -20,7 +20,9 @@ const DEFAULT_FILTERS: FilterOptions = {
   bodyTypes: [],
   showrooms: [],
   steeringPositions: [],
-  status: []
+  status: [],
+  isFeatured: false,
+  isNewArrival: false
 };
 
 const CarInventory: React.FC = () => {
@@ -68,7 +70,9 @@ const CarInventory: React.FC = () => {
       bodyTypes: sp.get('buildType')?.split(',').filter(Boolean) ?? [],
       showrooms: sp.get('showroom')?.split(',').filter(Boolean) ?? [],
       steeringPositions: sp.get('steeringPosition')?.split(',').filter(Boolean) ?? [],
-      status: (sp.get('status')?.split(',').filter(Boolean) as any) ?? []
+      status: (sp.get('status')?.split(',').filter(Boolean) as any) ?? [],
+      isFeatured: sp.get('featured') === 'true',
+      isNewArrival: sp.get('isNewArrival') === 'true'
     };
     return { filters: parsed, search };
   };
@@ -87,6 +91,8 @@ const CarInventory: React.FC = () => {
     if (f.showrooms && f.showrooms.length > 0) params.showroom = f.showrooms.join(',');
     if (f.steeringPositions && f.steeringPositions.length > 0) params.steeringPosition = f.steeringPositions.join(',');
     if (f.status.length > 0) params.status = f.status.join(',');
+    if (f.isFeatured) params.featured = 'true';
+    if (f.isNewArrival) params.isNewArrival = 'true';
     if (q) params.q = q;
     if (p > 1) params.page = String(p);
     return params;
@@ -133,6 +139,12 @@ const CarInventory: React.FC = () => {
     };
     if (searchTerm) {
         runtimeParams.q = searchTerm;
+    }
+    if (filters.isFeatured) {
+        runtimeParams.featured = true;
+    }
+    if (filters.isNewArrival) {
+        runtimeParams.isNewArrival = true;
     }
     return runtimeParams;
   }, [filters, searchTerm, page]);

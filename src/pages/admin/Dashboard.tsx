@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { useGetApiDashboardSummary } from "../../services/api";
+import { useGetApiDashboardSummary, useGetApiPromoBanners } from "../../services/api";
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const { data, isLoading, isError } = useGetApiDashboardSummary();
+    const { data: promoBannersData } = useGetApiPromoBanners();
+    const promoBannersCount = Array.isArray(promoBannersData) ? promoBannersData.length : 0;
 
     if (isLoading) {
         return (
@@ -33,7 +35,8 @@ const Dashboard = () => {
         { title: "Showrooms", value: data?.totalShowrooms ?? 0, path: "/admin/showrooms" },
         { title: "Colors", value: data?.totalColors ?? 0, path: "/admin/vehicle-specs" },
         { title: "Sell Requests", value: data?.totalSellRequests ?? 0, path: "/admin/sell-requests" },
-        { title: "Banners", value: data?.totalBanners ?? 0, path: "/admin/banners" },
+        { title: "Footer Banners", value: data?.totalBanners ?? 0, path: "/admin/banners" },
+        { title: "Promo Banners", value: promoBannersCount, path: "/admin/promo-banners" },
     ];
 
     if (data?.totalAdmins !== undefined && data?.totalAdmins !== null) {

@@ -46,7 +46,9 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
       bodyTypes: [],
       showrooms: [],
       steeringPositions: [],
-      status: []
+      status: [],
+      isFeatured: false,
+      isNewArrival: false
     });
   };
 
@@ -440,6 +442,28 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                       </button>
                     );
                   })}
+                </div>
+              </div>
+
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block text-sm font-medium text-slate-800 mb-2">Special</label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      updateFilters('isFeatured', !filters.isFeatured);
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm border ${filters.isFeatured ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                  >
+                    Featured
+                  </button>
+                  <button
+                    onClick={() => {
+                      updateFilters('isNewArrival', !filters.isNewArrival);
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm border ${filters.isNewArrival ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                  >
+                    New Arrivals
+                  </button>
                 </div>
               </div>
 

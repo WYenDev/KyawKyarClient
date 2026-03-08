@@ -1,4 +1,5 @@
 import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
 // Import all namespaces for English
@@ -29,6 +30,7 @@ import mmResellMarketPrice from './locales/mm/resellMarketPrice.json';
 
 
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
@@ -59,7 +61,10 @@ i18n
         resellMarketPrice: mmResellMarketPrice
       },
     },
-    lng: 'mm', // default language
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
     fallbackLng: 'mm',
     ns: ['common', 'home', 'about', 'cars', 'contact', 'footer', 'reviews', 'rqi', 'cleanHistory', 'resellMarketPrice'],
     defaultNS: 'common',
