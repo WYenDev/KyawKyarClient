@@ -2,18 +2,11 @@ import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Clock, FileText, ShieldCheck, Landmark, ArrowRight, Sparkles } from "lucide-react";
-
-import heroPaymentImage from "../assets/hero-payment.png";
+import { Clock, FileText, ShieldCheck, Landmark, ArrowRight, CheckCircle2 } from "lucide-react";
 
 type Mode = "showroom" | "bank";
 
 const FIXED_BANKS = ["KBZ Bank", "AYA Bank", "CB Bank"] as const;
-
-// ✅ Put a car-only image (NO human / NO money) in /public/images/hero-car.jpg
-const IMAGES = {
-    heroCar: heroPaymentImage,
-};
 
 const InstallmentDetail = () => {
     const navigate = useNavigate();
@@ -24,7 +17,7 @@ const InstallmentDetail = () => {
 
     return (
         <section className="bg-gradient-to-b from-white via-slate-50 to-white overflow-hidden">
-            {/* ================= HERO (FIXED, Premium, Car Image, No Human/Money) ================= */}
+            {/* ================= HERO ================= */}
             <Hero
                 mode={mode}
                 onCalculate={() => navigate("/payments", { state: { recommendedMode: mode } })}
@@ -35,7 +28,7 @@ const InstallmentDetail = () => {
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.15, duration: 0.35 }}
-                className="flex justify-center mt-12 sm:mt-14 px-6"
+                className="flex justify-center mt-12 sm:mt-14 px-6 border-t border-gray-100 pt-12"
             >
                 <div className="bg-white/70 backdrop-blur-sm p-1 rounded-2xl flex gap-1 shadow-sm ring-1 ring-black/5">
                     <ToggleButton
@@ -99,63 +92,46 @@ const InstallmentDetail = () => {
                 </div>
             </motion.div>
 
-            {/* ================= CTA (Premium, No Money Image) ================= */}
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-120px" }}
-                transition={{ duration: 0.75 }}
-                className="max-w-6xl mx-auto mt-16 sm:mt-20 px-6 pb-20 sm:pb-28"
-            >
-                <div className="relative overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5">
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900" />
-                    <div className="absolute inset-0 opacity-[0.18] bg-[radial-gradient(circle_at_15%_20%,white_1px,transparent_1px)] [background-size:18px_18px]" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+            {/* ================= CTA ================= */}
+            <section className="py-12 md:py-16 border-t border-gray-100">
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={{
+                        hidden: { opacity: 0, y: 24 },
+                        visible: { opacity: 1, y: 0 },
+                    }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-4xl mx-auto px-6 text-center"
+                >
+                    <div className="bg-gray-50 rounded-2xl p-8 md:p-12 ring-1 ring-black/5">
+                        <h2 className="text-3xl font-semibold leading-[1.45] mb-6">
+                            {t("installment_detail.cta.title")}
+                        </h2>
 
-                    <motion.div
-                        whileHover={{ scale: 1.01 }}
-                        className="relative flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 p-6 sm:p-8 md:p-10 text-white"
-                    >
-                        <div className="max-w-2xl">
-                            <h3 className="text-2xl md:text-3xl font-black mb-2">
-                                {t("installment_detail.cta.title")}
-                            </h3>
-                            <p className="text-white/80 leading-7 text-pretty">
-                                {t("installment_detail.cta.description_line1")}{" "}
-                                {t("installment_detail.cta.description_line2")}
-                            </p>
+                        <p className="text-gray-700 text-lg sm:text-xl leading-relaxed font-medium mb-8 md:mb-10">
+                            {t("installment_detail.cta.description_line1")}{" "}
+                            {t("installment_detail.cta.description_line2")}
+                        </p>
 
-                            <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
-                                <CtaPill text={t("installment_detail.cta.pills.instant")} />
-                                <CtaPill text={t("installment_detail.cta.pills.steps")} />
-                                <CtaPill text={t("installment_detail.cta.pills.secure")} />
-                            </div>
+                        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8">
+                            <CtaPill text={t("installment_detail.cta.pills.instant")} />
+                            <CtaPill text={t("installment_detail.cta.pills.steps")} />
+                            <CtaPill text={t("installment_detail.cta.pills.secure")} />
                         </div>
 
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.96 }}
-                                onClick={() =>
-                                    navigate("/payments", { state: { recommendedMode: mode } })
-                                }
-                                className="w-full md:w-auto px-8 py-4 rounded-xl bg-white text-slate-900 font-black text-base sm:text-lg shadow-lg hover:shadow-xl transition-shadow inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-                            >
-                                {t("installment_detail.cta.button")} <ArrowRight className="w-5 h-5" />
-                            </motion.button>
-                    </motion.div>
-
-                    <motion.div
-                        className="pointer-events-none absolute -top-16 -left-16 w-72 h-72 rounded-full bg-white/10 blur-3xl"
-                        animate={{ x: [0, 28, 0], y: [0, 18, 0] }}
-                        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div
-                        className="pointer-events-none absolute -bottom-20 -right-16 w-80 h-80 rounded-full bg-blue-500/12 blur-3xl"
-                        animate={{ x: [0, -22, 0], y: [0, -16, 0] }}
-                        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                </div>
-            </motion.div>
+                        <button
+                            onClick={() =>
+                                navigate("/payments", { state: { recommendedMode: mode } })
+                            }
+                            className="px-16 py-4 bg-black text-white rounded-full text-sm tracking-wide hover:bg-gray-800 transition"
+                        >
+                            {t("installment_detail.cta.button")}
+                        </button>
+                    </div>
+                </motion.div>
+            </section>
         </section>
     );
 };
@@ -171,173 +147,75 @@ const Hero = ({
     mode: Mode;
     onCalculate: () => void;
 }) => {
-    const { t, i18n } = useTranslation("common");
-    const isMm = i18n.language?.toLowerCase().startsWith("mm");
+    const { t } = useTranslation("common");
 
     return (
-        <div className="relative">
-            {/* background layers */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute -top-28 left-1/2 -translate-x-1/2 w-[980px] h-[520px] rounded-full bg-blue-600/12 blur-3xl" />
-                <div className="absolute top-10 right-[-140px] w-[520px] h-[520px] rounded-full bg-indigo-600/12 blur-3xl" />
-                <div className="absolute bottom-[-220px] left-[-160px] w-[640px] h-[640px] rounded-full bg-slate-900/6 blur-3xl" />
-
-                {/* subtle grid */}
-                <div
-                    className="absolute inset-0 opacity-[0.045]"
-                    style={{
-                        backgroundImage:
-                            "linear-gradient(to right, rgb(15 23 42) 1px, transparent 1px), linear-gradient(to bottom, rgb(15 23 42) 1px, transparent 1px)",
-                        backgroundSize: "52px 52px",
-                    }}
-                />
-            </div>
-
-            <div className="max-w-6xl mx-auto pt-14 sm:pt-16 md:pt-24 px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                    {/* Left copy */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 22 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                        className="lg:col-span-6"
-                    >
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.05, duration: 0.55 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm text-slate-700 text-sm font-semibold ring-1 ring-black/5 shadow-sm"
-                        >
-                            <span className="w-2 h-2 rounded-full bg-blue-600" />
+        <section className="py-14 md:py-20">
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={{
+                    hidden: { opacity: 0, y: 24 },
+                    visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.7 }}
+                className="max-w-5xl mx-auto px-6"
+            >
+                <div>
+                    <div className="flex items-center gap-3 mb-6">
+                        <ShieldCheck className="text-blue-600" />
+                        <span className="text-xs tracking-[0.35em] text-gray-500">
                             {t("installment_detail.hero.kicker")}
-                        </motion.div>
+                        </span>
+                    </div>
 
-                        <h1 className={`font-black mt-6 text-slate-900 tracking-tight leading-[1.4] text-pretty ${isMm ? "text-2xl sm:text-3xl lg:text-4xl" : "text-3xl sm:text-4xl lg:text-5xl"}`}>
-                            <Trans
-                                ns="common"
-                                i18nKey="installment_detail.hero.title"
-                                components={{
-                                    brand: (
-                                        <span className="text-blue-600 sm:whitespace-nowrap" />
-                                    ),
-                                }}
-                            />
-                        </h1>
+                    <h1 className="text-4xl md:text-5xl font-semibold leading-[1.55] md:leading-[1.35] mb-6 md:mb-8">
+                        <Trans
+                            ns="common"
+                            i18nKey="installment_detail.hero.title"
+                            components={{
+                                brand: <span className="text-red-600" />,
+                            }}
+                        />
+                    </h1>
 
-                        <p className="text-slate-600 text-base sm:text-lg leading-7 sm:leading-8 mt-5 max-w-xl text-pretty">
-                            {t("installment_detail.hero.description")}
-                        </p>
+                    <p className="text-gray-800 text-lg sm:text-xl leading-relaxed font-medium max-w-xl">
+                        {t("installment_detail.hero.description")}
+                    </p>
 
-                        {/* premium chips */}
-                        <div className="mt-8 flex flex-wrap gap-2 sm:gap-3">
-                            <HeroChip icon={<Clock className="w-4 h-4" />} text={t("installment_detail.hero.chips.fast")} />
-                            <HeroChip icon={<ShieldCheck className="w-4 h-4" />} text={t("installment_detail.hero.chips.secure")} />
-                            <HeroChip icon={<Sparkles className="w-4 h-4" />} text={t("installment_detail.hero.chips.premium")} />
-                        </div>
+                    <div className="flex flex-wrap gap-6 mt-6 mb-2">
+                        <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("installment_detail.hero.chips.fast")}</div>
+                        <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("installment_detail.hero.chips.secure")}</div>
+                        <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("installment_detail.hero.chips.premium")}</div>
+                    </div>
 
-                        {/* stats */}
-                        <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-xl">
-                            <StatCard title={t("installment_detail.hero.stats.fast_title")} desc={t("installment_detail.hero.stats.fast_desc")} />
-                            <StatCard title={t("installment_detail.hero.stats.secure_title")} desc={t("installment_detail.hero.stats.secure_desc")} />
-                            <StatCard title={t("installment_detail.hero.stats.flex_title")} desc={t("installment_detail.hero.stats.flex_desc")} />
-                        </div>
+                    <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3">
+                        <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={onCalculate}
+                            className="w-full sm:w-auto px-7 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold shadow-lg hover:shadow-xl transition-shadow inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                        >
+                            {t("installment_detail.hero.button")} <ArrowRight className="w-5 h-5" />
+                        </motion.button>
 
-                        {/* actions */}
-                        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3">
-                            <motion.button
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                                onClick={onCalculate}
-                                className="w-full sm:w-auto px-7 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold shadow-lg hover:shadow-xl transition-shadow inline-flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
-                            >
-                                {t("installment_detail.hero.button")} <ArrowRight className="w-5 h-5" />
-                            </motion.button>
-
-                            <div className="w-full sm:w-auto px-6 py-4 rounded-xl bg-white ring-1 ring-black/5 shadow-sm flex items-center gap-3">
-                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                                <div className="text-sm">
-                                    <div className="font-extrabold text-slate-900">{t("installment_detail.hero.selected_mode")}</div>
-                                    <div className="text-slate-600">
-                                        {mode === "showroom"
-                                            ? t("installment_detail.toggle.showroom")
-                                            : t("installment_detail.toggle.bank")}
-                                    </div>
+                        <div className="w-full sm:w-auto px-6 py-4 rounded-xl bg-gray-50 ring-1 ring-black/5 shadow-sm flex items-center gap-3">
+                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                            <div className="text-sm">
+                                <div className="font-extrabold text-slate-900">{t("installment_detail.hero.selected_mode")}</div>
+                                <div className="text-slate-600">
+                                    {mode === "showroom"
+                                        ? t("installment_detail.toggle.showroom")
+                                        : t("installment_detail.toggle.bank")}
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
-
-                    {/* Right image card */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 22 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                        className="lg:col-span-6"
-                    >
-                        <div className="relative">
-                            <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-blue-600/30 via-indigo-600/25 to-slate-900/0 blur" />
-
-                            <div className="relative rounded-3xl overflow-hidden ring-1 ring-black/5 shadow-2xl bg-white">
-                                <motion.img
-                                    src={IMAGES.heroCar}
-                                    alt={t("installment_detail.hero.image_alt")}
-                                    className="w-full h-[240px] sm:h-[320px] md:h-[440px] object-cover"
-                                    initial={{ scale: 1.04 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-                                />
-
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.12, duration: 0.55 }}
-                                    className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5"
-                                >
-                                    <div className="backdrop-blur-md bg-white/10 border border-white/15 rounded-2xl p-4 sm:p-5 text-white">
-                                        <div className="text-sm font-semibold opacity-90">
-                                            {t("installment_detail.hero.image_card.subtitle")}
-                                        </div>
-                                        <div className="mt-1 text-lg sm:text-xl font-black leading-snug">
-                                            {t("installment_detail.hero.image_card.title")}
-                                        </div>
-                                        <div className="mt-2 text-white/80 text-sm leading-6">
-                                            {t("installment_detail.hero.image_card.description")}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            </div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2, duration: 0.55 }}
-                                className="absolute -top-3 sm:-top-4 left-4 sm:left-6"
-                            >
-                                <div className="px-4 py-3 rounded-2xl bg-white shadow-lg ring-1 ring-black/5">
-                                    <div className="text-xs font-bold text-slate-500 uppercase">
-                                        KYAW KYAR
-                                    </div>
-                                    <div className="text-sm font-black text-slate-900">
-                                        {t("installment_detail.hero.badge_title")}
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    </motion.div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </section>
     );
 };
-
-const HeroChip = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
-    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white ring-1 ring-black/5 shadow-sm text-sm font-semibold text-slate-700">
-        <span className="text-blue-600">{icon}</span>
-        {text}
-    </span>
-);
 
 /* ================= TOGGLE ================= */
 
@@ -492,20 +370,8 @@ const BankBlock = ({ dir }: { dir: number }) => {
 
 /* ================= UI Bits ================= */
 
-const StatCard = ({ title, desc }: { title: string; desc: string }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="p-4 sm:p-5 rounded-2xl bg-white shadow-sm ring-1 ring-black/5"
-    >
-        <div className="text-base font-extrabold text-slate-900">{title}</div>
-        <div className="text-sm text-slate-600 mt-1">{desc}</div>
-    </motion.div>
-);
-
 const CtaPill = ({ text }: { text: string }) => (
-    <span className="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs sm:text-sm font-semibold">
+    <span className="px-3 py-1.5 rounded-full bg-white ring-1 ring-black/5 text-xs sm:text-sm font-semibold text-gray-700">
         {text}
     </span>
 );

@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, BadgeCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import heroBannerImg from "../assets/resell-hero-showroom.jpg";
+
 import step1Img from "../assets/hero-payment.png";
 import step2Img from "../assets/about.jpg";
 import step3Img from "../assets/hero-installment.png";
@@ -86,66 +86,41 @@ const ResellMarketPrice: React.FC = () => {
       />
       <ScrollToTop />
 
-      <section className="relative h-[420px] md:h-[520px]">
-        <motion.img
-          src={heroBannerImg}
-          alt={t("resell_market.title", "Resell at Market Price")}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-black/45" />
-
-        <div className="relative z-10 h-full flex items-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            transition={{ duration: 0.8 }}
-            className="max-w-5xl mx-auto px-6 text-white"
+      {/* ================= Header ================= */}
+      <section className="py-14 md:py-20 bg-white">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.7 }}
+          className="max-w-5xl mx-auto px-6"
+        >
+          <p className="uppercase tracking-[0.35em] text-xs text-gray-500 mb-4 text-center md:text-left">
+            {t("resell_market.overline", "Why Kyaw Kyar")}
+          </p>
+          <h1
+            className={`text-3xl sm:text-4xl font-semibold mb-4 ${
+              isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
+            } text-center md:text-left`}
           >
-            <div className="flex items-center gap-3 mb-6 justify-center md:justify-start">
-              <BadgeCheck className="text-blue-300" />
-              <span
-                className={`text-xs text-white/80 ${
-                  isMyanmar ? "tracking-normal" : "tracking-[0.35em] uppercase"
-                }`}
-              >
-                {t("resell_market.hero_card.kicker", "Resell Market Price")}
-              </span>
-            </div>
+            {t("resell_market.title", "Resell at Market Price")}
+          </h1>
+          <p className={`text-gray-800 text-lg sm:text-xl leading-relaxed font-medium ${isMyanmar ? "leading-[1.9]" : ""} max-w-3xl text-center md:text-left`}>
+            {t(
+              "resell_market.subtitle",
+              "Share your car details and photos, and we'll suggest a fair market price with clear next steps.",
+            )}
+          </p>
 
-            <h1
-              className={`text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 ${
-                isMyanmar ? "leading-[1.6]" : "leading-[1.2]"
-              } text-center md:text-left`}
-            >
-              {t("resell_market.title", "Resell at Market Price")}
-            </h1>
-
-            <p className="text-white/85 text-base sm:text-lg leading-8 max-w-2xl text-center md:text-left">
-              {t(
-                "resell_market.subtitle",
-                "Share your car details and photos, and we'll suggest a fair market price with clear next steps.",
-              )}
-            </p>
-
-            <div className="mt-10 flex flex-col sm:flex-row gap-3 sm:items-center justify-center md:justify-start">
-              <button onClick={() => navigate("/sellCars")} className={primaryButtonClass}>
-                {t("resell_market.cta.primary", "Continue to Sell Car")}
-                <ArrowRight className="w-5 h-5" />
-              </button>
-
-              <p className="text-sm text-white/70 leading-6 max-w-lg text-center md:text-left">
-                {t("resell_market.note.desc", "We'll guide you step by step.")}
-              </p>
-            </div>
-          </motion.div>
-        </div>
+          <div className="flex flex-wrap gap-6 mt-6 mb-2">
+            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("resell_market.badge.valuation", "Verified Market Valuation")}</div>
+            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("resell_market.badge.process", "Seamless Direct Process")}</div>
+            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("resell_market.badge.security", "Ownership Security")}</div>
+          </div>
+        </motion.div>
       </section>
 
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 border-t border-gray-100">
         <div className="max-w-6xl mx-auto px-6">
           <motion.h2
             initial="hidden"
@@ -181,24 +156,26 @@ const ResellMarketPrice: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto px-6 text-center"
         >
-          <h2 className={`text-2xl sm:text-3xl font-semibold mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
-            {t("resell_market.cta_card.title", "Ready to submit your car details?")}
-          </h2>
+          <div className="bg-gray-50 rounded-2xl p-8 md:p-12 ring-1 ring-black/5">
+            <h2 className={`text-2xl sm:text-3xl font-semibold mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"}`}>
+              {t("resell_market.cta_card.title", "Ready to submit your car details?")}
+            </h2>
 
-          <p className="text-gray-600 text-base sm:text-lg leading-8 mb-8 md:mb-10">
-            {t(
-              "resell_market.cta_card.desc",
-              "Continue to the Sell Car page to upload photos and send your information.",
-            )}
-          </p>
+            <p className="text-gray-700 text-lg sm:text-xl leading-relaxed font-medium mb-8 md:mb-10">
+              {t(
+                "resell_market.cta_card.desc",
+                "Continue to the Sell Car page to upload photos and send your information.",
+              )}
+            </p>
 
-          <button
-            onClick={() => navigate("/sellCars")}
-            className={`${primaryButtonClass} px-16`}
-          >
-            {t("resell_market.cta.secondary", "Go to Sell Car")}
-            <ArrowRight className="w-5 h-5" />
-          </button>
+            <button
+              onClick={() => navigate("/sellCars")}
+              className={`${primaryButtonClass} px-16`}
+            >
+              {t("resell_market.cta.secondary", "Go to Sell Car")}
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
         </motion.div>
       </section>
     </main>
@@ -225,11 +202,11 @@ const StepBlock: React.FC<{
         {stepLabel} {step}
       </span>
       <h3 className="text-xl md:text-2xl font-semibold mt-3 mb-4">{title}</h3>
-      <p className="text-gray-600 leading-relaxed max-w-xl">{desc}</p>
+      <p className="text-gray-800 md:text-lg leading-relaxed font-medium max-w-xl">{desc}</p>
     </div>
 
     <div className={imageSide === "left" ? "md:order-1" : "md:order-2"}>
-      <div className="h-[220px] md:h-[340px] rounded-2xl overflow-hidden shadow-md mt-6 md:mt-0 ring-1 ring-black/5">
+      <div className="h-[200px] md:h-[320px] rounded-2xl overflow-hidden shadow-md mt-6 md:mt-0 ring-1 ring-black/5">
         <img
           src={image}
           alt={title}

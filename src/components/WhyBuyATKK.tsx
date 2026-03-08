@@ -31,7 +31,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
       title: t("whybuy.benefits.financing.title"),
       description: t("whybuy.benefits.financing.description"),
       type: "redirect",
-      redirectTo: "/showroom-installment",
+      redirectTo: "/payments",
     },
     {
       title: t("whybuy.benefits.buy-at-market-price.title"),
