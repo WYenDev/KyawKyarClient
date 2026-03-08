@@ -24,15 +24,21 @@ interface CarFilterProps {
   serverTransmissionTypes?: Array<string | { id?: string; name?: string }>;
   /** Rendered beside the mobile Filters button (e.g. Total Results pill) */
   mobileBarExtra?: React.ReactNode;
+  /** Min price for the price range filter (from API) */
+  minPrice?: number;
+  /** Max price for the price range filter (from API) */
+  maxPrice?: number;
 }
 
-const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes, mobileBarExtra }) => {
+const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes, mobileBarExtra, minPrice, maxPrice }) => {
 
   const updateFilters = (key: keyof FilterOptions, value: FilterOptions[keyof FilterOptions]) => {
     onFiltersChange({ ...filters, [key]: value } as FilterOptions);
   };
 
   const CURRENT_YEAR = new Date().getFullYear();
+  const priceMin = minPrice ?? 0;
+  const priceMax = maxPrice ?? 5000;
 
   const clearFilters = () => {
     onFiltersChange({
@@ -214,8 +220,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 <div className="space-y-2">
                   <input
                     type="range"
-                    min="0"
-                    max="5000"
+                    min={priceMin}
+                    max={priceMax}
                     step="1"
                     value={filters.priceRange[0]}
                     onChange={(e) => {
@@ -228,8 +234,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                   />
                   <input
                     type="range"
-                    min="0"
-                    max="5000"
+                    min={priceMin}
+                    max={priceMax}
                     step="1"
                     value={filters.priceRange[1]}
                     onChange={(e) => {

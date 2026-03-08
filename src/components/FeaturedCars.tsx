@@ -17,6 +17,7 @@ const FeaturedCars: React.FC = () => {
       highlightedTitle={t('featured.highlightedText')}
       useDataHook={useGetApiCarsFeatured}
       theme="indigo"
+      filterParam="featured=true"
     />
   );
 };

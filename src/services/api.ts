@@ -854,6 +854,8 @@ export type GetApiCarsFilters200 = {
   fuelTypes?: FuelType[];
   transmissionTypes?: TransmissionType[];
   steeringPositions?: SteeringPosition[];
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 export type GetApiCarsSearchParams = {
@@ -1020,6 +1022,21 @@ export type GetApiDashboardSummary200 = {
   totalBanners?: number;
   /** @nullable */
   totalAdmins?: number | null;
+};
+
+export type GetApiFilterMinMaxPrice200 = {
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+export type PatchApiFilterMinMaxPriceBody = {
+  minPrice: number;
+  maxPrice: number;
+};
+
+export type PatchApiFilterMinMaxPrice200 = {
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 export type PostApiFooterBannersIdImageBody = {
@@ -6013,6 +6030,165 @@ export function useGetApiDashboardSummary<TData = Awaited<ReturnType<typeof getA
 
 
 
+/**
+ * Returns the default min and max price values for the car filter
+ * @summary Get filter min/max price range
+ */
+export const getApiFilterMinMaxPrice = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiFilterMinMaxPrice200>(
+      {url: `/api/filter-min-max-price`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiFilterMinMaxPriceQueryKey = () => {
+    return [
+    `/api/filter-min-max-price`
+    ] as const;
+    }
+
+    
+export const getGetApiFilterMinMaxPriceQueryOptions = <TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiFilterMinMaxPriceQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>> = ({ signal }) => getApiFilterMinMaxPrice(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiFilterMinMaxPriceQueryResult = NonNullable<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>>
+export type GetApiFilterMinMaxPriceQueryError = unknown
+
+
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get filter min/max price range
+ */
+
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiFilterMinMaxPriceQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Updates the default min and max price values for the car filter (admin only)
+ * @summary Update filter min/max price range
+ */
+export const patchApiFilterMinMaxPrice = (
+    patchApiFilterMinMaxPriceBody: PatchApiFilterMinMaxPriceBody,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<PatchApiFilterMinMaxPrice200>(
+      {url: `/api/filter-min-max-price`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchApiFilterMinMaxPriceBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiFilterMinMaxPriceMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, TError,{data: PatchApiFilterMinMaxPriceBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, TError,{data: PatchApiFilterMinMaxPriceBody}, TContext> => {
+
+const mutationKey = ['patchApiFilterMinMaxPrice'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, {data: PatchApiFilterMinMaxPriceBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchApiFilterMinMaxPrice(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiFilterMinMaxPriceMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>>
+    export type PatchApiFilterMinMaxPriceMutationBody = PatchApiFilterMinMaxPriceBody
+    export type PatchApiFilterMinMaxPriceMutationError = void
+
+    /**
+ * @summary Update filter min/max price range
+ */
+export const usePatchApiFilterMinMaxPrice = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, TError,{data: PatchApiFilterMinMaxPriceBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>,
+        TError,
+        {data: PatchApiFilterMinMaxPriceBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiFilterMinMaxPriceMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Upload footer banner image
  */

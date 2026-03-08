@@ -17,6 +17,7 @@ const NewArrivals: React.FC = () => {
       bg='bg-white'
       useDataHook={useGetApiCarsNewArrivals}
       theme="amber"
+      filterParam="isNewArrival=true"
     />
   );
 };

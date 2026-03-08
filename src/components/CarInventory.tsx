@@ -12,7 +12,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 const DEFAULT_FILTERS: FilterOptions = {
   brand: '',
   model: '',
-  priceRange: [0, 5000],
+  priceRange: [0, 5000], // Will be overridden by API values if available
   yearRange: [1980, CURRENT_YEAR + 1],
   mileageRange: [0, 200000],
   fuelTypes: [],
@@ -26,7 +26,7 @@ const DEFAULT_FILTERS: FilterOptions = {
 };
 
 const CarInventory: React.FC = () => {
-  const { t } = useTranslation('cars');
+  useTranslation('cars');
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -42,7 +42,11 @@ const CarInventory: React.FC = () => {
 
   // Fetch filter metadata
   const { data: filterData, isLoading: filtersLoading, isError: filtersError } = useGetApiCarsFilters();
-  
+
+  // Use API minPrice/maxPrice if available, otherwise fallback to defaults
+  const defaultMinPrice = filterData?.minPrice ?? 0;
+  const defaultMaxPrice = filterData?.maxPrice ?? 5000;
+
   const serverBrands = filterData?.brandsWithModels ? Object.keys(filterData.brandsWithModels) : undefined;
   const serverBrandModels = filterData?.brandsWithModels ?? undefined;
   const serverBodyTypes = filterData?.buildTypes ?? [];
@@ -58,8 +62,8 @@ const CarInventory: React.FC = () => {
       brand: sp.get('brand') ?? '',
       model: sp.get('model') ?? '',
       priceRange: [
-        sp.get('priceMin') ? parseInt(sp.get('priceMin')!, 10) : DEFAULT_FILTERS.priceRange[0],
-        sp.get('priceMax') ? parseInt(sp.get('priceMax')!, 10) : DEFAULT_FILTERS.priceRange[1]
+        sp.get('priceMin') ? parseInt(sp.get('priceMin')!, 10) : defaultMinPrice,
+        sp.get('priceMax') ? parseInt(sp.get('priceMax')!, 10) : defaultMaxPrice
       ],
       yearRange: [
         sp.get('yearMin') ? parseInt(sp.get('yearMin')!, 10) : DEFAULT_FILTERS.yearRange[0],
@@ -81,8 +85,8 @@ const CarInventory: React.FC = () => {
     const params: Record<string, string> = {};
     if (f.brand) params.brand = f.brand;
     if (f.model) params.model = f.model;
-    if (f.priceRange[0] !== DEFAULT_FILTERS.priceRange[0]) params.priceMin = String(f.priceRange[0]);
-    if (f.priceRange[1] !== DEFAULT_FILTERS.priceRange[1]) params.priceMax = String(f.priceRange[1]);
+    if (f.priceRange[0] !== defaultMinPrice) params.priceMin = String(f.priceRange[0]);
+    if (f.priceRange[1] !== defaultMaxPrice) params.priceMax = String(f.priceRange[1]);
     if (f.yearRange[0] !== DEFAULT_FILTERS.yearRange[0]) params.yearMin = String(f.yearRange[0]);
     if (f.yearRange[1] !== DEFAULT_FILTERS.yearRange[1]) params.yearMax = String(f.yearRange[1]);
     if (f.fuelTypes.length > 0) params.fuelTypeId = f.fuelTypes[0];
@@ -180,6 +184,8 @@ const CarInventory: React.FC = () => {
               serverSteeringPositions={serverSteeringPositions}
               serverFuelTypes={serverFuelTypes}
               serverTransmissionTypes={serverTransmissionTypes}
+              minPrice={defaultMinPrice}
+              maxPrice={defaultMaxPrice}
               mobileBarExtra={
                 <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full text-sm">Total Results: {totalCount}</div>
               }

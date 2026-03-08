@@ -16,6 +16,7 @@ interface CarCarouselProps {
   highlightedTitle: string;
   useDataHook: () => { data: any; isLoading: boolean; isError: boolean };
   theme: 'indigo' | 'amber';
+  filterParam?: string;
 }
 
 const themeClasses = {
@@ -49,7 +50,7 @@ const themeClasses = {
   },
 };
 
-const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme }) => {
+const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme, filterParam }) => {
   const { t, i18n } = useTranslation('home');
   const isMyanmar = i18n?.language?.startsWith('mm');
   const { data, isLoading, isError } = useDataHook();
@@ -171,7 +172,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
                   ))}
 
                   <div
-                    onClick={() => navigate('/buyCars')}
+                    onClick={() => navigate(filterParam ? `/buyCars?${filterParam}` : '/buyCars')}
                     className={`snap-start flex-shrink-0 w-64 flex flex-col items-center justify-center bg-slate-50/50 rounded-none border-2 border-dashed border-slate-200 ${classes.hoverBorder} ${classes.hoverBgLight} transition-all cursor-pointer group/more`}
                   >
                     <div className={`w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover/more:scale-110 transition-all`}>
