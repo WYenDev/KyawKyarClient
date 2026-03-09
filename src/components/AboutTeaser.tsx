@@ -222,9 +222,9 @@ const AboutTeaser: React.FC = () => {
                  <span className="text-slate-900 font-bold tracking-[0.2em] text-xs uppercase mb-4 inline-block">
                    {t('about_teaser.badge', 'About KyawKyar')}
                  </span>
-                  <h2 className={`font-black text-indigo-600 leading-tight ${isMyanmar ? 'font-myanmar font-extrabold text-2xl sm:text-3xl lg:text-4xl sm:leading-[1.4] pt-2' : 'text-4xl lg:text-5xl'}`}>
-                   {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
-                 </h2>
+                  <h1 className={`font-black text-indigo-600 leading-tight ${isMyanmar ? 'font-myanmar font-extrabold text-2xl sm:text-3xl lg:text-4xl sm:leading-[1.4] pt-2' : 'text-4xl lg:text-5xl'}`}>
+                    {t('about_teaser.title', 'Your Trusted Multi-Brand Car Showroom in Myanmar')}
+                  </h1>
                </div>
               <p className={`text-lg text-slate-500 leading-relaxed whitespace-pre-line ${isMyanmar ? 'font-myanmar leading-[1.8] text-[1.05rem]' : ''}`}>
                 {t('about:about.description')}
