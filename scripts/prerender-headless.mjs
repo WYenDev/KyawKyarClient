@@ -27,11 +27,11 @@ const DIST = path.resolve(__dirname, '..', 'dist');
 const PORT = 4321;
 const API_TARGET = process.env.PRERENDER_API_TARGET || 'http://localhost:3000';
 
-const ROUTES = [
+const BASE_ROUTES = [
   '/',
-  '/about',
   '/buyCars',
   '/sellCars',
+  '/resell-market-price',
   '/reviews',
   '/contact',
   '/payments',
@@ -40,6 +40,12 @@ const ROUTES = [
   '/why-kyawkyar/clean-history',
   '/showroom-installment',
 ];
+
+const LANGUAGES = ['my', 'en'];
+
+const ROUTES = LANGUAGES.flatMap(lang => 
+  BASE_ROUTES.map(route => route === '/' ? `/${lang}` : `/${lang}${route}`)
+);
 
 function serveFile(filePath) {
   return fs.promises.readFile(filePath).catch(() => null);

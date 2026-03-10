@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CarListItemSearch, useGetApiHome } from '../services/api';
 import { Calendar, Gauge, Fuel, Settings, MapPin, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ interface CarCardProps {
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const { t } = useTranslation('cars');
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   const { data: homeData } = useGetApiHome();
   const phoneNumber = (homeData?.phoneNo ?? '').toString().replace(/\s/g, '');
   const viberNumber = (homeData?.viberNo ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
@@ -19,22 +21,8 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const hasViber = viberNumber.length > 0;
   const hasContact = hasPhone || hasViber;
 
-  {/*
-  const getStatusBadge = (status: Status) => {
-    switch (status) {
-      case Status.Available:
-        return 'bg-green-100 text-green-800 border border-green-200';
-      case Status.Sold:
-        return 'bg-red-100 text-red-800 border border-red-200';
-      //case 'reserved':
-      //  return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border border-gray-200';
-    }
-  };
-  */}
   const handleClick = () => {
-    navigate(`/cars/${car.id}`);
+    navigate(getPath(`/cars/${car.id}`));
   };
 
   return (
