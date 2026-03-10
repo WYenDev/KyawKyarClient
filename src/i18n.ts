@@ -47,7 +47,7 @@ i18n
         cleanHistory: enCleanHistory,
         resellMarketPrice: enResellMarketPrice
       },
-      mm: {
+      my: {
         common: mmCommon,
         home: mmHome,
         about: mmAbout,
@@ -62,10 +62,10 @@ i18n
       },
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['querystring', 'localStorage', 'navigator'],
       caches: ['localStorage'],
     },
-    fallbackLng: 'mm',
+    fallbackLng: 'my',
     ns: ['common', 'home', 'about', 'cars', 'contact', 'footer', 'reviews', 'rqi', 'cleanHistory', 'resellMarketPrice'],
     defaultNS: 'common',
     interpolation: {

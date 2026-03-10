@@ -7,7 +7,7 @@ import SEO from '../components/SEO';
 
 const About: React.FC = () => {
   const { t, i18n } = useTranslation('about');
-  const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
+  const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
   return (
     <div className="min-h-screen bg-gray-50 pt-8">

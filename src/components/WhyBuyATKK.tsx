@@ -19,7 +19,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
   const { lang } = useParams<{ lang?: string }>();
   const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
 
-  const isMyanmar = i18n.language.startsWith("mm");
+  const isMyanmar = i18n.language.startsWith("my");
 
   /* ================= Data (4 CARDS) ================= */
   const benefits: Benefit[] = [

@@ -52,7 +52,7 @@ const themeClasses = {
 
 const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme, filterParam }) => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const { data, isLoading, isError } = useDataHook();
   const cars: CarListItem[] = (data as any)?.items ?? (data as CarListItem[]) ?? [];
   const navigate = useNavigate();

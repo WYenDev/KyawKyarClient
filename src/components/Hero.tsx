@@ -11,7 +11,7 @@ const HERO_PLACEHOLDER_IMAGE =
 
 const Hero: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const navigate = useNavigate();
   const { lang } = useParams<{ lang?: string }>();
   const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;

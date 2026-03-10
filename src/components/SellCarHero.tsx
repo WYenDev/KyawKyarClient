@@ -4,7 +4,7 @@ import { Car, Shield, Clock, BadgeDollarSign } from 'lucide-react';
 
 const SellCarHero: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   return (
     <div>

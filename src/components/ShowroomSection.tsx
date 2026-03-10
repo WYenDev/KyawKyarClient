@@ -5,7 +5,7 @@ import { MapPin, Phone, ExternalLink, X, PhoneCall } from 'lucide-react';
 
 const ShowroomSection: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   const [selectedShowroom, setSelectedShowroom] = useState<Showroom | null>(null);
 

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 const BrowseCarByBuildTypes: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const { data: buildTypes = [], isLoading, isError } = useGetApiBuildTypes();
   const navigate = useNavigate();
   const { lang } = useParams<{ lang?: string }>();

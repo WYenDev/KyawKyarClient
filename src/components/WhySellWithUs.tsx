@@ -4,7 +4,7 @@ import { DollarSign, FastForward, ShieldCheck, Award } from 'lucide-react';
 
 const WhySellWithUs: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   const benefits = [
     {

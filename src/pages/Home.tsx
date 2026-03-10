@@ -15,7 +15,7 @@ import SEO, { SITE_URL } from '../components/SEO';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
+  const lang = i18n.language.startsWith('my') ? 'my' : 'en';
   const { data: promoBanners } = useGetApiPromoBannersActive();
   const { data: homeData } = useGetApiHome();
   const allBanners = useMemo(() => {

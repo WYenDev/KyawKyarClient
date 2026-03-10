@@ -5,7 +5,7 @@ import { FileText, User, Briefcase, Users, Info, CheckCircle2 } from "lucide-rea
 
 const CarPurchaseGuide: React.FC = () => {
     const { t, i18n } = useTranslation("common");
-    const isMyanmar = i18n?.language?.startsWith('mm');
+    const isMyanmar = i18n?.language?.startsWith('my');
     const [incomeType, setIncomeType] = useState<"business" | "employee">(
         "business"
     );

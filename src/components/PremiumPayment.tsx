@@ -41,7 +41,7 @@ type InstallmentMode = "bank" | "showroom";
 
 const PremiumPayment: React.FC = () => {
   const { t, i18n } = useTranslation("common");
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const [installmentMode, setInstallmentMode] = useState<InstallmentMode | null>("showroom");
 
   /* ===== NEW: Calculator State (string so trailing zeros are preserved in input) ===== */

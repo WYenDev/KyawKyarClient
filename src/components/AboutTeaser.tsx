@@ -13,7 +13,7 @@ const FALLBACK_IMAGES = [
 
 const AboutTeaser: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const { data: aboutData } = useGetApiAbout();
   const aboutImages = (aboutData?.images ?? [])
     .slice()
