@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={Logo} alt="" className="h-10 w-10 object-contain" />
+              <img src={Logo} alt="Kyaw Kyar" className="h-10 w-10 object-contain" />
               <h3 className="text-2xl font-bold text-red-500">{t('name')}</h3>
             </div>
             <p className="text-slate-300 mb-6 max-w-md">
@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
                   className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors overflow-hidden"
                   aria-label="Viber"
                 >
-                  <img src={ViberIcon} alt="" className="h-full w-full object-cover" />
+                  <img src={ViberIcon} alt="Viber" className="h-full w-full object-cover" />
                 </a>
               )}
               {hasPhone && (

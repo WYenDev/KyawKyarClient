@@ -60,7 +60,7 @@ const CarModal: React.FC<CarModalProps> = ({ car, isOpen, onClose }) => {
                     >
                       <img 
                         src={image} 
-                        alt=""
+                        alt={`${car.brand} ${car.model} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
                     </button>
