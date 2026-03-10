@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGetApiBrands } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Shield } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,11 +9,13 @@ const BrowseCarByBrands: React.FC = () => {
   const isMyanmar = i18n?.language?.startsWith('mm');
   const { data: brandData, isLoading, isError } = useGetApiBrands({ limit: 100 });
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
 
   const brands = brandData?.items ?? [];
 
   const handleBrandClick = (brandName: string) => {
-    navigate(`/buyCars?brand=${encodeURIComponent(brandName)}`);
+    navigate(getPath(`/buyCars?brand=${encodeURIComponent(brandName)}`));
   };
 
   const fallbackLogo = 'https://storage.googleapis.com/kyaw-kyar.appspot.com/brands/default-brand.png';

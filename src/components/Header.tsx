@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Phone, Menu, X, Globe, User, Facebook } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-with-text.png';
@@ -10,8 +10,9 @@ import { useGetApiHome } from '../services/api';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { t, i18n } = useTranslation('common'); // Use 'common' namespace
-  const currentLang = i18n.language;
+  const { lang } = useParams<{ lang?: string }>();
+  const currentLang = lang || 'my';
+  const { t } = useTranslation('common');
   const { data: homeData } = useGetApiHome();
   const apiPhone = homeData?.phoneNo ?? undefined;
   const apiViber = homeData?.viberNo ?? undefined;
@@ -19,17 +20,16 @@ const Header: React.FC = () => {
   const phoneNumber = (apiPhone ?? '').toString();
   const viberNumber = (apiViber ??  '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
+  const getPath = (path: string) => `/${currentLang}${path === '/' ? '' : path}`;
 
   const isActive = (path: string) => {
     const current = location.pathname;
+    const targetPath = getPath(path);
 
-    // Home: exact match or promo landing pages (reached from home carousel)
-    if (path === '/') return current === '/' || current.startsWith('/promo/');
+    if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`);
+    if (path === '/buyCars') return current === `/${currentLang}/buyCars` || current.startsWith(`/${currentLang}/cars`);
 
-    // Treat car detail pages as part of the Buy Cars section
-    if (path === '/buyCars') return current === '/buyCars' || current.startsWith('/cars');
-
-    return current === path;
+    return current === targetPath;
   };
 
   const navLinkClass = (path: string) => {
@@ -41,16 +41,17 @@ const Header: React.FC = () => {
   };
 
   const handleLanguageChange = () => {
-    const newLang = currentLang === 'en' ? 'mm' : 'en';
-    i18n.changeLanguage(newLang);
+    const newLang = currentLang === 'en' ? 'my' : 'en';
+    const currentPath = location.pathname.replace(/^\/(en|my)/, '') || '/';
+    const newPath = `/${newLang}${currentPath === '/' ? '' : currentPath}`;
+    navigate(newPath);
   };
 
-  // Fixed width per nav entry (inline style so it always applies) — no layout shift when switching EN/MM
   const navItems: { path: string; label: string; widthRem: number }[] = [
-    { path: '/', label: t('nav.home'), widthRem: 6 },           // Home / ပင်မ
-    { path: '/buyCars', label: t('nav.buyCars'), widthRem: 7.5 },   // Buy Cars / ကားဝယ်မည်
-    { path: '/sellCars', label: t('nav.sellCars'), widthRem: 8.5 },  // Sell Cars / ကားရောင်းမည်
-    { path: '/payments', label: t('nav.payments'), widthRem: 9.5 },  // Payments / ငွေပေးချေမှုများ
+    { path: '/', label: t('nav.home'), widthRem: 6 },
+    { path: '/buyCars', label: t('nav.buyCars'), widthRem: 7.5 },
+    { path: '/sellCars', label: t('nav.sellCars'), widthRem: 8.5 },
+    { path: '/payments', label: t('nav.payments'), widthRem: 9.5 },
   ];
 
   const accountRef = useRef<HTMLDivElement | null>(null);
@@ -74,7 +75,7 @@ const Header: React.FC = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const isHome = location.pathname === '/';
+  const isHome = location.pathname === `/${currentLang}`;
 
   return (
     <header
@@ -88,7 +89,7 @@ const Header: React.FC = () => {
         <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
           <div className={`mt-0 mb-0 ${isHome ? 'bg-white/95 border border-white/80 shadow-lg shadow-slate-900/5 rounded-none px-3 sm:px-6 h-16 flex items-center justify-between' : 'flex items-center justify-between h-14'}`}>
             {/* Logo */}
-            <Link to="/" className="flex items-center group shrink-0">
+            <Link to={getPath('/')} className="flex items-center group shrink-0">
               <img src={logo} alt="ကျော်ကြား car showroom" className="h-12 md:h-16 w-auto object-contain" />
             </Link>
 
@@ -97,7 +98,7 @@ const Header: React.FC = () => {
               {navItems.map((item) => (
                 <Link
                   key={item.path}
-                  to={item.path}
+                  to={getPath(item.path)}
                   className={navLinkClass(item.path)}
                   style={{ width: `${item.widthRem}rem`, minWidth: `${item.widthRem}rem` }}
                 >
@@ -235,7 +236,7 @@ const Header: React.FC = () => {
               {navItems.map((item) => (
                 <Link
                   key={item.path}
-                  to={item.path}
+                  to={getPath(item.path)}
                   className={`px-4 py-3 rounded-xl text-base font-medium transition-colors ${isActive(item.path)
                     ? 'bg-indigo-50 text-indigo-700'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'

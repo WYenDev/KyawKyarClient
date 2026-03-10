@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGetApiBuildTypes } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, LayoutGrid } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +9,8 @@ const BrowseCarByBuildTypes: React.FC = () => {
   const isMyanmar = i18n?.language?.startsWith('mm');
   const { data: buildTypes = [], isLoading, isError } = useGetApiBuildTypes();
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Fallback image source if API doesn't provide one
@@ -23,8 +25,7 @@ const BrowseCarByBuildTypes: React.FC = () => {
   };
 
   const handleBuildTypeClick = (buildTypeName: string) => {
-    // Navigate to BuyCars page with buildType filter
-    navigate(`/buyCars?buildType=${encodeURIComponent(buildTypeName)}`);
+    navigate(getPath(`/buyCars?buildType=${encodeURIComponent(buildTypeName)}`));
   };
 
   const getCardStyle = (index: number) => {

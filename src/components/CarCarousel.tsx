@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight, Plus, LucideProps } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import FeaturedCard from './FeaturedCard';
 import type { CarListItem } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -56,6 +56,8 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
   const { data, isLoading, isError } = useDataHook();
   const cars: CarListItem[] = (data as any)?.items ?? (data as CarListItem[]) ?? [];
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   const classes = themeClasses[theme];
 
   const displayCars = cars.length > 0 ? cars.slice(0, 6) : [];
@@ -172,7 +174,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
                   ))}
 
                   <div
-                    onClick={() => navigate(filterParam ? `/buyCars?${filterParam}` : '/buyCars')}
+                    onClick={() => navigate(filterParam ? getPath(`/buyCars?${filterParam}`) : getPath('/buyCars'))}
                     className={`snap-start flex-shrink-0 w-64 flex flex-col items-center justify-center bg-slate-50/50 rounded-none border-2 border-dashed border-slate-200 ${classes.hoverBorder} ${classes.hoverBgLight} transition-all cursor-pointer group/more`}
                   >
                     <div className={`w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover/more:scale-110 transition-all`}>
@@ -186,7 +188,7 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, tit
               </div>
               <div className="text-center mt-8 relative z-10">
                 <button
-                  onClick={() => navigate('/buyCars')}
+                  onClick={() => navigate(getPath('/buyCars'))}
                   className={`group inline-flex items-center gap-4 bg-slate-900 text-white px-10 py-5 rounded-none text-base font-bold hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl shadow-slate-900/10 transform hover:-translate-y-1`}
                 >
                   {t('car_carousel.ExploreFullInventory')}

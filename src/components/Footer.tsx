@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Facebook, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useGetApiHome } from '../services/api';
@@ -8,6 +8,10 @@ import Logo from '../assets/logo-removebg.png';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation('footer');
+  const { lang } = useParams<{ lang?: string }>();
+  const currentLang = lang || 'my';
+
+  const getPath = (path: string) => `/${currentLang}${path === '/' ? '' : path}`;
 
   const { data: homeData } = useGetApiHome();
   const apiPhone = homeData?.phoneNo ?? undefined;
@@ -70,17 +74,17 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">{t('quick_links')}</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-slate-300 hover:text-white transition-colors">
+                <Link to={getPath('/')} className="text-slate-300 hover:text-white transition-colors">
                   {t('quick_links_home', 'Home')}
                 </Link>
               </li>
               <li>
-                <Link to="/buyCars" className="text-slate-300 hover:text-white transition-colors">
+                <Link to={getPath('/buyCars')} className="text-slate-300 hover:text-white transition-colors">
                   {t('quick_links_inventory', 'Car Inventory')}
                 </Link>
               </li>
               <li>
-                <Link to="/#showrooms" className="text-slate-300 hover:text-white transition-colors">
+                <Link to={getPath('/#showrooms')} className="text-slate-300 hover:text-white transition-colors">
                   {t('quick_links_showroom', 'Showrooms')}
                 </Link>
               </li>
@@ -92,22 +96,22 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">{t('why_buy.title')}</h4>
             <ul className="space-y-2 text-slate-300">
               <li>
-                <Link to="/why-kyawkyar/rigorous-quality-inspection" className="hover:text-white transition-colors">
+                <Link to={getPath('/why-kyawkyar/rigorous-quality-inspection')} className="hover:text-white transition-colors">
                   {t('why_buy.inspection')}
                 </Link>
               </li>
               <li>
-                <Link to="/payments" className="hover:text-white transition-colors">
+                <Link to={getPath('/payments')} className="hover:text-white transition-colors">
                   {t('why_buy.financing')}
                 </Link>
               </li>
               <li>
-                <Link to="/resell-market-price" className="hover:text-white transition-colors">
+                <Link to={getPath('/resell-market-price')} className="hover:text-white transition-colors">
                   {t('why_buy.market_price')}
                 </Link>
               </li>
               <li>
-                <Link to="/why-kyawkyar/clean-history" className="hover:text-white transition-colors">
+                <Link to={getPath('/why-kyawkyar/clean-history')} className="hover:text-white transition-colors">
                   {t('why_buy.clean_history')}
                 </Link>
               </li>
@@ -119,17 +123,17 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">{t('services.title')}</h4>
             <ul className="space-y-2 text-slate-300">
               <li>
-                <Link to="/buyCars" className="hover:text-white transition-colors">
+                <Link to={getPath('/buyCars')} className="hover:text-white transition-colors">
                   {t('services.buy')}
                 </Link>
               </li>
               <li>
-                <Link to="/sellCars" className="hover:text-white transition-colors">
+                <Link to={getPath('/sellCars')} className="hover:text-white transition-colors">
                   {t('services.sell')}
                 </Link>
               </li>
               <li>
-                <Link to="/payments" className="hover:text-white transition-colors">
+                <Link to={getPath('/payments')} className="hover:text-white transition-colors">
                   {t('services.financing')}
                 </Link>
               </li>

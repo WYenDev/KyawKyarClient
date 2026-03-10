@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Search, ShieldCheck, Star, Users, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetApiCarsFilters, useGetApiHome } from '../services/api';
 import { brands as localBrands, brandModels as localBrandModels } from '../data/cars';
 import logoWithText from '../assets/text-logo-no-bg.png';
@@ -13,6 +13,8 @@ const Hero: React.FC = () => {
   const { t, i18n } = useTranslation('home');
   const isMyanmar = i18n?.language?.startsWith('mm');
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   const { data: homeData } = useGetApiHome();
   const [brand, setBrand] = useState<string>('');
   const [model, setModel] = useState<string>('');
@@ -56,7 +58,7 @@ const Hero: React.FC = () => {
     if (b) params.push(`brand=${encodeURIComponent(b)}`);
     if (m) params.push(`model=${encodeURIComponent(m)}`);
     const q = params.length ? `?${params.join('&')}` : '';
-    navigate(`/buyCars${q}`);
+    navigate(getPath(`/buyCars${q}`));
   };
 
   useEffect(() => {

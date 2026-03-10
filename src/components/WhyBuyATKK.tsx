@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 /* ================= Types ================= */
@@ -16,6 +16,8 @@ type Benefit = {
 const WhyBuyAtKyawKyar: React.FC = () => {
   const { t, i18n } = useTranslation("home");
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
 
   const isMyanmar = i18n.language.startsWith("mm");
 
@@ -50,12 +52,12 @@ const WhyBuyAtKyawKyar: React.FC = () => {
   /* ================= Handlers ================= */
   const handleClick = (benefit: Benefit) => {
     if (benefit.type === "redirect" && benefit.redirectTo) {
-      navigate(benefit.redirectTo);
+      navigate(getPath(benefit.redirectTo));
       return;
     }
 
     if (benefit.type === "detail" && benefit.slug) {
-      navigate(`/why-kyawkyar/${benefit.slug}`);
+      navigate(getPath(`/why-kyawkyar/${benefit.slug}`));
     }
   };
 
