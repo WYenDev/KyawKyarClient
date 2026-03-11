@@ -68,8 +68,7 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <SEO
-        lang={lang}
-        canonical="/"
+        canonical={`/${lang}`}
         title={t('meta.title', 'Kyaw Kyar Car Showroom | Buy & Sell Quality Vehicles')}
         description={t(
           'meta.description',

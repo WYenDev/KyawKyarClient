@@ -8,6 +8,7 @@ import {
     Ban,
     CheckCircle2,
 } from "lucide-react";
+import SEO from "../components/SEO";
 
 
 
@@ -47,10 +48,17 @@ interface GuaranteeProps {
 
 const CleanHistory = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation("cleanHistory");
+    const { t, i18n } = useTranslation("cleanHistory");
+    const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
+            <SEO
+                lang={lang}
+                canonical={`/${lang}/why-kyawkyar/clean-history`}
+                title={t('meta.title', 'Clean History Vehicles - Kyaw Kyar')}
+                description={t('meta.description', 'We guarantee 100% clean history for every vehicle. No owner book copies, no illegal modifications, no legal complications.')}
+            />
             {/* ======================================================
           HERO – IMAGE + BRAND PROMISE
       ====================================================== */}

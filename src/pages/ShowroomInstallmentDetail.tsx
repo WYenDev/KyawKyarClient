@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Clock, FileText, ShieldCheck, Landmark, ArrowRight, CheckCircle2 } from "lucide-react";
+import SEO from "../components/SEO";
 
 type Mode = "showroom" | "bank";
 
@@ -10,13 +11,20 @@ const FIXED_BANKS = ["KBZ Bank", "AYA Bank", "CB Bank"] as const;
 
 const InstallmentDetail = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation("common");
+    const { t, i18n } = useTranslation("common");
+    const lang = i18n.language.startsWith('my') ? 'my' : 'en';
     const [mode, setMode] = useState<Mode>("showroom");
     const dir = useMemo(() => (mode === "showroom" ? -1 : 1), [mode]);
     const banks = [...FIXED_BANKS, t("installment_detail.banks.other_local")];
 
     return (
         <section className="bg-gradient-to-b from-white via-slate-50 to-white overflow-hidden">
+            <SEO
+                lang={lang}
+                canonical={`/${lang}/showroom-installment`}
+                title={t('installment_detail.meta.title', 'Showroom Installment - Kyaw Kyar')}
+                description={t('installment_detail.meta.description', 'Flexible installment plans directly from Kyaw Kyar showroom. Easy monthly payments with competitive rates.')}
+            />
             {/* ================= HERO ================= */}
             <Hero
                 mode={mode}

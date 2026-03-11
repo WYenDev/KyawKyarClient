@@ -43,9 +43,9 @@ const BASE_ROUTES = [
 
 const LANGUAGES = ['my', 'en'];
 
-const ROUTES = LANGUAGES.flatMap(lang => 
+const ROUTES = LANGUAGES.flatMap(lang =>
   BASE_ROUTES.map(route => route === '/' ? `/${lang}` : `/${lang}${route}`)
-);
+).concat(['/']);
 
 function serveFile(filePath) {
   return fs.promises.readFile(filePath).catch(() => null);
@@ -142,7 +142,7 @@ async function run() {
     server.close();
     console.warn(
       'Headless prerender skipped (Chrome not available). Build still has meta tags from vite-prerender-plugin.\n' +
-        'For full HTML prerender: install Chrome, or run `npx puppeteer browsers install chrome`, or set PUPPETEER_EXECUTABLE_PATH.'
+      'For full HTML prerender: install Chrome, or run `npx puppeteer browsers install chrome`, or set PUPPETEER_EXECUTABLE_PATH.'
     );
     console.warn(err.message);
     process.exit(0);
@@ -153,7 +153,10 @@ async function run() {
     const page = await browser.newPage();
     try {
       await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
-      await page.waitForSelector('#root > *', { timeout: 15000 }).catch(() => {});
+      await page.waitForSelector('#root > *', { timeout: 15000 }).catch(() => { });
+      // give React Helmet time to update <head>
+      await new Promise((r) => setTimeout(r, 2000));
+
       const html = await page.content();
       const outPath = route === '/' ? path.join(DIST, 'index.html') : path.join(DIST, route.slice(1), 'index.html');
       await fs.promises.mkdir(path.dirname(outPath), { recursive: true });
@@ -164,6 +167,16 @@ async function run() {
     } finally {
       await page.close();
     }
+  }
+
+  const enIndexPath = path.join(DIST, 'en', 'index.html');
+  const rootIndexPath = path.join(DIST, 'index.html');
+  const enIndex = await fs.promises.readFile(enIndexPath).catch(() => null);
+  if (enIndex) {
+    await fs.promises.writeFile(rootIndexPath, enIndex, 'utf-8');
+    console.log('Copied /en/index.html to root index.html');
+  } else {
+    console.warn('Could not copy /en/index.html to root - file not found');
   }
 
   await browser.close();

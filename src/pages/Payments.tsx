@@ -11,7 +11,7 @@ const Payments: React.FC = () => {
     <main className="bg-[#f8fafc] min-h-screen py-2 lg:py-3">
       <SEO
         lang={lang}
-        canonical="/payments"
+        canonical={`/${lang}/payments`}
         title={t("payments_info.meta.title", "Payments | Kyaw Kyar Car Showroom")}
         description={t(
           "payments_info.meta.description",

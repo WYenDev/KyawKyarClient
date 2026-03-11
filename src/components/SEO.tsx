@@ -20,10 +20,10 @@ const buildUrl = (path?: any) => {
 };
 
 const generateHreflangAlternates = (canonicalPath: string): Array<{ href: string; hrefLang: string }> => {
-  const basePath = canonicalPath?.replace(/\/$/, '') || '';
+  const basePath = canonicalPath?.replace(/^\/(en|my)/, '')?.replace(/\/$/, '') || '';
   return [
-    { href: `${basePath || '/'}/my`, hrefLang: 'my' },
-    { href: `${basePath || '/'}/en`, hrefLang: 'en' },
+    { href: `/my${basePath}`, hrefLang: 'my' },
+    { href: `/en${basePath}`, hrefLang: 'en' },
   ];
 };
 
@@ -71,6 +71,9 @@ const SEO = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+      <link rel="alternate" hrefLang="x-default" href={canonicalUrl || SITE_URL} />
+      <link rel="alternate" hrefLang="en" href={buildUrl(canonical?.replace(/^\/(en|my)/, '') ? `/en${canonical?.replace(/^\/(en|my)/, '')}` : '/en')} />
+      <link rel="alternate" hrefLang="my" href={buildUrl(canonical?.replace(/^\/(en|my)/, '') ? `/my${canonical?.replace(/^\/(en|my)/, '')}` : '/my')} />
       {canonical && (
         <>
           <link rel="alternate" hrefLang="x-default" href={buildUrl(canonical)} />
