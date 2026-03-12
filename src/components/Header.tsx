@@ -189,7 +189,8 @@ const Header: React.FC = () => {
                     <button
                       onClick={() => setIsAccountOpen((s) => !s)}
                       aria-expanded={isAccountOpen}
-                      className="inline-flex items-center justify-center p-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      style={{ minWidth: '2.5rem' }}
                     >
                       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
                         <User className="h-4 w-4" strokeWidth={1.5} />
