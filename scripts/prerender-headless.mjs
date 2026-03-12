@@ -169,16 +169,6 @@ async function run() {
     }
   }
 
-  const enIndexPath = path.join(DIST, 'en', 'index.html');
-  const rootIndexPath = path.join(DIST, 'index.html');
-  const enIndex = await fs.promises.readFile(enIndexPath).catch(() => null);
-  if (enIndex) {
-    await fs.promises.writeFile(rootIndexPath, enIndex, 'utf-8');
-    console.log('Copied /en/index.html to root index.html');
-  } else {
-    console.warn('Could not copy /en/index.html to root - file not found');
-  }
-
   await browser.close();
   server.close();
   console.log('Headless prerender done.');
