@@ -86,7 +86,7 @@ function App() {
         </Route>
 
         {/* ================= PUBLIC ROUTES ================= */}
-        <Route path="/:lang" element={<PublicLayout />}>
+        <Route path="/:lang?" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="buyCars" element={<BuyCars />} />
           <Route path="cars/:id" element={<CarDetails />} />

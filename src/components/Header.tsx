@@ -18,22 +18,25 @@ const Header: React.FC = () => {
   const apiViber = homeData?.viberNo ?? undefined;
   const apiFacebook = homeData?.facebookLink ?? undefined;
   const phoneNumber = (apiPhone ?? '').toString();
-  const viberNumber = (apiViber ??  '').toString().replace(/\s/g, '').replace(/^\+/, '');
+  const viberNumber = (apiViber ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
-  const getPath = (path: string) => `/${currentLang}${path === '/' ? '' : path}`;
+  const getPath = (path: string) => {
+    const base = `/${currentLang}`;
+    if (path === '/') return base;
+    return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+  };
 
   const normalizePath = (p: string) => p.replace(/\/$/, '') || '/';
 
   const isActive = (path: string) => {
-    const current = normalizePath(location.pathname);
-    const targetPath = normalizePath(getPath(path));
+    const current = location.pathname;
 
+    // If path is '/', match exactly the base or promo pages
     if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`);
-    if (path === '/buyCars') return current === `/${currentLang}/buyCars` || current.startsWith(`/${currentLang}/cars`);
 
-    return current === targetPath;
+    // For other routes, check if current path contains the segment
+    return current.includes(path);
   };
-
   const navLinkClass = (path: string) => {
     const active = isActive(path);
     return `inline-flex items-center justify-center py-3 rounded-none text-sm font-medium transition-all duration-200 box-border shrink-0 ${active
@@ -139,7 +142,7 @@ const Header: React.FC = () => {
                 {isContactOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
                     <a
-                      href={`tel:${phoneNumber.replace(/\s/g, '')}` }
+                      href={`tel:${phoneNumber.replace(/\s/g, '')}`}
                       className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
                       onClick={() => setIsContactOpen(false)}
                     >
@@ -156,7 +159,7 @@ const Header: React.FC = () => {
                       <img src={ViberIcon} alt="Viber" className="h-8 w-8 rounded-md" />
                       <span>{t('buttons.viber', 'Viber')}</span>
                     </a>
-                    
+
                     <a
                       href={apiFacebook || '#'}
                       target="_blank"
@@ -292,7 +295,7 @@ const Header: React.FC = () => {
                   </div>
                   <span>{t('buttons.call_us')}</span>
                 </a>
-                
+
                 <a
                   href={`viber://chat?number=%2B${viberNumber}`}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#7360f2]/10 text-[#7360f2] border border-[#7360f2]/20 font-semibold active:scale-[0.98] transition-all"
