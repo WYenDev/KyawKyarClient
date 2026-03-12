@@ -22,9 +22,11 @@ const Header: React.FC = () => {
 
   const getPath = (path: string) => `/${currentLang}${path === '/' ? '' : path}`;
 
+  const normalizePath = (p: string) => p.replace(/\/$/, '') || '/';
+
   const isActive = (path: string) => {
-    const current = location.pathname;
-    const targetPath = getPath(path);
+    const current = normalizePath(location.pathname);
+    const targetPath = normalizePath(getPath(path));
 
     if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`);
     if (path === '/buyCars') return current === `/${currentLang}/buyCars` || current.startsWith(`/${currentLang}/cars`);
@@ -75,7 +77,7 @@ const Header: React.FC = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const isHome = location.pathname === `/${currentLang}`;
+  const isHome = normalizePath(location.pathname) === `/${currentLang}`;
 
   return (
     <header
