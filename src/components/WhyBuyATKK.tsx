@@ -113,7 +113,9 @@ const WhyBuyAtKyawKyar: React.FC = () => {
                 </p>
 
                 <div className="mt-4 flex items-center text-indigo-600 font-bold group-hover:gap-4 gap-2 transition-all">
-                  <span className="text-sm uppercase tracking-widest font-black">Learn More</span>
+                  <span className={`text-sm font-black ${isMyanmar ? "font-myanmar" : "uppercase tracking-widest"}`}>
+                    {isMyanmar ? "ပိုမိုကြည့်ရှုရန်" : "Learn More"}
+                  </span>
                   <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
