@@ -107,7 +107,7 @@
       "best_price_title": "Fair market pricing",
       "best_price_desc": "We benchmark prices across Myanmar to give you a competitive offer.",
       "trusted_title": "Trusted by thousands",
-      "trusted_desc": "15+ years of experience and thousands of happy sellers.",
+      "trusted_desc": "{{years}}+ years of experience and thousands of happy sellers.",
       "secure_payment_title": "Secure payment options",
       "secure_payment_desc": "Cash, bank transfer, or cheque – whichever works best for you."
     }

@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DollarSign, FastForward, ShieldCheck, Award } from 'lucide-react';
+import { getCompanyYears } from '../utils/company';
 
 const WhySellWithUs: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
   const isMyanmar = i18n?.language?.startsWith('my');
+  const years = getCompanyYears();
 
   const benefits = [
     {
@@ -43,6 +45,7 @@ const WhySellWithUs: React.FC = () => {
       description: t(
         'sell.highlights.trusted_desc',
         'With years of experience, we are a trusted name in the car industry.',
+        { years },
       ),
       color: 'text-amber-600',
       bg: 'bg-amber-50',
