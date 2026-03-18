@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight, Plus, LucideProps } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import FeaturedCard from './FeaturedCard';
 import type { CarListItem } from '../services/api';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ interface CarCarouselProps {
   highlightedTitle: string;
   useDataHook: () => { data: any; isLoading: boolean; isError: boolean };
   theme: 'indigo' | 'amber';
+  filterParam?: string;
 }
 
 const themeClasses = {
@@ -49,12 +50,14 @@ const themeClasses = {
   },
 };
 
-const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme }) => {
+const CarCarousel: React.FC<CarCarouselProps> = ({ id, badgeText, badgeIcon, title, highlightedTitle, useDataHook, theme, filterParam }) => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const { data, isLoading, isError } = useDataHook();
   const cars: CarListItem[] = (data as any)?.items ?? (data as CarListItem[]) ?? [];
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   const classes = themeClasses[theme];
 
   const displayCars = cars.length > 0 ? cars.slice(0, 6) : [];
@@ -171,23 +174,24 @@ const CarCarousel: React.FC<CarCarouselProps> = ({ id,bg, badgeText, badgeIcon, 
                   ))}
 
                   <div
-                    onClick={() => navigate('/buyCars')}
+                    onClick={() => navigate(filterParam ? getPath(`/buyCars?${filterParam}`) : getPath('/buyCars'))}
                     className={`snap-start flex-shrink-0 w-64 flex flex-col items-center justify-center bg-slate-50/50 rounded-none border-2 border-dashed border-slate-200 ${classes.hoverBorder} ${classes.hoverBgLight} transition-all cursor-pointer group/more`}
                   >
                     <div className={`w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover/more:scale-110 transition-all`}>
                       <Plus className={`w-7 h-7 text-slate-400 ${classes.hoverText} transition-colors`} />
                     </div>
-                    <span className="font-bold text-slate-900">Discover More</span>
-                    <span className="text-[10px] text-slate-400 mt-2 uppercase tracking-[0.2em] font-black">150+ Vehicles</span>
+                    <span className="font-bold text-slate-900">
+                      {t('car_carousel.DiscoverMore')}
+                    </span>
                   </div>
                 </div>
               </div>
               <div className="text-center mt-8 relative z-10">
                 <button
-                  onClick={() => navigate('/buyCars')}
+                  onClick={() => navigate(getPath('/buyCars'))}
                   className={`group inline-flex items-center gap-4 bg-slate-900 text-white px-10 py-5 rounded-none text-base font-bold hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl shadow-slate-900/10 transform hover:-translate-y-1`}
                 >
-                  Explore Full Inventory
+                  {t('car_carousel.ExploreFullInventory')}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

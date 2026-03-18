@@ -818,6 +818,22 @@ export type GetApiCarsDeleted200 = {
   limit?: number;
 };
 
+export type GetApiCarsFiltersParams = {
+/**
+ * If "true" or "1", include brands and models with zero car count. Default is to only include brands/models with at least one available car.
+ */
+includeEmpty?: GetApiCarsFiltersIncludeEmpty;
+};
+
+export type GetApiCarsFiltersIncludeEmpty = typeof GetApiCarsFiltersIncludeEmpty[keyof typeof GetApiCarsFiltersIncludeEmpty];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetApiCarsFiltersIncludeEmpty = {
+  true: 'true',
+  NUMBER_1: '1',
+} as const;
+
 export type GetApiCarsFilters200BrandsWithModelsModelsItem = {
   id?: string;
   name?: string;
@@ -838,6 +854,8 @@ export type GetApiCarsFilters200 = {
   fuelTypes?: FuelType[];
   transmissionTypes?: TransmissionType[];
   steeringPositions?: SteeringPosition[];
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 export type GetApiCarsSearchParams = {
@@ -873,6 +891,14 @@ showroom?: string;
  * Steering position (Left or Right)
  */
 steeringPosition?: SteeringPosition;
+/**
+ * Filter by new arrival status
+ */
+isNewArrival?: boolean;
+/**
+ * Filter by featured status
+ */
+featured?: boolean;
 page?: number;
 limit?: number;
 };
@@ -996,6 +1022,21 @@ export type GetApiDashboardSummary200 = {
   totalBanners?: number;
   /** @nullable */
   totalAdmins?: number | null;
+};
+
+export type GetApiFilterMinMaxPrice200 = {
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+export type PatchApiFilterMinMaxPriceBody = {
+  minPrice: number;
+  maxPrice: number;
+};
+
+export type PatchApiFilterMinMaxPrice200 = {
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 export type PostApiFooterBannersIdImageBody = {
@@ -4830,13 +4871,14 @@ export function useGetApiCarsDeleted<TData = Awaited<ReturnType<typeof getApiCar
  * @summary Get car filters (brandsWithModels, regions, colors, showrooms, buildTypes)
  */
 export const getApiCarsFilters = (
-    
+    params?: GetApiCarsFiltersParams,
  options?: SecondParameter<typeof mutator>,signal?: AbortSignal
 ) => {
       
       
       return mutator<GetApiCarsFilters200>(
-      {url: `/api/cars/filters`, method: 'GET', signal
+      {url: `/api/cars/filters`, method: 'GET',
+        params, signal
     },
       options);
     }
@@ -4844,23 +4886,23 @@ export const getApiCarsFilters = (
 
 
 
-export const getGetApiCarsFiltersQueryKey = () => {
+export const getGetApiCarsFiltersQueryKey = (params?: GetApiCarsFiltersParams,) => {
     return [
-    `/api/cars/filters`
+    `/api/cars/filters`, ...(params ? [params]: [])
     ] as const;
     }
 
     
-export const getGetApiCarsFiltersQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+export const getGetApiCarsFiltersQueryOptions = <TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(params?: GetApiCarsFiltersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsFiltersQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetApiCarsFiltersQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsFilters>>> = ({ signal }) => getApiCarsFilters(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCarsFilters>>> = ({ signal }) => getApiCarsFilters(params, requestOptions, signal);
 
       
 
@@ -4874,7 +4916,7 @@ export type GetApiCarsFiltersQueryError = unknown
 
 
 export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>> & Pick<
+ params: undefined |  GetApiCarsFiltersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiCarsFilters>>,
           TError,
@@ -4884,7 +4926,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>> & Pick<
+ params?: GetApiCarsFiltersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiCarsFilters>>,
           TError,
@@ -4894,7 +4936,7 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ params?: GetApiCarsFiltersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -4902,11 +4944,11 @@ export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCar
  */
 
 export function useGetApiCarsFilters<TData = Awaited<ReturnType<typeof getApiCarsFilters>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ params?: GetApiCarsFiltersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCarsFilters>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetApiCarsFiltersQueryOptions(options)
+  const queryOptions = getGetApiCarsFiltersQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -5770,6 +5812,131 @@ export function useGetApiCarsFeatured<TData = Awaited<ReturnType<typeof getApiCa
 
 
 /**
+ * @summary Mark a car as new arrival
+ */
+export const postApiCarsIdNewArrival = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/cars/${id}/new-arrival`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiCarsIdNewArrivalMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdNewArrival>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdNewArrival>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiCarsIdNewArrival'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiCarsIdNewArrival>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiCarsIdNewArrival(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiCarsIdNewArrivalMutationResult = NonNullable<Awaited<ReturnType<typeof postApiCarsIdNewArrival>>>
+    
+    export type PostApiCarsIdNewArrivalMutationError = void
+
+    /**
+ * @summary Mark a car as new arrival
+ */
+export const usePostApiCarsIdNewArrival = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiCarsIdNewArrival>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiCarsIdNewArrival>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiCarsIdNewArrivalMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Remove a car from new arrival
+ */
+export const deleteApiCarsIdNewArrival = (
+    id: string,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<void>(
+      {url: `/api/cars/${id}/new-arrival`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiCarsIdNewArrivalMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdNewArrival>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdNewArrival>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteApiCarsIdNewArrival'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiCarsIdNewArrival>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiCarsIdNewArrival(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiCarsIdNewArrivalMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiCarsIdNewArrival>>>
+    
+    export type DeleteApiCarsIdNewArrivalMutationError = void
+
+    /**
+ * @summary Remove a car from new arrival
+ */
+export const useDeleteApiCarsIdNewArrival = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiCarsIdNewArrival>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiCarsIdNewArrival>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiCarsIdNewArrivalMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * Returns counts for cars, brands, models, build types, showrooms, colors, sell requests, banners, and for super-admins, admin count.
  * @summary Get dashboard summary metrics
  */
@@ -5863,6 +6030,165 @@ export function useGetApiDashboardSummary<TData = Awaited<ReturnType<typeof getA
 
 
 
+/**
+ * Returns the default min and max price values for the car filter
+ * @summary Get filter min/max price range
+ */
+export const getApiFilterMinMaxPrice = (
+    
+ options?: SecondParameter<typeof mutator>,signal?: AbortSignal
+) => {
+      
+      
+      return mutator<GetApiFilterMinMaxPrice200>(
+      {url: `/api/filter-min-max-price`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiFilterMinMaxPriceQueryKey = () => {
+    return [
+    `/api/filter-min-max-price`
+    ] as const;
+    }
+
+    
+export const getGetApiFilterMinMaxPriceQueryOptions = <TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiFilterMinMaxPriceQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>> = ({ signal }) => getApiFilterMinMaxPrice(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiFilterMinMaxPriceQueryResult = NonNullable<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>>
+export type GetApiFilterMinMaxPriceQueryError = unknown
+
+
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>,
+          TError,
+          Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get filter min/max price range
+ */
+
+export function useGetApiFilterMinMaxPrice<TData = Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiFilterMinMaxPrice>>, TError, TData>>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiFilterMinMaxPriceQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Updates the default min and max price values for the car filter (admin only)
+ * @summary Update filter min/max price range
+ */
+export const patchApiFilterMinMaxPrice = (
+    patchApiFilterMinMaxPriceBody: PatchApiFilterMinMaxPriceBody,
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<PatchApiFilterMinMaxPrice200>(
+      {url: `/api/filter-min-max-price`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchApiFilterMinMaxPriceBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchApiFilterMinMaxPriceMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, TError,{data: PatchApiFilterMinMaxPriceBody}, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, TError,{data: PatchApiFilterMinMaxPriceBody}, TContext> => {
+
+const mutationKey = ['patchApiFilterMinMaxPrice'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, {data: PatchApiFilterMinMaxPriceBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchApiFilterMinMaxPrice(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchApiFilterMinMaxPriceMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>>
+    export type PatchApiFilterMinMaxPriceMutationBody = PatchApiFilterMinMaxPriceBody
+    export type PatchApiFilterMinMaxPriceMutationError = void
+
+    /**
+ * @summary Update filter min/max price range
+ */
+export const usePatchApiFilterMinMaxPrice = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>, TError,{data: PatchApiFilterMinMaxPriceBody}, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchApiFilterMinMaxPrice>>,
+        TError,
+        {data: PatchApiFilterMinMaxPriceBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchApiFilterMinMaxPriceMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
 /**
  * @summary Upload footer banner image
  */

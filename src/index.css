@@ -108,8 +108,8 @@ img {
   /* Critical for the 'Heavy' look in the image */
   font-weight: 700; 
   
-  /* Burmese scripts need slightly more line height than Latin to prevent clipping */
-  line-height: 1.6;
+  /* Burmese stacked/tall glyphs need extra vertical space; !important overrides Tailwind leading-* so they don't squash lines */
+  line-height: 1.75 !important;
   
   /* Removing letter spacing as Burmese characters should stay connected */
   letter-spacing: 0;
@@ -135,6 +135,24 @@ img {
 .ql-snow .ql-picker.ql-size .ql-picker-label::before,
 .ql-snow .ql-picker.ql-size .ql-picker-item::before {
   content: 'Normal';
+}
+
+.admin-promo-landing-title-editor .ql-container {
+  height: 80px;            /* smaller height for title */
+}
+
+.admin-promo-landing-title-editor .ql-editor {
+  height: 100%;
+  overflow-y: auto;        /* scroll if text exceeds height */
+}
+
+.admin-promo-landing-body-editor .ql-container {
+  height: 300px;          /* fixed height */
+}
+
+.admin-promo-landing-body-editor .ql-editor {
+  height: 100%;
+  overflow-y: auto;       /* enable vertical scroll */
 }
 
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before,
@@ -213,4 +231,33 @@ img {
   .banner-rich-text [style*="font-size: 12px"], .banner-rich-text [style*="font-size:12px"],
   .landing-title-content [style*="font-size: 12px"], .landing-title-content [style*="font-size:12px"] { font-size: 11px !important; }
   /* 10px is already small enough, no change needed usually, or keeps as is */
+}
+/* ===========================
+   ROOT LAYOUT FIX (IMPORTANT)
+   prevents narrow centered app
+   =========================== */
+
+html,
+body,
+#root {
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  display: block !important;
+  /* override any flex centering */
+  place-items: unset !important;
+}
+
+#root {
+  width: 100%;
+  max-width: none !important;
+  /* override Vite max-width:1280px */
+  margin: 0 !important;
+  /* override margin: 0 auto */
+  padding: 0 !important;
+  /* override template padding */
+  text-align: initial !important;
+  /* override text-align:center */
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { CarListItem } from '../services/api';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,6 +11,8 @@ interface FeaturedCardProps {
 const FeaturedCard: React.FC<FeaturedCardProps> = ({ car }) => {
   const { t } = useTranslation('home');
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   const { user } = useAuth();
   const title = `${car?.model?.brand?.name || ''} ${car?.model?.name || ''}`.trim();
   const imgSrc = car.primaryImage?.url;
@@ -20,8 +22,8 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car }) => {
     <article
       role="button"
       tabIndex={0}
-      onClick={() => navigate(`/cars/${car.id}`)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate(`/cars/${car.id}`); }}
+      onClick={() => navigate(getPath(`/cars/${car.id}`))}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate(getPath(`/cars/${car.id}`)); }}
       className="group flex-shrink-0 rounded-none overflow-hidden bg-white border border-slate-100 transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
     >
       <div className="relative h-56 sm:h-64 bg-gray-100 overflow-hidden">

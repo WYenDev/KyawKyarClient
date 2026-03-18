@@ -7,6 +7,13 @@ import { AuthProvider } from './contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import './i18n';
+import i18n from './i18n';
+
+const pathLang = window.location.pathname.split('/')[1];
+if (pathLang === 'my' || pathLang === 'en') {
+  console.log('path lang', pathLang)
+  i18n.changeLanguage(pathLang);
+}
 
 const rootElement = document.getElementById('root')!;
 const app = (

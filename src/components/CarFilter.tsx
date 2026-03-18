@@ -22,15 +22,23 @@ interface CarFilterProps {
   serverFuelTypes?: Array<string | { id?: string; name?: string }>;
   // serverTransmissionTypes may be array of strings or objects {id, name}
   serverTransmissionTypes?: Array<string | { id?: string; name?: string }>;
+  /** Rendered beside the mobile Filters button (e.g. Total Results pill) */
+  mobileBarExtra?: React.ReactNode;
+  /** Min price for the price range filter (from API) */
+  minPrice?: number;
+  /** Max price for the price range filter (from API) */
+  maxPrice?: number;
 }
 
-const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes }) => {
+const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen, onToggle, serverBrands, serverBrandModels, serverBodyTypes, serverShowrooms, serverSteeringPositions, serverFuelTypes, serverTransmissionTypes, mobileBarExtra, minPrice, maxPrice }) => {
 
   const updateFilters = (key: keyof FilterOptions, value: FilterOptions[keyof FilterOptions]) => {
     onFiltersChange({ ...filters, [key]: value } as FilterOptions);
   };
 
   const CURRENT_YEAR = new Date().getFullYear();
+  const priceMin = minPrice ?? 0;
+  const priceMax = maxPrice ?? 5000;
 
   const clearFilters = () => {
     onFiltersChange({
@@ -44,7 +52,9 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
       bodyTypes: [],
       showrooms: [],
       steeringPositions: [],
-      status: []
+      status: [],
+      isFeatured: false,
+      isNewArrival: false
     });
   };
 
@@ -137,8 +147,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
 
   return (
     <>
-      {/* Mobile Filter Button */}
-      <div className="xl:hidden mb-6">
+      {/* Mobile Filter Button + optional content (e.g. Total Results) */}
+      <div className="xl:hidden mb-6 flex items-center gap-3 flex-wrap">
         <button
           onClick={onToggle}
           className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:shadow-md transition-shadow"
@@ -146,6 +156,7 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
           <Filter className="h-4 w-4" />
           <span className="font-medium">Filters</span>
         </button>
+        {mobileBarExtra}
       </div>
 
       {/* Overlay for mobile */}
@@ -209,8 +220,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                 <div className="space-y-2">
                   <input
                     type="range"
-                    min="0"
-                    max="5000"
+                    min={priceMin}
+                    max={priceMax}
                     step="1"
                     value={filters.priceRange[0]}
                     onChange={(e) => {
@@ -223,8 +234,8 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                   />
                   <input
                     type="range"
-                    min="0"
-                    max="5000"
+                    min={priceMin}
+                    max={priceMax}
                     step="1"
                     value={filters.priceRange[1]}
                     onChange={(e) => {
@@ -437,6 +448,28 @@ const CarFilter: React.FC<CarFilterProps> = ({ filters, onFiltersChange, isOpen,
                       </button>
                     );
                   })}
+                </div>
+              </div>
+
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block text-sm font-medium text-slate-800 mb-2">Special</label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      updateFilters('isFeatured', !filters.isFeatured);
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm border ${filters.isFeatured ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                  >
+                    Featured
+                  </button>
+                  <button
+                    onClick={() => {
+                      updateFilters('isNewArrival', !filters.isNewArrival);
+                    }}
+                    className={`px-3 py-1 rounded-full text-sm border ${filters.isNewArrival ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200'}`}
+                  >
+                    New Arrivals
+                  </button>
                 </div>
               </div>
 

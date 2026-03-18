@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Phone, Menu, X, Globe, User, Facebook } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-with-text.png';
@@ -10,28 +10,33 @@ import { useGetApiHome } from '../services/api';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { t, i18n } = useTranslation('common'); // Use 'common' namespace
-  const currentLang = i18n.language;
+  const { lang } = useParams<{ lang?: string }>();
+  const currentLang = lang || 'my';
+  const { t } = useTranslation('common');
   const { data: homeData } = useGetApiHome();
   const apiPhone = homeData?.phoneNo ?? undefined;
   const apiViber = homeData?.viberNo ?? undefined;
   const apiFacebook = homeData?.facebookLink ?? undefined;
   const phoneNumber = (apiPhone ?? '').toString();
-  const viberNumber = (apiViber ??  '').toString().replace(/\s/g, '').replace(/^\+/, '');
+  const viberNumber = (apiViber ?? '').toString().replace(/\s/g, '').replace(/^\+/, '');
 
+  const getPath = (path: string) => {
+    const base = `/${currentLang}`;
+    if (path === '/') return base;
+    return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+  };
+
+  const normalizePath = (p: string) => p.replace(/\/$/, '') || '/';
 
   const isActive = (path: string) => {
     const current = location.pathname;
 
-    // Home: exact match or promo landing pages (reached from home carousel)
-    if (path === '/') return current === '/' || current.startsWith('/promo/');
+    // If path is '/', match exactly the base or promo pages
+    if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`);
 
-    // Treat car detail pages as part of the Buy Cars section
-    if (path === '/buyCars') return current === '/buyCars' || current.startsWith('/cars');
-
-    return current === path;
+    // For other routes, check if current path contains the segment
+    return current.includes(path);
   };
-
   const navLinkClass = (path: string) => {
     const active = isActive(path);
     return `inline-flex items-center justify-center py-3 rounded-none text-sm font-medium transition-all duration-200 box-border shrink-0 ${active
@@ -41,16 +46,17 @@ const Header: React.FC = () => {
   };
 
   const handleLanguageChange = () => {
-    const newLang = currentLang === 'en' ? 'mm' : 'en';
-    i18n.changeLanguage(newLang);
+    const newLang = currentLang === 'en' ? 'my' : 'en';
+    const currentPath = location.pathname.replace(/^\/(en|my)/, '') || '/';
+    const newPath = `/${newLang}${currentPath === '/' ? '' : currentPath}`;
+    navigate(newPath);
   };
 
-  // Fixed width per nav entry (inline style so it always applies) — no layout shift when switching EN/MM
   const navItems: { path: string; label: string; widthRem: number }[] = [
-    { path: '/', label: t('nav.home'), widthRem: 6 },           // Home / ပင်မ
-    { path: '/buyCars', label: t('nav.buyCars'), widthRem: 7.5 },   // Buy Cars / ကားဝယ်မည်
-    { path: '/sellCars', label: t('nav.sellCars'), widthRem: 8.5 },  // Sell Cars / ကားရောင်းမည်
-    { path: '/payments', label: t('nav.payments'), widthRem: 9.5 },  // Payments / ငွေပေးချေမှုများ
+    { path: '/', label: t('nav.home'), widthRem: 6 },
+    { path: '/buyCars', label: t('nav.buyCars'), widthRem: 7.5 },
+    { path: '/sellCars', label: t('nav.sellCars'), widthRem: 8.5 },
+    { path: '/payments', label: t('nav.payments'), widthRem: 9.5 },
   ];
 
   const accountRef = useRef<HTMLDivElement | null>(null);
@@ -74,7 +80,7 @@ const Header: React.FC = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const isHome = location.pathname === '/';
+  const isHome = normalizePath(location.pathname) === `/${currentLang}`;
 
   return (
     <header
@@ -88,7 +94,7 @@ const Header: React.FC = () => {
         <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">
           <div className={`mt-0 mb-0 ${isHome ? 'bg-white/95 border border-white/80 shadow-lg shadow-slate-900/5 rounded-none px-3 sm:px-6 h-16 flex items-center justify-between' : 'flex items-center justify-between h-14'}`}>
             {/* Logo */}
-            <Link to="/" className="flex items-center group shrink-0">
+            <Link to={getPath('/')} className="flex items-center group shrink-0">
               <img src={logo} alt="ကျော်ကြား car showroom" className="h-12 md:h-16 w-auto object-contain" />
             </Link>
 
@@ -97,7 +103,7 @@ const Header: React.FC = () => {
               {navItems.map((item) => (
                 <Link
                   key={item.path}
-                  to={item.path}
+                  to={getPath(item.path)}
                   className={navLinkClass(item.path)}
                   style={{ width: `${item.widthRem}rem`, minWidth: `${item.widthRem}rem` }}
                 >
@@ -136,7 +142,7 @@ const Header: React.FC = () => {
                 {isContactOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
                     <a
-                      href={`tel:${phoneNumber.replace(/\s/g, '')}` }
+                      href={`tel:${phoneNumber.replace(/\s/g, '')}`}
                       className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
                       onClick={() => setIsContactOpen(false)}
                     >
@@ -153,7 +159,7 @@ const Header: React.FC = () => {
                       <img src={ViberIcon} alt="Viber" className="h-8 w-8 rounded-md" />
                       <span>{t('buttons.viber', 'Viber')}</span>
                     </a>
-                    
+
                     <a
                       href={apiFacebook || '#'}
                       target="_blank"
@@ -186,7 +192,8 @@ const Header: React.FC = () => {
                     <button
                       onClick={() => setIsAccountOpen((s) => !s)}
                       aria-expanded={isAccountOpen}
-                      className="inline-flex items-center justify-center p-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      style={{ minWidth: '2.5rem' }}
                     >
                       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700">
                         <User className="h-4 w-4" strokeWidth={1.5} />
@@ -235,7 +242,7 @@ const Header: React.FC = () => {
               {navItems.map((item) => (
                 <Link
                   key={item.path}
-                  to={item.path}
+                  to={getPath(item.path)}
                   className={`px-4 py-3 rounded-xl text-base font-medium transition-colors ${isActive(item.path)
                     ? 'bg-indigo-50 text-indigo-700'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -288,7 +295,7 @@ const Header: React.FC = () => {
                   </div>
                   <span>{t('buttons.call_us')}</span>
                 </a>
-                
+
                 <a
                   href={`viber://chat?number=%2B${viberNumber}`}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#7360f2]/10 text-[#7360f2] border border-[#7360f2]/20 font-semibold active:scale-[0.98] transition-all"

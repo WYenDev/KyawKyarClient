@@ -185,6 +185,10 @@ const CarCreatePage = () => {
     const { mutate, isPending } = usePostApiCars({
         mutation: {
             onSuccess: () => navigate("/admin/cars"),
+            onError: (error: Error & { payload?: { error?: string } }) => {
+                const message = error.payload?.error ?? "Failed to create car";
+                alert(message);
+            },
         },
     });
 

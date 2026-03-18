@@ -8,7 +8,7 @@
   },
   "meta": {
     "title": "Kyaw Kyar Car Showroom | Buy & Sell Quality Vehicles",
-    "description": "Myanmar’s trusted destination for inspected cars, transparent pricing, flexible payments, and premium after-sales service."
+    "description": "Myanmar’s trusted destination for inspected cars, transparent pricing, flexible payments, and affordable installment plans."
   },
   "stats": {
     "cars_sold": "Cars Sold",
@@ -62,6 +62,10 @@
       }
     }
   }, 
+  "car_carousel": {
+    "ExploreFullInventory": "Explore Full Inventory",
+    "DiscoverMore": "Discover More"
+  },
   "browse_by_body_type": {
     "title": "Browse by",
     "highlightedText": "Body Type",
@@ -85,7 +89,7 @@
   },
   "about_teaser": {
     "badge": "About KyawKyar",
-    "title": "Your Trusted Multi-Brand Car Showroom in Myanmar",
+    "title": "With full reliability and accountability",
     "description": "Kyaw Kyar has established itself as Myanmar's leading destination for quality vehicles. We hand-select every car, perform comprehensive multi-point inspections, and provide flexible financing options to make your dream car ownership a reality. From daily-use vehicles to premium luxury cars, we offer transparent pricing, verified clean history, and dedicated after-sales support—all backed by our commitment to excellence and customer satisfaction."
   }
 }

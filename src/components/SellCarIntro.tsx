@@ -1,10 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, DollarSign, Clock, ShieldCheck } from 'lucide-react';
 
 const SellCarIntro: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   return (
     <div className="flex flex-col mb-2 sm:mb-4">

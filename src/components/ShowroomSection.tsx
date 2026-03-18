@@ -5,7 +5,7 @@ import { MapPin, Phone, ExternalLink, X, PhoneCall } from 'lucide-react';
 
 const ShowroomSection: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   const [selectedShowroom, setSelectedShowroom] = useState<Showroom | null>(null);
 
@@ -65,7 +65,7 @@ const ShowroomSection: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-indigo-600 shrink-0 mt-1" />
                   <div className="flex-1">
-                    <p className={`text-slate-600 leading-relaxed line-clamp-3 md:h-[4.8rem] ${isMyanmar ? 'font-myanmar leading-[1.8] md:h-[5.4rem]' : ''}`}>
+                    <p className={`text-slate-600 leading-relaxed md:line-clamp-3 md:h-[4.8rem] ${isMyanmar ? 'font-myanmar leading-[1.8] md:h-[5.4rem]' : ''}`}>
                       {isMyanmar ? (showroom.addressMm || showroom.addressEn) : showroom.addressEn}
                     </p>
                     {showroom.city && (

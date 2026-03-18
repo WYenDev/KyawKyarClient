@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
     Plus,
     Trash2,
@@ -17,9 +17,11 @@ import { keepPreviousData } from '@tanstack/react-query';
 
 import {
     CarListItem,
+    Status,
     useGetApiCarsActive,
     useGetApiCarsDeleted,
     useGetApiCarsSold,
+    usePatchApiCarsId,
     usePatchApiCarsIdSoftDelete,
     usePostApiCarsIdRestore,
 } from "../../services/api";
@@ -48,7 +50,13 @@ const Cars = () => {
     }, [searchParams]);
     const [deleteTarget, setDeleteTarget] = useState<CarListItem | null>(null);
     const [searchText, setSearchText] = useState("");
-    const [page, setPage] = useState(1);
+    const prevSearchTextRef = useRef(searchText);
+    const prevActiveTabRef = useRef(activeTab);
+
+    const page = useMemo(() => {
+        const p = searchParams.get('page');
+        return p ? parseInt(p, 10) : 1;
+    }, [searchParams]);
 
     const isSearching = searchText.trim().length > 0;
 
@@ -68,7 +76,8 @@ const Cars = () => {
 
     const { 
         data: soldData, 
-        isLoading: soldLoading
+        isLoading: soldLoading,
+        refetch: refetchSold,
     } = useGetApiCarsSold({
         page,
         limit: LIMIT,
@@ -90,7 +99,9 @@ const Cars = () => {
                     refetchActive();
                     refetchDeleted();
                     setDeleteTarget(null);
-                    setPage(1);
+                    const params = new URLSearchParams(searchParams);
+                    params.set('page', '1');
+                    setSearchParams(params);
                 },
             },
         });
@@ -100,6 +111,15 @@ const Cars = () => {
             onSuccess: () => {
                 refetchActive();
                 refetchDeleted();
+            },
+        },
+    });
+
+    const { mutate: markAvailable, isPending: markingAvailable } = usePatchApiCarsId({
+        mutation: {
+            onSuccess: () => {
+                refetchActive();
+                refetchSold();
             },
         },
     });
@@ -140,8 +160,18 @@ const Cars = () => {
     }, [filteredCars, page, isSearching]);
 
     useEffect(() => {
-        setPage(1);
-    }, [searchText, activeTab]);
+        const prevSearch = prevSearchTextRef.current;
+        const prevTab = prevActiveTabRef.current;
+
+        if (searchText !== prevSearch || activeTab !== prevTab) {
+            const params = new URLSearchParams(searchParams);
+            params.set('page', '1');
+            setSearchParams(params);
+        }
+
+        prevSearchTextRef.current = searchText;
+        prevActiveTabRef.current = activeTab;
+    }, [searchText, activeTab, searchParams, setSearchParams]);
 
     /* ================= RENDER ================= */
     return (
@@ -309,7 +339,17 @@ const Cars = () => {
                             </button>
                         </>
                     ) : activeTab === 'sold' ? (
-                        <div className="text-sm text-slate-500 ml-auto">Sold</div>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                markAvailable({ id: car.id, data: { status: Status.Available } });
+                            }}
+                            disabled={markingAvailable}
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-green-600 bg-green-50 hover:bg-green-100 transition-colors disabled:opacity-50 ml-auto"
+                        >
+                            <RotateCcw size={14} /> Back to inventory
+                        </button>
                     ) : (
                         <button
                             onClick={(e) => {
@@ -337,7 +377,11 @@ const Cars = () => {
                     </div>
                     <div className="flex items-center justify-center gap-3">
                         <button
-                            onClick={() => setPage(Math.max(1, page - 1))}
+                            onClick={() => {
+                                const params = new URLSearchParams(searchParams);
+                                params.set('page', String(Math.max(1, page - 1)));
+                                setSearchParams(params);
+                            }}
                             disabled={page <= 1}
                             className={`px-3 py-1 rounded-md border ${page <= 1 ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                         >
@@ -345,7 +389,11 @@ const Cars = () => {
                         </button>
                         <div className="text-sm text-slate-700">Page {page} of {totalPages}</div>
                         <button
-                            onClick={() => setPage(Math.min(totalPages, page + 1))}
+                            onClick={() => {
+                                const params = new URLSearchParams(searchParams);
+                                params.set('page', String(Math.min(totalPages, page + 1)));
+                                setSearchParams(params);
+                            }}
                             disabled={page >= totalPages}
                             className={`px-3 py-1 rounded-md border ${page >= totalPages ? 'bg-slate-100 text-slate-400 border-slate-200' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}
                         >

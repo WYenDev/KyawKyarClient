@@ -41,7 +41,7 @@ type InstallmentMode = "bank" | "showroom";
 
 const PremiumPayment: React.FC = () => {
   const { t, i18n } = useTranslation("common");
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const [installmentMode, setInstallmentMode] = useState<InstallmentMode | null>("showroom");
 
   /* ===== NEW: Calculator State (string so trailing zeros are preserved in input) ===== */
@@ -113,11 +113,11 @@ const PremiumPayment: React.FC = () => {
               <div className="p-3 sm:p-10">
                   <div className="animate-in fade-in slide-in-from-right-4 duration-500">
                     <div className="mb-4 sm:mb-6">
-                      <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight min-h-[36px] sm:min-h-0 ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
+                      <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug pt-0 sm:py-1 tracking-tight min-h-[36px] sm:min-h-0 ${isMyanmar ? 'font-myanmar sm:leading-relaxed max-sm:text-[1.6rem]' : ''}`}>
                          <span className={`inline-block ${isMyanmar ? 'pt-4 pb-4' : 'pt-0 md:pt-1 pb-1'} text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600`}>
                             {t("payments_info.title", "Flexible Payment Options")}
                          </span>
-                      </h2>
+                      </h1>
                       <p className={`text-base sm:text-lg text-slate-600 mt-3 sm:mt-4 leading-relaxed min-h-[72px] sm:min-h-0 ${isMyanmar ? 'font-myanmar' : ''}`}>
                         <Trans
                           i18nKey="payments_info.description"

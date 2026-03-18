@@ -302,10 +302,11 @@ const CarEditPage = () => {
             await queryClient.invalidateQueries({ queryKey: getGetApiCarsDeletedQueryKey() });
             await queryClient.invalidateQueries({ queryKey: getGetApiCarsIdQueryKey(id!) });
 
-            navigate("/admin/cars");
+            navigate(-1);
         } catch (error) {
-            console.error(error);
-            alert("Failed to save changes");
+            const err = error as Error & { payload?: { error?: string } };
+            const message = err.payload?.error ?? "Failed to save changes";
+            alert(message);
         }
     };
 

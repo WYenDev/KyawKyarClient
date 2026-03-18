@@ -12,7 +12,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 const DEFAULT_FILTERS: FilterOptions = {
   brand: '',
   model: '',
-  priceRange: [0, 5000],
+  priceRange: [0, 5000], // Will be overridden by API values if available
   yearRange: [1980, CURRENT_YEAR + 1],
   mileageRange: [0, 200000],
   fuelTypes: [],
@@ -20,11 +20,13 @@ const DEFAULT_FILTERS: FilterOptions = {
   bodyTypes: [],
   showrooms: [],
   steeringPositions: [],
-  status: []
+  status: [],
+  isFeatured: false,
+  isNewArrival: false
 };
 
 const CarInventory: React.FC = () => {
-  const { t } = useTranslation('cars');
+  useTranslation('cars');
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -40,7 +42,11 @@ const CarInventory: React.FC = () => {
 
   // Fetch filter metadata
   const { data: filterData, isLoading: filtersLoading, isError: filtersError } = useGetApiCarsFilters();
-  
+
+  // Use API minPrice/maxPrice if available, otherwise fallback to defaults
+  const defaultMinPrice = filterData?.minPrice ?? 0;
+  const defaultMaxPrice = filterData?.maxPrice ?? 5000;
+
   const serverBrands = filterData?.brandsWithModels ? Object.keys(filterData.brandsWithModels) : undefined;
   const serverBrandModels = filterData?.brandsWithModels ?? undefined;
   const serverBodyTypes = filterData?.buildTypes ?? [];
@@ -56,8 +62,8 @@ const CarInventory: React.FC = () => {
       brand: sp.get('brand') ?? '',
       model: sp.get('model') ?? '',
       priceRange: [
-        sp.get('priceMin') ? parseInt(sp.get('priceMin')!, 10) : DEFAULT_FILTERS.priceRange[0],
-        sp.get('priceMax') ? parseInt(sp.get('priceMax')!, 10) : DEFAULT_FILTERS.priceRange[1]
+        sp.get('priceMin') ? parseInt(sp.get('priceMin')!, 10) : defaultMinPrice,
+        sp.get('priceMax') ? parseInt(sp.get('priceMax')!, 10) : defaultMaxPrice
       ],
       yearRange: [
         sp.get('yearMin') ? parseInt(sp.get('yearMin')!, 10) : DEFAULT_FILTERS.yearRange[0],
@@ -68,7 +74,9 @@ const CarInventory: React.FC = () => {
       bodyTypes: sp.get('buildType')?.split(',').filter(Boolean) ?? [],
       showrooms: sp.get('showroom')?.split(',').filter(Boolean) ?? [],
       steeringPositions: sp.get('steeringPosition')?.split(',').filter(Boolean) ?? [],
-      status: (sp.get('status')?.split(',').filter(Boolean) as any) ?? []
+      status: (sp.get('status')?.split(',').filter(Boolean) as any) ?? [],
+      isFeatured: sp.get('featured') === 'true',
+      isNewArrival: sp.get('isNewArrival') === 'true'
     };
     return { filters: parsed, search };
   };
@@ -77,8 +85,8 @@ const CarInventory: React.FC = () => {
     const params: Record<string, string> = {};
     if (f.brand) params.brand = f.brand;
     if (f.model) params.model = f.model;
-    if (f.priceRange[0] !== DEFAULT_FILTERS.priceRange[0]) params.priceMin = String(f.priceRange[0]);
-    if (f.priceRange[1] !== DEFAULT_FILTERS.priceRange[1]) params.priceMax = String(f.priceRange[1]);
+    if (f.priceRange[0] !== defaultMinPrice) params.priceMin = String(f.priceRange[0]);
+    if (f.priceRange[1] !== defaultMaxPrice) params.priceMax = String(f.priceRange[1]);
     if (f.yearRange[0] !== DEFAULT_FILTERS.yearRange[0]) params.yearMin = String(f.yearRange[0]);
     if (f.yearRange[1] !== DEFAULT_FILTERS.yearRange[1]) params.yearMax = String(f.yearRange[1]);
     if (f.fuelTypes.length > 0) params.fuelTypeId = f.fuelTypes[0];
@@ -87,6 +95,8 @@ const CarInventory: React.FC = () => {
     if (f.showrooms && f.showrooms.length > 0) params.showroom = f.showrooms.join(',');
     if (f.steeringPositions && f.steeringPositions.length > 0) params.steeringPosition = f.steeringPositions.join(',');
     if (f.status.length > 0) params.status = f.status.join(',');
+    if (f.isFeatured) params.featured = 'true';
+    if (f.isNewArrival) params.isNewArrival = 'true';
     if (q) params.q = q;
     if (p > 1) params.page = String(p);
     return params;
@@ -134,6 +144,12 @@ const CarInventory: React.FC = () => {
     if (searchTerm) {
         runtimeParams.q = searchTerm;
     }
+    if (filters.isFeatured) {
+        runtimeParams.featured = true;
+    }
+    if (filters.isNewArrival) {
+        runtimeParams.isNewArrival = true;
+    }
     return runtimeParams;
   }, [filters, searchTerm, page]);
 
@@ -149,12 +165,7 @@ const CarInventory: React.FC = () => {
   }, [page]);
 
   return (
-    <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">{t('title')}</h1>
-        <p className="text-lg sm:text-xl text-slate-600">{t('subtitle')}</p>
-      </div>
-
+    <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8 xl:pt-8">
       <div className="flex flex-col xl:flex-row gap-8">
         <div className="xl:w-80 flex-shrink-0">
           {!filtersLoading && !filtersError && (
@@ -173,13 +184,20 @@ const CarInventory: React.FC = () => {
               serverSteeringPositions={serverSteeringPositions}
               serverFuelTypes={serverFuelTypes}
               serverTransmissionTypes={serverTransmissionTypes}
+              minPrice={defaultMinPrice}
+              maxPrice={defaultMaxPrice}
+              mobileBarExtra={
+                <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full text-sm">Total Results: {totalCount}</div>
+              }
             />
           )}
         </div>
 
         <div className="flex-1">
-          <div className="mb-6 flex flex-wrap gap-4 text-sm">
-            <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Total Results: {totalCount}</div>
+          <div className="mb-6 hidden xl:block">
+            <div className="flex flex-wrap gap-4 text-sm">
+              <div className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full">Total Results: {totalCount}</div>
+            </div>
           </div>
 
           {carsLoading ? (

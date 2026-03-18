@@ -1,13 +1,20 @@
 {
   "name": "Kyaw Kyar",
   "tagline": "Myanmar's #1 Car Dealer",
-  "description": "For over 15 years, we've been helping families across Myanmar find their perfect vehicles. With the largest inventory and most trusted service, we're your reliable car buying partner.",
+  "description": "For over {{years}} years, we've been helping families across Myanmar find their perfect vehicles. With our reliable and thoroughly inspected cars, we are always here for our dear customers whenever you're looking to buy a vehicle.",
   "quick_links": "Quick Links",
   "quick_links_home": "Home",
   "quick_links_inventory": "Car Inventory",
   "quick_links_testimonials": "Customer Reviews",
   "quick_links_contact": "Contact",
   "quick_links_showroom": "Showrooms",
+  "why_buy": {
+    "title": "Why Buy From Us",
+    "inspection": "Rigorous Quality Inspection",
+    "financing": "Flexible Financing Options",
+    "market_price": "Fair Market Price",
+    "clean_history": "Verified Clean History"
+  },
   "services": {
     "title": "Our Services",
     "buy": "Buy Cars",

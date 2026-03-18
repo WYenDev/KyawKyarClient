@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 const Contact: React.FC = () => {
   const { t, i18n } = useTranslation('contact');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   return (
     <section id="contact" className="py-16 bg-gray-900 text-white">

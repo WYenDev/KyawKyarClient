@@ -8,9 +8,9 @@ import {
     Ban,
     CheckCircle2,
 } from "lucide-react";
+import SEO from "../components/SEO";
 
-/* ===== Image ===== */
-import steeringImg from "../assets/clearhistory.png";
+
 
 /* ===== Animations ===== */
 const fadeUp = {
@@ -48,31 +48,28 @@ interface GuaranteeProps {
 
 const CleanHistory = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation("cleanHistory");
+    const { t, i18n } = useTranslation("cleanHistory");
+    const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
+            <SEO
+                lang={lang}
+                canonical={`/${lang}/why-kyawkyar/clean-history`}
+                title={t('meta.title', 'Clean History Vehicles - Kyaw Kyar')}
+                description={t('meta.description', 'We guarantee 100% clean history for every vehicle. No owner book copies, no illegal modifications, no legal complications.')}
+            />
             {/* ======================================================
           HERO – IMAGE + BRAND PROMISE
       ====================================================== */}
-            <section className="pt-14 pb-12 md:pt-20 md:pb-16">
+            <section className="py-14 md:py-20">
                 <motion.div
                     initial="hidden"
                     animate="visible"
                     variants={fadeUp}
                     transition={{ duration: 0.8 }}
-                    className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 md:gap-12 items-center"
+                    className="max-w-5xl mx-auto px-6"
                 >
-                    {/* IMAGE */}
-                    <div className="h-[280px] md:h-[420px] rounded-3xl overflow-hidden bg-gray-100">
-                        <img
-                            src={steeringImg}
-                            alt={t("hero.alt")}
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
-
-                    {/* TEXT */}
                     <div>
                         <div className="flex items-center gap-3 mb-6">
                             <ShieldCheck className="text-emerald-600" />
@@ -81,13 +78,13 @@ const CleanHistory = () => {
                             </span>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-semibold leading-[1.55] md:leading-[1.35] mb-6 md:mb-8">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-[1.55] md:leading-[1.35] mb-6 md:mb-8">
                             {t("hero.title")}
                             <br />
                             {t("hero.titleLine2")}
                         </h1>
 
-                        <p className="text-lg text-gray-600 leading-8 max-w-lg">
+                        <p className="text-gray-800 text-lg sm:text-xl leading-relaxed font-medium max-w-xl">
                             {t("hero.description")}
                             <br />
                             {t("hero.descriptionLine2")}
@@ -133,7 +130,7 @@ const CleanHistory = () => {
             {/* ======================================================
           REJECTION POLICY – EDITORIAL STYLE
       ====================================================== */}
-            <section className="py-12 md:py-16">
+            <section className="py-12 md:py-16 border-t border-gray-100">
                 <div className="max-w-5xl mx-auto px-6">
                     <motion.h2
                         initial="hidden"
@@ -141,7 +138,7 @@ const CleanHistory = () => {
                         variants={fadeUp}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="text-3xl font-semibold leading-[1.45] mb-10 md:mb-14 text-center"
+                        className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-[1.45] mb-10 md:mb-14 text-center"
                     >
                         {t("rejection.sectionTitle")}
                     </motion.h2>
@@ -181,7 +178,7 @@ const CleanHistory = () => {
                     className="max-w-5xl mx-auto px-6"
                 >
                     <div className="bg-white rounded-3xl border border-gray-200 p-8 md:p-12">
-                        <h2 className="text-3xl font-semibold leading-[1.45] mb-8 md:mb-10 text-center">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-[1.45] mb-8 md:mb-10 text-center">
                             {t("guarantee.sectionTitle")}
                         </h2>
 
@@ -207,20 +204,22 @@ const CleanHistory = () => {
                     transition={{ duration: 0.6 }}
                     className="max-w-4xl mx-auto px-6 text-center"
                 >
-                    <h2 className="text-3xl font-semibold leading-[1.45] mb-6">
-                        {t("cta.title")}
-                    </h2>
+                    <div className="bg-gray-50 rounded-2xl p-8 md:p-12 ring-1 ring-black/5">
+                        <h2 className="text-3xl font-semibold leading-[1.45] mb-6">
+                            {t("cta.title")}
+                        </h2>
 
-                    <p className="text-gray-600 text-lg leading-8 mb-8 md:mb-10">
-                        {t("cta.description")}
-                    </p>
+                        <p className="text-gray-700 text-lg sm:text-xl leading-relaxed font-medium mb-8 md:mb-10">
+                            {t("cta.description")}
+                        </p>
 
-                    <button
-                        onClick={() => navigate("/buyCars")}
-                        className="px-16 py-4 bg-black text-white rounded-full text-sm tracking-wide hover:bg-gray-800 transition"
-                    >
-                        {t("cta.button")}
-                    </button>
+                        <button
+                            onClick={() => navigate("/buyCars")}
+                            className="px-16 py-4 bg-black text-white rounded-full text-sm tracking-wide hover:bg-gray-800 transition"
+                        >
+                            {t("cta.button")}
+                        </button>
+                    </div>
                 </motion.div>
             </section>
         </main>
@@ -260,7 +259,7 @@ const RejectLine = ({
                 <Ban className="text-red-500" />
             </div>
             <div>
-                <h3 className="text-2xl font-semibold leading-[1.45] mb-2">{title}</h3>
+                <h3 className="text-xl sm:text-2xl font-semibold leading-[1.45] mb-2">{title}</h3>
                 <p className="text-gray-600 text-lg leading-8 max-w-xl">
                     {desc}
                 </p>

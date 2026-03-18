@@ -52,7 +52,7 @@ const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.
 
 const SellCarForm: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const [values, setValues] = useState<SellCarFormValues>(initialValues);
   const [errors, setErrors] = useState<SellCarFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);

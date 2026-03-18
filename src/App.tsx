@@ -1,15 +1,12 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
+import PublicLayout from "./components/PublicLayout";
 
 // Public layout components
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import FooterBanner from "./components/FooterBanner";
-
-// Public pages
 import Home from "./pages/Home";
 import BuyCars from "./pages/BuyCars";
 import SellCars from "./pages/SellCars";
+import ResellMarketPrice from "./pages/ResellMarketPrice";
 import Reviews from "./pages/Reviews";
 import Contact from "./pages/Contact";
 import CarDetails from "./pages/CarDetails";
@@ -51,6 +48,9 @@ import AdminPayments from "./pages/admin/Payments";
 import VehicleSpecs from "./pages/admin/VehicleSpecs";
 import Banners from "./pages/admin/FooterBanners";
 import PromoBanners from "./pages/admin/PromoBanners";
+// App.jsx
+
+// ... [Keep your existing imports]
 
 function App() {
   return (
@@ -62,14 +62,7 @@ function App() {
         <Route path="/admin/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin/password-change" element={<PasswordChange />} />
         <Route path="/admin/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/admin"
-          element={
-            <RequireAdmin>
-              <AdminLayout />
-            </RequireAdmin>
-          }
-        >
+        <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>
           <Route index element={<Dashboard />} />
           <Route path="cars" element={<Cars />} />
           <Route path="cars/create" element={<CarCreatePage />} />
@@ -87,52 +80,29 @@ function App() {
           <Route path="banners" element={<Banners />} />
           <Route path="promo-banners" element={<PromoBanners />} />
           <Route path="recover-codes-setup" element={<RecoverCodesPage />} />
-
-          <Route
-            path="user-management"
-            element={
-              <SuperAdminGuard>
-                <UserManagement />
-              </SuperAdminGuard>
-            }
-          />
+          <Route path="user-management" element={<SuperAdminGuard><UserManagement /></SuperAdminGuard>} />
           <Route path="sell-requests" element={<SellCarRequests />} />
           <Route path="sell-requests/:id" element={<SellCarRequestDetails />} />
         </Route>
 
-
         {/* ================= PUBLIC ROUTES ================= */}
-        <Route
-          path="*"
-          element={
-            <div className="min-h-screen bg-white flex flex-col">
-              <Header />
+        <Route path="/:lang?" element={<PublicLayout />}>
+          <Route index element={<Home />} />
+          <Route path="buyCars" element={<BuyCars />} />
+          <Route path="cars/:id" element={<CarDetails />} />
+          <Route path="sellCars" element={<SellCars />} />
+          <Route path="resell-market-price" element={<ResellMarketPrice />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="why-kyawkyar/rigorous-quality-inspection" element={<RigorousQualityInspection />} />
+          <Route path="why-kyawkyar/swift-processing" element={<SwiftProcessing />} />
+          <Route path="why-kyawkyar/clean-history" element={<CleanHistory />} />
+          <Route path="showroom-installment" element={<ShowroomInstallmentDetail />} />
+          <Route path="promo/:slug" element={<PromoLandingPage />} />
+        </Route>
 
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/buyCars" element={<BuyCars />} />
-                  <Route path="/cars/:id" element={<CarDetails />} />
-                  <Route path="/sellCars" element={<SellCars />} />
-                  <Route path="/payments" element={<Payments />} />
-                  <Route path="/reviews" element={<Reviews />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route
-                    path="/why-kyawkyar/rigorous-quality-inspection"
-                    element={<RigorousQualityInspection />}
-                  />
-                  <Route path="/why-kyawkyar/swift-processing" element={<SwiftProcessing />}  />
-                  <Route path="/why-kyawkyar/clean-history" element={<CleanHistory />} />
-                  <Route path="/showroom-installment" element={<ShowroomInstallmentDetail />} />
-                  <Route path="/promo/:slug" element={<PromoLandingPage />} />
-                </Routes>
-              </main>
-
-              <Footer />
-              <FooterBanner />
-            </div>
-          }
-        />
+        <Route path="/" element={<Navigate to="/my" replace />} />
       </Routes>
     </>
   );

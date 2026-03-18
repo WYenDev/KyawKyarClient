@@ -1,28 +1,28 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetApiPromoBannersActive } from '../services/api';
 import type { GetApiPromoBannersActive200Item } from '../services/api';
 
 export type PromoBannerItem = GetApiPromoBannersActive200Item & { slug?: string; modelName?: string; brandName?: string };
 
-const handleClick = (banner: PromoBannerItem, navigate: ReturnType<typeof useNavigate>) => {
+const handleClick = (banner: PromoBannerItem, navigate: ReturnType<typeof useNavigate>, getPath: (path: string) => string) => {
   if (banner.slug) {
-    navigate(`/promo/${banner.slug}`);
+    navigate(getPath(`/promo/${banner.slug}`));
     return;
   }
   if (banner.type === 'NEW_ARRIVAL') {
     const modelName = (banner as PromoBannerItem).modelName;
     const brandName = (banner as PromoBannerItem).brandName ?? banner.brandName;
     if (modelName) {
-      navigate(`/buyCars?model=${encodeURIComponent(modelName)}`);
+      navigate(getPath(`/buyCars?model=${encodeURIComponent(modelName)}`));
     } else if (brandName) {
-      navigate(`/buyCars?brand=${encodeURIComponent(brandName)}`);
+      navigate(getPath(`/buyCars?brand=${encodeURIComponent(brandName)}`));
     }
   } else if (banner.type === 'PROMOTION' && banner.linkUrl) {
     if (banner.linkUrl.startsWith('http')) {
       window.open(banner.linkUrl, '_blank', 'noopener,noreferrer');
     } else {
-      navigate(banner.linkUrl);
+      navigate(getPath(banner.linkUrl));
     }
   }
 };
@@ -30,6 +30,8 @@ const handleClick = (banner: PromoBannerItem, navigate: ReturnType<typeof useNav
 /** Presentational grid of promo banners; use when you already have a filtered list. */
 export const PromoBannerGrid: React.FC<{ banners: PromoBannerItem[] }> = ({ banners }) => {
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
   if (banners.length === 0) return null;
   return (
     <section className="relative w-full bg-[#f8fafc]">
@@ -39,7 +41,7 @@ export const PromoBannerGrid: React.FC<{ banners: PromoBannerItem[] }> = ({ bann
             <div
               key={banner.id}
               className="relative overflow-hidden rounded-none shadow-lg border border-white/50 cursor-pointer group"
-              onClick={() => handleClick(banner, navigate)}
+              onClick={() => handleClick(banner, navigate, getPath)}
             >
               <div className="relative w-full aspect-[21/9] sm:aspect-[21/8] overflow-hidden">
                 <img

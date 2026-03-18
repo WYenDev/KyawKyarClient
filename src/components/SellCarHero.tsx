@@ -1,10 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Car, Shield, Clock, BadgeDollarSign } from 'lucide-react';
+import { getCompanyYears } from '../utils/company';
 
 const SellCarHero: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
+  const years = getCompanyYears();
 
   return (
     <div>
@@ -50,7 +52,7 @@ const SellCarHero: React.FC = () => {
             <p className="font-semibold text-slate-100">
               {t('sell.highlights.trusted_title')}
             </p>
-            <p className="text-sm text-slate-400">{t('sell.highlights.trusted_desc')}</p>
+            <p className="text-sm text-slate-400">{t('sell.highlights.trusted_desc', { years })}</p>
           </div>
         </div>
         <div className="flex items-start space-x-4">

@@ -55,7 +55,7 @@ interface Props {
 
 const CarDetailsSummary: React.FC<Props> = ({ car }) => {
   const { t, i18n } = useTranslation('cars');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
   const { data: homeData } = useGetApiHome();
   const { user } = useAuth();
 

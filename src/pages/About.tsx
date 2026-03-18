@@ -7,13 +7,13 @@ import SEO from '../components/SEO';
 
 const About: React.FC = () => {
   const { t, i18n } = useTranslation('about');
-  const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
+  const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
   return (
     <div className="min-h-screen bg-gray-50 pt-8">
       <SEO
         lang={lang}
-        canonical="/about"
+        canonical={`/${lang}/about`}
         title={t('meta.title', 'About Kyaw Kyar Car Showroom')}
         description={t(
           'meta.description',

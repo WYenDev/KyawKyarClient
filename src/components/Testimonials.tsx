@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const testimonials = [
   {
@@ -30,7 +31,7 @@ const testimonials = [
 
 const Testimonials: React.FC = () => {
   const { t, i18n } = useTranslation('reviews');
-  const isMyanmar = i18n?.language?.startsWith('mm');
+  const isMyanmar = i18n?.language?.startsWith('my');
 
   return (
     <section id="testimonials" className="py-16 bg-slate-50">

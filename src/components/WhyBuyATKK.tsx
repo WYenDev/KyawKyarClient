@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 /* ================= Types ================= */
@@ -16,8 +16,10 @@ type Benefit = {
 const WhyBuyAtKyawKyar: React.FC = () => {
   const { t, i18n } = useTranslation("home");
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang?: string }>();
+  const getPath = (path: string) => `/${lang || 'my'}${path === '/' ? '' : path}`;
 
-  const isMyanmar = i18n.language.startsWith("mm");
+  const isMyanmar = i18n.language.startsWith("my");
 
   /* ================= Data (4 CARDS) ================= */
   const benefits: Benefit[] = [
@@ -31,13 +33,13 @@ const WhyBuyAtKyawKyar: React.FC = () => {
       title: t("whybuy.benefits.financing.title"),
       description: t("whybuy.benefits.financing.description"),
       type: "redirect",
-      redirectTo: "/showroom-installment",
+      redirectTo: "/payments",
     },
     {
       title: t("whybuy.benefits.buy-at-market-price.title"),
       description: t("whybuy.benefits.buy-at-market-price.description"),
       type: "redirect",
-      redirectTo: "/sellCars",
+      redirectTo: "/resell-market-price",
     },
     {
       title: t("whybuy.benefits.clean-history.title"),
@@ -50,12 +52,12 @@ const WhyBuyAtKyawKyar: React.FC = () => {
   /* ================= Handlers ================= */
   const handleClick = (benefit: Benefit) => {
     if (benefit.type === "redirect" && benefit.redirectTo) {
-      navigate(benefit.redirectTo);
+      navigate(getPath(benefit.redirectTo));
       return;
     }
 
     if (benefit.type === "detail" && benefit.slug) {
-      navigate(`/why-kyawkyar/${benefit.slug}`);
+      navigate(getPath(`/why-kyawkyar/${benefit.slug}`));
     }
   };
 
@@ -111,7 +113,9 @@ const WhyBuyAtKyawKyar: React.FC = () => {
                 </p>
 
                 <div className="mt-4 flex items-center text-indigo-600 font-bold group-hover:gap-4 gap-2 transition-all">
-                  <span className="text-sm uppercase tracking-widest font-black">Learn More</span>
+                  <span className={`text-sm font-black ${isMyanmar ? "font-myanmar" : "uppercase tracking-widest"}`}>
+                    {isMyanmar ? "ပိုမိုကြည့်ရှုရန်" : "Learn More"}
+                  </span>
                   <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </div>
               </div>

@@ -10,23 +10,18 @@ import NewArrivals from '../components/NewArrivals';
 import BrowseCarByBuildTypes from '../components/BrowseCarByBuildTypes';
 import BrowseCarByBrands from '../components/BrowseCarByBrands';
 import { PromoBannerGrid, type PromoBannerItem } from '../components/PromoBannerCarousel';
-import { useGetApiPromoBannersActive } from '../services/api';
+import { useGetApiPromoBannersActive, useGetApiHome } from '../services/api';
 import SEO, { SITE_URL } from '../components/SEO';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation('home');
-  const lang = i18n.language.startsWith('mm') ? 'my' : 'en';
+  const lang = i18n.language.startsWith('my') ? 'my' : 'en';
   const { data: promoBanners } = useGetApiPromoBannersActive();
-  const { firstSectionBanners, secondSectionBanners } = useMemo(() => {
-    const withImage = (Array.isArray(promoBanners) ? promoBanners : []).filter(
+  const { data: homeData } = useGetApiHome();
+  const allBanners = useMemo(() => {
+    return (Array.isArray(promoBanners) ? promoBanners : []).filter(
       (b): b is PromoBannerItem => Boolean(b?.imageUrl)
-    ) as PromoBannerItem[];
-    const promotions = withImage.filter((b) => b.type === 'PROMOTION');
-    const newArrivals = withImage.filter((b) => b.type === 'NEW_ARRIVAL');
-    const hasBoth = promotions.length > 0 && newArrivals.length > 0;
-    const first = promotions.length > 0 ? promotions : newArrivals.length > 0 ? newArrivals : [];
-    const second = hasBoth ? newArrivals : [];
-    return { firstSectionBanners: first, secondSectionBanners: second };
+    );
   }, [promoBanners]);
 
   const organizationSchema = {
@@ -55,23 +50,36 @@ const Home: React.FC = () => {
     }
   };
 
+  const autoDealerSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'AutoDealer',
+    name: 'Kyaw Kyar Car Showroom',
+    url: SITE_URL,
+    logo: `${SITE_URL}/apple-touch-icon.png`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Mandalay',
+      addressCountry: 'MM'
+    },
+    telephone: homeData?.phoneNo ?? '+959260069699',
+    areaServed: 'MM'
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <SEO
-        lang={lang}
-        canonical="/"
+        canonical={`/${lang}`}
         title={t('meta.title', 'Kyaw Kyar Car Showroom | Buy & Sell Quality Vehicles')}
         description={t(
           'meta.description',
           'Myanmar’s trusted destination for inspected cars, financing support, and premium after-sales service.'
         )}
-        structuredData={[organizationSchema, webSiteSchema]}
+        structuredData={[organizationSchema, webSiteSchema, autoDealerSchema]}
       />
       <Hero />
-      {firstSectionBanners.length > 0 && <PromoBannerGrid banners={firstSectionBanners} />}
+      {allBanners.length > 0 && <PromoBannerGrid banners={allBanners} />}
       <FeaturedCars />
       <NewArrivals />
-      {secondSectionBanners.length > 0 && <PromoBannerGrid banners={secondSectionBanners} />}
       <BrowseCarByBuildTypes />
       <BrowseCarByBrands />
       <WhyBuyATKK />
