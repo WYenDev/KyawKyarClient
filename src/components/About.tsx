@@ -1,7 +1,10 @@
 import React from 'react';
 import { Award, Shield, Users, Clock, CheckCircle } from 'lucide-react';
+import { getCompanyYears } from '../utils/company';
 
 const About: React.FC = () => {
+  const years = getCompanyYears();
+
   return (
     <section id="about" className="py-16 xl:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,9 +45,9 @@ const About: React.FC = () => {
               <span className="text-indigo-600"> Pre-Owned Car Dealer</span>
             </h2>
             <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-              For over 15 years, Kyaw Kyar has been the leading destination for quality used cars. 
-              We've built our reputation on trust, transparency, and exceptional customer service, 
-              helping thousands of families find their perfect vehicle.
+              For over {years} years, Kyaw Kyar has helped families across Myanmar find quality
+              vehicles with confidence. We focus on trusted service, transparent guidance, and a
+              carefully selected inventory that makes car buying easier.
             </p>
             
             <div className="grid grid-cols-2 gap-6 mb-8">

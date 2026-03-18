@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useGetApiHome } from '../services/api';
 import ViberIcon from '../assets/viber-icon.avif';
 import Logo from '../assets/logo-removebg.png';
+import { getCompanyYears } from '../utils/company';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation('footer');
   const { lang } = useParams<{ lang?: string }>();
   const currentLang = lang || 'my';
+  const years = getCompanyYears();
 
   const getPath = (path: string) => `/${currentLang}${path === '/' ? '' : path}`;
 
@@ -34,7 +36,7 @@ const Footer: React.FC = () => {
               <h3 className="text-2xl font-bold text-red-500">{t('name')}</h3>
             </div>
             <p className="text-slate-300 mb-6 max-w-md">
-              {t('description')}
+              {t('description', { years })}
             </p>
             <div className="flex gap-3">
               {hasFacebook && (
