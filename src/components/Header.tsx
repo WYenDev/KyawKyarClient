@@ -26,10 +26,13 @@ const Header: React.FC = () => {
     return `${base}${path.startsWith('/') ? path : `/${path}`}`;
   };
 
-  const normalizePath = (p: string) => p.replace(/\/$/, '') || '/';
+  const normalizePath = (p: string) => {
+    if (!p) return '/';
+    return p.replace(/\/+$/, '') || '/';
+  };
 
   const isActive = (path: string) => {
-    const current = location.pathname;
+    const current = normalizePath(location.pathname);
 
     // If path is '/', match exactly the base or promo pages
     if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`);
