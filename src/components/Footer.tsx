@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to={getPath('/resell-market-price')} className="hover:text-white transition-colors">
+                <Link to={getPath('/why-kyawkyar/resell-market-price')} className="hover:text-white transition-colors">
                   {t('why_buy.market_price')}
                 </Link>
               </li>

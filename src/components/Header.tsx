@@ -35,7 +35,12 @@ const Header: React.FC = () => {
     const current = normalizePath(location.pathname);
 
     // If path is '/', match exactly the base or promo pages
-    if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`);
+    if (path === '/') return current === `/${currentLang}` || current.startsWith(`/${currentLang}/promo/`) || current.startsWith(`/${currentLang}/why-kyawkyar/`);
+
+    // Special case: /buyCars should also be active for car details pages (/cars/:id)
+    if (path === '/buyCars') {
+      return current.includes(path) || current.startsWith(`/${currentLang}/cars/`);
+    }
 
     // For other routes, check if current path contains the segment
     return current.includes(path);

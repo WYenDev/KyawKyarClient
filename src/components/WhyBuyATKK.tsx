@@ -39,7 +39,7 @@ const WhyBuyAtKyawKyar: React.FC = () => {
       title: t("whybuy.benefits.buy-at-market-price.title"),
       description: t("whybuy.benefits.buy-at-market-price.description"),
       type: "redirect",
-      redirectTo: "/resell-market-price",
+      redirectTo: "/why-kyawkyar/resell-market-price",
     },
     {
       title: t("whybuy.benefits.clean-history.title"),

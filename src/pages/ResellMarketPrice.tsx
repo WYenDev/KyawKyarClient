@@ -83,7 +83,7 @@ const ResellMarketPrice: React.FC = () => {
           "meta.description",
           "Get a market-based valuation and resell your car with a smooth process.",
         )}
-        canonical={`/${lang}/resell-market-price`}
+        canonical={`/${lang}/why-kyawkyar/resell-market-price`}
       />
       <ScrollToTop />
 
