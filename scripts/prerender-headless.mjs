@@ -31,7 +31,7 @@ const BASE_ROUTES = [
   '/',
   '/buyCars',
   '/sellCars',
-  '/resell-market-price',
+  '/why-kyawkyar/resell-market-price',
   '/reviews',
   '/contact',
   '/payments',
@@ -152,7 +152,7 @@ async function run() {
     const url = `${base}${route === '/' ? '' : route}`;
     const page = await browser.newPage();
     try {
-      await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+      await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
       await page.waitForSelector('#root > *', { timeout: 15000 }).catch(() => { });
       // give React Helmet time to update <head>
       await new Promise((r) => setTimeout(r, 2000));

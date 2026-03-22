@@ -12,7 +12,7 @@ const BASE_ROUTES = [
   '/',
   '/buyCars',
   '/sellCars',
-  '/resell-market-price',
+  '/why-kyawkyar/resell-market-price',
   '/reviews',
   '/contact',
   '/payments',

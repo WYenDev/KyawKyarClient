@@ -72,10 +72,10 @@ const SellCarRequestDetails: React.FC = () => {
   const mainImage = images[selectedIndex] ?? null;
 
   return (
-    <div className="p-8 bg-[#F8F9FB] min-h-screen">
+    <div className="p-4 sm:p-8 bg-[#F8F9FB] min-h-screen overflow-x-hidden">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-start gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-6">
           <button onClick={() => navigate(-1)} className="p-2 rounded-lg bg-white border border-slate-100 shadow-sm hover:shadow-md">
             <ArrowLeft />
           </button>
@@ -87,8 +87,8 @@ const SellCarRequestDetails: React.FC = () => {
                 <div className="text-sm text-slate-500">{req.makeYear} • Requested by <span className="font-medium text-slate-800">{formatString(req.sellerName)}</span></div>
               </div>
 
-              <div className="ml-auto flex items-center gap-3">
-                <div className={`inline-flex items-center py-1 px-3 rounded-full border ${statusClass(req.status)} text-sm font-semibold`}>{req.status}</div>
+              <div className="ml-auto flex flex-wrap items-center justify-end gap-2 max-w-full">
+                <div className={`inline-flex items-center py-1 px-3 rounded-full border ${statusClass(req.status)} text-sm font-semibold whitespace-nowrap`}>{req.status}</div>
 
                 <button onClick={openEdit} className="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-xl hover:bg-slate-50 transition-shadow">
                   <Pencil size={16} /> <span className="hidden sm:inline">Edit Status</span>
@@ -121,11 +121,11 @@ const SellCarRequestDetails: React.FC = () => {
                     src={mainImage}
                     alt="car"
                     onClick={() => setFullscreen(true)}
-                    className="w-full h-96 object-cover cursor-zoom-in"
+                    className="w-full h-64 sm:h-96 object-cover cursor-zoom-in"
                   />
                 </div>
               ) : (
-                <div className="w-full h-96 flex items-center justify-center text-slate-400">
+                <div className="w-full h-64 sm:h-96 flex items-center justify-center text-slate-400">
                   <div className="text-center">
                     <ImageIcon className="mx-auto text-slate-300" />
                     <div className="mt-2">No images provided</div>
@@ -140,7 +140,7 @@ const SellCarRequestDetails: React.FC = () => {
                       <button
                         key={src + idx}
                         onClick={() => setSelectedIndex(idx)}
-                        className={`flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border ${idx === selectedIndex ? 'border-indigo-500' : 'border-slate-100'} focus:outline-none`}
+                        className={`flex-shrink-0 w-20 h-14 sm:w-24 sm:h-16 rounded-lg overflow-hidden border ${idx === selectedIndex ? 'border-indigo-500' : 'border-slate-100'} focus:outline-none`}
                       >
                         <img src={src} className="w-full h-full object-cover" />
                       </button>
@@ -158,7 +158,7 @@ const SellCarRequestDetails: React.FC = () => {
           </div>
 
           {/* Right / Info Card */}
-          <aside className="sticky top-8 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+          <aside className="lg:sticky lg:top-8 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
             <div className="space-y-4">
               <div>
                 <div className="text-xs text-slate-400 uppercase tracking-wide">Expected Price</div>

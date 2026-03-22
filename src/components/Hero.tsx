@@ -141,24 +141,20 @@ const Hero: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="xl:block hidden">
-                  {isMyanmar ? (
-                    <div className="mb-2">
+                <div className="xl:block hidden relative">
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2">
+                    <span className={`inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-900 ${isMyanmar ? 'opacity-0' : ''}`}>
+                      {t('hero.title_prefix')}
+                    </span>
+                  </h1>
+                  {isMyanmar && (
+                    <div className="absolute -top-6 -left-4 z-10">
                       <img
                         src={logoWithText}
                         alt="ကျော်ကြား Kyaw Kyar"
                         className="h-20 sm:h-24 lg:h-28 w-auto object-contain"
                       />
                     </div>
-                  ) : (
-                    <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight md:leading-snug sm:py-2">
-                      <span className="inline-block py-1 sm:py-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-900">
-                        {t('hero.title_prefix')}
-                      </span>
-                      <span className="block sm:mb-2">
-                        {t('hero.title_suffix')}
-                      </span>
-                    </h1>
                   )}
                   <p className={`text-base sm:text-lg text-slate-500 max-w-lg mx-auto xl:mx-0 leading-relaxed ${isMyanmar ? 'font-myanmar leading-relaxed sm:leading-loose pt-1 sm:pt-1' : ''}`}>
                     {t('hero.description')}
@@ -248,22 +244,16 @@ const Hero: React.FC = () => {
                   {/* MOBILE TITLE: Perfectly matched to image width inside the border box */}
                   <div className="absolute bottom-0 left-0 right-0 z-30 xl:hidden translate-y-1/2">
                     <div className="relative py-3 overflow-hidden shadow-xl border-y border-white/30 backdrop-blur-2xl bg-white/10">
-                      <div className="text-center flex flex-col items-center">
-                        {isMyanmar ? (
+                      <div className="text-center flex flex-col items-center relative">
+                        <h1 className={`text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-800 whitespace-nowrap leading-tight drop-shadow-sm ${isMyanmar ? 'opacity-0' : ''}`}>
+                          {t('hero.title_prefix')}
+                        </h1>
+                        {isMyanmar && (
                           <img
                             src={logoWithText}
                             alt="ကျော်ကြား Kyaw Kyar"
-                            className="h-14 sm:h-16 w-auto object-contain"
+                            className="h-14 sm:h-16 w-auto object-contain absolute top-1/2 left-1/2 -translate-x-[55%] -translate-y-[65%] z-10"
                           />
-                        ) : (
-                          <>
-                            <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-red-500 to-red-800 whitespace-nowrap leading-tight drop-shadow-sm">
-                              {t('hero.title_prefix')}
-                            </h1>
-                            <p className="text-[12px] text-white font-black tracking-widest uppercase mt-0 pb-1 drop-shadow-md">
-                              {t('hero.title_suffix')}
-                            </p>
-                          </>
                         )}
                       </div>
                     </div>

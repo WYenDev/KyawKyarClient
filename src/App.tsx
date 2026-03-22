@@ -91,7 +91,7 @@ function App() {
           <Route path="buyCars" element={<BuyCars />} />
           <Route path="cars/:id" element={<CarDetails />} />
           <Route path="sellCars" element={<SellCars />} />
-          <Route path="resell-market-price" element={<ResellMarketPrice />} />
+          <Route path="why-kyawkyar/resell-market-price" element={<ResellMarketPrice />} />
           <Route path="payments" element={<Payments />} />
           <Route path="reviews" element={<Reviews />} />
           <Route path="contact" element={<Contact />} />
