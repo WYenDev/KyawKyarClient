@@ -18,16 +18,24 @@ import { keepPreviousData } from '@tanstack/react-query';
 import {
     CarListItem,
     Status,
+    useDeleteApiCarsId,
     useGetApiCarsActive,
     useGetApiCarsDeleted,
     useGetApiCarsSold,
     usePatchApiCarsId,
     usePatchApiCarsIdSoftDelete,
+    usePostApiCarsDeleteBatch,
     usePostApiCarsIdRestore,
 } from "../../services/api";
 
 const PLACEHOLDER_IMAGE =
     "https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg";
+
+type DeleteMode = "soft" | "hard";
+type DeleteTarget = {
+    car: CarListItem;
+    mode: DeleteMode;
+};
 
 /* ================= CONSTANTS ================= */
 const PAGE_LIMIT = 8;        // ⭐ 1 page = 8 cars (4 x 2 grid)
@@ -48,8 +56,11 @@ const Cars = () => {
         if (tab === 'sold' || tab === 'deleted') setActiveTab(tab);
         else if (tab === 'active' || !tab) setActiveTab('active');
     }, [searchParams]);
-    const [deleteTarget, setDeleteTarget] = useState<CarListItem | null>(null);
+    const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
     const [searchText, setSearchText] = useState("");
+    const [selectMode, setSelectMode] = useState(false);
+    const [selectedCarIds, setSelectedCarIds] = useState<string[]>([]);
+    const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
     const prevSearchTextRef = useRef(searchText);
     const prevActiveTabRef = useRef(activeTab);
 
@@ -92,7 +103,7 @@ const Cars = () => {
         limit: LIMIT,
     }, { query: { enabled: activeTab === 'deleted' } });
 
-    const { mutate: softDeleteCar, isPending: deleting } =
+    const { mutate: softDeleteCar, isPending: isSoftDeleting } =
         usePatchApiCarsIdSoftDelete({
             mutation: {
                 onSuccess: () => {
@@ -106,11 +117,37 @@ const Cars = () => {
             },
         });
 
+    const { mutate: hardDeleteCar, isPending: isHardDeleting } = useDeleteApiCarsId({
+        mutation: {
+            onSuccess: (_, variables) => {
+                const id = variables?.id;
+                if (!id) return;
+                refetchDeleted();
+                setSelectedCarIds((current) => current.filter((selectedId) => selectedId !== id));
+                setDeleteTarget(null);
+            },
+        },
+    });
+
     const { mutate: restoreCar, isPending: restoring } = usePostApiCarsIdRestore({
         mutation: {
             onSuccess: () => {
                 refetchActive();
                 refetchDeleted();
+            },
+        },
+    });
+
+    const { mutate: batchDeleteCars, isPending: isBulkDeleting } = usePostApiCarsDeleteBatch({
+        mutation: {
+            onSuccess: () => {
+                refetchDeleted();
+                setSelectedCarIds([]);
+                setSelectMode(false);
+                setConfirmBulkDelete(false);
+                const params = new URLSearchParams(searchParams);
+                params.set('page', '1');
+                setSearchParams(params);
             },
         },
     });
@@ -172,6 +209,75 @@ const Cars = () => {
         prevSearchTextRef.current = searchText;
         prevActiveTabRef.current = activeTab;
     }, [searchText, activeTab, searchParams, setSearchParams]);
+
+    useEffect(() => {
+        if (activeTab !== 'deleted') {
+            setSelectMode(false);
+            setSelectedCarIds([]);
+            setConfirmBulkDelete(false);
+        }
+    }, [activeTab]);
+
+    const isDeletedTab = activeTab === 'deleted';
+    const deletedVisibleIds = isDeletedTab ? visibleCars.map((car) => car.id) : [];
+    const selectedCount = selectedCarIds.length;
+    const isAllVisibleSelected =
+        deletedVisibleIds.length > 0 &&
+        deletedVisibleIds.every((id) => selectedCarIds.includes(id));
+
+    const toggleSelectMode = () => {
+        if (selectMode) {
+            setSelectMode(false);
+            setSelectedCarIds([]);
+            setConfirmBulkDelete(false);
+            return;
+        }
+        setSelectMode(true);
+    };
+
+    const toggleCarSelection = (carId: string) => {
+        setSelectedCarIds((prev) =>
+            prev.includes(carId) ? prev.filter((id) => id !== carId) : [...prev, carId]
+        );
+    };
+
+    const handleSelectVisible = () => {
+        if (!isDeletedTab || deletedVisibleIds.length === 0) return;
+
+        if (isAllVisibleSelected) {
+            setSelectedCarIds((prev) =>
+                prev.filter((id) => !deletedVisibleIds.includes(id))
+            );
+            return;
+        }
+
+        setSelectedCarIds((prev) => {
+            const nextSet = new Set(prev);
+            deletedVisibleIds.forEach((id) => nextSet.add(id));
+            return Array.from(nextSet);
+        });
+    };
+
+    const handleDeleteConfirmation = () => {
+        if (!deleteTarget) return;
+
+        if (deleteTarget.mode === "soft") {
+            softDeleteCar({ id: deleteTarget.car.id });
+        } else {
+            hardDeleteCar({ id: deleteTarget.car.id });
+        }
+    };
+
+    const handleBatchDelete = () => {
+        if (selectedCount === 0) return;
+        batchDeleteCars({ data: { ids: selectedCarIds } });
+    };
+
+    const deleteCarLabel = deleteTarget
+        ? `${deleteTarget.car.model?.brand?.name ?? ""} ${deleteTarget.car.model?.name ?? ""}`.trim()
+        : "";
+    const isHardDeleteTarget = deleteTarget?.mode === 'hard';
+    const isDeleteInProgress = isHardDeleteTarget ? isHardDeleting : isSoftDeleting;
 
     /* ================= RENDER ================= */
     return (
@@ -250,6 +356,54 @@ const Cars = () => {
                 </div>
             </div>
 
+            {isDeletedTab && (
+                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={toggleSelectMode}
+                            disabled={cars.length === 0}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition border ${selectMode ? 'border-black bg-black text-white hover:bg-slate-900' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'} disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                            {selectMode ? "Cancel selection" : "Select cars"}
+                        </button>
+                        {selectMode && deletedVisibleIds.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={handleSelectVisible}
+                                className="px-4 py-2 rounded-full text-sm font-medium text-slate-700 border border-slate-200 bg-white hover:border-slate-300"
+                            >
+                                {isAllVisibleSelected ? "Deselect visible" : "Select visible"}
+                            </button>
+                        )}
+                        {selectMode && selectedCount > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => setSelectedCarIds([])}
+                                className="px-4 py-2 rounded-full text-sm font-medium text-slate-500 border border-slate-200 bg-white hover:border-slate-300"
+                            >
+                                Clear selection
+                            </button>
+                        )}
+                        {selectMode && (
+                            <span className="text-sm text-slate-600">
+                                {selectedCount} selected
+                            </span>
+                        )}
+                    </div>
+                    {selectMode && (
+                        <button
+                            type="button"
+                            onClick={() => setConfirmBulkDelete(true)}
+                            disabled={selectedCount === 0}
+                            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${selectedCount === 0 ? 'bg-slate-200 text-slate-500 cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-500'}`}
+                        >
+                            Delete selected
+                        </button>
+                    )}
+                </div>
+            )}
+
             {/* CAR CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 {isLoading ? (
@@ -266,8 +420,24 @@ const Cars = () => {
                             key={car.id}
                             className="bg-white rounded-xl shadow-sm
                                        hover:shadow-md transition
-                                       overflow-hidden cursor-pointer group"
+                                       overflow-hidden cursor-pointer group relative"
                         >
+                            {isDeletedTab && selectMode && (
+                                <label
+                                    className="absolute top-4 right-4 z-10"
+                                    aria-label={`Select ${car.model?.brand?.name} ${car.model?.name}`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedCarIds.includes(car.id)}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            toggleCarSelection(car.id);
+                                        }}
+                                        className="h-5 w-5 rounded border border-slate-300 text-black focus:ring-2 focus:ring-black"
+                                    />
+                                </label>
+                            )}
                             {/* IMAGE */}
                             <img
                                 src={
@@ -313,7 +483,7 @@ const Cars = () => {
                                     {car.price.toLocaleString()}
                                 </div>
 
-                                <div className="flex justify-between pt-3 border-t">
+                                <div className="flex items-center justify-between pt-3 border-t">
                     {activeTab === 'active' ? (
                         <>
                             <button
@@ -331,7 +501,7 @@ const Cars = () => {
                                 type="button"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setDeleteTarget(car);
+                                    setDeleteTarget({ car, mode: 'soft' });
                                 }}
                                 className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
                             >
@@ -351,16 +521,30 @@ const Cars = () => {
                             <RotateCcw size={14} /> Back to inventory
                         </button>
                     ) : (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                restoreCar({ id: car.id });
-                            }}
-                            disabled={restoring}
-                            className="text-green-600 text-sm flex items-center gap-1 ml-auto disabled:opacity-50"
-                        >
-                            <RotateCcw size={14} /> Restore
-                        </button>
+                        <div className="flex items-center justify-between gap-3 w-full">
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    restoreCar({ id: car.id });
+                                }}
+                                disabled={restoring}
+                                className="text-green-600 text-sm flex items-center gap-1 disabled:opacity-50"
+                            >
+                                <RotateCcw size={14} /> Restore
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteTarget({ car, mode: 'hard' });
+                                }}
+                                disabled={isHardDeleting}
+                                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors disabled:opacity-50"
+                            >
+                                <Trash2 size={14} /> Delete
+                            </button>
+                        </div>
                     )}
                                 </div>
                             </div>
@@ -403,18 +587,54 @@ const Cars = () => {
                 </div>
             )}
 
+            {/* BULK DELETE CONFIRMATION */}
+            {confirmBulkDelete && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center px-4">
+                    <div className="bg-white p-6 rounded-xl w-full max-w-md">
+                        <h2 className="font-semibold mb-2">
+                            Permanently delete {selectedCount} {selectedCount === 1 ? "car" : "cars"}
+                        </h2>
+                        <p className="text-sm text-gray-600 mb-6">
+                            This will permanently remove the selected cars from the system.
+                            This action cannot be undone.
+                        </p>
+
+                        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-4">
+                            <button
+                                onClick={() => setConfirmBulkDelete(false)}
+                                className="border px-4 py-2 rounded w-full sm:w-auto"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleBatchDelete}
+                                disabled={selectedCount === 0 || isBulkDeleting}
+                                className="bg-red-600 text-white px-4 py-2 rounded w-full sm:w-auto disabled:opacity-50"
+                            >
+                                {isBulkDeleting ? "Deleting..." : "Delete selected"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* DELETE MODAL */}
             {deleteTarget && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center px-4">
                     <div className="bg-white p-6 rounded-xl w-full max-w-md">
-                        <h2 className="font-semibold mb-2">Delete Car</h2>
+                        <h2 className="font-semibold mb-2">
+                            {isHardDeleteTarget ? "Delete car permanently" : "Delete car"}
+                        </h2>
                         <p className="text-sm mb-6">
-                            Delete{" "}
-                            <b>
-                                {deleteTarget.model?.brand?.name}{" "}
-                                {deleteTarget.model?.name}
-                            </b>
-                            ?
+                            {isHardDeleteTarget ? (
+                                <>
+                                    Permanently delete <b>{deleteCarLabel}</b>? This cannot be undone.
+                                </>
+                            ) : (
+                                <>
+                                    Delete <b>{deleteCarLabel}</b>?
+                                </>
+                            )}
                         </p>
 
                         <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-4">
@@ -425,13 +645,11 @@ const Cars = () => {
                                 Cancel
                             </button>
                             <button
-                                onClick={() =>
-                                    softDeleteCar({ id: deleteTarget.id })
-                                }
-                                disabled={deleting}
+                                onClick={handleDeleteConfirmation}
+                                disabled={isDeleteInProgress}
                                 className="bg-red-600 text-white px-4 py-2 rounded w-full sm:w-auto"
                             >
-                                Delete
+                                {isHardDeleteTarget ? "Delete permanently" : "Delete"}
                             </button>
                         </div>
                     </div>
