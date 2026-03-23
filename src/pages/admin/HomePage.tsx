@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Loader2 } from "lucide-react";
-import { useGetApiHome, usePostApiHomeImage, usePatchApiHome } from "../../services/api";
+import {
+  useGetApiHome,
+  usePostApiHomeImage,
+  usePatchApiHome,
+  useDeleteApiHomeImage,
+} from "../../services/api";
 import { MAX_IMAGE_SIZE_BYTES } from "../../utils/imageUpload";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
   const [uploading, setUploading] = useState(false);
+  const [deletingImage, setDeletingImage] = useState(false);
 
   // ----- QUERIES -----
   const { data: homeData, isLoading } = useGetApiHome();
@@ -51,6 +57,19 @@ const HomePage = () => {
 
   const { mutate: patchHome, isPending: isPatching } = usePatchApiHome(patchOptions);
 
+  const { mutate: deleteImage } = useDeleteApiHomeImage({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["/api/home"] });
+        alert("Home hero image deleted.");
+      },
+      onError: (error) => {
+        console.error("Failed to delete hero image", error);
+        alert("Failed to delete hero image.");
+      },
+    },
+  });
+
   // ----- HANDLERS -----
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
@@ -81,6 +100,18 @@ const HomePage = () => {
     patchHome({ data: payload });
   };
 
+  const handleDeleteImage = () => {
+    if (!image) return;
+    if (!confirm("Are you sure you want to delete the hero image?")) return;
+    setDeletingImage(true);
+
+    deleteImage(undefined, {
+      onSettled: () => {
+        setDeletingImage(false);
+      },
+    });
+  };
+
   if (isLoading) {
     return <div className="p-8">Loading...</div>;
   }
@@ -104,10 +135,20 @@ const HomePage = () => {
                   <>
                     <img src={image.url} alt="Home hero" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                      <label className="cursor-pointer bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100">
-                        Replace
-                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-                      </label>
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <label className="cursor-pointer bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100">
+                          Replace
+                          <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={handleDeleteImage}
+                          disabled={uploading || deletingImage}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-500 disabled:opacity-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </>
                 ) : (
@@ -122,7 +163,7 @@ const HomePage = () => {
                   </div>
                 )}
 
-                {uploading && (
+                {(uploading || deletingImage) && (
                   <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
                     <Loader2 className="animate-spin text-indigo-600" />
                   </div>

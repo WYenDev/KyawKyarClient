@@ -75,39 +75,41 @@ const SellCarRequestDetails: React.FC = () => {
     <div className="p-4 sm:p-8 bg-[#F8F9FB] min-h-screen overflow-x-hidden">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-6">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-lg bg-white border border-slate-100 shadow-sm hover:shadow-md">
-            <ArrowLeft />
-          </button>
-
-          <div className="flex-1">
-            <div className="flex items-start gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">{req.make} {req.model}</h1>
-                <div className="text-sm text-slate-500">{req.makeYear} • Requested by <span className="font-medium text-slate-800">{formatString(req.sellerName)}</span></div>
-              </div>
-
-              <div className="ml-auto flex flex-wrap items-center justify-end gap-2 max-w-full">
-                <div className={`inline-flex items-center py-1 px-3 rounded-full border ${statusClass(req.status)} text-sm font-semibold whitespace-nowrap`}>{req.status}</div>
-
-                <button onClick={openEdit} className="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-xl hover:bg-slate-50 transition-shadow">
-                  <Pencil size={16} /> <span className="hidden sm:inline">Edit Status</span>
-                </button>
-
-                {!req.assignedAdminId && (
-                  <button onClick={handleAssign} className="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-xl hover:bg-slate-50 transition-shadow">
-                    <User size={16} /> <span className="hidden sm:inline">Assign to me</span>
-                  </button>
-                )}
-
-                <button onClick={handleDelete} className="inline-flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-shadow">
-                  <Trash2 size={16} /> <span className="hidden sm:inline">Delete</span>
-                </button>
+        <div className="flex flex-col gap-3 mb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate(-1)}
+                className="inline-flex items-center justify-center w-fit p-2 rounded-lg bg-white border border-slate-100 shadow-sm hover:shadow-md"
+              >
+                <ArrowLeft />
+              </button>
+              <span className="text-lg font-semibold text-slate-900 sm:hidden">Sell car request</span>
+              <div className="hidden sm:flex flex-col">
+                <h1 className="text-3xl font-bold text-slate-900">Sell car request</h1>
               </div>
             </div>
 
-            <div className="mt-4 text-sm text-slate-500">Status updated on <span className="font-medium text-slate-700">{new Date(req.updatedAt).toLocaleString()}</span></div>
+            <div className="flex flex-wrap items-start gap-2 sm:items-center sm:justify-end">
+              <div className={`inline-flex items-center py-1 px-3 rounded-full border ${statusClass(req.status)} text-sm font-semibold whitespace-nowrap`}>{req.status}</div>
+
+              <button onClick={openEdit} className="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-xl hover:bg-slate-50 transition-shadow">
+                <Pencil size={16} /> <span className="hidden sm:inline">Edit Status</span>
+              </button>
+
+              {!req.assignedAdminId && (
+                <button onClick={handleAssign} className="inline-flex items-center gap-2 px-3 py-2 bg-white border rounded-xl hover:bg-slate-50 transition-shadow">
+                  <User size={16} /> <span className="hidden sm:inline">Assign to me</span>
+                </button>
+              )}
+
+              <button onClick={handleDelete} className="inline-flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-shadow">
+                <Trash2 size={16} /> <span className="hidden sm:inline">Delete</span>
+              </button>
+            </div>
           </div>
+
+          <div className="text-sm text-slate-500">updated <span className="font-medium text-slate-700">{new Date(req.updatedAt).toLocaleString()}</span></div>
         </div>
 
         {/* Content */}
@@ -234,4 +236,3 @@ const SellCarRequestDetails: React.FC = () => {
 };
 
 export default SellCarRequestDetails;
-

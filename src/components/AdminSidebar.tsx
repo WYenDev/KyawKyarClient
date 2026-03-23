@@ -58,7 +58,7 @@ const AdminSidebar = ({
                 {/* ================= HEADER ================= */}
                 <div className="h-14 flex items-center justify-between px-4 border-b">
                     <Link
-                        to="/"
+                        to="/my"
                         className={`flex items-center gap-2 ${collapsed ? "justify-center w-full" : ""}`}
                     >
                         <img

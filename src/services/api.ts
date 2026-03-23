@@ -1244,6 +1244,21 @@ export type PostApiHomeImageBody = {
   image?: Blob;
 };
 
+export type DeleteApiHomeImage200S3ResultDeletedItem = { [key: string]: unknown };
+
+export type DeleteApiHomeImage200S3ResultErrorsItem = { [key: string]: unknown };
+
+export type DeleteApiHomeImage200S3Result = {
+  Deleted?: DeleteApiHomeImage200S3ResultDeletedItem[];
+  Errors?: DeleteApiHomeImage200S3ResultErrorsItem[];
+};
+
+export type DeleteApiHomeImage200 = {
+  /** @nullable */
+  storageKey?: string | null;
+  s3Result?: DeleteApiHomeImage200S3Result;
+};
+
 export type GetApiModelsParams = {
 page?: number;
 limit?: number;
@@ -7807,6 +7822,68 @@ export const usePostApiHomeImage = <TError = unknown,
       > => {
 
       const mutationOptions = getPostApiHomeImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Delete the Home page image
+ */
+export const deleteApiHomeImage = (
+    
+ options?: SecondParameter<typeof mutator>,) => {
+      
+      
+      return mutator<DeleteApiHomeImage200>(
+      {url: `/api/home/image`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiHomeImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiHomeImage>>, TError,void, TContext>, request?: SecondParameter<typeof mutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiHomeImage>>, TError,void, TContext> => {
+
+const mutationKey = ['deleteApiHomeImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiHomeImage>>, void> = () => {
+          
+
+          return  deleteApiHomeImage(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiHomeImageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiHomeImage>>>
+    
+    export type DeleteApiHomeImageMutationError = unknown
+
+    /**
+ * @summary Delete the Home page image
+ */
+export const useDeleteApiHomeImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiHomeImage>>, TError,void, TContext>, request?: SecondParameter<typeof mutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiHomeImage>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiHomeImageMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
