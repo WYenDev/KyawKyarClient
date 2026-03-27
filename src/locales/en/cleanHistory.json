@@ -1,58 +1,81 @@
 {
   "meta": {
     "title": "Clean History - Kyaw Kyar",
-    "description": "Every vehicle at Kyaw Kyar is verified for clean ownership, no illegal modifications, and zero legal risk before listing."
+    "description": "Every vehicle listed by Kyaw Kyar is screened for ownership clarity, legal status, and unacceptable modifications before it is offered for sale."
   },
   "hero": {
-    "alt": "Clean History Verification",
-    "badge": "VERIFIED STANDARD",
-    "title": "Clean History.",
-    "titleLine2": "Proven Before Listing.",
-    "description": "Every vehicle at Kyaw Kyar is reviewed, verified, and approved before it ever reaches you.",
-    "descriptionLine2": "No assumptions. No unresolved records.",
-    "policy": "Only after a car has been verified through our inspection process is it officially listed for sale at Kyaw Kyar Showroom."
+    "alt": "Vehicle inspection report illustration with verified history checklist",
+    "badge": "CLEAN HISTORY STANDARD",
+    "title": "History Checked.",
+    "titleLine2": "Before We List It.",
+    "description": "Every vehicle is screened for ownership clarity, legal status, and trustworthiness before it enters the showroom.",
+    "descriptionLine2": "If ownership, legality, or record integrity cannot be confirmed, the vehicle does not move forward.",
+    "policy": "A Kyaw Kyar listing begins only after the record is reviewed and cleared through our internal verification standard.",
+    "howToComposeTitle": "How to compose:",
+    "composeStep1": "Frosted Glass (Layered).",
+    "composeStep2": "Clear Hierarchy.",
+    "composeStep3": "Detailed Data.",
+    "composeStep4": "Status Icons."
+  },
+  "inspection": {
+    "title": "Inspection Report",
+    "checks": {
+      "cleanTitle": "Clean Title",
+      "engine": "Engine",
+      "serviceRecords": "Service Records",
+      "singleOwner": "Single Owner",
+      "validServiceRecords": "Valid Service Records",
+      "noMajorAccidents": "No Prior Major Accidents",
+      "odometerAccurate": "Odometer Accurate"
+    },
+    "ghost": {
+      "ownershipTransfer": "Ownership Transfer Records",
+      "historyReportClear": "History Report (Clear)"
+    }
   },
   "trust": {
     "verifiedDoc": {
-      "title": "Verified Documentation",
-      "description": "Ownership and registration records are fully confirmed."
+      "title": "Ownership Verified",
+      "description": "Registration and ownership records are reviewed before approval."
     },
     "zeroRisk": {
-      "title": "Zero Legal Risk",
-      "description": "Any uncertainty means immediate rejection."
+      "title": "Legal Status Cleared",
+      "description": "If the status is unclear, the vehicle is rejected from listing."
     },
     "buyerProtection": {
-      "title": "Buyer Protection",
-      "description": "Confidence from purchase to resale."
+      "title": "Buyer Confidence Protected",
+      "description": "The result is a cleaner purchase decision and stronger resale trust."
     }
   },
   "rejection": {
-    "sectionTitle": "What Never Reaches Our Showroom",
+    "sectionTitle": "What We Refuse To List",
+    "sectionDescription": "We reject vehicles the moment the record is unclear. That keeps buyer confidence high and protects the reputation of every car that stays in our inventory.",
     "noOwnerBook": {
-      "title": "No Owner Book Copies",
-      "description": "Copied, missing, or unverifiable ownership records are rejected before listing."
+      "title": "Copied or Unclear Ownership Records",
+      "description": "If the ownership trail is incomplete, copied, or cannot be verified, the vehicle is stopped before listing."
     },
     "noIllegalMods": {
-      "title": "No Illegal Modifications",
-      "description": "Undocumented engine swaps, chassis changes, or unapproved alterations are never accepted."
+      "title": "Unapproved Structural Modifications",
+      "description": "Undocumented engine swaps, chassis changes, or illegal alterations are not accepted into inventory."
     },
     "noLegalExposure": {
-      "title": "No Legal Exposure",
-      "description": "Vehicles linked to disputes, loans, or registration irregularities do not proceed."
+      "title": "Active Legal or Registration Exposure",
+      "description": "Vehicles connected to disputes, debt, ownership conflict, or registration irregularities do not proceed."
     }
   },
   "guarantee": {
-    "sectionTitle": "What This Means for You",
+    "sectionTitle": "What This Means For You",
     "items": {
-      "verifiedOwnership": "Verified ownership records",
-      "noHiddenLegal": "No hidden legal issues",
-      "transparentHistory": "Transparent vehicle history",
-      "resaleConfidence": "Higher resale confidence"
+      "verifiedOwnership": "Verified ownership record",
+      "noHiddenLegal": "No unresolved legal red flags",
+      "transparentHistory": "Clearer vehicle background",
+      "resaleConfidence": "Greater confidence when reselling later"
     }
   },
   "cta": {
-    "title": "Trust Starts With What We Reject",
-    "description": "We remove uncertainty long before you ever see the car.",
+    "title": "Trust Begins With Screening",
+    "finalTitle": "Clean history is part of our screening process, not a claim.",
+    "description": "We remove uncertainty before the vehicle is presented to the buyer.",
     "button": "Browse cars"
   }
 }
