@@ -34,6 +34,9 @@
     }
   },
   "trust": {
+    "sectionLabel": "Trust Principles",
+    "sectionTitle": "What We Verify Before Listing",
+    "sectionDescription": "Every approved vehicle must pass these ownership, legal, and buyer-confidence checks first.",
     "verifiedDoc": {
       "title": "Ownership Verified",
       "description": "Registration and ownership records are reviewed before approval."

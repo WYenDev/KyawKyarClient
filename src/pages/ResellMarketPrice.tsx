@@ -97,7 +97,7 @@ const ResellMarketPrice: React.FC = () => {
           className="max-w-5xl mx-auto px-6"
         >
           <p className="uppercase tracking-[0.35em] text-xs text-gray-500 mb-4 text-center md:text-left">
-            {t("overline", "Why Kyaw Kyar")}
+            Why Kyaw Kyar
           </p>
           <h1
             className={`text-3xl sm:text-4xl font-semibold mb-6 ${isMyanmar ? "leading-[1.6]" : "leading-[1.2]"

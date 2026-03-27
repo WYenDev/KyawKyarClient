@@ -28,9 +28,9 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-slate-900 text-slate-50">
       <div className="max-w-[1850px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
           {/* Company Info */}
-          <div className="lg:col-span-2">
+          <div className="lg:w-full lg:max-w-md lg:flex-none">
             <div className="flex items-center gap-3 mb-4">
               <img src={Logo} alt="Kyaw Kyar" className="h-10 w-10 object-contain" />
               <h3 className="text-2xl font-bold text-red-500">{t('name')}</h3>
@@ -71,75 +71,77 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">{t('quick_links')}</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to={getPath('/')} className="text-slate-300 hover:text-white transition-colors">
-                  {t('quick_links_home', 'Home')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/buyCars')} className="text-slate-300 hover:text-white transition-colors">
-                  {t('quick_links_inventory', 'Car Inventory')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/#showrooms')} className="text-slate-300 hover:text-white transition-colors">
-                  {t('quick_links_showroom', 'Showrooms')}
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <div className="flex flex-col gap-8 lg:flex-1 lg:flex-row lg:justify-between lg:pl-16">
+            {/* Quick Links */}
+            <div>
+              <h4 className="text-lg font-semibold">{t('quick_links')}</h4>
+              <ul className="mt-4 space-y-3 text-slate-300">
+                <li>
+                  <Link to={getPath('/')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('quick_links_home', 'Home')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/buyCars')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('quick_links_inventory', 'Car Inventory')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/#showrooms')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('quick_links_showroom', 'Showrooms')}
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Why Buy From Us */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">{t('why_buy.title')}</h4>
-            <ul className="space-y-2 text-slate-300">
-              <li>
-                <Link to={getPath('/why-kyawkyar/rigorous-quality-inspection')} className="hover:text-white transition-colors">
-                  {t('why_buy.inspection')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/payments')} className="hover:text-white transition-colors">
-                  {t('why_buy.financing')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/why-kyawkyar/resell-market-price')} className="hover:text-white transition-colors">
-                  {t('why_buy.market_price')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/why-kyawkyar/clean-history')} className="hover:text-white transition-colors">
-                  {t('why_buy.clean_history')}
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Why Buy From Us */}
+            <div>
+              <h4 className="text-lg font-semibold">{t('why_buy.title')}</h4>
+              <ul className="mt-4 space-y-3 text-slate-300">
+                <li>
+                  <Link to={getPath('/why-kyawkyar/rigorous-quality-inspection')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('why_buy.inspection')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/payments')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('why_buy.financing')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/why-kyawkyar/resell-market-price')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('why_buy.market_price')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/why-kyawkyar/clean-history')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('why_buy.clean_history')}
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Services */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">{t('services.title')}</h4>
-            <ul className="space-y-2 text-slate-300">
-              <li>
-                <Link to={getPath('/buyCars')} className="hover:text-white transition-colors">
-                  {t('services.buy')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/sellCars')} className="hover:text-white transition-colors">
-                  {t('services.sell')}
-                </Link>
-              </li>
-              <li>
-                <Link to={getPath('/payments')} className="hover:text-white transition-colors">
-                  {t('services.financing')}
-                </Link>
-              </li>
-            </ul>
+            {/* Services */}
+            <div>
+              <h4 className="text-lg font-semibold">{t('services.title')}</h4>
+              <ul className="mt-4 space-y-3 text-slate-300">
+                <li>
+                  <Link to={getPath('/buyCars')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('services.buy')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/sellCars')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('services.sell')}
+                  </Link>
+                </li>
+                <li>
+                  <Link to={getPath('/payments')} className="block leading-relaxed hover:text-white transition-colors">
+                    {t('services.financing')}
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

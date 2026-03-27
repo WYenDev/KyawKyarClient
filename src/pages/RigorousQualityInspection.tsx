@@ -52,6 +52,9 @@ const RigorousQualityInspection = () => {
                         variants={fadeUp}
                         className="max-w-5xl mx-auto px-6 text-white"
                     >
+                        <p className="mb-4 text-xs uppercase tracking-[0.35em] text-gray-300">
+                            Why Kyaw Kyar
+                        </p>
                         <h1 className="text-3xl md:text-5xl font-bold mb-6">
                             {t('hero.title')}
                         </h1>
@@ -189,5 +192,4 @@ const Step = ({
 };
 
 export default RigorousQualityInspection;
-
 
