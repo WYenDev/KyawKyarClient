@@ -83,12 +83,12 @@
       "desc": "We provide a valuation based on today's accurate market prices, ensuring you receive a transparent and fair offer."
     },
     "physicalAppraisal": {
-      "title": "Physical Appraisal",
-      "desc": "Our experienced team performs a comprehensive review of your vehicle, leveraging our deep knowledge of car specifications to determine a fair, accurate valuation."
+      "title": "Accident-Free Status and Vehicle Condition",
+      "desc": "Our team of experts performs a detailed inspection of every component and specification, determining an accurate valuation based on the vehicle's current condition and accident-free status."
     },
     "serviceHistory": {
-      "title": "Service History Premium",
-      "desc": "Our experienced team performs a comprehensive review of your vehicle, leveraging our deep knowledge of car specifications to determine a fair, accurate valuation."
+      "title": "Systematic Maintenance and Care",
+      "desc": "We offer the highest possible prices for vehicles that have been used systematically and have a well-documented maintenance history."
     }
   },
   "eligibility": {

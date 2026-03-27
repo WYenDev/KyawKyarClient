@@ -111,11 +111,6 @@ const ResellMarketPrice: React.FC = () => {
             )}
           </p>
 
-          <div className="flex flex-wrap gap-6 mt-6 mb-2">
-            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("badge.valuation", "Verified Market Valuation")}</div>
-            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("badge.process", "Seamless Direct Process")}</div>
-            <div className="flex items-center gap-2 text-sm text-gray-800"><CheckCircle2 className="text-green-500 w-5 h-5" /> {t("badge.security", "Ownership Security")}</div>
-          </div>
         </motion.div>
       </section>
 

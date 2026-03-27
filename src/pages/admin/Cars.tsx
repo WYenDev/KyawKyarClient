@@ -49,6 +49,20 @@ const Cars = () => {
 
     /* ================= STATE ================= */
     const [activeTab, setActiveTab] = useState<'active' | 'sold' | 'deleted'>(initialTab);
+    const setTabQueryParam = (tab: 'active' | 'sold' | 'deleted') => {
+        const params = new URLSearchParams(searchParams);
+        params.set('tab', tab);
+        params.set('page', '1');
+        setSearchParams(params);
+    };
+
+    useEffect(() => {
+        if (!searchParams.get('tab')) {
+            const params = new URLSearchParams(searchParams);
+            params.set('tab', 'active');
+            setSearchParams(params, { replace: true });
+        }
+    }, [searchParams, setSearchParams]);
 
     /* ================= SYNC TAB FROM URL (e.g. dashboard link or browser back) ================= */
     useEffect(() => {
@@ -62,7 +76,6 @@ const Cars = () => {
     const [selectedCarIds, setSelectedCarIds] = useState<string[]>([]);
     const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
     const prevSearchTextRef = useRef(searchText);
-    const prevActiveTabRef = useRef(activeTab);
 
     const page = useMemo(() => {
         const p = searchParams.get('page');
@@ -198,17 +211,15 @@ const Cars = () => {
 
     useEffect(() => {
         const prevSearch = prevSearchTextRef.current;
-        const prevTab = prevActiveTabRef.current;
 
-        if (searchText !== prevSearch || activeTab !== prevTab) {
+        if (searchText !== prevSearch) {
             const params = new URLSearchParams(searchParams);
             params.set('page', '1');
             setSearchParams(params);
         }
 
         prevSearchTextRef.current = searchText;
-        prevActiveTabRef.current = activeTab;
-    }, [searchText, activeTab, searchParams, setSearchParams]);
+    }, [searchText, searchParams, setSearchParams]);
 
     useEffect(() => {
         if (activeTab !== 'deleted') {
@@ -299,7 +310,7 @@ const Cars = () => {
             {/* TABS */}
             <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 border-b border-gray-200">
                     <button
-                        onClick={() => { setActiveTab('active'); setSearchParams({ tab: 'active' }); }}
+                        onClick={() => { setActiveTab('active'); setTabQueryParam('active'); }}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
                             activeTab === 'active' 
                                 ? 'text-black border-b-2 border-black' 
@@ -309,7 +320,7 @@ const Cars = () => {
                         Active Cars
                     </button>
                     <button
-                        onClick={() => { setActiveTab('sold'); setSearchParams({ tab: 'sold' }); }}
+                        onClick={() => { setActiveTab('sold'); setTabQueryParam('sold'); }}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
                             activeTab === 'sold' 
                                 ? 'text-black border-b-2 border-black' 
@@ -319,7 +330,7 @@ const Cars = () => {
                         Sold Cars
                     </button>
                     <button
-                        onClick={() => { setActiveTab('deleted'); setSearchParams({ tab: 'deleted' }); }}
+                        onClick={() => { setActiveTab('deleted'); setTabQueryParam('deleted'); }}
                         className={`pb-2 px-1 text-sm font-medium transition-colors relative ${
                             activeTab === 'deleted' 
                                 ? 'text-black border-b-2 border-black' 
