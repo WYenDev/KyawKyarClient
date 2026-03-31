@@ -7,7 +7,7 @@ const AdminLayout = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <div className="flex h-screen bg-[#F8F9FB] overflow-hidden">
+        <div className="flex min-h-screen bg-[#F8F9FB]">
             <AdminSidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
 
             <main className="flex-1 overflow-auto">

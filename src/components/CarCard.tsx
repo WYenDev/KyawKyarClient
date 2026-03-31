@@ -42,7 +42,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         <img
           src={car.primaryImage?.url || 'https://www.shutterstock.com/image-vector/flat-car-picture-placeholder-symbol-600nw-2366856295.jpg'}
           alt={`carImage} ${car.model?.name}`}
-          className="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-48 object-cover object-center group-hover:scale-105 transition-transform duration-300"
         />
         {/* 
 

@@ -456,7 +456,7 @@ const Cars = () => {
                                     PLACEHOLDER_IMAGE
                                 }
                                 alt={car.model?.name}
-                                className="w-full h-48 object-contain
+                                className="w-full h-48 object-cover object-center
                                            group-hover:scale-105 transition"
                             />
 
@@ -600,7 +600,7 @@ const Cars = () => {
 
             {/* BULK DELETE CONFIRMATION */}
             {confirmBulkDelete && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center px-4">
+                <div className="fixed inset-0 z-30 bg-black/40 flex items-center justify-center px-4">
                     <div className="bg-white p-6 rounded-xl w-full max-w-md">
                         <h2 className="font-semibold mb-2">
                             Permanently delete {selectedCount} {selectedCount === 1 ? "car" : "cars"}
@@ -631,7 +631,7 @@ const Cars = () => {
 
             {/* DELETE MODAL */}
             {deleteTarget && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center px-4">
+                <div className="fixed inset-0 z-30 bg-black/40 flex items-center justify-center px-4">
                     <div className="bg-white p-6 rounded-xl w-full max-w-md">
                         <h2 className="font-semibold mb-2">
                             {isHardDeleteTarget ? "Delete car permanently" : "Delete car"}
