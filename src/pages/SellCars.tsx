@@ -7,14 +7,15 @@ import SEO from '../components/SEO';
 
 const SellCars: React.FC = () => {
   const { t, i18n } = useTranslation('cars');
-  const lang = i18n.resolvedLanguage ?? i18n.language;
+  const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
   return (
     <div className="min-h-screen bg-[#f8fafc] py-2 lg:py-3">
-      <SEO 
+      <SEO
+        lang={lang}
         title={t('sell_meta.title', 'Sell Your Car')}
         description={t('sell_meta.description', 'Sell your car with confidence')}
-        canonical={`/${lang}/sell-cars`}
+        canonical={`/${lang}/sellCars`}
       />
       <ScrollToTop />
       <div className="max-w-[1850px] mx-auto px-1 sm:px-2 lg:px-3">

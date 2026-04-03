@@ -23,11 +23,14 @@ const fadeSide = (from: "left" | "right") => ({
 
 const RigorousQualityInspection = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation('rqi');
+    const { t, i18n } = useTranslation('rqi');
+    const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
             <SEO
+                lang={lang}
+                canonical={`/${lang}/why-kyawkyar/rigorous-quality-inspection`}
                 title={t('meta.title')}
                 description={t('meta.description')}
             />
@@ -192,4 +195,3 @@ const Step = ({
 };
 
 export default RigorousQualityInspection;
-

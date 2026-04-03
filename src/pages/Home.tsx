@@ -42,10 +42,11 @@ const Home: React.FC = () => {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Kyaw Kyar Car Showroom',
+    alternateName: 'Kyaw Kyar',
     url: SITE_URL,
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${SITE_URL}/buyCars?q={search_term_string}`,
+      target: `${SITE_URL}/${lang}/buyCars?q={search_term_string}`,
       'query-input': 'required name=search_term_string'
     }
   };
@@ -68,6 +69,7 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <SEO
+        lang={lang}
         canonical={`/${lang}`}
         title={t('meta.title', 'Kyaw Kyar Car Showroom | Buy & Sell Quality Vehicles')}
         description={t(

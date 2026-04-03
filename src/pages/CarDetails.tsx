@@ -8,9 +8,12 @@ import CarDetailsSummary from '../components/CarDetailsSummary';
 import SEO from '../components/SEO';
 
 const CarDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, lang: routeLang } = useParams<{ id: string; lang?: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation('cars');
+  const { t, i18n } = useTranslation('cars');
+  const lang = routeLang === 'my' || routeLang === 'en'
+    ? routeLang
+    : (i18n.language.startsWith('my') ? 'my' : 'en');
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -70,7 +73,9 @@ const CarDetails: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <SEO 
+      <SEO
+        lang={lang}
+        canonical={`/${lang}/cars/${id ?? ''}`}
         title={carTitle}
         description={(carData as any)?.description?.substring(0, 160)}
         image={mainImageUrl}

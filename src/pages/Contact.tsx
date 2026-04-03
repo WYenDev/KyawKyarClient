@@ -4,11 +4,14 @@ import ContactComponent from '../components/Contact';
 import SEO from '../components/SEO';
 
 const Contact: React.FC = () => {
-  const { t } = useTranslation('contact');
+  const { t, i18n } = useTranslation('contact');
+  const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
   return (
     <div className="min-h-screen bg-gray-900 pt-8">
-      <SEO 
+      <SEO
+        lang={lang}
+        canonical={`/${lang}/contact`}
         title={t('meta.title', 'Contact Us')}
         description={t('meta.description', 'Get in touch with us')}
         structuredData={{

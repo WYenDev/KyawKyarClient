@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import SEO from '../components/SEO';
 
@@ -13,10 +14,14 @@ const fadeUp = {
 
 const SwiftProcessing = () => {
     const navigate = useNavigate();
+    const { i18n } = useTranslation('common');
+    const lang = i18n.language.startsWith('my') ? 'my' : 'en';
 
     return (
         <main className="bg-white text-gray-900 overflow-hidden">
-            <SEO 
+            <SEO
+                lang={lang}
+                canonical={`/${lang}/why-kyawkyar/swift-processing`}
                 title="Swift Processing - Kyaw Kyar"
                 description="Fast and hassle-free paperwork processing for your car purchase. We handle the bureaucracy so you don't have to."
             />

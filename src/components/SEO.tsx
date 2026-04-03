@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
+const SITE_NAME = 'Kyaw Kyar Car Showroom';
+
 export const SITE_URL = (() => {
   const envUrl = import.meta.env.VITE_CANONICAL_URL || import.meta.env.VITE_SITE_URL;
   if (envUrl) {
@@ -27,6 +29,32 @@ const generateHreflangAlternates = (canonicalPath: string): Array<{ href: string
   ];
 };
 
+const detectLang = (lang?: string, canonical?: string) => {
+  if (lang === 'my' || lang === 'en') {
+    return lang;
+  }
+
+  if (canonical?.startsWith('/my')) {
+    return 'my';
+  }
+
+  if (canonical?.startsWith('/en')) {
+    return 'en';
+  }
+
+  if (typeof window !== 'undefined') {
+    if (window.location.pathname.startsWith('/my')) {
+      return 'my';
+    }
+
+    if (window.location.pathname.startsWith('/en')) {
+      return 'en';
+    }
+  }
+
+  return 'en';
+};
+
 export interface SEOProps {
   title?: string;
   description?: string;
@@ -39,7 +67,7 @@ export interface SEOProps {
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const DEFAULT_TITLE = 'Kyaw Kyar Car Showroom';
+const DEFAULT_TITLE = SITE_NAME;
 const DEFAULT_DESCRIPTION = 'Discover inspected vehicles and premium buying services at Kyaw Kyar Car Showroom.';
 const DEFAULT_IMAGE = '/apple-touch-icon.png';
 
@@ -47,7 +75,7 @@ const SEO = ({
   title = DEFAULT_TITLE,
   description = DEFAULT_DESCRIPTION,
   canonical,
-  lang = 'en',
+  lang,
   image = DEFAULT_IMAGE,
   type = 'website',
   noindex = false,
@@ -56,12 +84,14 @@ const SEO = ({
 }: SEOProps) => {
   const canonicalUrl = buildUrl(canonical);
   const imageUrl = buildUrl(image);
+  const pageLang = detectLang(lang, canonical);
 
   return (
-    <Helmet htmlAttributes={{ lang }}>
+    <Helmet htmlAttributes={{ lang: pageLang }}>
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="og:title" content={title} />
+      <meta name="og:site_name" content={SITE_NAME} />
       <meta name="og:description" content={description} />
       <meta name="og:type" content={type} />
       <meta name="og:url" content={canonicalUrl} />

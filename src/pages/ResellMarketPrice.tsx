@@ -32,8 +32,8 @@ const fadeSide = (from: "left" | "right") => ({
 const ResellMarketPrice: React.FC = () => {
   const { t, i18n } = useTranslation("resellMarketPrice");
   const navigate = useNavigate();
-  const lang = i18n.resolvedLanguage ?? i18n.language;
-  const isMyanmar = lang.startsWith("mm") || lang.startsWith("my");
+  const lang = i18n.language.startsWith("my") ? "my" : "en";
+  const isMyanmar = lang === "my";
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const primaryButtonClass =
@@ -78,6 +78,7 @@ const ResellMarketPrice: React.FC = () => {
   return (
     <main className={`bg-white text-gray-900 ${isMyanmar ? "font-myanmar" : ""}`}>
       <SEO
+        lang={lang}
         title={t("meta.title", "Resell at Market Price")}
         description={t(
           "meta.description",
