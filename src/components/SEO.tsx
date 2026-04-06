@@ -90,12 +90,12 @@ const SEO = ({
     <Helmet htmlAttributes={{ lang: pageLang }}>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="og:title" content={title} />
-      <meta name="og:site_name" content={SITE_NAME} />
-      <meta name="og:description" content={description} />
-      <meta name="og:type" content={type} />
-      <meta name="og:url" content={canonicalUrl} />
-      <meta name="og:image" content={imageUrl} />
+      <meta property="og:title" content={title} />
+      <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:description" content={description} />
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:image" content={imageUrl} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />

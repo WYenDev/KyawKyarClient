@@ -285,6 +285,7 @@ export interface Car {
   deletedAt?: string | null;
   featured?: boolean;
   isNewArrival?: boolean;
+  isBrandNew?: boolean;
   /** @nullable */
   gradeId?: string | null;
   /** @nullable */
@@ -336,6 +337,7 @@ export interface CarListItem {
   showroom?: Showroom;
   featured?: boolean;
   isNewArrival?: boolean;
+  isBrandNew?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -376,6 +378,8 @@ export interface CarCreate {
   /** @nullable */
   isNewArrival?: boolean | null;
   /** @nullable */
+  isBrandNew?: boolean | null;
+  /** @nullable */
   featured?: boolean | null;
   /** @nullable */
   license?: License;
@@ -396,6 +400,7 @@ export interface CarUpdate {
   showroomId?: string;
   buildTypeId?: string;
   isNewArrival?: boolean;
+  isBrandNew?: boolean;
   featured?: boolean;
   license?: License;
 }

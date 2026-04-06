@@ -41,6 +41,7 @@ interface Car {
   engineSize?: number;
   grade?: { name: string };
   showroom?: { city: string };
+  isBrandNew?: boolean;
   license?: {
     region?: { name: string; code?: string } | null;
     prefixLetter?: string | null;
@@ -186,6 +187,17 @@ const CarDetailsSummary: React.FC<Props> = ({ car }) => {
             </div>
           </div>
         )}
+
+        {/* Brand New */}
+        <div className="flex items-center">
+          <Badge className="h-5 w-5 mr-3 text-gray-400" />
+          <div>
+            <div className="text-sm text-gray-600">Brand New</div>
+            <div className="text-lg font-semibold text-gray-900">
+              {car.isBrandNew ? 'Yes' : 'No'}
+            </div>
+          </div>
+        </div>
 
         {/* Showroom Location */}
         {!!car.showroom?.city && (
