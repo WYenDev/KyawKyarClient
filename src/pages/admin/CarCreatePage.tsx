@@ -31,6 +31,7 @@ type CarForm = {
     buildTypeId?: string;
     gradeId?: string;
     isNewArrival?: boolean;
+    isBrandNew?: boolean;
     featured?: boolean;
     // Optional license block. If any of the core license fields are provided,
     // the user must provide all four: prefixNumber, prefixLetter, registrationNumber, regionId.
@@ -85,6 +86,7 @@ const CarCreatePage = () => {
         buildTypeId: undefined,
         gradeId: undefined,
         isNewArrival: false,
+        isBrandNew: false,
         featured: false,
     });
 
@@ -277,36 +279,38 @@ const CarCreatePage = () => {
                             </Field>
 
                             <Field label="Model" required>
-  <Select
-    value={form.modelId}
-    options={modelOptions}
-    placeholder={
-      !brandId
-        ? "Select brand first"
-        : modelOptions.length === 0
-        ? "No models available"
-        : "Select model"
-    }
-    onChange={onChangeModel}
-    className={
-      !brandId || modelOptions.length === 0
-        ? "opacity-50 bg-gray-100"
-        : ""
-    }
-    disabled={!brandId || modelOptions.length === 0}
-  />
-  {brandId && modelOptions.length === 0 && (
-    <div className="mt-2 text-sm text-red-500">
-      No models for this brand. Please{' '}
-      <a
-        className="underline text-blue-600"
-        href="/admin/models/create" // adjust this path if needed
-      >
-        create a model first
-      </a>.
-    </div>
-  )}
-</Field>
+                                <Select
+                                    value={form.modelId}
+                                    options={modelOptions}
+                                    placeholder={
+                                        !brandId
+                                            ? "Select brand first"
+                                            : modelOptions.length === 0
+                                                ? "No models available"
+                                                : "Select model"
+                                    }
+                                    onChange={(modelId) => {
+                                        if (!brandId || modelOptions.length === 0) return;
+                                        onChangeModel(modelId);
+                                    }}
+                                    className={
+                                        !brandId || modelOptions.length === 0
+                                            ? "opacity-50 bg-gray-100"
+                                            : ""
+                                    }
+                                />
+                                {brandId && modelOptions.length === 0 && (
+                                    <div className="mt-2 text-sm text-red-500">
+                                        No models for this brand. Please{' '}
+                                        <a
+                                            className="underline text-blue-600"
+                                            href="/admin/models/create" // adjust this path if needed
+                                        >
+                                            create a model first
+                                        </a>.
+                                    </div>
+                                )}
+                            </Field>
 
                             <Field label="Color" required>
                                 <Select
@@ -348,29 +352,29 @@ const CarCreatePage = () => {
                             </Field>
 
                             <Field label="Grade">
-<Select
-    value={form.gradeId ?? ""}
-    options={gradeOptions}
-    placeholder={
-      form.modelId
-        ? gradeOptions.length === 0
-          ? "No grade to select"
-          : "Select grade"
-        : "Select model first"
-    }
-    onChange={(v) =>
-      setForm({
-        ...form,
-        gradeId: v || undefined,
-      })
-    }
-    className={
-      !form.modelId || gradeOptions.length === 0
-        ? "opacity-50 bg-gray-100"
-        : ""
-    }
-    disabled={!form.modelId || gradeOptions.length === 0}
-  />
+                                <Select
+                                    value={form.gradeId ?? ""}
+                                    options={gradeOptions}
+                                    placeholder={
+                                        form.modelId
+                                            ? gradeOptions.length === 0
+                                                ? "No grade to select"
+                                                : "Select grade"
+                                            : "Select model first"
+                                    }
+                                    onChange={(v) => {
+                                        if (!form.modelId || gradeOptions.length === 0) return;
+                                        setForm({
+                                            ...form,
+                                            gradeId: v || undefined,
+                                        });
+                                    }}
+                                    className={
+                                        !form.modelId || gradeOptions.length === 0
+                                            ? "opacity-50 bg-gray-100"
+                                            : ""
+                                    }
+                                />
                             </Field>
                         </div>
                     </Section>
@@ -378,8 +382,8 @@ const CarCreatePage = () => {
                     {/* ===== SPECIFICATIONS ===== */}
                     <Section title="Specifications">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-<Input
-   label="Model Year" required
+                            <Input
+                                label="Model Year"
                                 value={form.modelYear}
                                 onChange={(v) =>
                                     setForm({ ...form, modelYear: Number(v) })
@@ -471,7 +475,19 @@ const CarCreatePage = () => {
                                     setForm({ ...form, status: v })
                                 }
                             />
-
+                        </div>
+                        <div className="pt-4">
+                            <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 w-full sm:w-fit">
+                                <input
+                                    type="checkbox"
+                                    checked={!!form.isBrandNew}
+                                    onChange={(e) =>
+                                        setForm({ ...form, isBrandNew: e.target.checked })
+                                    }
+                                    className="w-5 h-5"
+                                />
+                                <span className="text-sm font-medium text-gray-700">Brand New</span>
+                            </label>
                         </div>
                     </Section>
 
@@ -579,28 +595,28 @@ const CarCreatePage = () => {
                                 />
                             </div>
                         </div>
-                        
-                        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
-   <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
-      <input
-        type="checkbox"
-        checked={!!form.isNewArrival}
-        onChange={e => setForm(prev => ({ ...prev, isNewArrival: e.target.checked }))}
-        className="w-5 h-5 ml-auto"
-      />
-      <span className="text-sm font-medium text-gray-700">New Arrival</span>
-   </label>
 
-   <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
-      <input
-        type="checkbox"
-        checked={!!form.featured}
-        onChange={e => setForm(prev => ({ ...prev, featured: e.target.checked }))}
-        className="w-5 h-5 ml-auto"
-      />
-      <span className="text-sm font-medium text-gray-700">Featured Car</span>
-   </label>
-</div>
+                        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-2">
+                            <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
+                                <input
+                                    type="checkbox"
+                                    checked={!!form.isNewArrival}
+                                    onChange={e => setForm(prev => ({ ...prev, isNewArrival: e.target.checked }))}
+                                    className="w-5 h-5 ml-auto"
+                                />
+                                <span className="text-sm font-medium text-gray-700">New Arrival</span>
+                            </label>
+
+                            <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 flex-1 sm:flex-initial">
+                                <input
+                                    type="checkbox"
+                                    checked={!!form.featured}
+                                    onChange={e => setForm(prev => ({ ...prev, featured: e.target.checked }))}
+                                    className="w-5 h-5 ml-auto"
+                                />
+                                <span className="text-sm font-medium text-gray-700">Featured Car</span>
+                            </label>
+                        </div>
                     </Section>
 
                     {/* ===== ACTIONS ===== */}
@@ -614,14 +630,14 @@ const CarCreatePage = () => {
                         <button
                             onClick={handleSave}
                             disabled={isPending ||
-                              !brandId ||
-                              !form.modelId ||
-                              !form.modelYear ||
-                              !form.price ||
-                              !form.mileage ||
-                              !form.colorId ||
-                              !form.fuelTypeId ||
-                              !form.transmissionTypeId
+                                !brandId ||
+                                !form.modelId ||
+                                !form.modelYear ||
+                                !form.price ||
+                                !form.mileage ||
+                                !form.colorId ||
+                                !form.fuelTypeId ||
+                                !form.transmissionTypeId
                             }
                             className={`px-8 py-2 rounded-xl text-white ${(!brandId || !form.modelId || !form.modelYear || !form.price || !form.mileage || !form.colorId || !form.fuelTypeId || !form.transmissionTypeId) ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
                         >

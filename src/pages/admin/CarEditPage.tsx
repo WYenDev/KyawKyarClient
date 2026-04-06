@@ -46,6 +46,7 @@ type CarForm = {
     buildTypeId?: string;
     gradeId?: string;
     isNewArrival?: boolean;
+    isBrandNew?: boolean;
     featured?: boolean;
     // Optional license block
     license?: {
@@ -110,6 +111,7 @@ const CarEditPage = () => {
             buildTypeId: car.buildTypeId ?? undefined,
             gradeId: car.gradeId ?? undefined,
             isNewArrival: car.isNewArrival ?? false,
+            isBrandNew: car.isBrandNew ?? false,
             featured: car.featured ?? false,
             // initialize license from existing car. keep expiryDate as ISO string if present
             license: car.license
@@ -525,7 +527,24 @@ const CarEditPage = () => {
                                     setForm({ ...form, status: v })
                                 }
                             />
-
+                        </div>
+                        <div className="pt-4">
+                            <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-3 rounded-xl border border-gray-100 w-full sm:w-fit">
+                                <input
+                                    type="checkbox"
+                                    checked={form.isBrandNew ?? false}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            isBrandNew: e.target.checked,
+                                        })
+                                    }
+                                    className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700">
+                                    Brand New
+                                </span>
+                            </label>
                         </div>
                     </Section>
 
